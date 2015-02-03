@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ASIMOV</groupId>
+  <artifactId>ASIMOV</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>ASIMOV</name>
+  <description>Agent-based SImulation, MOdeling, and Visualization of processes</description>
+  
+  <repositories>
+    <repository>
+        <id>io.coala</id>
+        <name>COALA Repository</name>
+        <url>https://github.com/krevelen/coala/raw/mvn-repo</url>
+    </repository>
+  </repositories>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+  <dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.nosql</artifactId>        
+			<version>2.5.0</version>
+		</dependency>
+		<!-- provide XPath annotations on JAXB beans <dependency> <groupId>org.eclipse.persistence</groupId> 
+			<artifactId>org.eclipse.persistence.moxy</artifactId> </dependency> -->
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>eclipselink</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+  <dependency>
+  	<groupId>io.coala</groupId>
+	<artifactId>coala-guice3-adapter</artifactId>
+	<version>1.0.0</version>
+   </dependency>
+   <dependency>
+  	<groupId>io.coala</groupId>
+	<artifactId>coala-eve2-adapter</artifactId>
+	<version>1.0.0</version>
+   </dependency>
+   <dependency>
+  	<groupId>io.coala</groupId>
+    <artifactId>coala-jsa-adapter</artifactId>
+	<version>1.0.0</version>
+   </dependency>
+   <dependency>
+   	<groupId>io.coala</groupId>
+	<artifactId>coala-enterprise-ontology</artifactId>
+	<version>1.0.0</version>
+   </dependency>
+   <dependency>
+   	<groupId>io.coala</groupId>
+	<artifactId>coala-jsa-adapter</artifactId>
+	<version>1.0.0</version>
+   </dependency>
+  </dependencies>
+</project>
