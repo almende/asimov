@@ -1,9 +1,9 @@
 package io.arum.model;
 
-import io.asimov.agent.resource.AbstractEmbodied;
-import io.asimov.agent.resource.AssemblyLine;
-import io.asimov.agent.resource.Material;
-import io.asimov.agent.resource.Person;
+import io.arum.model.resource.assemblyline.AssemblyLine;
+import io.arum.model.resource.person.Person;
+import io.arum.model.resource.supply.Material;
+import io.asimov.model.AbstractEmbodied;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;

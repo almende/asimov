@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://io.asimov.almende.org/2015/schema/cim/"
+	elementFormDefault="unqualified" attributeFormDefault="unqualified"
+	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:asimovcim="http://io.asimov.almende.org/2015/schema/cim/"
+	xmlns:asimovbpm="http://io.asimov.almende.org/2015/schema/bpm/"
+	xmlns:asimovevent="http://io.asimov.almende.org/2015/schema/event/"
+	xmlns:asimovunit="http://io.asimov.almende.org/2015/schema/unit/"
+	>
+
+
+
+
+
+	
+	<import schemaLocation="asimovBPM.xsd" namespace="http://io.asimov.almende.org/2015/schema/bpm/">
+	</import>
+	<import schemaLocation="asimovEvent.xsd"
+		namespace="http://io.asimov.almende.org/2015/schema/event/">
+	</import>
+	<import schemaLocation="asimovUnits.xsd"
+		namespace="http://io.asimov.almende.org/2015/schema/unit/">
+	</import>
+	
+	<complexType name="tMaterial">
+		<sequence>
+		<element name="material" maxOccurs="unbounded" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="amount" type="int"></element>
+						<element name="type" type="string"></element>
+					</sequence>
+				</complexType>
+		</element>
+		</sequence>
+	</complexType>
+	<complexType name="tTrainedTemplate">
+		<sequence>
+			<element name="id" type="string" maxOccurs="1" minOccurs="1"></element>
+			<element name="roleTemplate" maxOccurs="unbounded" minOccurs="0">
+				<annotation>
+					<documentation>
+						For every role the average values of some parameters
+						are provided.
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="roleRef" type="string"></element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="materialTemplate" maxOccurs="unbounded"
+				minOccurs="0">
+				<annotation>
+					<documentation>
+						For every material type, average values are
+						provided
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="tMaterial" minOccurs="0" maxOccurs="unbounded"></element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="assemblyLineTemplate" maxOccurs="unbounded"
+				minOccurs="0">
+				<annotation>
+					<documentation>
+						For every space, average values are provided
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="assemblyLineTypeRef" type="string"
+							maxOccurs="1" minOccurs="0"></element>
+						<element name="tMaterial" maxOccurs="unbounded" minOccurs="0">
+							<complexType>
+								<sequence>
+									<element name="occupantRole" type="asimovbpm:tRole"
+										minOccurs="0" maxOccurs="1" />
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="activity" type="asimovbpm:tSkeletonActivityType"
+				maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="process" type="asimovbpm:tProcessType"
+				maxOccurs="unbounded" minOccurs="0"></element>
+			<!-- start of change request -->
+<element name="processTemplate" type="asimovunit:tDistribution" maxOccurs="unbounded" minOccurs="0"></element>
+			<!-- end of change request -->
+		</sequence>
+	</complexType>
+	<!-- start of change request -->
+	<element name="Extensions">
+		 <complexType>
+			<annotation>
+				<documentation>
+					Structure holding all the extensions to be used by applications
+					that does not have to be conform a standard due to it's scope.
+					For example: data that does not have to be exchanged between 
+					different applications but will be persisted in the ASIM.
+				</documentation>
+			</annotation>
+			<sequence>
+				<element name="extension" type="asimovunit:tExtension" minOccurs="0" maxOccurs="unbounded">	
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+	<!-- end of change request -->
+	<element name="ASMInput" type="asimovcim:tTrainedTemplate">
+		<annotation>
+			<documentation>Input of the Agent Simulation module.</documentation>
+		</annotation>
+	</element>
+
+
+	<element name="SimulationFile">
+		<annotation>
+			<documentation>XML containing all the aspects of the simulation
+				needed for a full persistency of the data using this file.
+			</documentation>
+		</annotation>
+		<complexType>
+			<sequence>
+				<element name="id" type="string" maxOccurs="1" minOccurs="1">
+				</element>
+				<element name="trainingParameters" type="asimovcim:tTrainedTemplate"
+					maxOccurs="unbounded" minOccurs="1">
+				</element>
+				<element name="simulations" maxOccurs="1" minOccurs="1">
+					<complexType>
+						<sequence>
+							<element name="simulationCase" maxOccurs="unbounded"
+								minOccurs="0">
+								<complexType>
+
+									<sequence>
+										<element name="id" type="string" maxOccurs="1"
+											minOccurs="1">
+										</element>
+										<element name="context" type="anyType" maxOccurs="1"
+											minOccurs="1">
+										</element>
+
+										<element name="simulationResult"
+											type="asimovevent:tAgentBasedSimulationModuleOutput" maxOccurs="1"
+											minOccurs="1">
+										</element>
+
+										<element name="trainingParametersRef" type="string"
+											maxOccurs="1" minOccurs="0">
+										</element>
+
+                    <element name="roles" maxOccurs="1" minOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="role" type="asimovbpm:tRole" maxOccurs="unbounded"
+                            minOccurs="0"></element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                  </sequence>
+								</complexType>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+
+
+
+
+
+
+
+
+
+	<element name="BPMImport">
+		<annotation>
+			<documentation>BPM imorting.</documentation>
+		</annotation>
+		<complexType>
+			<sequence>
+				<element name="process" type="asimovbpm:tProcessType"
+					maxOccurs="unbounded" minOccurs="1">
+					<annotation>
+						<documentation>one or more processes to import</documentation>
+					</annotation>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="EventsImport">
+		<annotation>
+			<documentation>import new events into the adapt4ee</documentation>
+		</annotation>
+		<complexType>
+			<sequence>
+				<element name="event" type="asimovevent:tEvent" maxOccurs="unbounded"
+					minOccurs="1">
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+	
+	<element name="ListOfEvents">
+		<complexType>
+			<sequence>
+				<element name="event" type="asimovevent:tEvent" maxOccurs="unbounded"
+					minOccurs="0">
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+	
+
+	<element name="ListOfProcesses">
+		<complexType>
+			<sequence>
+				<element name="process" type="asimovbpm:tProcessType"
+					maxOccurs="unbounded" minOccurs="0"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="ListOfRoles">
+		<complexType>
+			<sequence>
+				<element name="role" type="asimovbpm:tRole" maxOccurs="unbounded"
+					minOccurs="0"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	
+	
+	<element name="EventTraceImport">
+		<complexType>
+			<sequence>
+				<element name="eventTrace" type="asimovevent:tEventTrace"
+					minOccurs="1" maxOccurs="1" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="ListOfPersons">
+		<complexType>
+			<sequence>
+				<element name="person" maxOccurs="unbounded" minOccurs="0">
+					<complexType>
+						<sequence>
+							<element name="id" type="string" maxOccurs="1" minOccurs="1"></element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="EventTraceMinTime" type="dateTime"></element>
+
+	<element name="EventTraceMaxTime" type="dateTime"></element>
+
+	<element name="EventTraceCount" type="long"></element>
+</schema>

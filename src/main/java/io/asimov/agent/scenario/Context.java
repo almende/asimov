@@ -1,6 +1,6 @@
 package io.asimov.agent.scenario;
 
-import io.asimov.agent.resource.Resource;
+import io.asimov.model.Resource;
 import io.coala.resource.ResourceType;
 
 import java.util.Set;

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="unqualified" attributeFormDefault="unqualified"
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	xmlns:a4eebpm="http://io.asimov.almende.org/2015/schema/bpm/"
+	xmlns:a4eecim="http://io.asimov.almende.org/2015/schema/cim/"
+	xmlns:a4eeevent="http://io.asimov.almende.org/2015/schema/event/"
+	xmlns:a4eeunit="http://io.asimov.almende.org/2015/schema/unit/"
+	>
+
+	<xs:import namespace="http://io.asimov.almende.org/2015/schema/bpm/"
+		schemaLocation="asimovBPM.xsd" />
+		
+	<xs:import namespace="http://io.asimov.almende.org/2015/schema/unit/"
+		schemaLocation="asimovUnits.xsd" />
+
+	<xs:import namespace="http://io.asimov.almende.org/2015/schema/cim/"
+		schemaLocation="asimovCIM.xsd" />
+
+	<xs:import namespace="http://io.asimov.almende.org/2015/schema/event/"
+		schemaLocation="asimovEvent.xsd" />
+
+</xs:schema>

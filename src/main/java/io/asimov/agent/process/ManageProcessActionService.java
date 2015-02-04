@@ -1,6 +1,6 @@
 package io.asimov.agent.process;
 
-import io.asimov.agent.resource.ActivityParticipation;
+import io.asimov.model.ActivityParticipation;
 import io.coala.capability.CapabilityFactory;
 import io.coala.enterprise.role.Executor;
 

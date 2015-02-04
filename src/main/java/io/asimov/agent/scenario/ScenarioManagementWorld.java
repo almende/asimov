@@ -1,9 +1,9 @@
 package io.asimov.agent.scenario;
 
 import io.arum.model.ARUMOrganizationWorld;
-import io.asimov.agent.resource.AssemblyLine;
-import io.asimov.agent.resource.Material;
-import io.asimov.agent.resource.Person;
+import io.arum.model.resource.assemblyline.AssemblyLine;
+import io.arum.model.resource.person.Person;
+import io.arum.model.resource.supply.Material;
 import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;

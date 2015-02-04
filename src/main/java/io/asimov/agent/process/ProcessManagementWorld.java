@@ -1,7 +1,7 @@
 package io.asimov.agent.process;
 
 import io.arum.model.ARUMOrganizationWorld;
-import io.asimov.agent.resource.Material;
+import io.arum.model.resource.supply.Material;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.capability.embody.Percept;

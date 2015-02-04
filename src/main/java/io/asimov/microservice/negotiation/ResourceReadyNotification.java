@@ -1,9 +1,9 @@
 package io.asimov.microservice.negotiation;
 
-import io.asimov.agent.resource.ActivityParticipation;
-import io.asimov.agent.resource.ActivityParticipation.ActivityParticipant;
-import io.asimov.agent.resource.ActivityParticipationResourceInformation;
-import io.asimov.agent.resource.RouteInitiator;
+import io.asimov.model.ActivityParticipation;
+import io.asimov.model.ActivityParticipationResourceInformation;
+import io.asimov.model.RouteInitiator;
+import io.asimov.model.ActivityParticipation.ActivityParticipant;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.enterprise.fact.AbstractCoordinationFact;
@@ -15,6 +15,7 @@ import io.coala.enterprise.role.Initiator;
 import io.coala.model.ModelComponentID;
 import io.coala.time.SimTime;
 import io.coala.enterprise.role.Executor;
+
 import java.util.List;
 
 /**

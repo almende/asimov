@@ -1,6 +1,6 @@
 package io.asimov.agent.scenario;
 
-import io.asimov.agent.resource.AbstractEntity;
+import io.asimov.model.AbstractEntity;
 import io.coala.log.LogUtil;
 import io.coala.time.TimeUnit;
 
