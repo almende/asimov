@@ -39,8 +39,6 @@ public class ScenarioAgentGui extends JFrame
 	/** */
 	private static final long serialVersionUID = -5631971473763466432L;
 	
-	private static File plannerDataOutputFile = new File(
-			"src/test/resources/resource-planner-vis/schedule.json");
 
 	/** */
 	private final Binder binder;

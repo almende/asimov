@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -527,34 +526,6 @@ public class GraphUtil implements Util
 	}
 
 
-	// public List<Node> getAllActivityNodes()
-	// {
-	// return new ArrayList<Node>(termNodeMapping.values());
-	// }
-
-	private List<Node> getAllResourceNodes()
-	{
-		return new ArrayList<Node>(resourceNodeMapping.values());
-	}
-
-
-	/*
-	 * Helper method to switch from method of processNamed derivement
-	 */
-	private static String deriveProcessId(Node n)
-	{
-		return n.getProperty("processName").toString();
-	}
-
-	/*
-	 * Helper method to switch from method of processNamed derivement
-	 */
-	private static String deriveActivityId(Node n)
-	{
-		return getInstance().getNameForActivityId(
-				n.getProperty("activityName").toString());
-	}
-
 	boolean hasLoop(final List<Set<String>> list)
 	{
 
@@ -621,31 +592,4 @@ public class GraphUtil implements Util
 	}
 
 	
-	private Set<String> connectedNodes = new HashSet<String>();
-	private Set<String> unConnectedNodes = new HashSet<String>();
-
-	private boolean isConnected(Node prevCandidate, Node currentCandidate)
-	{
-		if (connectedNodes.contains(prevCandidate.getId() + "_"
-				+ currentCandidate.getId()))
-			return true;
-		else if (unConnectedNodes.contains(prevCandidate.getId() + "_"
-				+ currentCandidate.getId()))
-			return false;
-
-		Iterable<Path> paths = GraphUtil.getInstance().processPathTraverser
-				.evaluator(Evaluators.includingDepths(1, this.pMaxSize))
-				.evaluator(Evaluators.includeWhereEndNodeIs(currentCandidate))
-				.traverse(prevCandidate);
-		if (paths != null && paths.iterator().hasNext())
-		{
-			connectedNodes.add(prevCandidate.getId() + "_"
-					+ currentCandidate.getId());
-			return true;
-		}
-		unConnectedNodes.add(prevCandidate.getId() + "_"
-				+ currentCandidate.getId());
-		return false;
-	}
-
 }

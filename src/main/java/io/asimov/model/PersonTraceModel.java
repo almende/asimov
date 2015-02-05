@@ -21,17 +21,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.xml.bind.JAXBException;
 
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
-import nl.tudelft.simulation.jstats.distributions.DistContinuous;
-import nl.tudelft.simulation.jstats.distributions.DistTriangular;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTimeZone;
-import org.joda.time.Duration;
 
 /**
  * {@link PersonTraceModel}
@@ -77,12 +73,6 @@ public class PersonTraceModel extends
 	private final TTrainedTemplate simParams;
 
 
-	/** internal assumptions regarding emissions */
-	private DistContinuous emissionKgCO2PerKWhDist = null;
-
-	/** */
-	private final Duration emissionUpdateRepeat = Duration.standardHours(3);
-
 	/** */
 	private boolean initialized = false;
 
@@ -92,8 +82,6 @@ public class PersonTraceModel extends
 	/** */
 	private final List<PersonTraceEventListener> occEventListeners = new ArrayList<PersonTraceEventListener>();
 
-	/** */
-	private final Map<String, String> materialTypes = new TreeMap<>();
 
 	/**
 	 * @throws Exception
@@ -180,15 +168,6 @@ public class PersonTraceModel extends
 
 		LOG.trace("Initializing model...");
 
-		this.emissionKgCO2PerKWhDist = new DistTriangular(getRNG(), 1.66, 5.0,
-				8.33);
-
-	
-
-		// initiate emission rate update cycle
-		getSimulator().scheduleEvent(getSimTime().doubleValue(), this, this,
-				UPDATE_EMISSION_RATE_METHOD_ID, NO_ARGS);
-
 
 		this.initialized = true;
 
@@ -247,7 +226,7 @@ public class PersonTraceModel extends
 		return groupID;
 	}
 
-	private RoleTemplate getRoleTemplate(final String groupID) {
+	public RoleTemplate getRoleTemplate(final String groupID) {
 		final Set<String> roleNames = new HashSet<>();
 		final String roleName = roleIDMapping(groupID);
 		if (!roleName.equals(groupID))

@@ -32,7 +32,7 @@ public class Replication extends AbstractEntity<Replication>
 	private static final long serialVersionUID = 1L;
 
 	protected String id;
-	protected String projectId;
+	protected String useCaseUri;
 	protected String contextUri = null;
 	protected Number startDate = 0;
 	protected Number durationMS;
@@ -57,14 +57,14 @@ public class Replication extends AbstractEntity<Replication>
 		this.id = id;
 	}
 
-	public String getProjectId()
+	public String getUseCaseUri()
 	{
-		return projectId;
+		return useCaseUri;
 	}
 
-	public void setProjectId(String projectId)
+	public void setUseCaseUri(String useCaseUri)
 	{
-		this.projectId = projectId;
+		this.useCaseUri = useCaseUri;
 	}
 
 	public String getContextUri()
@@ -195,7 +195,7 @@ public class Replication extends AbstractEntity<Replication>
 	{
 		super();
 		this.id = builder.id;
-		this.projectId = builder.projectId;
+		this.useCaseUri = builder.projectId;
 		this.contextUri = builder.contextUri;
 		this.startDate = builder.startDate;
 		this.durationMS = builder.durationMS;

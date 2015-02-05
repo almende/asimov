@@ -34,11 +34,25 @@ enum EventStatus implements
 
 	;
 
-	private String term;
+	private String status;
 
-	private EventStatus(final String jsaTerm)
+	private EventStatus(final String status)
 	{
-		this.term = jsaTerm;
+		this.setStatus(status);
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	private void setStatus(String status) {
+		this.status = status;
 	}
 
 	/** @see XMLConvertible#toXML() */

@@ -3,7 +3,6 @@ package io.arum.model.events;
 import io.arum.model.resource.person.Person;
 import io.asimov.model.XMLConvertible;
 import io.asimov.xml.TEventTrace.EventRecord;
-import io.coala.jsa.sl.SLConvertible;
 import io.coala.time.SimTime;
 
 /**

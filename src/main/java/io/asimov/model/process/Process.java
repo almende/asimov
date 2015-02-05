@@ -857,7 +857,7 @@ public class Process extends AbstractEntity<Process> implements
 		return this;
 	}
 
-	private static Double deNormalizeFactorForDistribution(
+	public static Double deNormalizeFactorForDistribution(
 			final ArrayList<Double> denormalizedValues)
 	{
 		return deNormalizeFactorForDistribution(denormalizedValues, 1);

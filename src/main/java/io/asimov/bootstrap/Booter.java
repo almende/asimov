@@ -46,16 +46,12 @@ public class Booter
 		// LOG.error("Missing argument, expected a replication id as argument but got none.");
 		// System.exit(1);
 		final String replicationID = binder.getID().getModelID().getValue();
-		final String projectID = "defaultProj";
-		final String calibID = "defaultCalib";
 
 		final Datasource ds = binder.inject(Datasource.class);
 		ds.removeReplication();
-		ds.removeProject(projectID);
-		ds.removeCalibration(calibID);
 
 		final String basePath = System.getProperty("user.dir") + "/default/"; // src/test/resources/
-		final String cimUri = new File(basePath + "arum_scenario.xml").toURI()
+		final String usecaseUri = new File(basePath + "arum_scenario.xml").toURI()
 				.toASCIIString();
 		final String contextUri = new File(basePath + "arum_context.xml")
 				.toURI().toASCIIString();
@@ -68,8 +64,7 @@ public class Booter
 		final Replication replication = new Replication()
 				.withName(replicationID);
 		replication.setId(replicationID);
-		replication.setProjectId(projectID);
-		replication.setCalibrationId(calibID);
+		replication.setUseCaseUri(usecaseUri);
 		replication.setContextUri(contextUri);
 		replication.setStartDate(startDate);
 		replication.setDurationMS(durationMS);
@@ -100,7 +95,7 @@ public class Booter
 					:
 						BinderFactory.Builder.fromFile(configFileName).build()
 						.create("_booter_");
-
+						
 		if (args.length == 0)
 		{
 			LOG.warn("Did not receive replication ID seting up default.");
