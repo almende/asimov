@@ -1,6 +1,6 @@
 package io.asimov.agent.gui;
 
-import io.asimov.messaging.ARUMMessage;
+import io.asimov.messaging.ASIMOVMessage;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.admin.DestroyingCapability;
@@ -655,7 +655,7 @@ public class SemanticAgentGui extends JFrame
 		else if (permormative.toLowerCase().equals("cfp")) {perf = ACLMessage.CFP;}
 		*/
 		// FIXME Add performative
-		ARUMMessage msg = new ARUMMessage((SimTime) binder.inject(
+		ASIMOVMessage msg = new ASIMOVMessage((SimTime) binder.inject(
 				TimingCapability.class).getTime(), binder.getID(), new AgentID(
 				binder.getID().getModelID(), receiver), content);
 		// msg.setLanguage("fipa-sl");

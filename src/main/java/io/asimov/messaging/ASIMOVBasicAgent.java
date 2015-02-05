@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import rx.functions.Action1;
 
 /**
- * {@link ARUMBasicAgent}
+ * {@link ASIMOVBasicAgent}
  * 
  * @date $Date: 2014-09-01 11:53:05 +0200 (ma, 01 sep 2014) $
  * @version $Revision: 1048 $
@@ -26,7 +26,7 @@ import rx.functions.Action1;
  * 
  * @param <THIS>
  */
-public abstract class ARUMBasicAgent extends BasicAgent implements ModelComponent<AgentID>
+public abstract class ASIMOVBasicAgent extends BasicAgent implements ModelComponent<AgentID>
 {
 
 	// sub-types: resource (equipment, room, occupant, etc.)
@@ -38,7 +38,7 @@ public abstract class ARUMBasicAgent extends BasicAgent implements ModelComponen
 	private Logger LOG;
 
 	@Inject
-	protected ARUMBasicAgent(final Binder binder)
+	protected ASIMOVBasicAgent(final Binder binder)
 	{
 		super(binder);
 	}
@@ -48,12 +48,12 @@ public abstract class ARUMBasicAgent extends BasicAgent implements ModelComponen
 	{
 		if (LOG == null)
 		{
-			LOG = LogUtil.getLogger(ARUMBasicAgent.class, this);
+			LOG = LogUtil.getLogger(ASIMOVBasicAgent.class, this);
 
 			new NullPointerException("LOG was not injected??")
 					.printStackTrace();
 		}
-		LOG.info("ARUMAgent is initializing.");
+		LOG.info("ASIMOVAgent is initializing.");
 
 		getBinder().inject(ReceivingCapability.class).getIncoming()
 				.subscribe(new Action1<Message<?>>()
@@ -85,7 +85,7 @@ public abstract class ARUMBasicAgent extends BasicAgent implements ModelComponen
 	public void finish()
 	{
 		if (LOG != null)
-			LOG.info("ARUMAgent is finalizing.");
+			LOG.info("ASIMOVAgent is finalizing.");
 	}
 
 	/** @see ModelComponent#getOwnerID() */

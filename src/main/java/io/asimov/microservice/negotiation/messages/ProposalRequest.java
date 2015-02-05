@@ -1,6 +1,6 @@
 package io.asimov.microservice.negotiation.messages;
 
-import io.asimov.messaging.ARUMMessageID;
+import io.asimov.messaging.ASIMOVMessageID;
 import io.coala.agent.AgentID;
 import io.coala.json.JSONConvertible;
 import io.coala.json.JsonUtil;
@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  *
  */
-public class ProposalRequest extends AbstractMessage<ARUMMessageID> implements
+public class ProposalRequest extends AbstractMessage<ASIMOVMessageID> implements
 		Serializable, JSONConvertible<ProposalRequest>
 {
 	/** */
@@ -42,7 +42,7 @@ public class ProposalRequest extends AbstractMessage<ARUMMessageID> implements
 	public ProposalRequest(final SimTime time, final AgentID senderID,
 			final AgentID receiverID)
 	{
-		super(new ARUMMessageID(senderID.getModelID(), time), senderID
+		super(new ASIMOVMessageID(senderID.getModelID(), time), senderID
 				.getModelID(), senderID, receiverID);
 	}
 
