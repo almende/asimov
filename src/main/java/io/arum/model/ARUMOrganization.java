@@ -1,6 +1,6 @@
 package io.arum.model;
 
-import io.asimov.messaging.A4EEMessage;
+import io.asimov.messaging.ARUMMessage;
 import io.coala.agent.AgentID;
 import io.coala.agent.BasicAgent;
 import io.coala.bind.Binder;
@@ -131,8 +131,8 @@ public class ARUMOrganization<W extends ARUMOrganizationWorld> extends
 			}
 		});
 
-		getReceiver().getIncoming().ofType(A4EEMessage.class)
-				.subscribe(new Observer<A4EEMessage>()
+		getReceiver().getIncoming().ofType(ARUMMessage.class)
+				.subscribe(new Observer<ARUMMessage>()
 				{
 
 					@Override
@@ -148,7 +148,7 @@ public class ARUMOrganization<W extends ARUMOrganizationWorld> extends
 					}
 
 					@Override
-					public void onNext(final A4EEMessage msg)
+					public void onNext(final ARUMMessage msg)
 					{
 						final ReasoningCapability reasoner = getBinder()
 								.inject(ReasoningCapability.class);

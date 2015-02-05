@@ -1,6 +1,6 @@
 package io.asimov.microservice.negotiation.messages;
 
-import io.asimov.messaging.A4EEMessageID;
+import io.asimov.messaging.ARUMMessageID;
 import io.coala.agent.AgentID;
 import io.coala.json.JSONConvertible;
 import io.coala.json.JsonUtil;
@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @version $Revision: 1049 $
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  */
-public class AvailabilityReply extends AbstractMessage<A4EEMessageID> implements
+public class AvailabilityReply extends AbstractMessage<ARUMMessageID> implements
 		Serializable, JSONConvertible<AvailabilityReply>
 {
 	/** */
@@ -34,7 +34,7 @@ public class AvailabilityReply extends AbstractMessage<A4EEMessageID> implements
 
 	public boolean available;
 	public Serializable requirements;
-	public A4EEMessageID replyToId;
+	public ARUMMessageID replyToId;
 
 	protected AvailabilityReply()
 	{
@@ -111,7 +111,7 @@ public class AvailabilityReply extends AbstractMessage<A4EEMessageID> implements
 		return JsonUtil.fromJSONString(jsonValue, AvailabilityReply.class);
 	}
 
-	public A4EEMessageID getReplyToId()
+	public ARUMMessageID getReplyToId()
 	{
 		return this.replyToId;
 	}

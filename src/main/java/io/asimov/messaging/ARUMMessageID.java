@@ -5,13 +5,13 @@ import io.coala.model.ModelID;
 import io.coala.time.SimTime;
 
 /**
- * {@link A4EEMessageID}
+ * {@link ARUMMessageID}
  * 
  * @version $Revision: 1048 $
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  * 
  */
-public class A4EEMessageID extends MessageID<Long, SimTime>
+public class ARUMMessageID extends MessageID<Long, SimTime>
 {
 
 	/** */
@@ -24,18 +24,18 @@ public class A4EEMessageID extends MessageID<Long, SimTime>
 		return msgID;
 	}
 
-	protected A4EEMessageID()
+	protected ARUMMessageID()
 	{
 
 	}
 
 	/**
-	 * {@link A4EEMessageID} constructor
+	 * {@link ARUMMessageID} constructor
 	 * 
 	 * @param modelID
 	 * @param instant
 	 */
-	public A4EEMessageID(final ModelID modelID, final SimTime instant)
+	public ARUMMessageID(final ModelID modelID, final SimTime instant)
 	{
 		super(modelID, getNextCounterValue(), instant);
 	}

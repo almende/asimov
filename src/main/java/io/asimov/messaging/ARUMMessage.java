@@ -7,36 +7,36 @@ import io.coala.time.SimTime;
 import java.io.Serializable;
 
 /**
- * {@link A4EEMessage}
+ * {@link ARUMMessage}
  * 
  * @version $Revision: 1048 $
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  * 
  */
-public class A4EEMessage extends AbstractMessage<A4EEMessageID>
+public class ARUMMessage extends AbstractMessage<ARUMMessageID>
 {
 	/** */
 	private static final long serialVersionUID = 1L;
 
 	public Serializable content = null;
 
-	protected A4EEMessage()
+	protected ARUMMessage()
 	{
 
 	}
 
 	/**
-	 * {@link A4EEMessage} constructor
+	 * {@link ARUMMessage} constructor
 	 * 
 	 * @param time
 	 * @param senderID
 	 * @param receiverID
 	 * @param content
 	 */
-	public A4EEMessage(final SimTime time, final AgentID senderID,
+	public ARUMMessage(final SimTime time, final AgentID senderID,
 			final AgentID receiverID, final Serializable content)
 	{
-		super(new A4EEMessageID(senderID.getModelID(), time), senderID
+		super(new ARUMMessageID(senderID.getModelID(), time), senderID
 				.getModelID(), senderID, receiverID);
 		this.content = content;
 	}

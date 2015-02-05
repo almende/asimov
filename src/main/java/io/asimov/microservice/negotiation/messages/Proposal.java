@@ -1,6 +1,6 @@
 package io.asimov.microservice.negotiation.messages;
 
-import io.asimov.messaging.A4EEMessageID;
+import io.asimov.messaging.ARUMMessageID;
 import io.coala.agent.AgentID;
 import io.coala.json.JSONConvertible;
 import io.coala.json.JsonUtil;
@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  *
  */
-public class Proposal extends AbstractMessage<A4EEMessageID> implements
+public class Proposal extends AbstractMessage<ARUMMessageID> implements
 		Serializable, JSONConvertible<Proposal>
 {
 	/** */
@@ -30,7 +30,7 @@ public class Proposal extends AbstractMessage<A4EEMessageID> implements
 
 	private static final Logger LOG = LogUtil.getLogger(Proposal.class);
 
-	private A4EEMessageID replyToId;
+	private ARUMMessageID replyToId;
 
 	private double score;
 
@@ -65,7 +65,7 @@ public class Proposal extends AbstractMessage<A4EEMessageID> implements
 	/**
 	 * @return the id
 	 */
-	public A4EEMessageID getReplyToId()
+	public ARUMMessageID getReplyToId()
 	{
 		return replyToId;
 	}

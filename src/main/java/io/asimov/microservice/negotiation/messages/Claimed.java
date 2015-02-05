@@ -1,6 +1,6 @@
 package io.asimov.microservice.negotiation.messages;
 
-import io.asimov.messaging.A4EEMessageID;
+import io.asimov.messaging.ARUMMessageID;
 import io.coala.agent.AgentID;
 import io.coala.json.JSONConvertible;
 import io.coala.json.JsonUtil;
@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class Claimed extends AbstractMessage<A4EEMessageID> implements
+public class Claimed extends AbstractMessage<ARUMMessageID> implements
 		Serializable, JSONConvertible<Claimed>
 {
 	/** */
@@ -25,7 +25,7 @@ public class Claimed extends AbstractMessage<A4EEMessageID> implements
 
 	public boolean available;
 
-	private A4EEMessageID replyToId;
+	private ARUMMessageID replyToId;
 
 	protected Claimed()
 	{
@@ -58,7 +58,7 @@ public class Claimed extends AbstractMessage<A4EEMessageID> implements
 	/**
 	 * @return the id
 	 */
-	public A4EEMessageID getReplyToId()
+	public ARUMMessageID getReplyToId()
 	{
 		return replyToId;
 	}
