@@ -1,6 +1,7 @@
 package io.asimov.bootstrap;
 
 import io.asimov.agent.scenario.Replication;
+import io.asimov.agent.scenario.ScenarioManagementOrganization;
 import io.asimov.agent.scenario.SimStatus;
 import io.asimov.db.Datasource;
 import io.coala.agent.AgentStatusObserver;

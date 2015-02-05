@@ -7,14 +7,15 @@ import io.arum.model.resource.person.Person;
 import io.arum.model.resource.supply.Material;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.model.events.ActivityEvent;
+import io.asimov.model.events.Event;
+import io.asimov.model.events.EventType;
+import io.asimov.model.process.Process;
 import io.coala.capability.BasicCapabilityStatus;
 import io.coala.capability.Capability;
 import io.coala.capability.CapabilityFactory;
-import io.coala.event.Event;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.eclipse.persistence.jpa.jpql.tools.model.IListChangeEvent.EventType;
 import org.eclipse.persistence.sessions.Project;
 
 /**
