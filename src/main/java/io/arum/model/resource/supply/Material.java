@@ -1,10 +1,13 @@
 package io.arum.model.resource.supply;
 
+import java.util.ArrayList;
+
 import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.Body;
 import io.asimov.model.ResourceType;
 import io.asimov.model.XMLConvertible;
+import io.asimov.xml.TComponent;
 
 import javax.persistence.Basic;
 import javax.persistence.Embedded;
@@ -32,8 +35,8 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 
 	/** */
 	@Embedded
-	@Field(name = "type")
-	private SupplyType type;
+	@Field(name = "types")
+	private ArrayList<SupplyType> types;
 
 	/** */
 	@Basic
@@ -49,25 +52,25 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	private AssemblyLine inRoom;
 
 	/** @param type the {@link SupplyType} to set */
-	protected void setType(final SupplyType type)
+	protected void setTypes(final ArrayList<SupplyType> types)
 	{
-		this.type = type;
+		this.types = types;
 	}
 
 	/**
 	 * @param name the (new) {@link SupplyType}
 	 * @return this {@link Material} object
 	 */
-	public Material withType(final SupplyType type)
+	public Material withTypes(final ArrayList<SupplyType> types)
 	{
-		setType(type);
+		setTypes(types);
 		return this;
 	}
 
 	/** @return the type */
-	public SupplyType getType()
+	public ArrayList<SupplyType> getTypes()
 	{
-		return this.type;
+		return this.types;
 	}
 
 	/**
@@ -137,7 +140,12 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	@Override
 	public Object toXML()
 	{
-		return new io.asimov.xml.TContext.Material().withComponentId(getName()).withComponentRef(getType().getName());
+		io.asimov.xml.TContext.Material m = new io.asimov.xml.TContext.Material().withMaterialId(getName());
+		for (SupplyType t : getTypes()) {
+			TComponent component = new TComponent().withType(t.getName());
+			m.withComponent(component);
+		}
+		return m;
 	}
 
 	/** @see XMLConvertible#fromXML(Object) */
@@ -146,8 +154,12 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	{
 		if (xmlBean instanceof io.asimov.xml.TContext.Material) {
 			io.asimov.xml.TContext.Material m = (io.asimov.xml.TContext.Material)xmlBean;
-			withName(m.getComponentId());
-			withType(new SupplyType().withName(m.getComponentRef()));
+			withName(m.getMaterialId());
+			ArrayList<SupplyType> types = new ArrayList<SupplyType>();
+			for (TComponent c : m.getComponent()) {
+				types.add(new SupplyType().withName(c.getType()));
+			}
+			withTypes(types);
 			return this;
 		} else {
 			throw new IllegalStateException("Expected xmlBean to be an instanceof io.asimov.xml.TContext.Material");

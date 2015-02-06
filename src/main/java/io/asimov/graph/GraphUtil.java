@@ -4,7 +4,7 @@ import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
 import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
-import io.asimov.xml.TSkeletonActivityType.UsedMaterial;
+import io.asimov.xml.TSkeletonActivityType.UsedComponent;
 import io.coala.log.LogUtil;
 import io.coala.util.Util;
 
@@ -327,11 +327,11 @@ public class GraphUtil implements Util
 					roleNode);
 		}
 
-		for (UsedMaterial material : bodyActivity.getUsedMaterial())
+		for (UsedComponent material : bodyActivity.getUsedComponent())
 		{
 			boolean alreadyConnected = false;
 			Node materialNode = retainNodeForResource(material
-					.getMaterialTypeRef().toString());
+					.getComponentRef().toString());
 			for (Relationship rel : materialNode
 					.getRelationships(ConnectionTypes.HAS_RESOURCE))
 			{

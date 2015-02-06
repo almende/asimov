@@ -23,27 +23,27 @@
 	
 	<complexType name="tContext">
 		<sequence>
-			<element name="material" maxOccurs="unbounded" minOccurs="0">
+			<element name="material" maxOccurs="unbounded" minOccurs="1">
 				<complexType>
 					<sequence>
-						<element name="componentId" type="string"></element>
-						<element name="componentRef" type="string"></element>
+						<element name="materialId" type="string"></element>
+						<element name="component" type="asimovcim:tComponent" maxOccurs="unbounded" minOccurs="1"></element>
 					</sequence>
 				</complexType>
 			</element>
-			<element name="person" maxOccurs="unbounded" minOccurs="0">
+			<element name="person" maxOccurs="unbounded" minOccurs="1">
 				<complexType>
 					<sequence>
 						<element name="personId" type="string"></element>
-						<element name="roleRef" type="string"></element>
+						<element name="role" type="asimovbpm:tRole" maxOccurs="unbounded" minOccurs="1"></element>
 					</sequence>
 				</complexType>
 			</element>
-			<element name="assemblyLine" maxOccurs="unbounded" minOccurs="0">
+			<element name="assemblyLine" maxOccurs="unbounded" minOccurs="1">
 				<complexType>
 					<sequence>
 						<element name="assemblyLineId" type="string"></element>
-						<element name="assemblyLineTypeRef" type="string"></element>
+						<element name="assemblyLineType" type="asimovcim:tAssemblyLineType" maxOccurs="unbounded" minOccurs="1"></element>
 					</sequence>
 				</complexType>
 			</element>
@@ -52,70 +52,20 @@
 	
 	<complexType name="tComponent">
 		<sequence>
-		<element name="component" maxOccurs="unbounded" minOccurs="0">
-				<complexType>
-					<sequence>
-						<element name="amount" type="int"></element>
-						<element name="type" type="string"></element>
-					</sequence>
-				</complexType>
-		</element>
+			<element name="amount" type="int"></element>
+			<element name="type" type="string"></element>
+		</sequence>
+	</complexType>
+	<complexType name="tAssemblyLineType">	
+		<sequence>
+			<element name="amount" type="int"></element>
+			<element name="type" type="string"></element>
 		</sequence>
 	</complexType>
 	<complexType name="tUseCase">
 		<sequence>
 			<element name="id" type="string" maxOccurs="1" minOccurs="1"></element>
-			<element name="roleTemplate" maxOccurs="unbounded" minOccurs="0">
-				<annotation>
-					<documentation>
-						For every role the average values of some parameters
-						are provided.
-					</documentation>
-				</annotation>
-				<complexType>
-					<sequence>
-						<element name="roleRef" type="string"></element>
-					</sequence>
-				</complexType>
-			</element>
-			<element name="componentTemplate" maxOccurs="unbounded"
-				minOccurs="0">
-				<annotation>
-					<documentation>
-						For every component, average values are
-						provided
-					</documentation>
-				</annotation>
-				<complexType>
-					<sequence>
-						<element name="tComponent" minOccurs="0" maxOccurs="unbounded"></element>
-					</sequence>
-				</complexType>
-			</element>
-			<element name="assemblyLineTemplate" maxOccurs="unbounded"
-				minOccurs="0">
-				<annotation>
-					<documentation>
-						For every space, average values are provided
-					</documentation>
-				</annotation>
-				<complexType>
-					<sequence>
-						<element name="assemblyLineTypeRef" type="string"
-							maxOccurs="1" minOccurs="0"></element>
-						<element name="tComponent" maxOccurs="unbounded" minOccurs="0">
-							<complexType>
-								<sequence>
-									<element name="occupantRole" type="asimovbpm:tRole"
-										minOccurs="0" maxOccurs="1" />
-								</sequence>
-							</complexType>
-						</element>
-					</sequence>
-				</complexType>
-			</element>
-			<element name="activity" type="asimovbpm:tSkeletonActivityType"
-				maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="context" type="asimovcim:tContext" maxOccurs="1" minOccurs="1"></element>
 			<element name="process" type="asimovbpm:tProcessType"
 				maxOccurs="unbounded" minOccurs="0"></element>
 			<element name="processTemplate" type="asimovunit:tDistribution" maxOccurs="unbounded" minOccurs="0"></element>
@@ -154,9 +104,6 @@
 			<sequence>
 				<element name="id" type="string" maxOccurs="1" minOccurs="1">
 				</element>
-				<element name="trainingParameters" type="asimovcim:tUseCase"
-					maxOccurs="unbounded" minOccurs="1">
-				</element>
 				<element name="simulations" maxOccurs="1" minOccurs="1">
 					<complexType>
 						<sequence>
@@ -168,17 +115,13 @@
 										<element name="id" type="string" maxOccurs="1"
 											minOccurs="1">
 										</element>
-										<element name="context" type="asimovcim:tContext" maxOccurs="1"
+										<element name="usecase" type="asimovcim:tUseCase" maxOccurs="1"
 											minOccurs="1">
 										</element>
 
 										<element name="simulationResult"
 											type="asimovevent:tAgentBasedSimulationModuleOutput" maxOccurs="1"
 											minOccurs="1">
-										</element>
-
-										<element name="trainingParametersRef" type="string"
-											maxOccurs="1" minOccurs="0">
 										</element>
 
                     <element name="roles" maxOccurs="1" minOccurs="1">

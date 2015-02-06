@@ -7,9 +7,9 @@ import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.EventType;
 import io.asimov.xml.SimulationFile.Simulations.SimulationCase;
 import io.asimov.xml.SimulationFile.Simulations.SimulationCase.Roles;
+import io.asimov.xml.TContext.Person;
 import io.asimov.xml.TRole;
 import io.asimov.xml.TUseCase;
-import io.asimov.xml.TUseCase.RoleTemplate;
 import io.coala.dsol.util.AbstractDsolModel;
 import io.coala.dsol.util.DsolModel;
 import io.coala.log.LogUtil;
@@ -208,43 +208,7 @@ public class PersonTraceModel extends
 	}
 
 
-	private String roleIDMapping(final String groupID) {
-		// [Project Manager, Junior Financial Assistant, Controller, Unknown,
-		// Solution Designer, Trainee, Financial Assistant, Innovation Director,
-		// Financail Director, Accountant]
-
-		if (groupID.equals("Board Member"))
-			return "Financial Assistant";
-		if (groupID.equals("Procurement Specialist"))
-			return "Solution Designer";
-		if (groupID.equals("Treasury Controller"))
-			return "Controller";
-		if (groupID.equals("ISA Employee"))
-			return "Unknown";
-		if (groupID.equals("Director"))
-			return "Financail Director"; // or "Innovation Director" ?
-		return groupID;
-	}
-
-	public RoleTemplate getRoleTemplate(final String groupID) {
-		final Set<String> roleNames = new HashSet<>();
-		final String roleName = roleIDMapping(groupID);
-		if (!roleName.equals(groupID))
-			LOG.warn("Applied group name mapping: " + groupID + " -> "
-					+ roleName);
-		for (TRole role : this.roles.getRole()) {
-			if (role.getRoleName().equalsIgnoreCase(roleName))
-				for (RoleTemplate roleTpl : this.simParams.getRoleTemplate())
-					if (roleTpl.getRoleRef().equalsIgnoreCase(role.getId()))
-						return roleTpl;
-			roleNames.add(role.getRoleName());
-		}
-		throw new NullPointerException(
-				"Role template not defined in simulation training params: "
-						+ groupID + " (" + roleName + "), mismatched: "
-						+ roleNames);
-	}
-
+	
 	/**
 	 * @return
 	 * @throws JAXBException
@@ -253,11 +217,11 @@ public class PersonTraceModel extends
 			final SimulationCase simCase, final TUseCase simParams)
 			throws Exception {
 		final Context context;
-		if (simCase.getContext() == null) {
+		if (simCase.getUsecase().getContext() == null) {
 			context = (Context) new ARUMContext().toXML();
-			simCase.setContext(context.toXML());
+			simCase.getUsecase().setContext(context.toXML());
 		} else
-			context = (Context) simCase.getContext();
+			context = (Context) simCase.getUsecase().getContext();
 
 		return new PersonTraceModel(replicationID, context,
 				simCase.getRoles(), simParams);

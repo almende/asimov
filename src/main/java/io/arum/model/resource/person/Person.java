@@ -1,11 +1,16 @@
 package io.arum.model.resource.person;
 
+import java.util.ArrayList;
+
 import io.arum.model.resource.assemblyline.AssemblyLine;
+import io.arum.model.resource.supply.Material;
 import io.arum.model.resource.supply.SupplyType;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.Body;
 import io.asimov.model.ResourceType;
 import io.asimov.model.XMLConvertible;
+import io.asimov.xml.TComponent;
+import io.asimov.xml.TRole;
 
 import javax.persistence.Basic;
 import javax.persistence.Embedded;
@@ -32,8 +37,8 @@ public class Person extends AbstractEmbodied<Person> implements ResourceType, XM
 
 	/** */
 	@Embedded
-	@Field(name = "type")
-	private PersonRole type;
+	@Field(name = "types")
+	private ArrayList<PersonRole> types;
 
 	/** */
 	@Basic
@@ -49,25 +54,25 @@ public class Person extends AbstractEmbodied<Person> implements ResourceType, XM
 	private AssemblyLine atAssemblyLine;
 
 	/** @param type the {@link PersonRole} to set */
-	protected void setType(final PersonRole type)
+	protected void setTypes(final ArrayList<PersonRole> types)
 	{
-		this.type = type;
+		this.types = types;
 	}
 
 	/**
 	 * @param name the (new) {@link PersonRole}
 	 * @return this {@link Person} object
 	 */
-	public Person withType(final PersonRole type)
+	public Person withTypes(final ArrayList<PersonRole> types)
 	{
-		setType(type);
+		setTypes(types);
 		return this;
 	}
 
 	/** @return the type */
-	public PersonRole getType()
+	public ArrayList<PersonRole> getTypes()
 	{
-		return this.type;
+		return this.types;
 	}
 
 	/**
@@ -136,7 +141,12 @@ public class Person extends AbstractEmbodied<Person> implements ResourceType, XM
 	@Override
 	public Object toXML()
 	{
-		return new io.asimov.xml.TContext.Person().withPersonId(getName()).withRoleRef(getType().getName());
+		io.asimov.xml.TContext.Person p = new io.asimov.xml.TContext.Person().withPersonId(getName());
+		for (PersonRole t : getTypes()) {
+			TRole role = new TRole().withRoleName(t.getName()).withId(t.getName());
+			p.withRole(role);
+		}
+		return p;
 	}
 
 	/** @see XMLConvertible#fromXML(Object) */
@@ -144,14 +154,17 @@ public class Person extends AbstractEmbodied<Person> implements ResourceType, XM
 	public Person fromXML(final Object xmlBean)
 	{
 		if (xmlBean instanceof io.asimov.xml.TContext.Person) {
-			io.asimov.xml.TContext.Person m = (io.asimov.xml.TContext.Person)xmlBean;
-			withName(m.getPersonId());
-			withType(new PersonRole().withName(m.getRoleRef()));
+			io.asimov.xml.TContext.Person p = (io.asimov.xml.TContext.Person)xmlBean;
+			withName(p.getPersonId());
+			ArrayList<PersonRole> types = new ArrayList<PersonRole>();
+			for (TRole c : p.getRole()) {
+				types.add(new PersonRole().withName(c.getId()));
+			}
+			withTypes(types);
 			return this;
 		} else {
-			throw new IllegalStateException("Expected xmlBean to be an instanceof io.asimov.xml.TContext.Person");
+			throw new IllegalStateException("Expected xmlBean to be an instanceof io.asimov.xml.TContext.Material");
 		}
 	}
-
 
 }

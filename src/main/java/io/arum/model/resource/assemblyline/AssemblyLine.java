@@ -4,6 +4,9 @@ import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.Body;
 import io.asimov.model.ResourceType;
 import io.asimov.model.XMLConvertible;
+import io.asimov.xml.TAssemblyLineType;
+
+import java.util.ArrayList;
 
 import javax.persistence.Basic;
 import javax.persistence.Embedded;
@@ -30,8 +33,8 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 
 	/** */
 	@Embedded
-	@Field(name = "type")
-	private AssemblyLineType type;
+	@Field(name = "types")
+	private ArrayList<AssemblyLineType> types;
 
 	/** */
 	@Basic
@@ -47,25 +50,25 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 	private AssemblyLine inRoom;
 
 	/** @param type the {@link AssbemblyLineType} to set */
-	protected void setType(final AssemblyLineType type)
+	protected void setTypes(final ArrayList<AssemblyLineType> types)
 	{
-		this.type = type;
+		this.types = types;
 	}
 
 	/**
 	 * @param name the (new) {@link AssbemblyLineType}
 	 * @return this {@link AssemblyLine} object
 	 */
-	public AssemblyLine withType(final AssemblyLineType type)
+	public AssemblyLine withTypes(final ArrayList<AssemblyLineType> types)
 	{
-		setType(type);
+		setTypes(types);
 		return this;
 	}
 
 	/** @return the type */
-	public AssemblyLineType getType()
+	public ArrayList<AssemblyLineType> getTypes()
 	{
-		return this.type;
+		return this.types;
 	}
 
 	/**
@@ -135,7 +138,12 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 	@Override
 	public Object toXML()
 	{
-		return new io.asimov.xml.TContext.AssemblyLine().withAssemblyLineId(getName()).withAssemblyLineTypeRef(getType().getName());
+		io.asimov.xml.TContext.AssemblyLine m = new io.asimov.xml.TContext.AssemblyLine().withAssemblyLineId(getName());
+		for (AssemblyLineType t : getTypes()) {
+			TAssemblyLineType component = new TAssemblyLineType().withType(t.getName());
+			m.withAssemblyLineType(component);
+		}
+		return m;
 	}
 
 	/** @see XMLConvertible#fromXML(Object) */
@@ -143,14 +151,16 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 	public AssemblyLine fromXML(final Object xmlBean)
 	{
 		if (xmlBean instanceof io.asimov.xml.TContext.AssemblyLine) {
-			io.asimov.xml.TContext.AssemblyLine al = (io.asimov.xml.TContext.AssemblyLine)
-						xmlBean;
-			withName(al.getAssemblyLineId());
-			withType(new AssemblyLineType().withName(al.getAssemblyLineTypeRef()));
+			io.asimov.xml.TContext.AssemblyLine m = (io.asimov.xml.TContext.AssemblyLine)xmlBean;
+			withName(m.getAssemblyLineId());
+			ArrayList<AssemblyLineType> types = new ArrayList<AssemblyLineType>();
+			for (TAssemblyLineType c : m.getAssemblyLineType()) {
+				types.add(new AssemblyLineType().withName(c.getType()));
+			}
+			withTypes(types);
 			return this;
-		} else
-		{
-			throw new IllegalStateException("Assembly line expects xml bean of type: io.asimov.xml.TContext.AssemblyLine");
+		} else {
+			throw new IllegalStateException("Expected xmlBean to be an instanceof io.asimov.xml.TContext.AssemblyLine");
 		}
 	}
 

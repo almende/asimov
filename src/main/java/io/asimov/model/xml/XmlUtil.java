@@ -13,7 +13,6 @@ import io.asimov.xml.TDistribution;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TRole;
 import io.asimov.xml.TUseCase;
-import io.asimov.xml.TUseCase.RoleTemplate;
 import io.coala.log.LogUtil;
 import io.coala.xml.XmlContextID;
 
@@ -231,17 +230,14 @@ public class XmlUtil extends io.coala.xml.XmlUtil
 	 */
 	public static void exportRoleDistribution(
 			final Collection<TProcessType> processes,
-			final Map<Person, RoleTemplate> roleDistribution,
 			final TUseCase template, final Roles roles)
 	{
 		template.getProcess().addAll(processes);
-		for (Entry<Person, RoleTemplate> entry : roleDistribution.entrySet())
+		for (io.asimov.xml.TContext.Person entry : template.getContext().getPerson())
 		{
-			final TRole role = new TRole();
-			role.setId(entry.getKey().getName());
-			role.setRoleName(entry.getValue().getRoleRef());
-			roles.getRole().add(role);
-			template.getRoleTemplate().add(entry.getValue());
+			for (TRole r : entry.getRole()) {
+				roles.getRole().add(r);
+			}
 		}
 	}
 

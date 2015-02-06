@@ -21,7 +21,7 @@ import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.NextActivityRef;
 import io.asimov.xml.TSkeletonActivityType.PreviousActivityRef;
 import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
-import io.asimov.xml.TSkeletonActivityType.UsedMaterial;
+import io.asimov.xml.TSkeletonActivityType.UsedComponent;
 import io.coala.log.LogUtil;
 import jade.semantics.lang.sl.grammar.ListOfTerm;
 import jade.semantics.lang.sl.grammar.Term;
@@ -544,15 +544,15 @@ public class Process extends AbstractEntity<Process> implements
 				}
 				if (resource.getResource().getTypeID().equals(Material.class))
 				{
-					UsedMaterial ue = new UsedMaterial();
-					activity.getUsedMaterial().add(ue);
+					UsedComponent ue = new UsedComponent();
+					activity.getUsedComponent().add(ue);
 					try
 					{
-						ue.setMaterialTypeRef(resource.getResource().getSubTypeID()
+						ue.setComponentRef(resource.getResource().getSubTypeID()
 												.getName());
 					} catch (IllegalArgumentException ia)
 					{
-						ue.setMaterialTypeRef(resource.getResource()
+						ue.setComponentRef(resource.getResource()
 										.getSubTypeID().getName());
 					}
 					ue.setTimeOfUse(XmlUtil.durationFromLong(resource
@@ -670,15 +670,15 @@ public class Process extends AbstractEntity<Process> implements
 						new AssemblyLineType().withName(usedAssemblyLine.toString()), t);
 				taskResources.add(usedAssemblyLine.toString());
 			}
-			for (UsedMaterial usedMaterial : skeletonActivityType
-					.getUsedMaterial())
+			for (UsedComponent usedMaterial : skeletonActivityType
+					.getUsedComponent())
 			{
 				Time t = new Time().withMillisecond(XmlUtil
 						.gDurationToLong(usedMaterial.getTimeOfUse()));
 				this.withResource(Material.class, new SupplyType()
-						.withName(usedMaterial.getMaterialTypeRef()
+						.withName(usedMaterial.getComponentRef()
 								.toString()), t);
-				taskResources.add(usedMaterial.getMaterialTypeRef()
+				taskResources.add(usedMaterial.getComponentRef()
 						.toString());
 			}
 			// After all resource requirements have been added the tasks can be
