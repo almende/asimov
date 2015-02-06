@@ -17,7 +17,7 @@ import java.util.Set;
  * {@link Transition} describes possible {@link Activity} transitions for some
  * {@link ProcessTYpe} that should translate into sequences of {@link Next}s
  * 
- * @see adapt4eesim.A4EEAgents.FerilliFactory.Transition
+ * @see adapt4eesim.ASIMOVAgents.FerilliFactory.Transition
  * 
  * @date $Date: 2014-03-28 11:22:14 +0100 (Fri, 28 Mar 2014) $
  * @version $Revision: 806 $

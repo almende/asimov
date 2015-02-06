@@ -1,6 +1,5 @@
 package io.arum.model.resource.assemblyline;
 
-import io.arum.model.resource.person.PersonRole;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.Body;
 import io.asimov.model.ResourceType;
@@ -32,7 +31,7 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 	/** */
 	@Embedded
 	@Field(name = "type")
-	private PersonRole type;
+	private AssemblyLineType type;
 
 	/** */
 	@Basic
@@ -47,24 +46,24 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 	@Field(name = "inRoom")
 	private AssemblyLine inRoom;
 
-	/** @param type the {@link PersonRole} to set */
-	protected void setType(final PersonRole type)
+	/** @param type the {@link AssbemblyLineType} to set */
+	protected void setType(final AssemblyLineType type)
 	{
 		this.type = type;
 	}
 
 	/**
-	 * @param name the (new) {@link PersonRole}
+	 * @param name the (new) {@link AssbemblyLineType}
 	 * @return this {@link AssemblyLine} object
 	 */
-	public AssemblyLine withType(final PersonRole type)
+	public AssemblyLine withType(final AssemblyLineType type)
 	{
 		setType(type);
 		return this;
 	}
 
 	/** @return the type */
-	public PersonRole getType()
+	public AssemblyLineType getType()
 	{
 		return this.type;
 	}
@@ -136,15 +135,23 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 	@Override
 	public Object toXML()
 	{
-		return getName();
+		return new io.asimov.xml.TContext.AssemblyLine().withAssemblyLineId(getName()).withAssemblyLineTypeRef(getType().getName());
 	}
 
 	/** @see XMLConvertible#fromXML(Object) */
 	@Override
 	public AssemblyLine fromXML(final Object xmlBean)
 	{
-		// FIXME implement
-		throw new IllegalStateException("Not Implemented!");
+		if (xmlBean instanceof io.asimov.xml.TContext.AssemblyLine) {
+			io.asimov.xml.TContext.AssemblyLine al = (io.asimov.xml.TContext.AssemblyLine)
+						xmlBean;
+			withName(al.getAssemblyLineId());
+			withType(new AssemblyLineType().withName(al.getAssemblyLineTypeRef()));
+			return this;
+		} else
+		{
+			throw new IllegalStateException("Assembly line expects xml bean of type: io.asimov.xml.TContext.AssemblyLine");
+		}
 	}
 
 

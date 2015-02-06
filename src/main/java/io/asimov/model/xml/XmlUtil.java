@@ -12,8 +12,8 @@ import io.asimov.xml.SimulationFile.Simulations.SimulationCase.Roles;
 import io.asimov.xml.TDistribution;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TRole;
-import io.asimov.xml.TTrainedTemplate;
-import io.asimov.xml.TTrainedTemplate.RoleTemplate;
+import io.asimov.xml.TUseCase;
+import io.asimov.xml.TUseCase.RoleTemplate;
 import io.coala.log.LogUtil;
 import io.coala.xml.XmlContextID;
 
@@ -232,7 +232,7 @@ public class XmlUtil extends io.coala.xml.XmlUtil
 	public static void exportRoleDistribution(
 			final Collection<TProcessType> processes,
 			final Map<Person, RoleTemplate> roleDistribution,
-			final TTrainedTemplate template, final Roles roles)
+			final TUseCase template, final Roles roles)
 	{
 		template.getProcess().addAll(processes);
 		for (Entry<Person, RoleTemplate> entry : roleDistribution.entrySet())

@@ -1,7 +1,6 @@
 package io.arum.model.resource.supply;
 
 import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.person.PersonRole;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.Body;
 import io.asimov.model.ResourceType;
@@ -23,7 +22,7 @@ import org.eclipse.persistence.nosql.annotations.NoSql;
  * 
  */
 @Entity
-@NoSql(dataType = "occupants")
+@NoSql(dataType = "materials")
 public class Material extends AbstractEmbodied<Material> implements ResourceType,
 		 XMLConvertible<Object, Material>
 {
@@ -34,7 +33,7 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	/** */
 	@Embedded
 	@Field(name = "type")
-	private PersonRole type;
+	private SupplyType type;
 
 	/** */
 	@Basic
@@ -49,24 +48,24 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	@Field(name = "inRoom")
 	private AssemblyLine inRoom;
 
-	/** @param type the {@link PersonRole} to set */
-	protected void setType(final PersonRole type)
+	/** @param type the {@link SupplyType} to set */
+	protected void setType(final SupplyType type)
 	{
 		this.type = type;
 	}
 
 	/**
-	 * @param name the (new) {@link PersonRole}
+	 * @param name the (new) {@link SupplyType}
 	 * @return this {@link Material} object
 	 */
-	public Material withType(final PersonRole type)
+	public Material withType(final SupplyType type)
 	{
 		setType(type);
 		return this;
 	}
 
 	/** @return the type */
-	public PersonRole getType()
+	public SupplyType getType()
 	{
 		return this.type;
 	}
@@ -138,15 +137,21 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	@Override
 	public Object toXML()
 	{
-		return getName();
+		return new io.asimov.xml.TContext.Material().withComponentId(getName()).withComponentRef(getType().getName());
 	}
 
 	/** @see XMLConvertible#fromXML(Object) */
 	@Override
 	public Material fromXML(final Object xmlBean)
 	{
-		// FIXME implement
-		throw new IllegalStateException("Not Implemented!");
+		if (xmlBean instanceof io.asimov.xml.TContext.Material) {
+			io.asimov.xml.TContext.Material m = (io.asimov.xml.TContext.Material)xmlBean;
+			withName(m.getComponentId());
+			withType(new SupplyType().withName(m.getComponentRef()));
+			return this;
+		} else {
+			throw new IllegalStateException("Expected xmlBean to be an instanceof io.asimov.xml.TContext.Material");
+		}
 	}
 
 }

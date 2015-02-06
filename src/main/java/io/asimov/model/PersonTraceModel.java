@@ -8,8 +8,8 @@ import io.asimov.model.events.EventType;
 import io.asimov.xml.SimulationFile.Simulations.SimulationCase;
 import io.asimov.xml.SimulationFile.Simulations.SimulationCase.Roles;
 import io.asimov.xml.TRole;
-import io.asimov.xml.TTrainedTemplate;
-import io.asimov.xml.TTrainedTemplate.RoleTemplate;
+import io.asimov.xml.TUseCase;
+import io.asimov.xml.TUseCase.RoleTemplate;
 import io.coala.dsol.util.AbstractDsolModel;
 import io.coala.dsol.util.DsolModel;
 import io.coala.log.LogUtil;
@@ -70,7 +70,7 @@ public class PersonTraceModel extends
 	private final Context context;
 
 	/** */
-	private final TTrainedTemplate simParams;
+	private final TUseCase simParams;
 
 
 	/** */
@@ -88,7 +88,7 @@ public class PersonTraceModel extends
 	 */
 	public PersonTraceModel(final String simulatorName,
 			final Context context, final Roles roles,
-			final TTrainedTemplate simParams)
+			final TUseCase simParams)
 			throws Exception {
 		super(simulatorName);
 
@@ -203,7 +203,7 @@ public class PersonTraceModel extends
 	}
 
 	/** @return the processes */
-	public TTrainedTemplate getSimulationParameters() {
+	public TUseCase getSimulationParameters() {
 		return this.simParams;
 	}
 
@@ -250,12 +250,12 @@ public class PersonTraceModel extends
 	 * @throws JAXBException
 	 */
 	public static PersonTraceModel fromXML(final String replicationID,
-			final SimulationCase simCase, final TTrainedTemplate simParams)
+			final SimulationCase simCase, final TUseCase simParams)
 			throws Exception {
 		final Context context;
 		if (simCase.getContext() == null) {
-			context = new ARUMContext();
-			simCase.setContext(context);
+			context = (Context) new ARUMContext().toXML();
+			simCase.setContext(context.toXML());
 		} else
 			context = (Context) simCase.getContext();
 

@@ -1,6 +1,7 @@
 package io.arum.model.resource.person;
 
 import io.arum.model.resource.assemblyline.AssemblyLine;
+import io.arum.model.resource.supply.SupplyType;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.Body;
 import io.asimov.model.ResourceType;
@@ -135,15 +136,21 @@ public class Person extends AbstractEmbodied<Person> implements ResourceType, XM
 	@Override
 	public Object toXML()
 	{
-		return getName();
+		return new io.asimov.xml.TContext.Person().withPersonId(getName()).withRoleRef(getType().getName());
 	}
 
 	/** @see XMLConvertible#fromXML(Object) */
 	@Override
 	public Person fromXML(final Object xmlBean)
 	{
-		// FIXME implement
-		throw new IllegalStateException("Not Implemented!");
+		if (xmlBean instanceof io.asimov.xml.TContext.Person) {
+			io.asimov.xml.TContext.Person m = (io.asimov.xml.TContext.Person)xmlBean;
+			withName(m.getPersonId());
+			withType(new PersonRole().withName(m.getRoleRef()));
+			return this;
+		} else {
+			throw new IllegalStateException("Expected xmlBean to be an instanceof io.asimov.xml.TContext.Person");
+		}
 	}
 
 

@@ -1,35 +1,36 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>ASIMOV</groupId>
-  <artifactId>ASIMOV</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>ASIMOV</name>
-  <description>Agent-based SImulation, MOdeling, and Visualization of processes</description>
-  
-  <repositories>
-    <repository>
-        <id>io.coala</id>
-        <name>COALA Repository</name>
-        <url>https://github.com/krevelen/coala/raw/mvn-repo</url>
-    </repository>
-  </repositories>
-  
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ASIMOV</groupId>
+	<artifactId>ASIMOV</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>ASIMOV</name>
+	<description>Agent-based SImulation, MOdeling, and Visualization of processes</description>
+
+	<repositories>
+		<repository>
+			<id>io.coala</id>
+			<name>COALA Repository</name>
+			<url>https://github.com/krevelen/coala/raw/mvn-repo</url>
+		</repository>
+	</repositories>
+
+	<properties>
 		<xsd.basedir>${basedir}/src/main/xsd</xsd.basedir>
 		<jaxb.targetdir>${project.build.directory}/generated-sources/jaxb</jaxb.targetdir>
-	
+
 		<woodstox.version>4.3.0</woodstox.version>
 		<jaxb-api.version>2.2.11</jaxb-api.version>
 		<cxf.version>3.0.1</cxf.version>
 		<jaxb-fluent-api.version>2.1.8</jaxb-fluent-api.version>
 		<lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
 	</properties>
-  
-  
-  <build>
-  <pluginManagement>
-  <plugins>
-   <plugin>
+
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
 					<!-- Configure the Maven2 Eclipse IDE Integration (m2e) for non-standard 
 						plug-in executions during the compile-test-run life-cycles by the IDE -->
 					<groupId>org.eclipse.m2e</groupId>
@@ -58,8 +59,8 @@
 									</action>
 								</pluginExecution>
 
-								<!-- Configure "org.apache.cxf.cxf-xjc-plugin:xsdtojava" goal 
-									execution in Eclipse IDE -->
+								<!-- Configure "org.apache.cxf.cxf-xjc-plugin:xsdtojava" goal execution 
+									in Eclipse IDE -->
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>org.apache.cxf</groupId>
@@ -97,17 +98,17 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-  
-  
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
+
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<!-- include generated XMLBean sources in class path -->
 				<groupId>org.codehaus.mojo</groupId>
@@ -137,7 +138,7 @@
 				<verbose>false</verbose> <quiet>false</quiet> <javaSource>${source}</javaSource> 
 				</configuration> <inherited>true</inherited> </plugin> -->
 
- 
+
 			<!-- Used to generate source code based on XSD (schema) file -->
 			<!-- http://cxf.apache.org/cxf-xjc-plugin.html -->
 			<plugin>
@@ -164,11 +165,11 @@
 					</execution>
 				</executions>
 			</plugin>
-      
-    </plugins>
-  </build>
-  <dependencies>
-  <dependency>
+
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>${jaxb-api.version}</version>
@@ -205,9 +206,9 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-  <dependency>
+		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>org.eclipse.persistence.nosql</artifactId>        
+			<artifactId>org.eclipse.persistence.nosql</artifactId>
 			<version>2.5.0</version>
 		</dependency>
 		<dependency>
@@ -227,30 +228,37 @@
 			<artifactId>neo4j</artifactId>
 			<version>1.9.2</version>
 		</dependency>
-  <dependency>
-  	<groupId>io.coala</groupId>
-	<artifactId>coala-guice3-adapter</artifactId>
-	<version>1.0.0</version>
-   </dependency>
-   <dependency>
-  	<groupId>io.coala</groupId>
-	<artifactId>coala-eve2-adapter</artifactId>
-	<version>1.0.0</version>
-   </dependency>
-   <dependency>
-  	<groupId>io.coala</groupId>
-    <artifactId>coala-jsa-adapter</artifactId>
-	<version>1.0.0</version>
-   </dependency>
-   <dependency>
-   	<groupId>io.coala</groupId>
-	<artifactId>coala-enterprise-ontology</artifactId>
-	<version>1.0.0</version>
-   </dependency>
-   <dependency>
-   	<groupId>io.coala</groupId>
-	<artifactId>coala-jsa-adapter</artifactId>
-	<version>1.0.0</version>
-   </dependency>
-  </dependencies>
+		<dependency>
+			<groupId>io.coala</groupId>
+			<artifactId>coala-guice3-adapter</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.coala</groupId>
+			<artifactId>coala-eve2-adapter</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.coala</groupId>
+			<artifactId>coala-jsa-adapter</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.coala</groupId>
+			<artifactId>coala-enterprise-ontology</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.coala</groupId>
+			<artifactId>coala-jsa-adapter</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

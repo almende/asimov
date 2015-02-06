@@ -1,0 +1,52 @@
+# Eve configuration
+
+# environment specific settings
+environment:
+  Development:
+    # development specific settings...
+  Production:
+    # production specific settings...
+
+# transport services
+transport_services:
+- class: XmppService
+  host: openid.almende.org
+  port: 5222
+  service: openid.almende.org
+- class: HttpService
+  servlet_url: http://localhost:8080/agents/
+- class: HttpService
+  servlet_url: https://localhost:8443/agents/
+#- class: ZmqService
+#  baseUrl: tcp://127.0.0.1:5444
+#- class: ZmqService
+#  baseUrl: inproc://
+#- class: ZmqService
+#  baseUrl: ipc:///tmp/zmq-socket-
+
+# state settings
+# the state is used to persist the agents state.
+# state:
+#   class: FileStateFactory
+#   path: .eveagents
+# cookies:
+#   class: FileStateFactory
+#   path: .evecookies
+# tokens:
+#   class: FileStateFactory
+#   path: .evecookies
+state:
+   class: MemoryStateFactory
+
+# scheduler settings
+scheduler:
+  class: RunnableSchedulerFactory
+
+# bootstrap agents
+# bootstrap:
+#   agents:
+#     calc: com.almende.eve.agent.example.CalcAgent
+#     echo: com.almende.eve.agent.example.EchoAgent
+#     aspect: com.almende.eve.agent.example.ExampleAspect
+#     test2agent: com.almende.test.agents.Test2Agent
+

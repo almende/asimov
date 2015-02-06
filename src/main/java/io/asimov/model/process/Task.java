@@ -26,7 +26,7 @@ import javax.persistence.Embeddable;
  * {@link Task} describes the type of {@link Activity} that can occur for some
  * {@link ProcessType}
  * 
- * @see adapt4eesim.A4EEAgents.FerilliFactory.Task
+ * @see ASIMOVAgents.A4EEAgents.FerilliFactory.Task
  * 
  * @date $Date: 2014-03-28 11:22:14 +0100 (Fri, 28 Mar 2014) $
  * @version $Revision: 806 $
