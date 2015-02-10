@@ -72,6 +72,8 @@ public class Person extends AbstractEmbodied<Person> implements ResourceType, XM
 	/** @return the type */
 	public ArrayList<PersonRole> getTypes()
 	{
+		if (this.types == null)
+			this.types = new ArrayList<PersonRole>();
 		return this.types;
 	}
 
@@ -104,7 +106,7 @@ public class Person extends AbstractEmbodied<Person> implements ResourceType, XM
 	/**
 	 * @return the inRoom
 	 */
-	public AssemblyLine getInRoom()
+	public AssemblyLine getAtAssemblyLine()
 	{
 		return atAssemblyLine;
 	}

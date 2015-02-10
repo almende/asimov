@@ -1,5 +1,6 @@
 package io.asimov.test.sim;
 
+import io.asimov.agent.gui.SemanticAgentGui;
 import io.asimov.messaging.ASIMOVMessage;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.ConversionCallback;
@@ -54,7 +55,7 @@ public class NegotiationTestAgent extends BasicAgent
 	@InjectLogger
 	private Logger LOG;
 
-	// public final SemanticAgentGui myGui;
+	public final SemanticAgentGui myGui;
 
 	private ReasoningCapability reasonerService;
 
@@ -97,9 +98,9 @@ public class NegotiationTestAgent extends BasicAgent
 	protected NegotiationTestAgent(Binder binder)
 	{
 		super(binder);
-		// myGui = new SemanticAgentGui(this.getID().getValue(), null, this,
-		// true,
-		// true, this.getID() + " GUI");
+		 myGui = new SemanticAgentGui(binder,null,
+		 true,
+		 true);
 	}
 
 	@Override

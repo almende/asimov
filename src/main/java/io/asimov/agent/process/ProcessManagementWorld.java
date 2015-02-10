@@ -1,12 +1,16 @@
 package io.asimov.agent.process;
 
 import io.arum.model.ARUMOrganizationWorld;
+import io.arum.model.resource.assemblyline.AssemblyLineType;
 import io.arum.model.resource.supply.Material;
+import io.arum.model.resource.supply.SupplyType;
+import io.asimov.model.process.Process;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.capability.embody.Percept;
 
 import java.util.List;
+import java.util.Set;
 
 import rx.Observable;
 
@@ -40,14 +44,14 @@ public interface ProcessManagementWorld extends ARUMOrganizationWorld
 	 * @param agent
 	 * @return
 	 */
-	String getAssemblyLineTypeForAgentID(AgentID agent);
+	List<AssemblyLineType> getAssemblyLineTypesForAgentID(AgentID agent);
 
 	/**
 	 * @param resourceAgent
 	 * @param resourceName
 	 * @return
 	 */
-	List<Material> getMaterialsOfType(AgentID resourceAgent,
-			String resourceName);
+	List<Material> getMaterialsForSupplyType(AgentID resourceAgent,
+			SupplyType resourceName);
 
 }

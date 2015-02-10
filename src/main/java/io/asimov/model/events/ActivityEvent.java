@@ -124,7 +124,8 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 		final EventRecord result = new EventRecord();
 		result.setActivityType(getType().toXML()); // event type
 		result.setPersonRef(getPerson().getName());
-		result.setPersonRoleRef(getPerson().getType().getName());
+		for (PersonRole r: getPerson().getTypes())
+			result.getPersonRoleRef().add(r.getName());
 		result.setProcessRef(getProcessID());
 		result.setActivityRef(getActivity());
 		result.setProcessInstanceRef(getProcessInstanceID());
@@ -170,6 +171,9 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 		{
 			time = simTimeMS;
 		}
+		Person p = new Person().withName(event.getPersonRef());
+		for (String r : event.getPersonRoleRef())
+			p.getTypes().add(new PersonRole().withName(r));
 		return withType(actType)
 				.withActivity(event.getActivityRef())
 				.withProcessID(event.getProcessRef())
@@ -177,11 +181,7 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 				.withAssemblyLineName(event.getAssemblyLineRef())
 //				.withReplicationID(null)
 				.withType(actType)
-				.withPerson(
-						new Person().withName(event.getPersonRef())
-								.withType(
-										new PersonRole().withName(event
-												.getPersonRoleRef())))
+				.withPerson(p)
 				.withExecutionTime(new SimTime(// Replication.BASE_UNIT,
 						sourceID, time, timeUnit, offset))
 				.withProcessInstanceID(event.getProcessInstanceRef());

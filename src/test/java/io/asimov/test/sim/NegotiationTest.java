@@ -8,6 +8,7 @@ import io.coala.bind.BinderFactory;
 import io.coala.capability.admin.CreatingCapability;
 import io.coala.capability.admin.DestroyingCapability;
 import io.coala.capability.know.ReasoningCapability;
+import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.exception.CoalaException;
 import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.log.LogUtil;
@@ -133,7 +134,9 @@ public class NegotiationTest
 			@Override
 			public void onNext(AgentStatusUpdate args)
 			{
-				System.err.flush();
+				final ReplicatingCapability replication =  platform.agents.get(
+						args.getAgentID().getValue()).inject(ReplicatingCapability.class);
+				replication.start();
 				if (args.getStatus().isCompleteStatus())
 				{
 					final ReasoningCapability r = platform.agents.get(
@@ -177,21 +180,21 @@ public class NegotiationTest
 			}
 
 		};
-//		platform.agents
-//				.get("room1")
-//				.inject(CreatingCapability.class)
-//				.createAgent(platform.agents.get("room1").getID(),
-//						NegotiationTestAgent.class);
-//		platform.agents
-//				.get("room2")
-//				.inject(CreatingCapability.class)
-//				.createAgent(platform.agents.get("room2").getID(),
-//						NegotiationTestAgent.class);
-//		platform.agents
-//				.get("patient1")
-//				.inject(CreatingCapability.class)
-//				.createAgent(platform.agents.get("patient1").getID(),
-//						NegotiationTestAgent.class);
+		platform.agents
+				.get("room1")
+				.inject(CreatingCapability.class)
+				.createAgent(platform.agents.get("room1").getID(),
+						NegotiationTestAgent.class);
+		platform.agents
+				.get("room2")
+				.inject(CreatingCapability.class)
+				.createAgent(platform.agents.get("room2").getID(),
+						NegotiationTestAgent.class);
+		platform.agents
+				.get("patient1")
+				.inject(CreatingCapability.class)
+				.createAgent(platform.agents.get("patient1").getID(),
+						NegotiationTestAgent.class);
 		platform.agents
 				.get("process2")
 				.inject(CreatingCapability.class)
@@ -279,21 +282,21 @@ public class NegotiationTest
 			}
 
 		};
-//		platform.agents
-//				.get("room1")
-//				.inject(CreatingCapability.class)
-//				.createAgent(platform.agents.get("room1").getID(),
-//						NegotiationTestAgent.class);
-//		platform.agents
-//				.get("room2")
-//				.inject(CreatingCapability.class)
-//				.createAgent(platform.agents.get("room2").getID(),
-//						NegotiationTestAgent.class);
-//		platform.agents
-//				.get("patient1")
-//				.inject(CreatingCapability.class)
-//				.createAgent(platform.agents.get("patient1").getID(),
-//						NegotiationTestAgent.class);
+		platform.agents
+				.get("room1")
+				.inject(CreatingCapability.class)
+				.createAgent(platform.agents.get("room1").getID(),
+						NegotiationTestAgent.class);
+		platform.agents
+				.get("room2")
+				.inject(CreatingCapability.class)
+				.createAgent(platform.agents.get("room2").getID(),
+						NegotiationTestAgent.class);
+		platform.agents
+				.get("patient1")
+				.inject(CreatingCapability.class)
+				.createAgent(platform.agents.get("patient1").getID(),
+						NegotiationTestAgent.class);
 		final Thread t2 = new Thread()
 		{
 			public void run()

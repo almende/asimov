@@ -2,6 +2,7 @@ package io.asimov.model;
 
 import io.arum.model.events.MaterialEvent;
 import io.arum.model.events.MovementEvent;
+import io.arum.model.resource.person.PersonRole;
 import io.asimov.agent.scenario.Context;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.EventType;
@@ -111,8 +112,8 @@ public class PersonTraceModel extends
 	/** @see PersonTraceEventListener#onMovement(MovementEvent) */
 	@Override
 	public void onMovement(final MovementEvent event) {
-		this.personGroups.put(event.getPerson().getName(), event
-				.getPerson().getType().getName());
+		for (PersonRole r : event.getPerson().getTypes())
+			this.personGroups.put(event.getPerson().getName(),r.getName());
 		this.personLocations.put(event.getPerson().getName(), event
 				.getType().getName().equals(EventType.ARIVE_AT_ASSEMBLY) ? event.getAssemblyLine()
 				.getName() : null);

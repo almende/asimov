@@ -46,7 +46,7 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 	private Set<DirectlyIn> directlyIns = null;
 	
 	
-	public static class InitialA4EEPercept implements SLConvertible<InitialA4EEPercept>, Percept {
+	public static class InitialASIMOVPercept implements SLConvertible<InitialASIMOVPercept>, Percept {
 
 		/** */
 		private static final long serialVersionUID = 1L;
@@ -67,15 +67,15 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 
 		/** @see io.coala.jsa.sl.SLConvertible#fromSL(jade.semantics.lang.sl.grammar.Node) */
 		@Override
-		public <N extends Node> InitialA4EEPercept fromSL(N node)
+		public <N extends Node> InitialASIMOVPercept fromSL(N node)
 		{
 			this.internalBelief = node;
 			return this;
 		}
 		
-		public static <N extends Node> InitialA4EEPercept toBelief(N node)
+		public static <N extends Node> InitialASIMOVPercept toBelief(N node)
 		{
-			InitialA4EEPercept result = new InitialA4EEPercept();
+			InitialASIMOVPercept result = new InitialASIMOVPercept();
 			result.internalBelief = node;
 			return result;
 		}

@@ -82,7 +82,7 @@
 						<element name="personRef" type="string"
 							minOccurs="1" maxOccurs="1" />
 						<element name="personRoleRef" type="string"
-							minOccurs="1" maxOccurs="1" />
+							minOccurs="1" maxOccurs="unbounded" />
 						<element name="assemblyLineRef" type="string"
 							minOccurs="1" maxOccurs="1" />
 						<element name="materialRef" type="string"

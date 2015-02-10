@@ -2,6 +2,7 @@ package io.arum.model.events;
 
 import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.arum.model.resource.person.Person;
+import io.arum.model.resource.person.PersonRole;
 import io.asimov.model.XMLConvertible;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
@@ -16,7 +17,9 @@ import io.coala.time.ClockID;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -165,7 +168,8 @@ public class MaterialEvent extends Event<MaterialEvent> implements
 		result.setActivityType(getType().toXML());
 		result.setMaterialRef(getMaterial());
 		result.setPersonRef(getPerson().getName());
-		result.setPersonRoleRef(getPerson().getType().getName());
+		for (PersonRole r: getPerson().getTypes())
+			result.getPersonRoleRef().add(r.getName());
 		result.setAssemblyLineRef(getAssemblyLine().getName());
 		result.setProcessRef(getProcessID());
 		result.setActivityRef(getActivity());

@@ -17,6 +17,7 @@ import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -137,7 +138,8 @@ public class MovementEvent extends Event<MovementEvent> implements
 		result.setActivityType(getType().toXML());
 		result.setAssemblyLineRef(getAssemblyLine().getName());
 		result.setPersonRef(getPerson().getName());
-		result.setPersonRoleRef(getPerson().getType().getName());
+		for (PersonRole r: getPerson().getTypes())
+			result.getPersonRoleRef().add(r.getName());
 		result.setProcessRef(getProcessID());
 		result.setProcessInstanceRef(getProcessInstanceID());
 		result.setActivityRef(getActivity());
@@ -163,7 +165,7 @@ public class MovementEvent extends Event<MovementEvent> implements
 
 	public MovementEvent fromXML(
 			final TEvent event,
-			final TimeUnit timeUnit, final Date offset, final String spaceName, final String personGroupRef, EventType type)
+			final TimeUnit timeUnit, final Date offset, final String spaceName, final List<String> personGroupRefs, EventType type)
 	{
 		final EventType moveType = type;
 		final ClockID sourceID = new ClockID(null, getSourceID());
@@ -179,12 +181,12 @@ public class MovementEvent extends Event<MovementEvent> implements
 		{
 			time = simTimeMS;
 		}
+		Person p = new Person().withName(event.getPersonMoved().getPersonRef());
+		for (String r : personGroupRefs)
+			p.getTypes().add(new PersonRole().withName(r));
 		return withType(moveType)
 				.withAssemblyLine(new AssemblyLine().withName(spaceName))
-				.withPerson(
-						new Person().withName(event.getPersonMoved().getPersonRef())
-								.withType(
-										new PersonRole().withName(personGroupRef)))
+				.withPerson(p)
 				.withExecutionTime(new SimTime(// Replication.BASE_UNIT,
 						sourceID, time, timeUnit, offset));
 	}
@@ -209,13 +211,12 @@ public class MovementEvent extends Event<MovementEvent> implements
 		{
 			time = simTimeMS;
 		}
+		Person p = new Person().withName(event.getPersonRef());
+		for (String r : event.getPersonRoleRef())
+			p.getTypes().add(new PersonRole().withName(r));
 		return withType(moveType)
 				.withAssemblyLine(new AssemblyLine().withName(event.getAssemblyLineRef()))
-				.withPerson(
-						new Person().withName(event.getPersonRef())
-								.withType(
-										new PersonRole().withName(event
-												.getPersonRoleRef())))
+				.withPerson(p)
 				.withExecutionTime(new SimTime(// Replication.BASE_UNIT,
 						sourceID, time, timeUnit, offset))
 						.withActivity(event.getActivityRef())

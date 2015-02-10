@@ -3,6 +3,7 @@ package io.asimov.vis.timeline;
 import io.arum.model.events.MaterialEvent;
 import io.arum.model.events.MovementEvent;
 import io.arum.model.events.PersonEvent;
+import io.arum.model.resource.person.PersonRole;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.xml.TEventTrace.EventRecord;
@@ -211,8 +212,14 @@ public class VisJSTimelineUtil
 						+ er.getMaterialRef();
 				item.setGroup(getGroupWithName(resource, timeline));
 				item.setContent(e.getPerson().getName());
+				String roles = "";
+				for (PersonRole r: e.getPerson().getTypes()) {
+					if (!roles.equals(""))
+						roles += ", ";
+					roles += r.getName();
+				}
 				item.setTitle(
-						e.getPerson().getType().getName() + " : "
+						roles + " : "
 						+ e.getPerson().getName() + "\n:"
 						+ er.getProcessRef() + "\ninstance: "
 								+ processInstanceName + "\nactivity:"
@@ -226,7 +233,13 @@ public class VisJSTimelineUtil
 				String resource = er.getAssemblyLineRef();
 				item.setGroup(getGroupWithName(resource, timeline));
 				item.setContent(e.getPerson().getName());
-				item.setTitle(e.getPerson().getType().getName() + " : "
+				String roles = "";
+				for (PersonRole r: e.getPerson().getTypes()) {
+					if (!roles.equals(""))
+						roles += ", ";
+					roles += r.getName();
+				}
+				item.setTitle(roles + " : "
 						+ e.getPerson().getName() + "\n"
 						+ er.getProcessRef() + "\ninstance: "
 								+ processInstanceName + "\nactivity: "
