@@ -1,8 +1,10 @@
 package io.arum.model.resource.supply;
 
+import io.arum.model.events.MaterialEvent;
 import io.asimov.agent.resource.ResourceManagementWorld;
 import io.asimov.model.events.EventType;
 import io.coala.capability.CapabilityFactory;
+import rx.Observable;
 
 /**
  * {@link MaterialResourceManagementWorld}
@@ -30,12 +32,12 @@ public interface MaterialResourceManagementWorld extends
 	void performUsageChange(String processID, String processInstanceID, String activityName, String equipmentName, String occupantName, EventType eventType) throws Exception;
 
 //	/** @param event the newly triggered {@link EquipmentEvent} */
-//	Observable<EquipmentEvent> onUsage();
-//
-//	/**
-//	 * @param equipmentType the type of equipment
-//	 * @return a List of all available equipments for the specified type in the space
-//	 */
+	Observable<MaterialEvent> onUsage();
+
+	/**
+	 * @param equipmentType the type of equipment
+	 * @return a List of all available equipments for the specified type in the space
+	 */
 //	List<Equipment> getEquipmentsOfType(String equipmentType);
 	
 

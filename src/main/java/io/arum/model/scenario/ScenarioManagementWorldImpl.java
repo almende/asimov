@@ -23,12 +23,15 @@ import io.coala.capability.replicate.ReplicationConfig;
 import io.coala.log.InjectLogger;
 import io.coala.model.ModelComponentIDFactory;
 import io.coala.random.RandomDistribution;
+import io.coala.resource.FileUtil;
 import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
 import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -36,6 +39,9 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.measure.unit.SI;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBIntrospector;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -144,8 +150,33 @@ public class ScenarioManagementWorldImpl extends AbstractARUMOrganizationtWorld
 
 		this.replication = ds.findReplication();
 		File simFileURI = new File(getProperty(SCENARIO_FILE_KEY).get());
-		SimulationFile simFile = (SimulationFile)
-				XmlUtil.getCIMUnmarshaller().unmarshal(simFileURI);
+		SimulationFile simFile = null;
+		InputStream is = FileUtil.getFileAsInputStream(simFileURI);
+		
+		if (is == null)
+			throw new NullPointerException("Simulationfile not found at URI: " + simFileURI);
+		try
+		{
+			JAXBContext jc = JAXBContext.newInstance(SimulationFile.class);
+	        Unmarshaller unmarshaller = jc.createUnmarshaller();
+	       
+			simFile = (SimulationFile) unmarshaller.unmarshal(is);
+			
+		} finally
+		{
+			try
+			{
+				is.close();
+			} catch (final IOException ignore)
+			{
+			}
+		}
+		
+		if (simFile == null) {
+			LOG.error("Was not able to read input, aborting inference.");
+			return;
+		}
+		
 		if (this.replication == null)
 		{
 			LOG.warn("Replication not found in DB: "

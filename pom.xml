@@ -18,7 +18,9 @@
 	<properties>
 		<xsd.basedir>${basedir}/src/main/xsd</xsd.basedir>
 		<jaxb.targetdir>${project.build.directory}/generated-sources/jaxb</jaxb.targetdir>
-
+		<jongo.version>1.0</jongo.version>
+		<mongo-java-driver.version>2.11.3</mongo-java-driver.version>
+		<embed-mongo.version>1.33</embed-mongo.version>
 		<woodstox.version>4.3.0</woodstox.version>
 		<jaxb-api.version>2.2.11</jaxb-api.version>
 		<cxf.version>3.0.1</cxf.version>
@@ -258,6 +260,29 @@
 			<groupId>io.coala</groupId>
 			<artifactId>coala-jsa-adapter</artifactId>
 			<version>1.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongo-java-driver.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.jongo</groupId>
+		    <artifactId>jongo</artifactId>
+		    <version>${jongo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.flapdoodle.embed</groupId>
+			<artifactId>de.flapdoodle.embed.mongo</artifactId>
+			<version>${embed-mongo.version}</version>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>2.4.3</version>
 		</dependency>
 
 		<dependency>

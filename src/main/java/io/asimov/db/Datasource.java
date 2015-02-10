@@ -16,8 +16,6 @@ import io.coala.capability.CapabilityFactory;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.eclipse.persistence.sessions.Project;
-
 /**
  * {@link Datasource}
  * 
@@ -195,17 +193,7 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	 */
 	Replication findReplication();
 	
-	/**
-	 * Get all projects stored in the database
-	 * @return projects
-	 */
-	Iterable<Project> findProjects();
 	
-	/**
-	 * @param id the project id
-	 * @return project the {@link Project} or {@code null} if not found
-	 */
-	Project findProject(String id);
 	
 	/**
 	 * Find a gbXMLDocument by id.
@@ -221,11 +209,6 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	 */
 	void save(Replication replication);
 	
-	/**
-	 * Save a new project in the database
-	 * @param project
-	 */
-	void save(Project project);
 	
 	/**
 	 * Save a gbXML file in the database
@@ -267,54 +250,36 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	void removeReplication();
 
 	/**
-	 * Update an existing project in the database
-	 * @param project
-	 */
-	void update(Project project);
-	
-	/**
-	 * Remove a project from the database
-	 * @param project
-	 */
-	void remove(Project project);
-
-	/**
-	 * Remove a project from the database by its id
-	 * @param id
-	 */
-	void removeProject(String id);
-
-	/**
 	 * @param replicationId the id {@link Replication} to match
 	 */
-	//void removeEvents();
+	void removeEvents();
 	
 	/**
 	 * @param replicationId the id {@link Replication} to match
 	 */
-	//void removePersons();
+	void removePersons();
 	
 	/**
 	 * @param replicationId the id {@link Replication} to match
 	 */
-	//void removeAssemblyLines();
+	void removeAssemblyLines();
 	
 	/**
 	 * @param replicationId the id {@link Replication} to match
 	 */
-	//void removeMaterials();
+	void removeMaterials();
 	
 	/**
 	 * @param replicationId the id {@link Replication} to match
 	 */
-	//void removeProcesses();
+	void removeProcesses();
 
 
-	/**
-	 * Remove a calibration from the database by its id
-	 * @param id
-	 */
-	void removeCalibration(String id);
+//	/**
+//	 * Remove a calibration from the database by its id
+//	 * @param id
+//	 */
+//	void removeCalibration(String id);
 
 	/**
 	 * @param replicationID

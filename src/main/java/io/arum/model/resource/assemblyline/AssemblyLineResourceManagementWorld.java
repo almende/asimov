@@ -21,13 +21,13 @@ public interface AssemblyLineResourceManagementWorld extends
 		// empty
 	}
 
-	/**
-	 * @param equipmentName
-	 * @param beName
-	 * @param eventType
-	 * @return equipmentInstanceID
-	 */
-	void performUsageChange(String processID, String processInstanceID, String activityName, String equipmentName, String occupantName, EventType eventType) throws Exception;
+//	/**
+//	 * @param equipmentName
+//	 * @param beName
+//	 * @param eventType
+//	 * @return equipmentInstanceID
+//	 */
+//	void performUsageChange(String processID, String processInstanceID, String activityName, String equipmentName, String occupantName, EventType eventType) throws Exception;
 
 //	/** @param event the newly triggered {@link EquipmentEvent} */
 //	Observable<EquipmentEvent> onUsage();

@@ -41,6 +41,7 @@ import java.util.Set;
 
 import javax.persistence.Embedded;
 import javax.persistence.ManyToOne;
+import javax.xml.datatype.Duration;
 
 import org.apache.log4j.Logger;
 import org.eclipse.persistence.nosql.annotations.Field;
@@ -673,8 +674,11 @@ public class Process extends AbstractEntity<Process> implements
 			for (UsedComponent usedMaterial : skeletonActivityType
 					.getUsedComponent())
 			{
+				Duration materialTimeOfUse = usedMaterial.getTimeOfUse();
+				if (materialTimeOfUse == null) // Default material usage time equal to activity execution time
+					materialTimeOfUse = skeletonActivityType.getExecutionTime();
 				Time t = new Time().withMillisecond(XmlUtil
-						.gDurationToLong(usedMaterial.getTimeOfUse()));
+						.gDurationToLong(materialTimeOfUse));
 				this.withResource(Material.class, new SupplyType()
 						.withName(usedMaterial.getComponentRef()
 								.toString()), t);

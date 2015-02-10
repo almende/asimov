@@ -1,5 +1,6 @@
 package io.asimov.model;
 
+import io.arum.model.resource.RouteLookup;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessCompletion.ProcessCompleter;
@@ -55,10 +56,10 @@ public abstract class ActivityParticipation extends AbstractCoordinationFact
 		
 		
 		/**
-		 * A Schedulable method ID that must be provided for the enterBuildingELement event
-		 * Denotes the method that causes the agent to enter a building element.
+		 * A Schedulable method ID that must be provided for the arriveAtAssembly event
+		 * Denotes the method that causes the agent to arrive at an assemblyLine.
 		 */
-		public final static String ENTER_BE = "ENTER_BE";
+		public final static String ARRIVE_AT_ASSEMBLY = "ARRIVE_AT_ASSEMBLY";
 		
 		public static final String RETRY_REQUEST = "RETRY_REQUEST";
 		
@@ -110,7 +111,7 @@ public abstract class ActivityParticipation extends AbstractCoordinationFact
 		/**
 		 * @param cause 
 		 */
-		void walkRoute(Request cause, boolean walkTomorrow);
+		void walkRoute(RouteLookup.Result state, ActivityParticipation.Request cause, boolean walkTomorrow);
 		
 
 	}
