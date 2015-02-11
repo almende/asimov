@@ -64,7 +64,7 @@ public class ResourceAllocationRequestorImpl extends BasicCapability implements
 	private static final Logger LOG = LogUtil
 			.getLogger(ResourceAllocationRequestorImpl.class);
 
-	private String scenarioAgentID = null;
+	private String scenarioAgentID = "testScenario";
 	private final AgentServiceProxy agentServiceProxy;
 	private Map<AgentID, Serializable> resourcesAllocationMap = null;
 	private Map<Serializable, Set<AgentID>> candidateMap = null;

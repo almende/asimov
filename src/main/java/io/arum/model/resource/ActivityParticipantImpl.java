@@ -223,6 +223,13 @@ public class ActivityParticipantImpl extends
 			if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
 				assemblyLineInfo = otherResource;
 
+		if (getBinder().inject(ConfiguringCapability.class).getProperty("walkingDisabled").getBoolean().booleanValue() && !getWorld(PersonResourceManagementWorld.class)
+				.getCurrentLocation().equals(assemblyLineInfo.getResourceAgent())){
+			ProcedureCall<?> enter = ProcedureCall.create(this, this,
+					ActivityParticipant.ARRIVE_AT_ASSEMBLY, request, assemblyLineInfo.getResourceAgent());
+			getSimulator().schedule(enter, Trigger.createAbsolute(getTime()));
+		}
+		
 		if (getWorld(PersonResourceManagementWorld.class)
 				.getCurrentLocation().equals(assemblyLineInfo.getResourceAgent())){
 			if (getBinder().inject(PersonResourceManagementWorld.class)

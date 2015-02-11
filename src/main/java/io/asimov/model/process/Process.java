@@ -696,7 +696,7 @@ public class Process extends AbstractEntity<Process> implements
 						taskResourcesStringArray);
 			} catch (Exception e)
 			{
-				LOG.fatal(
+				LOG.error(
 						"Failed to create task: "
 								+ skeletonActivityType.getName(), e);
 			}

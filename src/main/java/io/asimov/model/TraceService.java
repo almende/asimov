@@ -323,6 +323,9 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		for (PersonEvent<?> event : events)
 		{
 			if (event instanceof MovementEvent
+					&& ((MovementEvent) event).getAssemblyLine() == null)
+				continue;
+			if (event instanceof MovementEvent
 					&& ((MovementEvent) event).getAssemblyLine().getName()
 							.equalsIgnoreCase("world"))
 				continue;

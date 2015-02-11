@@ -11,7 +11,7 @@
        <simulationCase>
            <id>ARUM Toy Model Movie</id>
                 <usecase>
-                    <id>FHI</id>
+                    <id>IHF</id>
                     <context>
 <!-- Here we make the correlation between the specific materials and the generic components -->
                         <material>
@@ -117,7 +117,7 @@
                             <personId>Giovanni</personId>
                             <role>
                                 <id>Worker</id>
-                                <roleName>FHI Worker</roleName>
+                                <roleName>IHF Worker</roleName>
                             </role>
                             <role>
                                 <id>Minor Manager</id>
@@ -132,14 +132,14 @@
                             <personId>Victor</personId>
                             <role>
                                 <id>Worker</id>
-                                <roleName>FHI Worker</roleName>
+                                <roleName>IHF Worker</roleName>
                             </role>
                         </person>
                         <person>
                             <personId>Edward</personId>
                             <role>
                                 <id>Worker</id>
-                                <roleName>FHI Worker</roleName>
+                                <roleName>IHF Worker</roleName>
                             </role>
                             <role>
                                 <id>Electrical Engineer</id>
@@ -150,7 +150,7 @@
                             <personId>Suki</personId>
                             <role>
                                 <id>Worker</id>
-                                <roleName>FHI Worker</roleName>
+                                <roleName>IHF Worker</roleName>
                             </role>
                             <role>
                                 <id>RAO</id>
@@ -161,7 +161,58 @@
                             <personId>Mario</personId>
                             <role>
                                 <id>Major Manager</id>
-                                <roleName>FHI Board Member</roleName>
+                                <roleName>IHF Board Member</roleName>
+                            </role>
+                        </person>
+                        <person>
+                            <personId>Anthony</personId>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                            <role>
+                                <id>Minor Manager</id>
+                                <roleName>Floor Manager</roleName>
+                            </role>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                        </person>
+                        <person>
+                            <personId>Vitek</personId>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        </person>
+                        <person>
+                            <personId>Eduardo</personId>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                        </person>
+                        <person>
+                            <personId>Rick</personId>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                            <role>
+                                <id>RAO</id>
+                                <roleName>Tester (RAO)</roleName>
+                            </role>
+                        </person>
+                        <person>
+                            <personId>Sven</personId>
+                            <role>
+                                <id>Major Manager</id>
+                                <roleName>IHF Board Member</roleName>
                             </role>
                         </person>
 <!-- Here we make the correlation between the specific assemblyLines and the generic types -->
@@ -220,7 +271,7 @@
                             <executionTime>P00Y000DT02H10M00S</executionTime>
                             <transportTime>P00Y000DT00H00M00S</transportTime>
                             <isBusinessActivity>true</isBusinessActivity>
-                            <nextActivityRef likelihood="1">A2</nextActivityRef>
+                            <nextActivityRef likelihood="10">A2</nextActivityRef>
                         </activity>
                         <activity>
                             <id>A2</id>
@@ -245,13 +296,13 @@
                             <executionTime>P00Y000DT00H20M00S</executionTime>
                             <transportTime>P00Y000DT00H00M00S</transportTime>
                             <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="0.5">A1</previousActivityRef>
-                            <previousActivityRef likelihood="0.10">A5</previousActivityRef>
-                            <previousActivityRef likelihood="0.40">A6</previousActivityRef>
-                            <nextActivityRef likelihood="0.25">A3</nextActivityRef>
-                            <nextActivityRef likelihood="0.25">A4</nextActivityRef>
-                            <nextActivityRef likelihood="0.10">A5</nextActivityRef>
-                            <nextActivityRef likelihood="0.40">A6</nextActivityRef>
+                            <previousActivityRef likelihood="5">A1</previousActivityRef>
+                            <previousActivityRef likelihood="1">A5</previousActivityRef>
+                            <previousActivityRef likelihood="4">A6</previousActivityRef>
+                            <nextActivityRef likelihood="5">A3</nextActivityRef>
+                            <nextActivityRef likelihood="5">A4</nextActivityRef>
+                            <nextActivityRef likelihood="2">A5</nextActivityRef>
+                            <nextActivityRef likelihood="8">A6</nextActivityRef>
                         </activity>
                         <activity>
                             <id>A3</id>
@@ -278,8 +329,8 @@
                             <transportTime>P00Y000DT00H00M00S</transportTime>
                             
                             <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="0.5">A2</previousActivityRef>
-                            <previousActivityRef likelihood="0.5">A4</previousActivityRef>
+                            <previousActivityRef likelihood="10">A2</previousActivityRef>
+                            <previousActivityRef likelihood="10">A4</previousActivityRef>
                         </activity>
                         <activity>
                             <id>A4</id>
@@ -295,8 +346,8 @@
                             <transportTime>P00Y000DT00H00M00S</transportTime>
                             
                             <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="1">A2</previousActivityRef>
-                            <nextActivityRef likelihood="1">A3</nextActivityRef>
+                            <previousActivityRef likelihood="10">A2</previousActivityRef>
+                            <nextActivityRef likelihood="10">A3</nextActivityRef>
                         </activity>
                         <activity>
                             <id>A5</id>
@@ -314,8 +365,8 @@
                             <transportTime>P00Y000DT00H00M00S</transportTime>
                             
                             <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="1">A2</previousActivityRef>
-                            <nextActivityRef likelihood="1">A2</nextActivityRef>
+                            <previousActivityRef likelihood="10">A2</previousActivityRef>
+                            <nextActivityRef likelihood="10">A2</nextActivityRef>
                         </activity>
                         <activity>
                             <id>A6</id>
@@ -333,8 +384,8 @@
                             <transportTime>P00Y000DT00H00M00S</transportTime>
                             
                             <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="1">A2</previousActivityRef>
-                            <nextActivityRef likelihood="1">A2</nextActivityRef>
+                            <previousActivityRef likelihood="10">A2</previousActivityRef>
+                            <nextActivityRef likelihood="10">A2</nextActivityRef>
                         </activity>
                     </process>
                     <processTemplate processRef="Process_A">
@@ -342,7 +393,7 @@
                     </processTemplate>
                 </usecase>
            <simulationResult>
-               <simulationID>FHI</simulationID>
+               <simulationID>IHF</simulationID>
                <eventTrace>
                    <!-- Here is an example of the output of ASIMOV all event types -->
                    <eventRecord>
@@ -479,7 +530,7 @@
            <roles>
                <role>
                    <id>Worker</id>
-                   <roleName>FHI Worker</roleName>
+                   <roleName>IHF Worker</roleName>
                </role>
                <role>
                    <id>Electrical Engineer</id>
@@ -491,7 +542,7 @@
                </role>
                <role>
                    <id>Major Manager</id>
-                   <roleName>FHI Board Member</roleName>
+                   <roleName>IHF Board Member</roleName>
                </role>
                <role>
                    <id>RAO</id>
