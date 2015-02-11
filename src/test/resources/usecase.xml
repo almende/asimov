@@ -77,6 +77,41 @@
                                 <type>Coffee machine cover</type>
                             </component>
                         </material>
+                        <material>
+                            <materialId>Circuit Validator 1</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 2</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 3</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device A</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device B</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
                         <!-- Here we make the correlation between the specific persons and the generic roles -->
                         <person>
                             <personId>Giovanni</personId>

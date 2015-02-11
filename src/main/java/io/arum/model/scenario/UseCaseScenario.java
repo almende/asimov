@@ -11,12 +11,16 @@ import io.asimov.model.Body;
 import io.asimov.model.process.Process;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.xml.ProcessValueRefEnum;
+import io.asimov.xml.TAssemblyLineType;
+import io.asimov.xml.TComponent;
 import io.asimov.xml.TContext;
 import io.asimov.xml.TDistribution;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TProperty;
+import io.asimov.xml.TRole;
 import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
+import io.asimov.xml.TSkeletonActivityType.UsedComponent;
 import io.asimov.xml.TUseCase;
 import io.coala.bind.Binder;
 import io.coala.exception.CoalaException;
@@ -215,7 +219,7 @@ public interface UseCaseScenario
 				}
 			Util.removeInfeasibleProcesses(processTypes, context);
 			final Set<Person> roleDistribution = Util
-					.createPersonRoleDistribution(processTypes);
+					.createPersonRoleDistribution(processTypes, useCase);
 			// simCase.setRoles(new Roles());
 			// for (Entry<Person, RoleTemplate> entry :
 			// roleDistribution.entrySet())
@@ -388,8 +392,35 @@ public interface UseCaseScenario
 				for (TSkeletonActivityType activity : process.getActivity())
 				{
 					boolean foundPersonRole = activity.getRoleInvolved().size() == 0;
+					if (!foundPersonRole)
+						for (RoleInvolved r : activity.getRoleInvolved()) {
+							for (io.asimov.xml.TContext.Person p : context.getPerson()) {
+								for (TRole tr : p.getRole())
+								if (r.getRoleRef().equalsIgnoreCase(tr.getId())) {
+									foundPersonRole = true;
+								}
+							}
+						}
 					boolean foundAssemblyLineType = activity.getUsedAssemlyLineType().size() == 0;
+					if (!foundAssemblyLineType)
+						for (String t : activity.getUsedAssemlyLineType()) {
+							for (io.asimov.xml.TContext.AssemblyLine p : context.getAssemblyLine()) {
+								for (TAssemblyLineType tr : p.getAssemblyLineType())
+								if (t.equalsIgnoreCase(tr.getType())) {
+									foundAssemblyLineType = true;
+								}
+							}
+						}
 					boolean foundMaterial = activity.getUsedComponent().size() == 0;
+					if (!foundMaterial)
+						for (UsedComponent t : activity.getUsedComponent()) {
+							for (io.asimov.xml.TContext.Material p : context.getMaterial()) {
+								for (TComponent tr : p.getComponent())
+								if (t.getComponentRef().equalsIgnoreCase(tr.getType())) {
+									foundMaterial = true;
+								}
+							}
+						}
 					if (!foundPersonRole)
 					{
 						LOG.error("Activity " + activity.getName()
@@ -416,7 +447,7 @@ public interface UseCaseScenario
 			}
 			LOG.info(availableProcesses.size() + " of " + processes.size()
 					+ " processes are feasible in "
-					+ "this building's assemblyLine and equipment types");
+					+ " this contexts assemblyLine and material types");
 			if (unavailableProcesses.size() > 0)
 			{
 				LOG.warn("Removing infeasible processes: "
@@ -546,10 +577,15 @@ public interface UseCaseScenario
 		 * @return
 		 */
 		public static Set<Person> createPersonRoleDistribution(
-				final Collection<TProcessType> processes)
+				final Collection<TProcessType> processes, TUseCase useCase)
 		{
 			final Set<Person> result = new HashSet<Person>();
-
+			if (!useCase.getContext().getPerson().isEmpty()) {
+				for (TContext.Person p : useCase.getContext().getPerson())
+					result.add(new Person().fromXML(p));
+			}
+			if (!result.isEmpty())
+				return result;
 			for (TProcessType process : processes)
 				for (TSkeletonActivityType activity : process.getActivity())
 				{
@@ -557,6 +593,8 @@ public interface UseCaseScenario
 					{
 						int minNofPersonsRequired = 0;
 						int nofPersonsWithRoleFound = 0;
+						if (roleInvolved.getAverageNumberOfPersons() == null)
+							roleInvolved.setAverageNumberOfPersons(1.0f);
 						if (roleInvolved.getAverageNumberOfPersons() > 1)
 						{
 							minNofPersonsRequired = (int) Math

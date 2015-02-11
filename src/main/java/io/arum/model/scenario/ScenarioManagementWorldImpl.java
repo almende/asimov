@@ -18,8 +18,10 @@ import io.asimov.xml.TUseCase;
 import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.capability.replicate.ReplicationConfig;
+import io.coala.exception.CoalaException;
 import io.coala.log.InjectLogger;
 import io.coala.model.ModelComponentIDFactory;
 import io.coala.random.RandomDistribution;
@@ -289,7 +291,19 @@ public class ScenarioManagementWorldImpl extends AbstractARUMOrganizationtWorld
 					{
 						if (replication.getStatus().equals(SimStatus.PREPARING))
 							setReplication(SimStatus.RUNNING, 0);
-						
+						// HOLD the simulation for debugging purposes
+						Double autoPause;
+						try {
+							autoPause = getBinder().inject(ConfiguringCapability.class).getProperty("autopause").getDouble();
+							if (autoPause != null && autoPause > 0)
+								if (time.isAfter(getBinder().inject(SimTimeFactory.class).create(autoPause, TimeUnit.DAYS))) {
+									LOG.info("Paused replication for debugging puposes");
+									getBinder().inject(ReplicatingCapability.class).pause();
+								}	
+						} catch (CoalaException e1) {
+							LOG.trace("Simulation may continue because no auto-pause property could be retrieved: "+e1.getMessage());
+						}
+						// ------------------------------------------
 						LOG.trace("Time changed: " + time);
 						final Number progressPerc =
 						// (time.getValue().doubleValue() == 0.0) ? 0 :

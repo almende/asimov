@@ -35,7 +35,7 @@ public interface ASIMOVAgents {
 
 	
     public static final Term REQUEST_ALLOCATION_ACTION_TERM = SL.term(
-			String.format("(ALLOCATE_RESOURCE :%s ??%s :%s ??%s :%s ??%s :%s ??%s)",
+			String.format("(ALLOCATE_RESOURCE :%s ??%s :%s ??%s)",
 					ResourceAllocation.RESOURCE_REQUIREMENT_ID,ResourceAllocation.RESOURCE_REQUIREMENT_ID,
 					PROCESS_NAME,PROCESS_NAME
 					)
