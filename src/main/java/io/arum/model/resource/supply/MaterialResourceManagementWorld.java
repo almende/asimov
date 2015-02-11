@@ -29,7 +29,7 @@ public interface MaterialResourceManagementWorld extends
 	 * @param eventType
 	 * @return equipmentInstanceID
 	 */
-	void performUsageChange(String processID, String processInstanceID, String activityName, String equipmentName, String occupantName, EventType eventType) throws Exception;
+	void performUsageChange(String processID, String processInstanceID, String activityName, String equipmentName, String occupantName, final String assemblyLineRef, EventType eventType) throws Exception;
 
 //	/** @param event the newly triggered {@link EquipmentEvent} */
 	Observable<MaterialEvent> onUsage();

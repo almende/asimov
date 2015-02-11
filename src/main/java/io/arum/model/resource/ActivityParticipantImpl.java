@@ -377,6 +377,11 @@ public class ActivityParticipantImpl extends
 		ActivityParticipationResourceInformation materialInfo = request
 				.getResourceInfo();
 		boolean foundPerson = false;
+		ActivityParticipationResourceInformation assemblyLineInfo = null;
+		for (ActivityParticipationResourceInformation otherResource : request
+				 .getOtherResourceInfo())
+				 if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
+				 assemblyLineInfo = otherResource;
 
 		for (ActivityParticipationResourceInformation personInfo : request
 				.getOtherResourceInfo())
@@ -390,14 +395,11 @@ public class ActivityParticipantImpl extends
 								materialInfo.getActivityName(),
 								materialInfo.getResourceInstanceName(),
 								personInfo.getResourceAgent().getValue(),
+								assemblyLineInfo.getResourceAgent().getValue(),
 								EventType.START_USE_MATERIAL);
 				foundPerson = true;
 			}
-		// for (ActivityParticipationResourceInformation otherResource : request
-		// .getOtherResourceInfo())
-		// if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
-		// assemblyLineInfo = otherResource;
-
+		
 		ProcedureCall<?> job = ProcedureCall.create(this, this,
 				STOP_USING_MATERIAL, request);
 
@@ -426,10 +428,12 @@ public class ActivityParticipantImpl extends
 		
 		ActivityParticipationResourceInformation materialInfo = request
 				.getResourceInfo();
-		// for (ActivityParticipationResourceInformation otherResource : request
-		// .getOtherResourceInfo())
-		// if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
-		// assemblyLineInfo = otherResource;
+		ActivityParticipationResourceInformation assemblyLineInfo = null;
+		for (ActivityParticipationResourceInformation otherResource : request
+				 .getOtherResourceInfo())
+				 if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
+				 assemblyLineInfo = otherResource;
+
 		for (ActivityParticipationResourceInformation personInfo : request
 				.getOtherResourceInfo())
 			if (personInfo.getResourceType()
@@ -440,6 +444,7 @@ public class ActivityParticipantImpl extends
 								materialInfo.getActivityName(),
 								materialInfo.getResourceInstanceName(),
 								personInfo.getResourceAgent().getValue(),
+								assemblyLineInfo.getResourceAgent().getValue(),
 								EventType.STOP_USE_MATERIAL);
 		send(ActivityParticipation.Result.Builder.forProducer(this,
 				(Request) request).build());

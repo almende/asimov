@@ -640,7 +640,31 @@ public class ManageProcessActionImpl extends
 									}
 								}
 								// LOG.warn("DONE CHECK ----------------:");
+								if (type == ARUMResourceType.ASSEMBLY_LINE)
+								{
+									for (UsedComponent componentUsed : activityXML
+											.getUsedComponent())
+									{
+										String requiredAgentID = getAgentIDByResourceSubType(componentUsed
+												.getComponentRef());
+										if (requiredAgentID.equals(agent.toString()))
+										{
+											// LOG.warn("Required: "+requiredAgentID+" == "+agent);
 
+											type = ARUMResourceType.MATERIAL;
+											resourceName = componentUsed
+													.getComponentRef();
+											LOG.info(agent.getValue() + " is a "
+													+ componentUsed.getComponentRef());
+										} else
+										{
+											// LOG.warn("Required: "+requiredAgentID+" != "+agent);
+
+											LOG.info(agent.getValue()
+													+ " is not a "
+													+ componentUsed.getComponentRef());
+										}
+									}
 								if (type == ARUMResourceType.ASSEMBLY_LINE)
 								{
 									try
@@ -672,37 +696,7 @@ public class ManageProcessActionImpl extends
 								// FIXME Choose a assemblyLine if more are available
 								// accoring to a random distribution.
 								
-								if (type == ARUMResourceType.MATERIAL)
-								{
-									try
-									{
-										Set<SupplyType> supplyTypes = new HashSet<SupplyType>();
-										for (UsedComponent c : activityXML.getUsedComponent()) {
-											for (Material m : getWorld()
-												.getMaterialsForSupplyType(agent,new SupplyType().withName(c.getComponentRef())))
-												supplyTypes.addAll(m.getTypes());
-												
-										}
-										List<String> materials = new ArrayList<String>();
-										for (SupplyType at : supplyTypes)
-											materials.add(at.getName());
-										for (String usedSuplyType : activityXML
-												.getUsedAssemlyLineType())
-											if (!materials.contains(usedSuplyType))
-											{
-												LOG.info("Ignoring material with component types: "
-														+ materials
-														+ " because "
-														+ usedSuplyType
-														+ " was required!");
-												continue participantLoop;
-											}
-									} catch (NullPointerException ne)
-									{
-										continue participantLoop;
-										// No assemblyLine and not the right type of
-										// person so continue
-									}
+								
 
 								}
 
