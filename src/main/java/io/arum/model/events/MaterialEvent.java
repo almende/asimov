@@ -247,6 +247,7 @@ public class MaterialEvent extends Event<MaterialEvent> implements
 				.withExecutionTime(new SimTime(// Replication.BASE_UNIT,
 						sourceID, time, timeUnit, offset))
 				.withActivity(event.getActivityRef())
+				.withMaterial(event.getMaterialRef())
 				.withProcessID(event.getProcessRef())
 				.withProcessInstanceID(event.getProcessInstanceRef());
 	}

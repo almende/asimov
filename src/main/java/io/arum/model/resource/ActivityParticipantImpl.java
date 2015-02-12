@@ -393,7 +393,7 @@ public class ActivityParticipantImpl extends
 						.performUsageChange(materialInfo.getProcessID(),
 								materialInfo.getProcessInstanceId(),
 								materialInfo.getActivityName(),
-								materialInfo.getResourceInstanceName(),
+								getOwnerID().getValue(),
 								personInfo.getResourceAgent().getValue(),
 								assemblyLineInfo.getResourceAgent().getValue(),
 								EventType.START_USE_MATERIAL);
@@ -442,7 +442,7 @@ public class ActivityParticipantImpl extends
 						.performUsageChange(materialInfo.getProcessID(),
 								materialInfo.getProcessInstanceId(),
 								materialInfo.getActivityName(),
-								materialInfo.getResourceInstanceName(),
+								getOwnerID().getValue(),
 								personInfo.getResourceAgent().getValue(),
 								assemblyLineInfo.getResourceAgent().getValue(),
 								EventType.STOP_USE_MATERIAL);

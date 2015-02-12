@@ -1,6 +1,8 @@
 package io.asimov.test.sim;
 
+import io.asimov.agent.scenario.Replication;
 import io.asimov.agent.scenario.ScenarioManagementOrganization;
+import io.asimov.db.Datasource;
 import io.coala.agent.AgentStatusObserver;
 import io.coala.agent.AgentStatusUpdate;
 import io.coala.bind.Binder;
@@ -62,7 +64,12 @@ public class ScenarioTest
 				.withProperty(ReplicationConfig.class,
 						ReplicationConfig.MODEL_NAME_KEY, replicationID)
 				.build().create("_unittest_");
-
+		binder.inject(Datasource.class).removeEvents();
+		binder.inject(Datasource.class).removeMaterials();
+		binder.inject(Datasource.class).removeAssemblyLines();
+		binder.inject(Datasource.class).removePersons();
+		binder.inject(Datasource.class).removeReplication();
+		binder.inject(Datasource.class).removeProcesses();
 //		UseCase.Util.saveDefaultReplication(binder, new File(scenario),
 //				new File(training), projectID, Amount.valueOf(30, Unit.ONE),
 //				Amount.valueOf(30, NonSI.DAY));
