@@ -37,6 +37,11 @@ public class CoordinationUtil
 	public static List<Number> getCoordinatesForNonMovingElement(final Datasource ds, final AgentID elementRepresentative) {
 		AssemblyLine r = ds.findAssemblyLineByID(elementRepresentative.getValue());
 		ArrayList<Number> result = new ArrayList<Number>();
+		if (r == null) {
+			r = new AssemblyLine().withName("world");
+		}
+		if (r.getBody() == null)
+			r.withBody(new Body().withCoordinates(0, 0, 0, 0, 0, 0).withDimensions(0, 0, 0, 0, 0, 0));
 		if (r != null) {
 			result.add(getCentreForCoordinateIndex(r.getBody(), X_COORDINATE_INDEX));
 			result.add(getCentreForCoordinateIndex(r.getBody(), Y_COORDINATE_INDEX));
@@ -86,16 +91,17 @@ public class CoordinationUtil
 	public static SimDuration calculateTravelTime(SimTime timeOffset, List<Number> sourceBody,
 			 List<Number> targetBody)
 	{
-		return calculateTravelTime(timeOffset, new Body().withCoordinates(
-				sourceBody.get(X_COORDINATE_INDEX), 
-				sourceBody.get(Y_COORDINATE_INDEX),
-				sourceBody.get(Z_COORDINATE_INDEX), 0, 0, 0)
-				.withDimensions(0, 0, 0, 0, 0, 0),
-				new Body().withCoordinates(targetBody.get(X_COORDINATE_INDEX), 
-				targetBody.get(Y_COORDINATE_INDEX),
-				targetBody.get(Z_COORDINATE_INDEX), 0, 0, 0)
-				.withDimensions(0, 0, 0, 0, 0, 0),
-				defaultWalkingSpeedInMilliMeterPerSecond);
+		return new SimDuration(10, TimeUnit.SECONDS);
+//		return calculateTravelTime(timeOffset, new Body().withCoordinates(
+//				sourceBody.get(X_COORDINATE_INDEX), 
+//				sourceBody.get(Y_COORDINATE_INDEX),
+//				sourceBody.get(Z_COORDINATE_INDEX), 0, 0, 0)
+//				.withDimensions(0, 0, 0, 0, 0, 0),
+//				new Body().withCoordinates(targetBody.get(X_COORDINATE_INDEX), 
+//				targetBody.get(Y_COORDINATE_INDEX),
+//				targetBody.get(Z_COORDINATE_INDEX), 0, 0, 0)
+//				.withDimensions(0, 0, 0, 0, 0, 0),
+//				defaultWalkingSpeedInMilliMeterPerSecond);
 	}
 
 	public static SimDuration calculateTravelTime(SimTime timeOffset, Body sourceBody,

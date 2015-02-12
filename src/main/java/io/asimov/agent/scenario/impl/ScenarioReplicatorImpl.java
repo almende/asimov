@@ -1,6 +1,7 @@
 package io.asimov.agent.scenario.impl;
 
 import io.arum.model.process.ProcessManagementOrganization;
+import io.arum.model.resource.RouteLookup.RouteProvider;
 import io.arum.model.resource.person.PersonResourceManagementWorld;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.scenario.Replication;
@@ -122,7 +123,7 @@ public class ScenarioReplicatorImpl extends
 	public void initialize()
 	{
 		// REQUIRED TO INITIALIZE ROLE
-		//getBinder().inject(RouteProvider.class);
+		getBinder().inject(RouteProvider.class);
 
 		// TODO from config?
 		// this.repeatIntervalDist = newDist().getConstant(

@@ -16,6 +16,6 @@ public interface ARUMOrganizationWorld extends GroundingCapability,
 {
 
 	/** */
-	String WORLD_NAME = "factory";
+	String WORLD_NAME = "world";
 	
 }
