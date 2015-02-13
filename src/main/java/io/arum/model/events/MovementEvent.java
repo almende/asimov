@@ -119,6 +119,9 @@ public class MovementEvent extends Event<MovementEvent> implements
 	{
 		return new MovementEvent()
 				.withReplicationID(getReplicationID())
+				.withProcessID(getProcessID())
+				.withProcessInstanceID(getProcessInstanceID())
+				.withActivity(getActivity())
 				.withExecutionTime(
 						new SimTime(
 								// Replication.BASE_UNIT,
@@ -136,7 +139,7 @@ public class MovementEvent extends Event<MovementEvent> implements
 	{
 		final EventRecord result = new EventRecord();
 		result.setActivityType(getType().toXML());
-		result.setAssemblyLineRef(getAssemblyLine().getName());
+		result.setAssemblyLineRef((getAssemblyLine() != null) ? getAssemblyLine().getName() : "world");
 		result.setPersonRef(getPerson().getName());
 		for (PersonRole r: getPerson().getTypes())
 			result.getPersonRoleRef().add(r.getName());

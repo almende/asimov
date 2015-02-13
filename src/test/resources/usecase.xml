@@ -116,16 +116,16 @@
                         <person>
                             <personId>Giovanni</personId>
                             <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <role>
                                 <id>Minor Manager</id>
                                 <roleName>Floor Manager</roleName>
                             </role>
                             <role>
                                 <id>Electrical Engineer</id>
                                 <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
                             </role>
                         </person>
                         <person>
@@ -138,23 +138,23 @@
                         <person>
                             <personId>Edward</personId>
                             <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <role>
                                 <id>Electrical Engineer</id>
                                 <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
                             </role>
                         </person>
                         <person>
                             <personId>Suki</personId>
                             <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <role>
                                 <id>RAO</id>
                                 <roleName>Tester (RAO)</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
                             </role>
                         </person>
                         <person>
@@ -167,16 +167,16 @@
                         <person>
                             <personId>Anthony</personId>
                             <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <role>
                                 <id>Minor Manager</id>
                                 <roleName>Floor Manager</roleName>
                             </role>
                             <role>
                                 <id>Electrical Engineer</id>
                                 <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
                             </role>
                         </person>
                         <person>
@@ -188,24 +188,24 @@
                         </person>
                         <person>
                             <personId>Eduardo</personId>
+                             <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
                             <role>
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
-                            </role>
-                            <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
                             </role>
                         </person>
                         <person>
                             <personId>Rick</personId>
                             <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <role>
                                 <id>RAO</id>
                                 <roleName>Tester (RAO)</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
                             </role>
                         </person>
                         <person>

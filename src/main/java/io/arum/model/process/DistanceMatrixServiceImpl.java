@@ -56,7 +56,7 @@ public class DistanceMatrixServiceImpl extends AbstractInitiator<RouteLookup> im
 	
 	private static final Map<Entry<AgentID,AgentID>, Subject<SimDuration,SimDuration>> subjects = new HashMap<Entry<AgentID,AgentID>,Subject<SimDuration,SimDuration>>();
 
-	private static final SimDuration DEFAULT_WALKING_DURATION = new SimDuration(10, TimeUnit.SECONDS);
+	public static final SimDuration DEFAULT_WALKING_DURATION = new SimDuration(10, TimeUnit.SECONDS);
 	
 	@InjectLogger
 	private static Logger LOG;
