@@ -9,13 +9,16 @@ import io.asimov.model.ActivityParticipationResourceInformation;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapabilityStatus;
 import io.coala.enterprise.role.AbstractInitiator;
+import io.coala.json.JsonUtil;
 import io.coala.log.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -91,7 +94,6 @@ public class ResouceReadyInitiatorImpl extends
 		}
 		
 		private Map<String, List<ActivityParticipationResourceInformation>> pendingResources = new HashMap<String, List<ActivityParticipationResourceInformation>>();
-
 		public void handle(ResourceReadyNotification.Result result) {
 			if (!result.getResourceInfo().getActivityName()
 					.equals(cause.getResourceInfo().getActivityName()) || 

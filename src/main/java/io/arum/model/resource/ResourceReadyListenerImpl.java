@@ -9,6 +9,7 @@ import io.asimov.model.ActivityParticipation.ActivityParticipant;
 import io.asimov.model.events.EventType;
 import io.coala.bind.Binder;
 import io.coala.enterprise.role.AbstractExecutor;
+import io.coala.json.JsonUtil;
 import io.coala.log.InjectLogger;
 
 import java.util.Collections;
@@ -92,7 +93,7 @@ public class ResourceReadyListenerImpl extends
 
 	private Set<Request> pending = Collections
 			.synchronizedSet(new HashSet<Request>());
-
+	
 	/** @see io.coala.enterprise.role.Executor#onRequested(io.coala.enterprise.fact.CoordinationFact) */
 	@Override
 	public void onRequested(final Request request)

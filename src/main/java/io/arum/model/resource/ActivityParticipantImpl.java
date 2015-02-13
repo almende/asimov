@@ -160,11 +160,14 @@ public class ActivityParticipantImpl extends
 		return getBinder().inject(clazz);
 	}
 
+	
+	
 	/** @see Executor#onRequested(CoordinationFact) */
 	@Override
 	@Schedulable(RETRY_REQUEST)
 	public void onRequested(final ActivityParticipation.Request request)
 	{
+		
 		if (!getWorld(PersonResourceManagementWorld.class)
 				.getCurrentLocation().getValue().equalsIgnoreCase("world")
 				&& getWorld(PersonResourceManagementWorld.class)
@@ -183,7 +186,24 @@ public class ActivityParticipantImpl extends
 		this.priorities.put(request, NORMAL_PRIORITY);
 		this.scenarioReplicatorID = request.getScenarioReplicatorID();
 		LOG.info("Handling activity participation request: " + request);
-		this.resourceReadyinitiator.forProducer(this, request);
+		if (request.getResourceInfo().getResourceType() == ARUMResourceType.PERSON) {
+			ActivityParticipationResourceInformation assemblyLineInfo = null;
+			for (ActivityParticipationResourceInformation otherResource : request
+					.getOtherResourceInfo())
+				if (otherResource.getResourceType().equals(
+						ARUMResourceType.ASSEMBLY_LINE))
+					assemblyLineInfo = otherResource;
+
+			if (!getWorld(PersonResourceManagementWorld.class)
+					.getCurrentLocation().equals(assemblyLineInfo.getResourceAgent()))
+			{
+				LOG.info("Person not yet at assemblyLine, walking will be required.");
+			} else {
+				this.resourceReadyinitiator.forProducer(this, request);
+			}
+			
+		} else
+			this.resourceReadyinitiator.forProducer(this, request);
 
 		if (request.getResourceInfo().getResourceType() == ARUMResourceType.PERSON)
 		{
@@ -343,6 +363,9 @@ public class ActivityParticipantImpl extends
 				.build());
 	}
 
+	final Map<String,StackTraceElement[]> debugRequests = new HashMap<String,StackTraceElement[]>();
+	
+	
 	/**
 	 * @param entity
 	 * @throws Exception
@@ -353,6 +376,7 @@ public class ActivityParticipantImpl extends
 		final Material material = (Material) getWorld(MaterialResourceManagementWorld.class)
 				.getEntity();
 		
+		LOG.error(request.getStackTrace());	
 		
 		LOG.info(getOwnerID()
 				+ " Scheduling participation of material: "
@@ -366,6 +390,7 @@ public class ActivityParticipantImpl extends
 			
 	}
 
+	
 	public final static String START_USING_MATERIAL = "STARTS_USING_MATERIAL";
 
 	@Schedulable(START_USING_MATERIAL)
@@ -382,7 +407,7 @@ public class ActivityParticipantImpl extends
 				 .getOtherResourceInfo())
 				 if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
 				 assemblyLineInfo = otherResource;
-
+		
 		for (ActivityParticipationResourceInformation personInfo : request
 				.getOtherResourceInfo())
 			if (personInfo.getResourceType()
@@ -393,7 +418,7 @@ public class ActivityParticipantImpl extends
 						.performUsageChange(materialInfo.getProcessID(),
 								materialInfo.getProcessInstanceId(),
 								materialInfo.getActivityName(),
-								getOwnerID().getValue(),
+								materialInfo.getResourceAgent().getValue(),
 								personInfo.getResourceAgent().getValue(),
 								assemblyLineInfo.getResourceAgent().getValue(),
 								EventType.START_USE_MATERIAL);
@@ -442,7 +467,7 @@ public class ActivityParticipantImpl extends
 						.performUsageChange(materialInfo.getProcessID(),
 								materialInfo.getProcessInstanceId(),
 								materialInfo.getActivityName(),
-								getOwnerID().getValue(),
+								materialInfo.getResourceAgent().getValue(),
 								personInfo.getResourceAgent().getValue(),
 								assemblyLineInfo.getResourceAgent().getValue(),
 								EventType.STOP_USE_MATERIAL);

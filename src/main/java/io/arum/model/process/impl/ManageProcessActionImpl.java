@@ -624,7 +624,11 @@ public class ManageProcessActionImpl extends
 									if (requiredAgentID.equals(agent.toString()))
 									{
 										// LOG.warn("Required: "+requiredAgentID+" == "+agent);
-
+										if (activityXML.getExecutionTime() != null)
+											activityDuration = new SimDuration(
+													XmlUtil.gDurationToLong(activityXML
+															.getExecutionTime()),
+													TimeUnit.MILLIS);
 										type = ARUMResourceType.PERSON;
 										resourceName = roleInvolved
 												.getRoleRef();
@@ -650,7 +654,18 @@ public class ManageProcessActionImpl extends
 										if (requiredAgentID.equals(agent.toString()))
 										{
 											// LOG.warn("Required: "+requiredAgentID+" == "+agent);
-
+											for (UsedComponent usedMaterial : activityXML
+													.getUsedComponent())
+												if (getAgentIDByResourceSubType(
+														usedMaterial.getComponentRef()).equalsIgnoreCase(
+														agent.toString()))
+												{
+													activityDuration = new SimDuration(
+															XmlUtil.gDurationToLong(usedMaterial
+																	.getTimeOfUse()),
+															TimeUnit.MILLIS);
+													break;
+												}
 											type = ARUMResourceType.MATERIAL;
 											resourceName = componentUsed
 													.getComponentRef();
@@ -701,51 +716,25 @@ public class ManageProcessActionImpl extends
 								}
 
 								// -----------------------------------------------------------------------------
+								ActivityParticipationResourceInformation p = new ActivityParticipationResourceInformation()
+								.withResourceType(type)
+								.withActivityName(activityID)
+								.withResourceUsageDuration(
+										activityDuration)
+								.withResourceAgent(agent)
+								.withResourceName(resourceName)
+								.withProcessID(
+										cause.getProcessTypeID())
+								.withInstanceProcessID(
+										cause.getID()
+												.getValue()
+												.toString());
+								if (type ==  ARUMResourceType.MATERIAL)
+									p.withResourceInstanceName(agent.getValue());
 								resourceParticipationInfo
-										.add(new ActivityParticipationResourceInformation()
-												.withResourceType(type)
-												.withActivityName(activityID)
-												.withResourceUsageDuration(
-														activityDuration)
-												.withResourceAgent(agent)
-												.withResourceName(resourceName)
-												.withProcessID(
-														cause.getProcessTypeID())
-												.withInstanceProcessID(
-														cause.getID()
-																.getValue()
-																.toString()));
+										.add(p);
 
-								for (UsedComponent usedMaterial : activityXML
-										.getUsedComponent())
-									if (getAgentIDByResourceSubType(
-											usedMaterial.getComponentRef()).equalsIgnoreCase(
-											agent.toString()))
-									{
-										type = ARUMResourceType.MATERIAL;
-										activityDuration = new SimDuration(
-												XmlUtil.gDurationToLong(usedMaterial
-														.getTimeOfUse()),
-												TimeUnit.MILLIS);
-										resourceParticipationInfo
-												.add(new ActivityParticipationResourceInformation()
-														.withResourceType(type)
-														.withActivityName(
-																activityID)
-														.withResourceUsageDuration(
-																activityDuration)
-														.withResourceAgent(
-																agent)
-														.withResourceName(
-																usedMaterial
-																		.getComponentRef())
-														.withProcessID(
-																cause.getProcessTypeID())
-														.withInstanceProcessID(
-																cause.getID()
-																		.getValue()
-																		.toString()));
-									}
+//								
 							}
 
 							synchronized (participatingFactIds)

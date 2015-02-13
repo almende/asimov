@@ -197,7 +197,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 
 			String ref = buildingElementName;
 			LOG.info("Checking wether " + ref
-					+ " is a assemblyLine or a door in replication: " + replicationID);
+					+ " is a assemblyLine in replication: " + replicationID);
 			try
 			{
 				synchronized (ds)
