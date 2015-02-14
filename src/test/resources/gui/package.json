@@ -1,0 +1,23 @@
+{
+  "name": "ARUM_examples",
+  "version": "0.4.1-SNAPSHOT",
+  "description": "Demo.",
+  "author": "Alex",
+  "keywords": [
+    "ARUM"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/enmasseio/evejs.git"
+  },
+  "dependencies": {
+    "evejs": "latest"
+  },
+  "devDependencies": {
+    "mocha": "latest"
+  },
+  "scripts": {
+    "test": "mocha test --recursive --reporter spec"
+  },
+  "main": "./index.js"
+}
