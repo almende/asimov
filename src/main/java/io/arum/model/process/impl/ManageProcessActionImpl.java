@@ -51,6 +51,7 @@ import org.slf4j.Logger;
 
 import rx.Observer;
 
+import com.eaio.uuid.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -572,8 +573,9 @@ public class ManageProcessActionImpl extends
 
 						nextActivityjob = null;
 						SimDuration activityDuration = SimDuration.ZERO;
-						String activityID = value.get(Activity.ACTIVITY_NAME)
+						final String activityID = value.get(Activity.ACTIVITY_NAME)
 								.toString();
+						final String activityInstanceId = new UUID().toString();
 						if (activityID.contains(Task.START_OF_PROCESS.getName()))
 						{
 							getSimulator().schedule(
@@ -719,6 +721,7 @@ public class ManageProcessActionImpl extends
 								ActivityParticipationResourceInformation p = new ActivityParticipationResourceInformation()
 								.withResourceType(type)
 								.withActivityName(activityID)
+								.withActivityInstanceId(activityInstanceId)
 								.withResourceUsageDuration(
 										activityDuration)
 								.withResourceAgent(agent)

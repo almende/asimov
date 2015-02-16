@@ -8,7 +8,6 @@ import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.xml.ActivityEnumerator;
-import io.asimov.xml.TEvent;
 import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.exception.CoalaRuntimeException;
 import io.coala.log.LogUtil;
@@ -17,7 +16,6 @@ import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -57,6 +55,8 @@ public class MovementEvent extends Event<MovementEvent> implements
 	private Person person;
 
 	private String activity;
+
+	private String activityInstanceId;
 
 	@Override
 	@Field(name = "name")
@@ -119,6 +119,7 @@ public class MovementEvent extends Event<MovementEvent> implements
 	{
 		return new MovementEvent()
 				.withReplicationID(getReplicationID())
+				.withActivityInstanceId(getActivityInstanceId())
 				.withProcessID(getProcessID())
 				.withProcessInstanceID(getProcessInstanceID())
 				.withActivity(getActivity())
@@ -139,6 +140,7 @@ public class MovementEvent extends Event<MovementEvent> implements
 	{
 		final EventRecord result = new EventRecord();
 		result.setActivityType(getType().toXML());
+		result.setActivityInstanceRef(getActivityInstanceId());
 		result.setAssemblyLineRef((getAssemblyLine() != null) ? getAssemblyLine().getName() : "world");
 		result.setPersonRef(getPerson().getName());
 		for (PersonRole r: getPerson().getTypes())
@@ -166,33 +168,6 @@ public class MovementEvent extends Event<MovementEvent> implements
 		return null;
 	}
 
-	public MovementEvent fromXML(
-			final TEvent event,
-			final TimeUnit timeUnit, final Date offset, final String spaceName, final List<String> personGroupRefs, EventType type)
-	{
-		final EventType moveType = type;
-		final ClockID sourceID = new ClockID(null, getSourceID());
-		
-		final long simTimeMS = event.getPersonMoved().getTime().toGregorianCalendar().getTime().getTime() - offset.getTime();
-
-		// TODO find assemblyLine/door type from ref
-		Number time;
-		try
-		{
-			time = timeUnit.convertFrom(simTimeMS, TimeUnit.MILLIS);
-		} catch (final CoalaRuntimeException e)
-		{
-			time = simTimeMS;
-		}
-		Person p = new Person().withName(event.getPersonMoved().getPersonRef());
-		for (String r : personGroupRefs)
-			p.getTypes().add(new PersonRole().withName(r));
-		return withType(moveType)
-				.withAssemblyLine(new AssemblyLine().withName(spaceName))
-				.withPerson(p)
-				.withExecutionTime(new SimTime(// Replication.BASE_UNIT,
-						sourceID, time, timeUnit, offset));
-	}
 	
 	// FIXME replace the XMLBeans version of fromXML() with this one
 	public MovementEvent fromXML(
@@ -219,6 +194,7 @@ public class MovementEvent extends Event<MovementEvent> implements
 			p.getTypes().add(new PersonRole().withName(r));
 		return withType(moveType)
 				.withAssemblyLine(new AssemblyLine().withName(event.getAssemblyLineRef()))
+				.withActivityInstanceId(event.getActivityInstanceRef())
 				.withPerson(p)
 				.withExecutionTime(new SimTime(// Replication.BASE_UNIT,
 						sourceID, time, timeUnit, offset))
@@ -244,5 +220,31 @@ public class MovementEvent extends Event<MovementEvent> implements
 	public String getActivity()
 	{
 		return this.activity;
+	}
+	
+	/**
+	 * gets the activityInstanceId for this event
+	 * @return the instance of the activity being perfomred
+	 */
+	public String getActivityInstanceId() {
+		return activityInstanceId;
+	}
+
+	/**
+	 * sets the activityInstanceId
+	 * @param activityInstanceId
+	 */
+	public void setActivityInstanceId(final String activityInstanceId) {
+		this.activityInstanceId = activityInstanceId;
+	}
+
+	/**
+	 * gets the ActivityEvent with the activityInstanceId set
+	 * @param activityInstanceId
+	 * @return
+	 */
+	public MovementEvent withActivityInstanceId(final String activityInstanceId) {
+		setActivityInstanceId(activityInstanceId);
+		return this;
 	}
 }

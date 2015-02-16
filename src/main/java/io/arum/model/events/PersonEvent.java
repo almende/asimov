@@ -28,7 +28,9 @@ public interface PersonEvent<THIS extends PersonEvent<THIS>> extends
 	
 	/** @param the activity this event was performed for, null if none */
 	void setActivity(final String activity);
-	
+
+	/** @param the activityInstanceId this event was performed for, null if none */
+	void setActivityInstanceId(final String activity);
 
 	/**
 	 * @return

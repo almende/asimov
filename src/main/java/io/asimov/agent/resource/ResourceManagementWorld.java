@@ -53,6 +53,8 @@ public interface ResourceManagementWorld<E extends AbstractEmbodied<?>> extends
 	 * @return the coordinates of the current location of the service owner.
 	 */
 	List<Number> getCurrentCoordinates();
+
+
 	
 	/**
 	 * Sets the current location for the service owner.

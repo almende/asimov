@@ -96,12 +96,12 @@ public class MaterialResourceManagementWorldImpl extends
 	 */
 	@Override
 	public void performUsageChange(final String processID,
-			final String processInstanceID, final String activityName,
+			final String processInstanceID, final String activityName, final String activityInstanceId,
 			final String equipmentName, final String occupantName, final String assemblyLineRef,
 			final EventType eventType) throws Exception
 	{
 		LOG.info("fire 3!");
-		fireAndForget(processID, processInstanceID, activityName, eventType,
+		fireAndForget(processID, processInstanceID, activityName, activityInstanceId, eventType,
 				getBinder().inject(ModelComponentIDFactory.class)
 						.createAgentID(occupantName), equipmentName,
 				assemblyLineRef, this.usage);

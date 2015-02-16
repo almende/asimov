@@ -216,11 +216,11 @@ public class PersonResourceManagementWorldImpl extends
 	 */
 	@Override
 	public void performActivityChange(final String processID,
-			final String processInstanceID, final String activityName,
+			final String processInstanceID, final String activityName, final String activityInstanceId, 
 			final String beName, final EventType eventType) throws Exception
 	{
 		LOG.info("fire 1!");
-		fireAndForget(processID, processInstanceID, activityName, eventType,
+		fireAndForget(processID, processInstanceID, activityName, activityInstanceId, eventType,
 				getOwnerID(), activityName, beName, this.activity);
 	}
 
@@ -230,11 +230,11 @@ public class PersonResourceManagementWorldImpl extends
 	 */
 	@Override
 	public void performOccupancyChange(final String processID,
-			final String processInstanceID, final String activityName,
+			final String processInstanceID, final String activityName, final String activityInstanceId,
 			final String beName, EventType eventType) throws Exception
 	{
 		LOG.info("fire 2!");
-		fireAndForget(processID, processInstanceID, activityName, eventType,
+		fireAndForget(processID, processInstanceID, activityName, activityInstanceId, eventType,
 				getOwnerID(), activityName, beName, this.movements);
 		if (getBinder().inject(Datasource.class).findAssemblyLineByID(beName) != null)
 			synchronized (assemblyLineOccupancy)
@@ -355,6 +355,8 @@ public class PersonResourceManagementWorldImpl extends
 //		return new SimDuration(result.toMilliseconds().longValue()
 //				- now.toMilliseconds().longValue(), TimeUnit.MILLIS);
 	}
+
+	
 
 	
 

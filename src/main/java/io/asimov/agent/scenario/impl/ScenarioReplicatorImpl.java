@@ -383,6 +383,9 @@ public class ScenarioReplicatorImpl extends
 	public SimTime getAbsProcessRepeatTime(final String processTypeID)
 	{
 		final SimTime now = getTime();
+		if (getBinder().inject(
+				PersonResourceManagementWorld.class).onSiteDelay(now.plus(1, TimeUnit.HOURS)).doubleValue() == 0)
+			return now.plus(1, TimeUnit.HOURS);
 		final SimDuration millisOfDay = new SimDuration(new DateTime(
 				now.getIsoTime()).getMillisOfDay(), TimeUnit.MILLIS);
 		final SimTime startOfDay = now.minus(millisOfDay);
@@ -431,7 +434,6 @@ public class ScenarioReplicatorImpl extends
 			throws Exception
 	{
 		// FIXME hold if too many agents are competing for resources !!!???
-
 		final String processInstanceID = "ProcMgr" + PROCESS_INSTANCE_COUNT++;
 
 		LOG.info("Adding process agent for process instance: "

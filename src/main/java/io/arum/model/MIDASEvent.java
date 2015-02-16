@@ -270,7 +270,7 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 			MovementEvent movementEvent = (MovementEvent) event;
 			this.setJobId(movementEvent.getProcessInstanceID()+" "+nameOfPersonInMovementEvent
 					+ " walks before "
-					+ event.getActivity());
+					+ event.getActivity() + " " + movementEvent.getActivityInstanceId());
 			// add to mapping of person to midasEvents
 			personToPrerequisite.get(nameOfPersonInMovementEvent).add(this);
 			final String jobID = 
@@ -307,10 +307,12 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 			
 		} else if (event instanceof ActivityEvent) {
 			ActivityEvent activityEvent = (ActivityEvent) event;
-			final String jobID = 
-					activityEvent.getProcessInstanceID()+" "+activityEvent.getPerson().getName()
+			String jobID = 
+					activityEvent.getProcessInstanceID()
 					+ " performs activity "
-					+ event.getActivity();
+					+ event.getActivity() + " by "+ activityEvent.getPerson().getName();
+			if (event.getActivity().contains("None Conformity"))
+				jobID += " " + activityEvent.getActivityInstanceId();
 			if (activityEvent.getType().equals(EventType.START_ACTIVITY))
 				this.setOperation(OperationEnum.start);
 			else
@@ -335,10 +337,12 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 			return this;
 		} else if (event instanceof MaterialEvent && includeMaterial) {
 			MaterialEvent materialEvent = (MaterialEvent) event;
-			final String jobID = 
-					materialEvent.getProcessInstanceID()+" "+materialEvent.getPerson().getName()
-					+ " uses material "+materialEvent.getMaterial()+" for activity "
-					+ event.getActivity();
+			String jobID = 
+					materialEvent.getProcessInstanceID()
+					+ " performs activity "
+					+ event.getActivity()+ " using material "+materialEvent.getMaterial()+" by "+materialEvent.getPerson().getName();
+			if (event.getActivity().contains("None Conformity"))
+				jobID += " " + materialEvent.getActivityInstanceId();
 			if (materialEvent.getType().equals(EventType.START_USE_MATERIAL))
 				this.setOperation(OperationEnum.start);
 			else

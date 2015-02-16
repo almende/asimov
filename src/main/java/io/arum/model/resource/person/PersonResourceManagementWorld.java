@@ -106,14 +106,14 @@ public interface PersonResourceManagementWorld
 	 * @param eventType
 	 * @return activityInstanceID
 	 */
-	void performActivityChange(String processID, String processInstanceID,  String activityName, String beName, EventType eventType) throws Exception;
+	void performActivityChange(String processID, String processInstanceID,  String activityName,  String activityInstanceId, String beName, EventType eventType) throws Exception;
 
 	/**
 	 * @param beName
 	 * @param eventType
 	 * @return equipmentInstanceID
 	 */
-	void performOccupancyChange(String processID,  String processInstanceID, String activityName, String beName, EventType eventType) throws Exception;
+	void performOccupancyChange(String processID,  String processInstanceID, String activityName, String activityInstanceId, String beName, EventType eventType) throws Exception;
 
 	/** @param event the newly triggered {@link MovementEvent} */
 	Observable<MovementEvent> onMovement();

@@ -56,6 +56,9 @@ public class ActivityParticipationResourceInformation implements Serializable
 	/** */
 	private String activityName = null;
 	
+	/** */
+	private String activityInstanceId = null;
+	
 	private String processID = null;
 	
 	private String processInstanceId = null;
@@ -205,6 +208,10 @@ public class ActivityParticipationResourceInformation implements Serializable
 				* result
 				+ ((resourceUsageDuration == null) ? 0 : resourceUsageDuration
 						.hashCode());
+		result = prime
+				* result
+				+ ((activityInstanceId == null) ? 0 : activityInstanceId
+						.hashCode());
 		return result;
 	}
 
@@ -256,6 +263,12 @@ public class ActivityParticipationResourceInformation implements Serializable
 			if (other.resourceUsageDuration != null)
 				return false;
 		} else if (!resourceUsageDuration.equals(other.resourceUsageDuration))
+			return false;
+		if (activityInstanceId == null)
+		{
+			if (other.activityInstanceId != null)
+				return false;
+		} else if (!activityInstanceId.equals(other.resourceUsageDuration))
 			return false;
 		return true;
 	}
@@ -356,5 +369,29 @@ public class ActivityParticipationResourceInformation implements Serializable
 		return this.scheduledExecutionTime;
 	}
 
-	
+	/**
+	 * @return the activityInstanceId
+	 */
+	public String getActivityInstanceId() {
+		return activityInstanceId;
+	}
+
+	/**
+	 * @param activityInstanceId the activityInstanceId to set
+	 */
+	public void setActivityInstanceId(String activityInstanceId) {
+		this.activityInstanceId = activityInstanceId;
+	}
+
+	/**
+	 * 
+	 * @param activityInstanceId the activityInstanceId to set
+	 * @return the {@link ActivityParticipationResourceInformation}
+	 */
+	public ActivityParticipationResourceInformation withActivityInstanceId(String activityInstanceId)
+	{
+		setActivityInstanceId(activityInstanceId);
+		return this;
+	}
+
 }

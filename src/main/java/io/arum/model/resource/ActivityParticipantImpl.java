@@ -312,7 +312,8 @@ public class ActivityParticipantImpl extends
 		getWorld(PersonResourceManagementWorld.class).performActivityChange(
 				personInfo.getProcessID(),
 				personInfo.getProcessInstanceId(),
-				personInfo.getActivityName(), assemblyLineInfo.getResourceName(),
+				personInfo.getActivityName(), personInfo.getActivityInstanceId(), 
+				assemblyLineInfo.getResourceName(),
 				EventType.START_ACTIVITY);
 		// TraceService.getInstance(getID().getModelID().getValue()).saveEvent(
 		// personInfo.getResourceAgent(), EventType.START_ACTIVITY,
@@ -353,7 +354,8 @@ public class ActivityParticipantImpl extends
 		getWorld(PersonResourceManagementWorld.class).performActivityChange(
 				personInfo.getProcessID(),
 				personInfo.getProcessInstanceId(),
-				personInfo.getActivityName(), assemblyLineInfo.getResourceName(),
+				personInfo.getActivityName(), personInfo.getActivityInstanceId(),
+				assemblyLineInfo.getResourceName(),
 				EventType.STOP_ACTIVITY);
 		// TraceService.getInstance(getID().getModelID().getValue()).saveEvent(
 		// personInfo.getResourceAgent(), EventType.STOP_ACTIVITY,
@@ -418,6 +420,7 @@ public class ActivityParticipantImpl extends
 						.performUsageChange(materialInfo.getProcessID(),
 								materialInfo.getProcessInstanceId(),
 								materialInfo.getActivityName(),
+								materialInfo.getActivityInstanceId(),
 								materialInfo.getResourceAgent().getValue(),
 								personInfo.getResourceAgent().getValue(),
 								assemblyLineInfo.getResourceAgent().getValue(),
@@ -467,6 +470,7 @@ public class ActivityParticipantImpl extends
 						.performUsageChange(materialInfo.getProcessID(),
 								materialInfo.getProcessInstanceId(),
 								materialInfo.getActivityName(),
+								materialInfo.getActivityInstanceId(),
 								materialInfo.getResourceAgent().getValue(),
 								personInfo.getResourceAgent().getValue(),
 								assemblyLineInfo.getResourceAgent().getValue(),
@@ -523,6 +527,7 @@ public class ActivityParticipantImpl extends
 				personInfo.getProcessID(),
 				personInfo.getProcessInstanceId(),
 				personInfo.getActivityName(),
+				personInfo.getActivityInstanceId(),
 				getWorld(PersonResourceManagementWorld.class)
 						.getCurrentLocation().getValue(), EventType.LEAVE_ASSEMBLY);
 		LOG.info(personInfo.getResourceName()
@@ -533,7 +538,9 @@ public class ActivityParticipantImpl extends
 		getWorld(PersonResourceManagementWorld.class).performOccupancyChange(
 				personInfo.getProcessID(),
 				personInfo.getProcessInstanceId(),
-				personInfo.getActivityName(), beAGentID.getValue(),
+				personInfo.getActivityName(),
+				personInfo.getActivityInstanceId(),
+				beAGentID.getValue(),
 				EventType.ARIVE_AT_ASSEMBLY);
 		if (getWorld(PersonResourceManagementWorld.class)
 				.getCurrentLocation().getValue().equals("world"))

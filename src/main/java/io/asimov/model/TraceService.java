@@ -140,7 +140,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	 */
 	public PersonEvent<?> saveEvent(final Datasource ds,
 			final String processID, final String processInstanceID,
-			final String activityID, final AgentID agentID,
+			final String activityID, final String activityInstanceID,final AgentID agentID,
 			final EventType eventType, final SimTime timeStamp,
 			final String refID, final String buildingElementName)
 	{
@@ -288,7 +288,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		((Event<?>) event).setProcessInstanceID(processInstanceID);
 		((PersonEvent<?>) event)
 				.setActivity((activityName == null) ? activityID : activityName);
-
+		((PersonEvent<?>) event).setActivityInstanceId(activityInstanceID);
 		this.eventLogger.submit(new Callable<Void>()
 		{
 			@Override
@@ -393,6 +393,42 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		@Override
 		public int compare(PersonEvent<?> x, PersonEvent<?> y)
 		{
+			if (x.getExecutionTime().compareTo(y.getExecutionTime()) == 0) {
+				if (x instanceof ActivityEvent) {
+					if (y instanceof ActivityEvent) {
+						if (((ActivityEvent)x).getType().equals(EventType.START_ACTIVITY)) {
+							if (((ActivityEvent)y).getType().equals(EventType.STOP_ACTIVITY))
+								return 1;
+						} else if (((ActivityEvent)y).getType().equals(EventType.START_ACTIVITY)) {
+							if (((ActivityEvent)x).getType().equals(EventType.STOP_ACTIVITY))
+								return -1;
+						}
+						else return 1;
+					} else if (y instanceof MaterialEvent) {
+							if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL))
+								return -1;
+							else if (((MaterialEvent)y).getType().equals(EventType.STOP_USE_MATERIAL))
+								return 1;
+					}
+				}
+				if (x instanceof MaterialEvent) {
+					if (y instanceof MaterialEvent) {
+						if (((MaterialEvent)x).getType().equals(EventType.START_USE_MATERIAL)) {
+							if (((MaterialEvent)y).getType().equals(EventType.STOP_USE_MATERIAL))
+								return 1;
+						} else if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL)) {
+							if (((MaterialEvent)x).getType().equals(EventType.STOP_USE_MATERIAL))
+								return -1;
+						}
+						else return 1;
+					} else if (y instanceof ActivityEvent) {
+						if (((ActivityEvent)y).getType().equals(EventType.START_ACTIVITY))
+							return 1;
+						else if (((ActivityEvent)y).getType().equals(EventType.STOP_ACTIVITY))
+							return -1;
+					}
+				}
+			}
 			return x.getExecutionTime().compareTo(y.getExecutionTime());
 		}
 	}

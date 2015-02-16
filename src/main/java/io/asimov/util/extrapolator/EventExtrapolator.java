@@ -60,7 +60,7 @@ public class EventExtrapolator
 					if (newTime.getMillis() < 0)
 						throw new Exception("Something went wrong");
 					if (e.getType().equals(EventType.ARIVE_AT_ASSEMBLY) || e.getType().equals(EventType.LEAVE_ASSEMBLY)) {
-						e = (MovementEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, null, e.getAssemblyLine().getName());
+						e = (MovementEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), e.getActivityInstanceId(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, null, e.getAssemblyLine().getName());
 						LOG.info("Extrapolated movement event: "+e);
 					} else {
 						LOG.warn("Unknown event type "+e.getClass().getName());
@@ -80,7 +80,7 @@ public class EventExtrapolator
 					if (e.getType().equals(EventType.START_ACTIVITY) || e.getType().equals(EventType.STOP_ACTIVITY)) {
 						//e.withExecutionTime(newTime).withProcessInstanceID(mapProcessInstanceId(e.getProcessInstanceID(),f));
 						//extrapolator.inject(Datasource.class).save(new ActivityEvent().fromXML(((ActivityEvent) e).toXML(),TimeUnit.MILLIS,SimTime.ZERO.calcOffset()));
-						e = (ActivityEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, null, e.getAssemblyLineName());
+						e = (ActivityEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), e.getActivityInstanceId(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, null, e.getAssemblyLineName());
 						LOG.info("Extrapolated activity event: "+e);
 					} else {
 						LOG.warn("Unknown event type "+e.getClass().getName());
@@ -100,7 +100,7 @@ public class EventExtrapolator
 					if (e.getType().equals(EventType.START_USE_MATERIAL) || e.getType().equals(EventType.STOP_USE_MATERIAL)) {
 //						e.withExecutionTime(newTime).withProcessInstanceID(mapProcessInstanceId(e.getProcessInstanceID(),f));
 //						extrapolator.inject(Datasource.class).save(new EquipmentEvent().fromXML(((EquipmentEvent) e).toXML(),TimeUnit.MILLIS,SimTime.ZERO.calcOffset()));
-						e = (MaterialEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, e.getMaterial(), e.getAssemblyLine().getName());
+						e = (MaterialEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), e.getActivityInstanceId(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, e.getMaterial(), e.getAssemblyLine().getName());
 						LOG.info("Extrapolated equipment event: "+e);
 					} else {
 						LOG.warn("Unknown event type "+e.getClass().getName());

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -175,7 +176,7 @@ public class VisJSTimelineUtil {
 		boolean day = false;
 		List<MIDASEvent> mEvents = new ArrayList<MIDASEvent>();
 		Set<String> startedJobs = new HashSet<String>();
-		Set<String> pausedJobs = new HashSet<String>();
+		Map<String, List<String>> pausedJobs = new HashMap<String,List<String>>();
 		for (PersonEvent<?> personEvent : list) {
 			MIDASEvent global = MIDASEvent.getGlobalEvent(personEvent);
 			MIDASEvent event = new MIDASEvent().fromPersonEvent(personEvent,
@@ -203,16 +204,24 @@ public class VisJSTimelineUtil {
 					mEvents.add(global);
 
 				}
-				for (String pausedJobPrefix : pausedJobs)
+				for (String pausedJobPrefix : pausedJobs.keySet())
 					if (event.getOperation().equals(OperationEnum.start.name())
-							&& event.getJobId().startsWith(pausedJobPrefix)) {
+							&& event.getJobId().startsWith(pausedJobPrefix)
+							&& pausedJobs.get(pausedJobPrefix).contains(event.getPerformedBy())) {
 						if (event.getJobId().startsWith(pausedJobPrefix+"A5")
 							||
 							event.getJobId().startsWith(pausedJobPrefix+"A6"))
 							continue;
 						event.setOperation(OperationEnum.resume);
-						pausedJobs.remove(pausedJobPrefix);
-						break;
+						for (String t : pausedJobs.get(pausedJobPrefix))
+							if (t.equals(event.getPerformedBy())) {
+								 pausedJobs.get(pausedJobPrefix).remove(event.getPerformedBy());
+								 break;
+							}
+						if (pausedJobs.get(pausedJobPrefix).isEmpty()) {
+							pausedJobs.remove(pausedJobPrefix);
+							break;
+						}
 					}
 				String ncString = null;
 				if (event.getOperation().equals(OperationEnum.start.name())
@@ -225,16 +234,26 @@ public class VisJSTimelineUtil {
 				if (ncString != null) {
 					for (int i = mEvents.size() - 1; i > 0; i--) {
 						MIDASEvent resumeCheckEvent = mEvents.get(i);
-						if (resumeCheckEvent.getOperation().equals(
+						if ((resumeCheckEvent.getOperation().equals(
 								OperationEnum.finish.name())
+								|| resumeCheckEvent.getOperation().equals(
+										OperationEnum.start.name()))
 								&& resumeCheckEvent.jobId.startsWith(ncString)) {
 							if (resumeCheckEvent.getJobId().startsWith(ncString+"A5")
 									||
 									resumeCheckEvent.getJobId().startsWith(ncString+"A6"))
 									continue;
+							if (resumeCheckEvent.getOperation().equals(
+									OperationEnum.start.name()))
+									break;
 							resumeCheckEvent.setOperation(OperationEnum.pause);
-							pausedJobs.add(ncString);
-							break;
+							if (pausedJobs.containsKey(ncString)){
+								pausedJobs.get(ncString).add(resumeCheckEvent.getPerformedBy());
+							} else {
+								List<String> roles = new ArrayList<String>();
+								roles.add(resumeCheckEvent.getPerformedBy());
+								pausedJobs.put(ncString,roles);
+							}
 						}
 					}
 				}

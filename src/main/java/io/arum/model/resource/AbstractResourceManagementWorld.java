@@ -240,7 +240,7 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	@SuppressWarnings("unchecked")
 	protected <T extends PersonEvent<?>> void fireAndForget(
 			final String processID, final String processInstanceID,
-			final String activityName, final EventType eventType,
+			final String activityName, final String activityInstanceId, final EventType eventType,
 			final AgentID personID, final String ref1, final String beName,
 			final Observer<T> publisher)
 	{
@@ -252,7 +252,7 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 		publisher.onNext((T) TraceService.getInstance(
 				personID.getModelID().getValue()).saveEvent(
 				getBinder().inject(Datasource.class), processID,
-				processInstanceID, activityName, personID, eventType, now,
+				processInstanceID, activityName, activityInstanceId, personID, eventType, now,
 				ref1, beName));
 	}
 

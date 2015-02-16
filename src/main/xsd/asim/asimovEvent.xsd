@@ -85,15 +85,13 @@
 							minOccurs="1" maxOccurs="unbounded" />
 						<element name="assemblyLineRef" type="string"
 							minOccurs="1" maxOccurs="1" />
-						<element name="materialRef" type="string"
-							minOccurs="0" maxOccurs="1" />
-						<element name="activityType"
-							type="asimovevent:ActivityEnumerator" maxOccurs="1" minOccurs="0" />
-						<element name="processRef" type="string" maxOccurs="1" minOccurs="0"></element>
-						<element name="processInstanceRef"
-							type="string" maxOccurs="1" minOccurs="0">
-						</element>
-						<element name="activityRef" type="string" maxOccurs="1" minOccurs="0"></element>
+						<element name="materialRef" type="string" minOccurs="0" maxOccurs="1" />
+						<element name="componentRef" type="string" minOccurs="0" maxOccurs="1" />
+						<element name="activityType" type="asimovevent:ActivityEnumerator" maxOccurs="1" minOccurs="0" />
+						<element name="activityInstanceRef" type="string" maxOccurs="1" minOccurs="0" />
+						<element name="processRef" type="string" maxOccurs="1" minOccurs="0" />
+						<element name="processInstanceRef" type="string" maxOccurs="1" minOccurs="0" />
+						<element name="activityRef" type="string" maxOccurs="1" minOccurs="0" />
 					</sequence>
 				</complexType>
 			</element>

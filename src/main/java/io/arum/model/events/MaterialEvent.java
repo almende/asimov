@@ -17,9 +17,7 @@ import io.coala.time.ClockID;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -62,6 +60,8 @@ public class MaterialEvent extends Event<MaterialEvent> implements
 	private Person person;
 
 	private String activity;
+
+	private String activityInstanceId;
 
 	@Override
 	@Field(name = "name")
@@ -155,6 +155,7 @@ public class MaterialEvent extends Event<MaterialEvent> implements
 								getExecutionTime().getClockID(), simTime,
 								getExecutionTime().getUnit(),
 								getExecutionTime().calcOffset()))
+				.withActivityInstanceId(getActivityInstanceId())
 				.withType(type).withAssemblyLine(getAssemblyLine())
 				.withMaterial(getMaterial());
 	}
@@ -173,6 +174,7 @@ public class MaterialEvent extends Event<MaterialEvent> implements
 		result.setAssemblyLineRef(getAssemblyLine().getName());
 		result.setProcessRef(getProcessID());
 		result.setActivityRef(getActivity());
+		result.setActivityInstanceRef(getActivityInstanceId());
 		result.setProcessInstanceRef(getProcessInstanceID());
 		try
 		{
@@ -194,34 +196,6 @@ public class MaterialEvent extends Event<MaterialEvent> implements
 		throw new IllegalStateException("Not Implemented");
 	}
 
-	public MaterialEvent fromXML(final TEvent eventIn,
-			final TimeUnit timeUnit, final Date offset,
-			final EventType eventType)
-	{
-		
-		final TMaterialUsedEvent event = eventIn.getMaterialUsed();
-		final ClockID sourceID = new ClockID(null, getSourceID());
-		long simTimeMS =event
-				.getTime().toGregorianCalendar().getTime().getTime()
-				- offset.getTime();
-		if (eventType != EventType.START_USE_MATERIAL)
-			simTimeMS += event.getDurationOfUse().getTimeInMillis(new Date());
-
-		// TODO find assemblyLine/door type from ref
-		Number time;
-		try
-		{
-			time = timeUnit.convertFrom(simTimeMS, TimeUnit.MILLIS);
-		} catch (final CoalaRuntimeException e)
-		{
-			time = simTimeMS;
-		}
-		
-		return withType(eventType).withMaterial(event.getMaterialRef())
-				.withAssemblyLine(new AssemblyLine().withName(event.getAssemblyLineRef()))
-				.withExecutionTime(new SimTime(// Replication.BASE_UNIT,
-						sourceID, time, timeUnit, offset));
-	}
 
 	// FIXME replace the XMLBeans version of fromXML() with this one
 	public MaterialEvent fromXML(final EventRecord event,
@@ -249,6 +223,7 @@ public class MaterialEvent extends Event<MaterialEvent> implements
 				.withActivity(event.getActivityRef())
 				.withMaterial(event.getMaterialRef())
 				.withProcessID(event.getProcessRef())
+				.withActivityInstanceId(event.getActivityInstanceRef())
 				.withProcessInstanceID(event.getProcessInstanceRef());
 	}
 
@@ -271,5 +246,31 @@ public class MaterialEvent extends Event<MaterialEvent> implements
 	public String getActivity()
 	{
 		return this.activity;
+	}
+	
+	/**
+	 * gets the activityInstanceId for this event
+	 * @return the instance of the activity being perfomred
+	 */
+	public String getActivityInstanceId() {
+		return activityInstanceId;
+	}
+
+	/**
+	 * sets the activityInstanceId
+	 * @param activityInstanceId
+	 */
+	public void setActivityInstanceId(final String activityInstanceId) {
+		this.activityInstanceId = activityInstanceId;
+	}
+
+	/**
+	 * gets the ActivityEvent with the activityInstanceId set
+	 * @param activityInstanceId
+	 * @return
+	 */
+	public MaterialEvent withActivityInstanceId(final String activityInstanceId) {
+		setActivityInstanceId(activityInstanceId);
+		return this;
 	}
 }

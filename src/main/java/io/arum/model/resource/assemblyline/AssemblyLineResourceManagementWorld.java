@@ -1,7 +1,6 @@
 package io.arum.model.resource.assemblyline;
 
 import io.asimov.agent.resource.ResourceManagementWorld;
-import io.asimov.model.events.EventType;
 import io.coala.capability.CapabilityFactory;
 
 /**

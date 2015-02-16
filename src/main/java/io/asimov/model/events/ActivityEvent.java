@@ -44,16 +44,20 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 	/** */
 	private static final long serialVersionUID = 1L;
 
-	/** the assemblyLine that is entered or left */
+	/** the activity type that is performed */
 
 	private String activity;
+	
+	/** the activity instance that is performed */
 
-	/** the person that is entering or leaving */
+	private String activityInstanceId;
+
+	/** the person that is performing the activity */
 	@ManyToOne
 	private Person person;
 
 	/**
-	 * The name of the assemblyLine this activty was performed in.
+	 * The name of the assemblyLine this activity was performed in.
 	 */
 	private String assemblyLineName;
 
@@ -123,6 +127,7 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 	{
 		final EventRecord result = new EventRecord();
 		result.setActivityType(getType().toXML()); // event type
+		result.setActivityInstanceRef(getActivityInstanceId());
 		result.setPersonRef(getPerson().getName());
 		for (PersonRole r: getPerson().getTypes())
 			result.getPersonRoleRef().add(r.getName());
@@ -176,6 +181,7 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 			p.getTypes().add(new PersonRole().withName(r));
 		return withType(actType)
 				.withActivity(event.getActivityRef())
+				.withActivityInstanceId(event.getActivityInstanceRef())
 				.withProcessID(event.getProcessRef())
 				.withProcessInstanceID(event.getProcessInstanceRef())
 				.withAssemblyLineName(event.getAssemblyLineRef())
@@ -211,5 +217,31 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 	public void setAssemblyLineName(final String assemblyLineName)
 	{
 		this.assemblyLineName = assemblyLineName;
+	}
+
+	/**
+	 * gets the activityInstanceId for this event
+	 * @return the instance of the activity being perfomred
+	 */
+	public String getActivityInstanceId() {
+		return activityInstanceId;
+	}
+
+	/**
+	 * sets the activityInstanceId
+	 * @param activityInstanceId
+	 */
+	public void setActivityInstanceId(final String activityInstanceId) {
+		this.activityInstanceId = activityInstanceId;
+	}
+
+	/**
+	 * gets the ActivityEvent with the activityInstanceId set
+	 * @param activityInstanceId
+	 * @return
+	 */
+	public ActivityEvent withActivityInstanceId(final String activityInstanceId) {
+		setActivityInstanceId(activityInstanceId);
+		return this;
 	}
 }
