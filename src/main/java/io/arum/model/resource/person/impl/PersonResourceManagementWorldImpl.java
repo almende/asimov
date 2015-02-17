@@ -60,6 +60,7 @@ public class PersonResourceManagementWorldImpl extends
 			.create();
 
 	
+	
 	private boolean onSite = false;
 
 	public RandomDistribution<SimDuration> onSiteTimeOfDay;
@@ -132,6 +133,7 @@ public class PersonResourceManagementWorldImpl extends
 	{
 		super(binder);
 	}
+	
 
 	@Override
 	public void initialize() throws Exception
@@ -140,6 +142,7 @@ public class PersonResourceManagementWorldImpl extends
 		this.entityType = ARUMResourceType.PERSON;
 		this.entity = getBinder().inject(Datasource.class).findPersonByID(
 				getOwnerID().getValue());
+
 		// this.onSiteDuration = CIMScenario.Util.getOccupancyOnSiteDist(
 		// Collections.singleton(new TDistribution()), // FIXME Should use real
 		// distribution here

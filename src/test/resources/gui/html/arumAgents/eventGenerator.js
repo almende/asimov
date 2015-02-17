@@ -11,8 +11,8 @@ function EventGenerator(id) {
   this.rpc = this.loadModule('rpc', this.rpcFunctions);
   this.connect(eve.system.transports.getAll());
   this.eventCounter = 0;
-  if (typeof data != 'undefined')
-	  this.events = data;
+  if (typeof midas_data != 'undefined')
+	  this.events = midas_data;
   else {
 	  alert("No data was received from ASIMOV tool yet.");
 	  this.events = [];

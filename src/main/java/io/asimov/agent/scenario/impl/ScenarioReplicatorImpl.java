@@ -2,6 +2,7 @@ package io.asimov.agent.scenario.impl;
 
 import io.arum.model.process.ProcessManagementOrganization;
 import io.arum.model.resource.RouteLookup.RouteProvider;
+import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.arum.model.resource.person.PersonResourceManagementWorld;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.scenario.Replication;
@@ -433,11 +434,13 @@ public class ScenarioReplicatorImpl extends
 			final ScenarioReplication.Request cause, final String processTypeID)
 			throws Exception
 	{
+					
 		// FIXME hold if too many agents are competing for resources !!!???
 		final String processInstanceID = "ProcMgr" + PROCESS_INSTANCE_COUNT++;
 
-		LOG.info("Adding process agent for process instance: "
+		LOG.info("Adding process agents for process instance: "
 				+ processInstanceID + " of type " + processTypeID);
+		
 		synchronized (processInstancesByType)
 		{
 			getProcesses(processTypeID).add(processInstanceID);
@@ -450,6 +453,7 @@ public class ScenarioReplicatorImpl extends
 					PROCESS_STATUS_PENDING);
 		else
 		{
+			
 			if (!processStatus.containsKey(processTypeID))
 				processStatus
 						.put(processTypeID, new HashMap<AgentID, String>());
@@ -459,7 +463,10 @@ public class ScenarioReplicatorImpl extends
 					ProcedureCall.create(this, this,
 							INITIATE_PROCESS_COMPLETION, cause, processTypeID,
 							completerAgentID));
+
 		}
+		
+
 	}
 
 	private static final String INITIATE_PROCESS_COMPLETION = "initiateProcessCompletion";

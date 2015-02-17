@@ -8,7 +8,7 @@ var jobList = {};
 var eventGen = new EventGenerator("eventGenerator");
 var agentGen = new AgentGenerator("agentGenerator");
 var jobGen = new JobAgentGenerator("jobAgentGenerator");
-
+var showMaterial = false;
 
 
 // eventGen.start();
@@ -239,31 +239,65 @@ function toggleDifference() {
 function showTimelineBtn() {
   var timelineBtn = document.getElementById('showTimeline');
   var graphBtn = document.getElementById('showGraph');
+  var materialBtn = document.getElementById('showMaterial');
+
 
   if (showTimeline == false) {
     graphBtn.className = graphBtn.className.replace("selected", "");
+    materialBtn.className = graphBtn.className.replace("selected", "");
     timelineBtn.className += " selected";
     var timelinewrapper = document.getElementById("timelineWrapper");
     var graphwrapper = document.getElementById("graphWrapper");
+    var materialwrapper = document.getElementById("materialWrapper");
     graphwrapper.style.display = "none";
     timelinewrapper.style.display = "block";
+    materialwrapper.style.display = "none";
     showTimeline = true;
     showGraph = false;
+    showMaterial = false;
   }
 }
+
+function showMaterialBtn() {
+	  var timelineBtn = document.getElementById('showTimeline');
+	  var graphBtn = document.getElementById('showGraph');
+	  var materialBtn = document.getElementById('showMaterial');
+
+	  if (showMaterial == false) {
+	    graphBtn.className = graphBtn.className.replace("selected", "");
+	    timelineBtn.className = graphBtn.className.replace("selected", "");
+
+	    materialBtn.className += " selected";
+	    var timelinewrapper = document.getElementById("timelineWrapper");
+	    var materialwrapper = document.getElementById("materialWrapper");
+	    var graphwrapper = document.getElementById("graphWrapper");
+	    graphwrapper.style.display = "none";
+	    timelinewrapper.style.display = "none";
+	    materialwrapper.style.display = "block";
+	    showMaterial = true;
+	    showGraph = false;
+	    showTimeline = false;
+	  }
+	}
 function showGraphBtn() {
   var timelineBtn = document.getElementById('showTimeline');
   var graphBtn = document.getElementById('showGraph');
+  var materialBtn = document.getElementById('showMaterial');
 
   if (showGraph == false) {
     timelineBtn.className = graphBtn.className.replace("selected", "");
+    materialBtn.className = graphBtn.className.replace("selected", "");
+
     graphBtn.className += " selected";
     var timelinewrapper = document.getElementById("timelineWrapper");
     var graphwrapper = document.getElementById("graphWrapper");
+    var materialwrapper = document.getElementById("materialWrapper");
     timelinewrapper.style.display = "none";
     graphwrapper.style.display = "block";
+    materialwrapper.style.display = "none";
     showTimeline = false;
     showGraph = true;
+    showMaterial = false;
   }
 }
 
@@ -347,4 +381,65 @@ function printEvents(events) {
   }
   str += "]";
   console.log(str);
+}
+
+
+function copyToClipboard(text)
+{
+    alert(text);
+}
+
+function onData(data) {
+	window.materialTimeline = new vis.Timeline(document.getElementById('materialTimeline'));
+	var options = {
+			min: Number.MAX_VALUE,
+			max: Number.MIN_VALUE,
+			orientation: 'top',
+			height: '100%',
+			groupOrder: 'content', // groupOrder can be a property name or a sorting function
+			margin: {item: 0, axis: 0}
+			}; 
+	var maxTime = 0;
+	for (var i = 0; i < data.items.length; i++) {
+		if (data.items[i].end != undefined)
+			maxTime = Math.max(maxTime,data.items[i].end)
+	}
+	var finishedItems = [];
+	for (var i = 0; i < data.items.length; i++) {
+		data.items[i].start = new Date(data.items[i].start);
+		options.min = Math.min(options.min, data.items[i].start);
+		if (data.items[i].end != undefined)
+		{
+			data.items[i].end = new Date(data.items[i].end);
+			options.max = Math.max(options.max, data.items[i].end);
+		}
+		else
+		{
+		///* else
+			data.items[i].end = new Date(maxTime);// */
+			//if(console.log)
+			//	console.log('Ignoring item without end time: '+JSON.stringify(data.items[i]));
+			options.max = Math.max(options.max, data.items[i].start);
+			continue;
+		}				
+		data.items[i].group = data.items[i].group.id;
+		
+		data.items[i].content = data.items[i].content;
+		data.items[i].title = data.items[i].title.replace('{interval}',data.items[i].start+'-'+data.items[i].end);
+		finishedItems.push(data.items[i])
+	}
+	window.materialTimeline.setOptions(options);
+	window.materialTimeline.setGroups(data.groups);
+	window.materialTimeline.setItems(data.items);
+	window.materialTimeline.on('select', onSelect);
+}
+
+function onSelect(nodes) {
+	var cText = "";
+	for (var i = 0; i < nodes.items.length; i++)
+		for (var j = 0; j < data.items.length; j++)
+			if (data.items[j].id == nodes.items[i])
+				cText += data.items[j].title  + "\n\n";
+	copyToClipboard(cText);
+	console.log('Selected items: ' + JSON.stringify(nodes));
 }

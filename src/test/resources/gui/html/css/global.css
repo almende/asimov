@@ -96,6 +96,13 @@ table.wrapper {
     width:100%;
 }
 
+table.mWrapper {
+    position:relative;
+    height:2000px;
+    width:100%;
+}
+
+
 /*table.wrapper td {*/
     /*border:1px solid #ff0000;*/
 /*}*/
@@ -184,6 +191,13 @@ div.graph2dContent{
 
 #timelineWrapper {
     display:block;
+    border: 1px solid #dddddd;
+    padding:5px;
+}
+
+
+#materialWrapper {
+    display:none;
     border: 1px solid #dddddd;
     padding:5px;
 }

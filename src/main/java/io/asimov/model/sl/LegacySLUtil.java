@@ -504,20 +504,21 @@ public class LegacySLUtil implements ASIMOVAgents
 				andFormulaString += " " + formula.toString();
 			}
 			andFormulaString += ")";
-			if (!requirement.getResource().getTypeID().getName()
-					.equalsIgnoreCase(ARUMResourceType.PERSON.name()) 
-					|| !isExclusive(requirement))
-				result = SL.formula(andFormulaString);
-			else
+//			if (!requirement.getResource().getTypeID().getName()
+//					.equalsIgnoreCase(ARUMResourceType.PERSON.name()) 
+//					|| !isExclusive(requirement))
+//				result = SL.formula(andFormulaString);
+//			else
 				result = new AndNode(notAllocated, SL.formula(andFormulaString));
 		} else
 		{
-			if (!requirement.getResource().getTypeID().getName()
-					.equalsIgnoreCase(ARUMResourceType.PERSON.name()) || !isExclusive(requirement))
-				result = resourceFormula;
-			else
+//			if (!requirement.getResource().getTypeID().getName()
+//					.equalsIgnoreCase(ARUMResourceType.PERSON.name()) || !isExclusive(requirement))
+//				result = resourceFormula;
+//			else
 				result = new AndNode(notAllocated, resourceFormula);
 		}
+		//LOG.error(result);
 		return result;
 	}
 

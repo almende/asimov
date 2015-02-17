@@ -539,6 +539,531 @@
 }
 
 
+.vis.materialTimeline {
+}
+
+
+.vis.materialTimeline.root {
+  position: relative;
+  border: 1px solid #bfbfbf;
+
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+
+  box-sizing: border-box;
+}
+
+.vis.materialTimeline .vispanel {
+  position: absolute;
+
+  padding: 0;
+  margin: 0;
+
+  box-sizing: border-box;
+}
+
+.vis.materialTimeline .vispanel.center,
+.vis.materialTimeline .vispanel.left,
+.vis.materialTimeline .vispanel.right,
+.vis.materialTimeline .vispanel.top,
+.vis.materialTimeline .vispanel.bottom {
+  border: 1px #bfbfbf;
+}
+
+.vis.materialTimeline .vispanel.center,
+.vis.materialTimeline .vispanel.left,
+.vis.materialTimeline .vispanel.right {
+  border-top-style: solid;
+  border-bottom-style: solid;
+  overflow: hidden;
+}
+
+.vis.materialTimeline .vispanel.center,
+.vis.materialTimeline .vispanel.top,
+.vis.materialTimeline .vispanel.bottom {
+  border-left-style: solid;
+  border-right-style: solid;
+}
+
+.vis.materialTimeline .background {
+  overflow: hidden;
+}
+
+.vis.materialTimeline .vispanel > .content {
+  position: relative;
+}
+
+.vis.materialTimeline .vispanel .shadow {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.8);
+  /* TODO: find a nice way to ensure shadows are drawn on top of items
+  z-index: 1;
+  */
+}
+
+.vis.materialTimeline .vispanel .shadow.top {
+  top: -1px;
+  left: 0;
+}
+
+.vis.materialTimeline .vispanel .shadow.bottom {
+  bottom: -1px;
+  left: 0;
+}
+
+.vis.materialTimeline .labelset {
+  position: relative;
+  width: 100%;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+.vis.materialTimeline .labelset .vlabel {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  color: #4d4d4d;
+
+  box-sizing: border-box;
+}
+
+.vis.materialTimeline .labelset .vlabel {
+  border-bottom: 1px solid #bfbfbf;
+}
+
+.vis.materialTimeline .labelset .vlabel:last-child {
+  border-bottom: none;
+}
+
+.vis.materialTimeline .labelset .vlabel .inner {
+  display: inline-block;
+  padding: 5px;
+}
+
+.vis.materialTimeline .labelset .vlabel .inner.hidden {
+  padding: 0;
+}
+
+
+.vis.materialTimeline .itemset {
+  position: relative;
+  padding: 0;
+  margin: 0;
+
+  box-sizing: border-box;
+}
+
+.vis.materialTimeline .itemset .background,
+.vis.materialTimeline .itemset .foreground {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.vis.materialTimeline .axis {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.vis.materialTimeline  .foreground .group {
+  position: relative;
+  box-sizing: border-box;
+  border-bottom: 1px solid #bfbfbf;
+}
+
+.vis.materialTimeline  .foreground .group:last-child {
+  border-bottom: none;
+}
+
+
+.vis.materialTimeline .item {
+  position: absolute;
+  color: #1A1A1A;
+  border-color: #97B0F8;
+  border-width: 1px;
+  background-color: #D5DDF6;
+  display: inline-block;
+  padding: 5px;
+}
+
+.vis.materialTimeline .item.selected {
+  border-color: #FFC200;
+  background-color: #FFF785;
+
+  /* z-index must be higher than the z-index of custom time bar and current time bar */
+  z-index: 2;
+}
+
+.vis.materialTimeline .editable .item.selected {
+  cursor: move;
+}
+
+.vis.materialTimeline .item.point.selected {
+  background-color: #FFF785;
+}
+
+.vis.materialTimeline .item.box {
+  text-align: center;
+  border-style: solid;
+  border-radius: 2px;
+}
+
+.vis.materialTimeline .item.point {
+  background: none;
+}
+
+.vis.materialTimeline .item.dot {
+  position: absolute;
+  padding: 0;
+  border-width: 4px;
+  border-style: solid;
+  border-radius: 4px;
+}
+
+.vis.materialTimeline .item.range {
+  border-style: solid;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.vis.materialTimeline .item.background {
+  overflow: hidden;
+  border: none;
+  background-color: rgba(213, 221, 246, 0.4);
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.vis.materialTimeline .item.range .content {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.vis.materialTimeline .item.background .content {
+  position: absolute;
+  display: inline-block;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 5px;
+}
+
+.vis.materialTimeline .item.line {
+  padding: 0;
+  position: absolute;
+  width: 0;
+  border-left-width: 1px;
+  border-left-style: solid;
+}
+
+.vis.materialTimeline .item .content {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.vis.materialTimeline .item .delete {
+  background: url('img/materialTimeline/delete.png') no-repeat top center;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 0;
+  right: -24px;
+  cursor: pointer;
+}
+
+.vis.materialTimeline .item.range .drag-left {
+  position: absolute;
+  width: 24px;
+  height: 100%;
+  top: 0;
+  left: -4px;
+
+  cursor: w-resize;
+}
+
+.vis.materialTimeline .item.range .drag-right {
+  position: absolute;
+  width: 24px;
+  height: 100%;
+  top: 0;
+  right: -4px;
+
+  cursor: e-resize;
+}
+
+.vis.materialTimeline .timeaxis {
+  position: relative;
+  overflow: hidden;
+}
+
+.vis.materialTimeline .timeaxis.foreground {
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.vis.materialTimeline .timeaxis.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vis.materialTimeline .timeaxis .text {
+  position: absolute;
+  color: #4d4d4d;
+  padding: 3px;
+  white-space: nowrap;
+}
+
+.vis.materialTimeline .timeaxis .text.measure {
+  position: absolute;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  visibility: hidden;
+}
+
+.vis.materialTimeline .timeaxis .grid.vertical {
+  position: absolute;
+  width: 0;
+  border-right: 1px solid;
+}
+
+.vis.materialTimeline .timeaxis .grid.minor {
+  border-color: #e5e5e5;
+}
+
+.vis.materialTimeline .timeaxis .grid.major {
+  border-color: #bfbfbf;
+}
+
+.vis.materialTimeline .currenttime {
+  background-color: #FF7F6E;
+  width: 2px;
+  z-index: 1;
+}
+.vis.materialTimeline .customtime {
+  background-color: #6E94FF;
+  width: 2px;
+  cursor: move;
+  z-index: 1;
+}
+.vis.materialTimeline.root {
+  /*
+  -webkit-transition: height .4s ease-in-out;
+  transition:         height .4s ease-in-out;
+  */
+}
+
+.vis.materialTimeline .vispanel {
+  /*
+  -webkit-transition: height .4s ease-in-out, top .4s ease-in-out;
+  transition:         height .4s ease-in-out, top .4s ease-in-out;
+  */
+}
+
+.vis.materialTimeline .axis {
+  /*
+  -webkit-transition: top .4s ease-in-out;
+  transition:         top .4s ease-in-out;
+  */
+}
+
+/* TODO: get animation working nicely
+
+.vis.materialTimeline .item {
+  -webkit-transition: top .4s ease-in-out;
+  transition:         top .4s ease-in-out;
+}
+
+.vis.materialTimeline .item.line {
+  -webkit-transition: height .4s ease-in-out, top .4s ease-in-out;
+  transition:         height .4s ease-in-out, top .4s ease-in-out;
+}
+/**/
+
+.vis.materialTimeline .vispanel.background.horizontal .grid.horizontal {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    border-bottom: 1px solid;
+}
+
+.vis.materialTimeline .vispanel.background.horizontal .grid.minor {
+    border-color: #e5e5e5;
+}
+
+.vis.materialTimeline .vispanel.background.horizontal .grid.major {
+    border-color: #bfbfbf;
+}
+
+
+.vis.materialTimeline .dataaxis .yAxis.major {
+    width: 100%;
+    position: absolute;
+    color: #4d4d4d;
+    white-space: nowrap;
+}
+
+.vis.materialTimeline .dataaxis .yAxis.major.measure{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    visibility: hidden;
+    width: auto;
+}
+
+
+.vis.materialTimeline .dataaxis .yAxis.minor{
+    position: absolute;
+    width: 100%;
+    color: #bebebe;
+    white-space: nowrap;
+}
+
+.vis.materialTimeline .dataaxis .yAxis.minor.measure{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    visibility: hidden;
+    width: auto;
+}
+
+
+.vis.materialTimeline .legend {
+    background-color: rgba(247, 252, 255, 0.65);
+    padding: 5px;
+    border-color: #b3b3b3;
+    border-style:solid;
+    border-width: 1px;
+    box-shadow: 2px 2px 10px rgba(154, 154, 154, 0.55);
+}
+
+.vis.materialTimeline .legendText {
+    /*font-size: 10px;*/
+    white-space: nowrap;
+    display: inline-block
+}
+.vis.materialTimeline .graphGroup0 {
+    fill:#4f81bd;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #4f81bd;
+}
+
+.vis.materialTimeline .graphGroup1 {
+    fill:#f79646;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #f79646;
+}
+
+.vis.materialTimeline .graphGroup2 {
+    fill: #8c51cf;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #8c51cf;
+}
+
+.vis.materialTimeline .graphGroup3 {
+    fill: #75c841;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #75c841;
+}
+
+.vis.materialTimeline .graphGroup4 {
+    fill: #ff0100;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #ff0100;
+}
+
+.vis.materialTimeline .graphGroup5 {
+    fill: #37d8e6;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #37d8e6;
+}
+
+.vis.materialTimeline .graphGroup6 {
+    fill: #042662;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #042662;
+}
+
+.vis.materialTimeline .graphGroup7 {
+    fill:#00ff26;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #00ff26;
+}
+
+.vis.materialTimeline .graphGroup8 {
+    fill:#ff00ff;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #ff00ff;
+}
+
+.vis.materialTimeline .graphGroup9 {
+    fill: #8f3938;
+    fill-opacity:0;
+    stroke-width:2px;
+    stroke: #8f3938;
+}
+
+.vis.materialTimeline .fill {
+    fill-opacity:0.1;
+    stroke: none;
+}
+
+
+.vis.materialTimeline .bar {
+    fill-opacity:0.5;
+    stroke-width:1px;
+}
+
+.vis.materialTimeline .point {
+    stroke-width:2px;
+    fill-opacity:1.0;
+}
+
+
+.vis.materialTimeline .legendBackground {
+    stroke-width:1px;
+    fill-opacity:0.9;
+    fill: #ffffff;
+    stroke: #c2c2c2;
+}
+
+
+.vis.materialTimeline .outline {
+    stroke-width:1px;
+    fill-opacity:1;
+    fill: #ffffff;
+    stroke: #e5e5e5;
+}
+
+.vis.materialTimeline .iconFill {
+    fill-opacity:0.3;
+    stroke: none;
+}
+
 
 div.network-manipulationDiv {
   border-width: 0;

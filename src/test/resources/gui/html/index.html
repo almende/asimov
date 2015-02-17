@@ -4,17 +4,18 @@
     <title>ARUM - MIDAS</title>
     <link href="./css/global.css" rel="stylesheet" type="text/css" />
     <link href="./css/vis.css" rel="stylesheet" type="text/css" />
+    <link href="../../resource-usage-vis/style.css" rel="stylesheet" type="text/css" />
 
     <script language="javascript">
-        var EVENT_DELAY = 1000;
+        var EVENT_DELAY = 0;
         var EVENTS_AGENT_ADDRESS = 'ws://localhost:8082/ws/events';
         var AMOUNT_OF_INITIAL_EVENTS = 1;
-        var TIMELINE_START = '2014-09-18 10:00:00';
-        var TIMELINE_END = '2014-09-19 18:00:00';
-        var INCREASE_SPEED = true;
+        var TIMELINE_START = '2015-02-09 10:00:00';
+        var TIMELINE_END = '2015-02-10 18:00:00';
+        var INCREASE_SPEED = false;
         var ONLINE_ONLY = true;
     </script>
-	
+	<script type="text/javascript" src="../../resource-usage-vis/usage.json"></script>
 	<script type="text/javascript" src="./data/asimov_events.json" ></script>
     <script type="text/javascript" src="./js/vis.js"></script>
     <script type="text/javascript" src="./js/evejs.js"></script>
@@ -31,11 +32,15 @@
     <script type="text/javascript" src="./arumAgents/jobAgentGenerator.js"></script>
     <script type="text/javascript" src="./arumAgents/eventGenerator.js"></script>
     <script type="text/javascript" src="./js/init.js"></script>
-
+    <style>
+		.fullHeight{ height:100%; margin:0px; }
+		
+	</style> 
 </head>
-<body onload="draw()">
-<img src="./images/arum_small.png" style="position:relative; top:-6px;"><img src="./images/midas_small.png" style="float:right;"><br>
-<div class="typeButton selected" onclick="showTimelineBtn()" id="showTimeline">Show by Timeline</div>
+<body onload="draw(); if (typeof data != 'undefined') onData(data);">
+<img src="./images/arum_small.png" style="position:relative; top:-6px;"><img height="120" src="./images/asimov_logo_large.png" style="float:right;"><br>
+<div class="typeButton selected" onclick="showTimelineBtn()" id="showTimeline">Show by Role</div>
+<div class="typeButton" onclick="showMaterialBtn()" id="showMaterial">Show by Material</div>
 <div class="typeButton" onclick="showGraphBtn()" id="showGraph">Show by Job</div>
 <div id="timelineWrapper">
     <input type="button" value="Next Event" onclick="getNewEvent()">
@@ -44,6 +49,16 @@
     <input type="button" value="Get All Events" onclick="getAllEvents()">
     <input type="button" value="Get All Events Quickly" onclick="getAllEventsQuickly()"> <br>
     <div id="timeline"></div>
+</div>
+
+<div id="materialWrapper">
+    <table class="mWrapper">
+        <tr>
+            <td width="100%">
+    			<div id="materialTimeline" class="fullHeight"></div>	
+    		</td>
+    	</tr>
+    </table>
 </div>
 
 <div id="graphWrapper">

@@ -188,7 +188,7 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 			{
 				LOG.error("Failed to request leaveSite action.",e);
 			}
-			
+		result.onCompleted();	
 		
 	}
 	

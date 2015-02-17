@@ -269,7 +269,7 @@ public class VisJSTimelineUtil {
 		}
 
 		// Now make a huge string representation of it
-		final String startOfData = "var data = [\n";
+		final String startOfData = "var midas_data = [\n";
 		String data = startOfData;
 		for (MIDASEvent me : mEvents) {
 			if (!data.equals(startOfData))
@@ -331,8 +331,7 @@ public class VisJSTimelineUtil {
 				LOG.info("Visualizing material event in timeline item.");
 				MaterialEvent e = (MaterialEvent) event;
 				EventRecord er = e.toXML();
-				String resource = er.getAssemblyLineRef() + ": "
-						+ er.getMaterialRef();
+				String resource = er.getMaterialRef();
 				item.setGroup(getGroupWithName(resource, timeline));
 				item.setContent(e.getPerson().getName());
 				String roles = "";
@@ -377,12 +376,12 @@ public class VisJSTimelineUtil {
 		}
 
 		HashMap<String, String> classNameToStyle = new HashMap<String, String>();
-		List<Color> colors = pick(classNames.size());
+		List<Color> colors = pick(classNames.size()+1);
 		int i = 0;
 		for (String styleName : classNames) {
 			String rgb = Integer.toHexString(colors.get(i).getRGB());
 			rgb = rgb.substring(2, rgb.length());
-			classNameToStyle.put(styleName, "{background-color: #" + rgb + "}");
+			classNameToStyle.put(styleName, "{background-color: #" + rgb + " !important}");
 			i++;
 		}
 
