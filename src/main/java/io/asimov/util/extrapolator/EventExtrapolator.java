@@ -44,7 +44,7 @@ public class EventExtrapolator
 			offset = SimTime.ZERO;
 		try
 		{
-			extrapolator = BinderFactory.Builder.fromFile("adapt4ee.properties").withProperty(ReplicationConfig.class, ReplicationConfig.MODEL_NAME_KEY, replicationID).build().create("extrapolator");
+			extrapolator = BinderFactory.Builder.fromFile("asimov.properties").withProperty(ReplicationConfig.class, ReplicationConfig.MODEL_NAME_KEY, replicationID).build().create("extrapolator");
 		} catch (CoalaException e)
 		{
 			LOG.error("Failed to create extrapolator", e);

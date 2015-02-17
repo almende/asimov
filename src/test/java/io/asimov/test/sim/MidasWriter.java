@@ -27,7 +27,7 @@ public class MidasWriter
 
 	final static String replicationId = "replication_test_0";
 
-	private static final boolean INCLUDE_MATERIALS = true;
+	private static final boolean INCLUDE_MATERIALS = false;
 
 	@Test
 	public void writeToMidas() throws Exception

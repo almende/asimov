@@ -40,6 +40,8 @@ import io.asimov.model.events.EventType;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.configure.ConfiguringCapability;
+import io.coala.capability.embody.Percept;
+import io.coala.capability.know.ReasoningCapability;
 import io.coala.enterprise.fact.CoordinationFact;
 import io.coala.enterprise.role.AbstractExecutor;
 import io.coala.enterprise.role.AbstractInitiator;
@@ -64,6 +66,8 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
+import rx.Observer;
+
 /**
  * {@link ActivityParticipantImpl}
  * 
@@ -73,8 +77,7 @@ import org.apache.log4j.Logger;
  */
 public class ActivityParticipantImpl extends
 		AbstractExecutor<ActivityParticipation.Request> implements
-		ActivityParticipant
-{
+		ActivityParticipant {
 
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -85,8 +88,7 @@ public class ActivityParticipantImpl extends
 	private Logger LOG;
 
 	private ResouceReadyInitiatorImpl resourceReadyinitiator;
-	
-	
+
 	private AgentID scenarioReplicatorID = null;
 
 	/**
@@ -95,8 +97,7 @@ public class ActivityParticipantImpl extends
 	 * @param binder
 	 */
 	@Inject
-	protected ActivityParticipantImpl(final Binder binder)
-	{
+	protected ActivityParticipantImpl(final Binder binder) {
 		super(binder);
 		new LookupInitiatorImpl(binder);
 		resourceReadyinitiator = new ResouceReadyInitiatorImpl(binder);
@@ -106,24 +107,19 @@ public class ActivityParticipantImpl extends
 
 	private final Set<AgentID> highestPriorityActivityLocationRepr = new HashSet<AgentID>();
 
-	public Set<AgentID> getHighestPriorityActivityLocations()
-	{
-		synchronized (this.highestPriorityActivityLocationRepr)
-		{
+	public Set<AgentID> getHighestPriorityActivityLocations() {
+		synchronized (this.highestPriorityActivityLocationRepr) {
 			return new HashSet<AgentID>(
 					this.highestPriorityActivityLocationRepr);
 		}
 	}
 
-	protected void updateHighestPriorityActivityLocation()
-	{
-		synchronized (this.highestPriorityActivityLocationRepr)
-		{
+	protected void updateHighestPriorityActivityLocation() {
+		synchronized (this.highestPriorityActivityLocationRepr) {
 			this.highestPriorityActivityLocationRepr.clear();
 			int maxPriority = Integer.MIN_VALUE; // lowest
 			activities: for (Entry<Request, Integer> entry : this.priorities
-					.entrySet())
-			{
+					.entrySet()) {
 				if (entry.getValue().intValue() > maxPriority)
 					this.highestPriorityActivityLocationRepr.clear();
 				maxPriority = Math
@@ -132,11 +128,9 @@ public class ActivityParticipantImpl extends
 				for (ActivityParticipationResourceInformation otherResource : entry
 						.getKey().getOtherResourceInfo())
 					if (otherResource.getResourceType().equals(
-							ARUMResourceType.ASSEMBLY_LINE))
-					{
+							ARUMResourceType.ASSEMBLY_LINE)) {
 						assemblyLineFound = true;
-						if (maxPriority <= entry.getValue().intValue())
-						{
+						if (maxPriority <= entry.getValue().intValue()) {
 							this.highestPriorityActivityLocationRepr
 									.add(otherResource.getResourceAgent());
 							continue activities;
@@ -155,28 +149,22 @@ public class ActivityParticipantImpl extends
 	}
 
 	protected <T extends ResourceManagementWorld<?>> T getWorld(
-			final Class<T> clazz)
-	{
+			final Class<T> clazz) {
 		return getBinder().inject(clazz);
 	}
 
-	
-	
 	/** @see Executor#onRequested(CoordinationFact) */
 	@Override
 	@Schedulable(RETRY_REQUEST)
-	public void onRequested(final ActivityParticipation.Request request)
-	{
-		
-		if (!getWorld(PersonResourceManagementWorld.class)
-				.getCurrentLocation().getValue().equalsIgnoreCase("world")
+	public void onRequested(final ActivityParticipation.Request request) {
+
+		if (!getWorld(PersonResourceManagementWorld.class).getCurrentLocation()
+				.getValue().equalsIgnoreCase("world")
 				&& getWorld(PersonResourceManagementWorld.class)
-						.onSiteDelay(getTime()).toMilliseconds()
-						.getMillis() != 0)
-		{
+						.onSiteDelay(getTime()).toMilliseconds().getMillis() != 0) {
 			// leave the building and come back tomorrow to continue
 			updateHighestPriorityActivityLocation();
-			getBinder().inject(RouteInitiator.class).initiate(this,request,
+			getBinder().inject(RouteInitiator.class).initiate(this, request,
 					true);
 			LOG.warn("Postponed activity participation request until tomorrow: "
 					+ request);
@@ -195,18 +183,17 @@ public class ActivityParticipantImpl extends
 					assemblyLineInfo = otherResource;
 
 			if (!getWorld(PersonResourceManagementWorld.class)
-					.getCurrentLocation().equals(assemblyLineInfo.getResourceAgent()))
-			{
+					.getCurrentLocation().equals(
+							assemblyLineInfo.getResourceAgent())) {
 				LOG.info("Person not yet at assemblyLine, walking will be required.");
 			} else {
 				this.resourceReadyinitiator.forProducer(this, request);
 			}
-			
+
 		} else
 			this.resourceReadyinitiator.forProducer(this, request);
 
-		if (request.getResourceInfo().getResourceType() == ARUMResourceType.PERSON)
-		{
+		if (request.getResourceInfo().getResourceType() == ARUMResourceType.PERSON) {
 			ActivityParticipationResourceInformation assemblyLineInfo = null;
 			for (ActivityParticipationResourceInformation otherResource : request
 					.getOtherResourceInfo())
@@ -215,10 +202,11 @@ public class ActivityParticipantImpl extends
 					assemblyLineInfo = otherResource;
 
 			if (!getWorld(PersonResourceManagementWorld.class)
-					.getCurrentLocation().equals(assemblyLineInfo.getResourceAgent()))
-			{
+					.getCurrentLocation().equals(
+							assemblyLineInfo.getResourceAgent())) {
 				LOG.info(request.getResourceInfo().getResourceName()
-						+ " is not in assemblyLine " + assemblyLineInfo.getResourceName()
+						+ " is not in assemblyLine "
+						+ assemblyLineInfo.getResourceName()
 						+ " starts walking now on " + getTime());
 				updateHighestPriorityActivityLocation();
 				getBinder().inject(RouteInitiator.class).initiate(this,
@@ -231,56 +219,63 @@ public class ActivityParticipantImpl extends
 	 * @param entity
 	 * @throws Exception
 	 */
-	protected void doPersonParticipation(final ActivityParticipation request, SimTime scheduledExecutiontime)
-			throws Exception
-	{
+	protected void doPersonParticipation(final ActivityParticipation request,
+			SimTime scheduledExecutiontime) throws Exception {
 		final Person person = (Person) getWorld(
 				PersonResourceManagementWorld.class).getEntity();
 		// Find corresponding assemblyLine for this activity
 		ActivityParticipationResourceInformation assemblyLineInfo = null;
 		for (ActivityParticipationResourceInformation otherResource : request
 				.getOtherResourceInfo())
-			if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
+			if (otherResource.getResourceType().equals(
+					ARUMResourceType.ASSEMBLY_LINE))
 				assemblyLineInfo = otherResource;
 
-		if (getBinder().inject(ConfiguringCapability.class).getProperty("walkingDisabled").getBoolean().booleanValue() && !getWorld(PersonResourceManagementWorld.class)
-				.getCurrentLocation().equals(assemblyLineInfo.getResourceAgent())){
+		if (getBinder().inject(ConfiguringCapability.class)
+				.getProperty("walkingDisabled").getBoolean().booleanValue()
+				&& !getWorld(PersonResourceManagementWorld.class)
+						.getCurrentLocation().equals(
+								assemblyLineInfo.getResourceAgent())) {
 			ProcedureCall<?> enter = ProcedureCall.create(this, this,
-					ActivityParticipant.ARRIVE_AT_ASSEMBLY, request, assemblyLineInfo.getResourceAgent());
+					ActivityParticipant.ARRIVE_AT_ASSEMBLY, request,
+					assemblyLineInfo.getResourceAgent());
 			getSimulator().schedule(enter, Trigger.createAbsolute(getTime()));
 		}
-		
-		if (getWorld(PersonResourceManagementWorld.class)
-				.getCurrentLocation().equals(assemblyLineInfo.getResourceAgent())){
+
+		if (getWorld(PersonResourceManagementWorld.class).getCurrentLocation()
+				.equals(assemblyLineInfo.getResourceAgent())) {
 			if (getBinder().inject(PersonResourceManagementWorld.class)
 					.onSiteDelay(getTime()).longValue() != 0) {
 				LOG.warn("Person is in after working hours, will exit the building first.");
-				ProcedureCall<?> j = ProcedureCall.create(this, this, RETRY_REQUEST, request);
-				getSimulator().schedule(j, Trigger.createAbsolute(getTime().plus(getBinder().inject(PersonResourceManagementWorld.class)
-					.onSiteDelay(getTime()))));
+				ProcedureCall<?> j = ProcedureCall.create(this, this,
+						RETRY_REQUEST, request);
+				getSimulator().schedule(
+						j,
+						Trigger.createAbsolute(getTime().plus(
+								getBinder().inject(
+										PersonResourceManagementWorld.class)
+										.onSiteDelay(getTime()))));
 				return;
 			}
-			LOG.info("Scheduling participation of person: "
-					+ person.getName());
-			/* pseudo-code
+			LOG.info("Scheduling participation of person: " + person.getName());
+			/*
+			 * pseudo-code
 			 * 
-			 * - lookup route
-			 * - schedule walk:
-			 * 		- schedule/perform assemblyLine enter event
-			 * 		- schedule/perform assemblyLine leave event
-			 * - wait for other resources
-			 * - schedule/perform activity start event
-			 * - schedule/perform activity stop event
+			 * - lookup route - schedule walk: - schedule/perform assemblyLine
+			 * enter event - schedule/perform assemblyLine leave event - wait
+			 * for other resources - schedule/perform activity start event -
+			 * schedule/perform activity stop event
 			 */
-			
+
 			final ProcedureCall<?> job = ProcedureCall.create(this, this,
 					START_EXECUTING_ACTIVITY, request);
-			
-			getSimulator().schedule(job, Trigger.createAbsolute(scheduledExecutiontime.max(getTime())));
-					
-			
-		} else
-		{
+
+			getSimulator().schedule(
+					job,
+					Trigger.createAbsolute(scheduledExecutiontime
+							.max(getTime())));
+
+		} else {
 			LOG.info("Person is not yet in the correct building element to perform activity "
 					+ request.getResourceInfo().getActivityName());
 		}
@@ -290,8 +285,7 @@ public class ActivityParticipantImpl extends
 
 	@Schedulable(START_EXECUTING_ACTIVITY)
 	public void startExecutionOfActivity(final ActivityParticipation request)
-			throws Exception
-	{
+			throws Exception {
 		LOG.info("Starts executing activity: "
 				+ request.getResourceInfo().getActivityName());
 
@@ -302,19 +296,18 @@ public class ActivityParticipantImpl extends
 		boolean foundAssemblyLine = false;
 		for (ActivityParticipationResourceInformation otherResource : request
 				.getOtherResourceInfo())
-			if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
-			{
+			if (otherResource.getResourceType().equals(
+					ARUMResourceType.ASSEMBLY_LINE)) {
 				assemblyLineInfo = otherResource;
 				foundAssemblyLine = true;
 			}
 		// getWorld(PersonResourceManagementWorld.class).performEvent(agentID,
 		// eventType, timeStamp, refID, buildingElementName);
 		getWorld(PersonResourceManagementWorld.class).performActivityChange(
-				personInfo.getProcessID(),
-				personInfo.getProcessInstanceId(),
-				personInfo.getActivityName(), personInfo.getActivityInstanceId(), 
-				assemblyLineInfo.getResourceName(),
-				EventType.START_ACTIVITY);
+				personInfo.getProcessID(), personInfo.getProcessInstanceId(),
+				personInfo.getActivityName(),
+				personInfo.getActivityInstanceId(),
+				assemblyLineInfo.getResourceName(), EventType.START_ACTIVITY);
 		// TraceService.getInstance(getID().getModelID().getValue()).saveEvent(
 		// personInfo.getResourceAgent(), EventType.START_ACTIVITY,
 		// getTime(), personInfo.getActivityName(),
@@ -339,8 +332,7 @@ public class ActivityParticipantImpl extends
 
 	@Schedulable(STOP_EXECUTING_ACTIVITY)
 	public void stopExecutionOfActivity(
-			final ActivityParticipation.Request request) throws Exception
-	{
+			final ActivityParticipation.Request request) throws Exception {
 		LOG.info("Stops executing activity: "
 				+ request.getResourceInfo().getActivityName());
 		ActivityParticipationResourceInformation personInfo = request
@@ -349,14 +341,14 @@ public class ActivityParticipantImpl extends
 		ActivityParticipationResourceInformation assemblyLineInfo = null;
 		for (ActivityParticipationResourceInformation otherResource : request
 				.getOtherResourceInfo())
-			if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
+			if (otherResource.getResourceType().equals(
+					ARUMResourceType.ASSEMBLY_LINE))
 				assemblyLineInfo = otherResource;
 		getWorld(PersonResourceManagementWorld.class).performActivityChange(
-				personInfo.getProcessID(),
-				personInfo.getProcessInstanceId(),
-				personInfo.getActivityName(), personInfo.getActivityInstanceId(),
-				assemblyLineInfo.getResourceName(),
-				EventType.STOP_ACTIVITY);
+				personInfo.getProcessID(), personInfo.getProcessInstanceId(),
+				personInfo.getActivityName(),
+				personInfo.getActivityInstanceId(),
+				assemblyLineInfo.getResourceName(), EventType.STOP_ACTIVITY);
 		// TraceService.getInstance(getID().getModelID().getValue()).saveEvent(
 		// personInfo.getResourceAgent(), EventType.STOP_ACTIVITY,
 		// getTime(), personInfo.getActivityName(),
@@ -365,40 +357,34 @@ public class ActivityParticipantImpl extends
 				.build());
 	}
 
-	final Map<String,StackTraceElement[]> debugRequests = new HashMap<String,StackTraceElement[]>();
-	
-	
+	final Map<String, StackTraceElement[]> debugRequests = new HashMap<String, StackTraceElement[]>();
+
 	/**
 	 * @param entity
 	 * @throws Exception
 	 */
-	protected void doMaterialParticipation(final ActivityParticipation request, SimTime scheduledExecutionTime)
-			throws Exception
-	{
-		final Material material = (Material) getWorld(MaterialResourceManagementWorld.class)
-				.getEntity();
-		
-		LOG.error(request.getStackTrace());	
-		
-		LOG.info(getOwnerID()
-				+ " Scheduling participation of material: "
+	protected void doMaterialParticipation(final ActivityParticipation request,
+			SimTime scheduledExecutionTime) throws Exception {
+		final Material material = (Material) getWorld(
+				MaterialResourceManagementWorld.class).getEntity();
+
+		LOG.error(request.getStackTrace());
+
+		LOG.info(getOwnerID() + " Scheduling participation of material: "
 				+ material.getName());
 		ProcedureCall<?> job = ProcedureCall.create(this, this,
 				START_USING_MATERIAL, request);
-		
+
 		getSimulator().schedule(job,
 				Trigger.createAbsolute(scheduledExecutionTime.max(getTime())));
-				
-			
+
 	}
 
-	
 	public final static String START_USING_MATERIAL = "STARTS_USING_MATERIAL";
 
 	@Schedulable(START_USING_MATERIAL)
 	public void startsMaterialUsageForActivity(
-			final ActivityParticipation request) throws Exception
-	{
+			final ActivityParticipation request) throws Exception {
 		LOG.info("Started use of material: "
 				+ request.getResourceInfo().getResourceName());
 		ActivityParticipationResourceInformation materialInfo = request
@@ -406,15 +392,14 @@ public class ActivityParticipantImpl extends
 		boolean foundPerson = false;
 		ActivityParticipationResourceInformation assemblyLineInfo = null;
 		for (ActivityParticipationResourceInformation otherResource : request
-				 .getOtherResourceInfo())
-				 if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
-				 assemblyLineInfo = otherResource;
-		
+				.getOtherResourceInfo())
+			if (otherResource.getResourceType().equals(
+					ARUMResourceType.ASSEMBLY_LINE))
+				assemblyLineInfo = otherResource;
+
 		for (ActivityParticipationResourceInformation personInfo : request
 				.getOtherResourceInfo())
-			if (personInfo.getResourceType()
-					.equals(ARUMResourceType.PERSON))
-			{
+			if (personInfo.getResourceType().equals(ARUMResourceType.PERSON)) {
 
 				getWorld(MaterialResourceManagementWorld.class)
 						.performUsageChange(materialInfo.getProcessID(),
@@ -427,7 +412,7 @@ public class ActivityParticipantImpl extends
 								EventType.START_USE_MATERIAL);
 				foundPerson = true;
 			}
-		
+
 		ProcedureCall<?> job = ProcedureCall.create(this, this,
 				STOP_USING_MATERIAL, request);
 
@@ -449,23 +434,22 @@ public class ActivityParticipantImpl extends
 
 	@Schedulable(STOP_USING_MATERIAL)
 	public void stopsMaterialUsageForActivity(
-			final ActivityParticipation request) throws Exception
-	{
+			final ActivityParticipation request) throws Exception {
 		LOG.info("Stopped use of material: "
 				+ request.getResourceInfo().getResourceName());
-		
+
 		ActivityParticipationResourceInformation materialInfo = request
 				.getResourceInfo();
 		ActivityParticipationResourceInformation assemblyLineInfo = null;
 		for (ActivityParticipationResourceInformation otherResource : request
-				 .getOtherResourceInfo())
-				 if (otherResource.getResourceType().equals(ARUMResourceType.ASSEMBLY_LINE))
-				 assemblyLineInfo = otherResource;
+				.getOtherResourceInfo())
+			if (otherResource.getResourceType().equals(
+					ARUMResourceType.ASSEMBLY_LINE))
+				assemblyLineInfo = otherResource;
 
 		for (ActivityParticipationResourceInformation personInfo : request
 				.getOtherResourceInfo())
-			if (personInfo.getResourceType()
-					.equals(ARUMResourceType.PERSON))
+			if (personInfo.getResourceType().equals(ARUMResourceType.PERSON))
 				getWorld(MaterialResourceManagementWorld.class)
 						.performUsageChange(materialInfo.getProcessID(),
 								materialInfo.getProcessInstanceId(),
@@ -475,6 +459,32 @@ public class ActivityParticipantImpl extends
 								personInfo.getResourceAgent().getValue(),
 								assemblyLineInfo.getResourceAgent().getValue(),
 								EventType.STOP_USE_MATERIAL);
+		getWorld(MaterialResourceManagementWorld.class).perceive().subscribe(
+				new Observer<Percept>() {
+
+					@Override
+					public void onCompleted() {
+						// TODO Auto-generated method stub
+						LOG.info("Material was used and will be removed from stock after process completion");
+					}
+
+					@Override
+					public void onError(Throwable e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onNext(Percept t) {
+						
+						getBinder().inject(ReasoningCapability.class)
+								.removeBeliefFromKBase(
+										getBinder().inject(
+												ReasoningCapability.class)
+												.toBelief(t));
+					}
+				});
+
 		send(ActivityParticipation.Result.Builder.forProducer(this,
 				(Request) request).build());
 	}
@@ -482,8 +492,7 @@ public class ActivityParticipantImpl extends
 	public final static String ROOM_IN_USE = "ROOM_IN_USE";
 
 	@Schedulable(ROOM_IN_USE)
-	public void assemblyLineInUseForActivity(final ActivityParticipation request)
-	{
+	public void assemblyLineInUseForActivity(final ActivityParticipation request) {
 		LOG.info("Starts using assemblyLine "
 				+ request.getResourceInfo().getResourceName()
 				+ " for activity: "
@@ -498,12 +507,11 @@ public class ActivityParticipantImpl extends
 
 	public final static String ROOM_IS_USED = "ROOM_IS_USED";
 
-//	private static final String RE_NOTIFY = null;
+	// private static final String RE_NOTIFY = null;
 
 	@Schedulable(ROOM_IS_USED)
-	public void assemblyLineWasUsedForActivity(final ActivityParticipation request)
-			throws Exception
-	{
+	public void assemblyLineWasUsedForActivity(
+			final ActivityParticipation request) throws Exception {
 		LOG.info("Stops using assemblyLine "
 				+ request.getResourceInfo().getResourceName() + " ("
 				+ " for activity: "
@@ -515,35 +523,33 @@ public class ActivityParticipantImpl extends
 
 	@Schedulable(ARRIVE_AT_ASSEMBLY)
 	public void enterBE(final ActivityParticipation.Request request,
-			final AgentID beAGentID) throws Exception
-	{
+			final AgentID beAGentID) throws Exception {
 		ActivityParticipationResourceInformation personInfo = request
 				.getResourceInfo();
-		if (getWorld(PersonResourceManagementWorld.class)
-				.getCurrentLocation().getValue().equals("world"))
-			getWorld(PersonResourceManagementWorld.class).enteredSite(
-					getTime());
+		if (getWorld(PersonResourceManagementWorld.class).getCurrentLocation()
+				.getValue().equals("world"))
+			getWorld(PersonResourceManagementWorld.class)
+					.enteredSite(getTime());
 		getWorld(PersonResourceManagementWorld.class).performOccupancyChange(
 				personInfo.getProcessID(),
 				personInfo.getProcessInstanceId(),
 				personInfo.getActivityName(),
 				personInfo.getActivityInstanceId(),
 				getWorld(PersonResourceManagementWorld.class)
-						.getCurrentLocation().getValue(), EventType.LEAVE_ASSEMBLY);
+						.getCurrentLocation().getValue(),
+				EventType.LEAVE_ASSEMBLY);
 		LOG.info(personInfo.getResourceName()
 				+ " left building element "
 				+ getWorld(PersonResourceManagementWorld.class)
 						.getCurrentLocation().getValue() + " for activity: "
 				+ personInfo.getActivityName());
 		getWorld(PersonResourceManagementWorld.class).performOccupancyChange(
-				personInfo.getProcessID(),
-				personInfo.getProcessInstanceId(),
+				personInfo.getProcessID(), personInfo.getProcessInstanceId(),
 				personInfo.getActivityName(),
-				personInfo.getActivityInstanceId(),
-				beAGentID.getValue(),
+				personInfo.getActivityInstanceId(), beAGentID.getValue(),
 				EventType.ARIVE_AT_ASSEMBLY);
-		if (getWorld(PersonResourceManagementWorld.class)
-				.getCurrentLocation().getValue().equals("world"))
+		if (getWorld(PersonResourceManagementWorld.class).getCurrentLocation()
+				.getValue().equals("world"))
 			getWorld(PersonResourceManagementWorld.class).leftSite(getTime());
 		LOG.info(personInfo.getResourceName() + " entered building element "
 				+ beAGentID.getValue() + " for activity: "
@@ -552,31 +558,31 @@ public class ActivityParticipantImpl extends
 
 	}
 
-	
-
 	/**
 	 * @param entity
 	 * @throws Exception
 	 */
-	protected void doAssemblyLineParticipation(final ActivityParticipation request, SimTime scheduledExecutionTime)
-			throws Exception
-	{
-		final AssemblyLine assemblyLine = (AssemblyLine) getWorld(AssemblyLineResourceManagementWorld.class)
-				.getEntity();
+	protected void doAssemblyLineParticipation(
+			final ActivityParticipation request, SimTime scheduledExecutionTime)
+			throws Exception {
+		final AssemblyLine assemblyLine = (AssemblyLine) getWorld(
+				AssemblyLineResourceManagementWorld.class).getEntity();
 		if (assemblyLine.getName() != null)
 			LOG.info("Scheduling participation of assemblyLine: "
 					+ assemblyLine.getName());
 		else
-			LOG.info("Scheduling participation of assemblyLine: " + assemblyLine.getName());
+			LOG.info("Scheduling participation of assemblyLine: "
+					+ assemblyLine.getName());
 		ProcedureCall<?> job = ProcedureCall.create(this, this, ROOM_IN_USE,
 				request);
-		getSimulator().schedule(job, Trigger.createAbsolute(scheduledExecutionTime.max(getTime())));
+		getSimulator().schedule(job,
+				Trigger.createAbsolute(scheduledExecutionTime.max(getTime())));
 
-		/* pseudo-code
+		/*
+		 * pseudo-code
 		 * 
-		 * - wait for other resources
-		 * - schedule/perform material usage start event
-		 * - schedule/perform material usage stop event
+		 * - wait for other resources - schedule/perform material usage start
+		 * event - schedule/perform material usage stop event
 		 */
 	}
 
@@ -589,8 +595,7 @@ public class ActivityParticipantImpl extends
 	 */
 	public static class LookupInitiatorImpl extends
 			AbstractInitiator<DirectoryLookup.Result> implements
-			LookupInitiator
-	{
+			LookupInitiator {
 
 		/** */
 		private static final long serialVersionUID = 1L;
@@ -600,27 +605,25 @@ public class ActivityParticipantImpl extends
 		 * 
 		 * @param binder
 		 */
-		protected LookupInitiatorImpl(final Binder binder)
-		{
+		protected LookupInitiatorImpl(final Binder binder) {
 			super(binder);
 		}
 
 		@Override
-		public void onStated(final DirectoryLookup.Result state)
-		{
+		public void onStated(final DirectoryLookup.Result state) {
 			new IllegalStateException("NOT IMPLEMENTED").printStackTrace();
 		}
 
 	}
+
 	/** @see ActivityParticipant#notifyResourcesReady(ActivityParticipation.Request) */
 	@Override
-	public void notifyResourcesReady(final Request request)
-	{
-		SimTime scheduledExecutionTime = getBinder().inject(SimTimeFactory.class).create(request.getTime().longValue(), TimeUnit.MILLIS);
-		try
-		{
-			switch (request.getResourceInfo().getResourceType())
-			{
+	public void notifyResourcesReady(final Request request) {
+		SimTime scheduledExecutionTime = getBinder().inject(
+				SimTimeFactory.class).create(request.getTime().longValue(),
+				TimeUnit.MILLIS);
+		try {
+			switch (request.getResourceInfo().getResourceType()) {
 			case PERSON:
 				doPersonParticipation(request, scheduledExecutionTime);
 				break;
@@ -634,18 +637,16 @@ public class ActivityParticipantImpl extends
 				LOG.error("Resource type can't participate: "
 						+ request.getResourceInfo().getResourceType());
 			}
-			} catch (final Exception e)
-			{
-				LOG.error("Problem handling activity participation request: "
-						+ request, e);
-			}
+		} catch (final Exception e) {
+			LOG.error("Problem handling activity participation request: "
+					+ request, e);
+		}
 	}
 
 	/** @see eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant#getCurrentlyOccupiedResource() */
 	@Override
 	public AgentID getCurrentlyOccupiedResource(
-			final ActivityParticipation.Request cause)
-	{
+			final ActivityParticipation.Request cause) {
 		if (cause.getResourceInfo().getResourceType()
 				.equals(ARUMResourceType.PERSON))
 			return getWorld(PersonResourceManagementWorld.class)
@@ -656,16 +657,14 @@ public class ActivityParticipantImpl extends
 
 	/** @see eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant#getScenarioAgentID() */
 	@Override
-	public AgentID getScenarioAgentID()
-	{
+	public AgentID getScenarioAgentID() {
 		return this.scenarioReplicatorID;
 	}
 
 	/** @see eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant#isReadyForActivity() */
 	@Override
 	public boolean isReadyForActivity(
-			final ResourceReadyNotification.Request request)
-	{
+			final ResourceReadyNotification.Request request) {
 		if (getBinder().inject(ConfiguringCapability.class)
 				.getProperty("walkingDisabled").getBoolean(false))
 			return true;
@@ -674,12 +673,14 @@ public class ActivityParticipantImpl extends
 		LOG.info("Current location = " + here);
 		for (final ActivityParticipationResourceInformation resc : request
 				.getOtherResourceInfo())
-			if (resc.getResourceType() == ARUMResourceType.ASSEMBLY_LINE)
-			{
-				Iterator<AgentID> hp = getHighestPriorityActivityLocations().iterator();
+			if (resc.getResourceType() == ARUMResourceType.ASSEMBLY_LINE) {
+				Iterator<AgentID> hp = getHighestPriorityActivityLocations()
+						.iterator();
 				return resc.getResourceAgent().equals(here)
-						&& hp.hasNext() && hp.next().equals(here)
-						&& (getBinder().inject(PersonResourceManagementWorld.class)
+						&& hp.hasNext()
+						&& hp.next().equals(here)
+						&& (getBinder()
+								.inject(PersonResourceManagementWorld.class)
 								.onSiteDelay(getTime()).longValue() == 0);
 			}
 		return false;
@@ -688,17 +689,14 @@ public class ActivityParticipantImpl extends
 	/** @see eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant#walkRoute(eu.a4ee.model.resource.ActivityParticipation.Result) */
 	@Override
 	public void walkRoute(RouteLookup.Result state,
-			ActivityParticipation.Request cause, final boolean tommorow)
-	{
+			ActivityParticipation.Request cause, final boolean tommorow) {
 		LOG.info("Intending to walk route: "
 				+ state.getRouteOfRepresentativesWithCoordidnates());
 		AgentID currentBE = null;
 		SimTime planning = getTime();
 		for (AgentID routeEntry : state
-				.getRouteOfRepresentativesWithCoordidnates().keySet())
-		{
-			if (currentBE == null)
-			{
+				.getRouteOfRepresentativesWithCoordidnates().keySet()) {
+			if (currentBE == null) {
 				currentBE = routeEntry;
 				continue;
 			}
@@ -712,11 +710,9 @@ public class ActivityParticipantImpl extends
 					ActivityParticipant.ARRIVE_AT_ASSEMBLY, cause, routeEntry);
 			getSimulator().schedule(enter, Trigger.createAbsolute(planning));
 		}
-		if (tommorow)
-		{
+		if (tommorow) {
 			planning = planning.plus(getWorld(
-					PersonResourceManagementWorld.class)
-					.onSiteDelay(planning));
+					PersonResourceManagementWorld.class).onSiteDelay(planning));
 			ProcedureCall<?> continueProcessOfYesterday = ProcedureCall.create(
 					this, this, ActivityParticipant.RETRY_REQUEST, cause);
 			getSimulator().schedule(continueProcessOfYesterday,
