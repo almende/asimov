@@ -151,6 +151,10 @@ public class ScenarioTest
 						{
 							LOG.info(binder.getID() + ": Starting sim!");
 							simulator.start();
+						} if (update.getStatus().isFinishedStatus() || update.getStatus().isFailedStatus())
+						{
+							LOG.info(binder.getID() + ": Aborted simulation!");
+							latch.countDown();
 						} 
 					}
 

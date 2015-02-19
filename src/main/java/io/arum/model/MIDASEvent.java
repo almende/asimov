@@ -3,15 +3,19 @@ package io.arum.model;
 import io.arum.model.events.MaterialEvent;
 import io.arum.model.events.MovementEvent;
 import io.arum.model.events.PersonEvent;
+import io.arum.model.process.DistanceMatrixServiceImpl;
+import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.arum.model.resource.person.Person;
 import io.arum.model.resource.person.PersonRole;
 import io.asimov.db.Datasource;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.EventType;
+import io.asimov.xml.TEventTrace.EventRecord;
 import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
 import io.coala.json.JSONConvertible;
 import io.coala.json.JsonUtil;
+import io.coala.time.TimeUnit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,6 +23,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * Bean representing a MIDAS event.
@@ -38,7 +44,7 @@ import java.util.Set;
  * @author suki
  */
 
-public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
+public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent>, Comparable<MIDASEvent> {
 
 	/**
 	 * The serialVersionUID of the MIDASEvent bean.
@@ -94,7 +100,7 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 	}
 
 	public String jobId = null;
-	public String time = null;
+	public XMLGregorianCalendar time = null;
 	public String performedBy = null;
 	public String type = null;
 	public String assignment = null;
@@ -110,12 +116,12 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 		this.jobId = jobId;
 	}
 
-	public String getTime() {
+	public XMLGregorianCalendar getTime() {
 		return time;
 	}
 
-	public void setTime(String time) {
-		this.time = time;
+	public void setTime(XMLGregorianCalendar xmlGregorianCalendar) {
+		this.time = xmlGregorianCalendar;
 	}
 
 	public String getPerformedBy() {
@@ -187,25 +193,46 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 		for (TSkeletonActivityType activity : process.toXML().getActivity()) {
 			if (activity.getName().equals(activityId)) {
 				for (RoleInvolved roleRequired : activity.getRoleInvolved()) {
-					Person mappedPerson = roleMap.get(token
-							+ roleRequired.getRoleRef());
+					Person mappedPerson = roleMap.get(roleRequired.getRoleRef() + token);
 					if (mappedPerson != null
 							&& mappedPerson.getName().equals(person.getName()))
 						return roleToTypeMapping(roleRequired.getRoleRef());
 				}
 				for (RoleInvolved roleRequired : activity.getRoleInvolved()) {
+					String usedRole = null;
+					String foundRole = null;
 					for (PersonRole role : person.getTypes()) {
 						if (!roleMap.containsKey(token + role.getName())
 								&& roleRequired.getRoleRef().equals(
 										role.getName())) {
-							roleMap.put(role.getName() + token, person);
-							return roleToTypeMapping(role.getName());
+							if (foundRole == null) {
+								usedRole = role.getName();
+								foundRole = roleToTypeMapping(role.getName());
+							} else {
+								if (compareRoles(foundRole,roleToTypeMapping(role.getName())) < 1)  {
+									foundRole = roleToTypeMapping(role.getName());
+									usedRole = role.getName();
+								}
+							}
 						}
+					}
+					if (foundRole != null) {
+						roleMap.put(usedRole + token, person);
+						return foundRole;
 					}
 				}
 			}
 		}
 		return person.getName();
+	}
+	
+	public static int compareRoles(String role, String comparedTo) {
+		Map<String,Integer> roles = new HashMap<String,Integer>();
+		roles.put("worker",1);
+		roles.put("rao",2);
+		roles.put("pm",3);
+		roles.put("mt",4);
+		return (roles.get(role).compareTo(roles.get(comparedTo)));
 	}
 
 	public static String roleToTypeMapping(final String role) {
@@ -226,7 +253,7 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 		if (event instanceof MovementEvent) {
 			MovementEvent movementEvent = (MovementEvent) event;
 			result.setAssignment(event.getPerson().getName());
-			result.setTime(event.toXML().getTimeStamp().toString());
+			result.setTime(event.toXML().getTimeStamp());
 			if (movementEvent.getType().equals(EventType.ARIVE_AT_ASSEMBLY)
 					&& movementEvent.getAssemblyLine() == null) {
 				peopleInFactoryCount--;
@@ -257,9 +284,13 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 		return null;
 	}
 	
+	static Map<String,String> startedMovements = new HashMap<String,String>();
+	static Set<String> completedEnterMovements = new HashSet<String>();
+	static Set<String> completedLeaveMovements = new HashSet<String>();
+	
 	public MIDASEvent fromPersonEvent(PersonEvent<?> event, Datasource ds, boolean includeMaterial) {
 		this.setAssignment(event.getPerson().getName());
-		this.setTime(event.toXML().getTimeStamp().toString());
+		this.setTime(event.toXML().getTimeStamp());
 		this.setAssignment(event.getActivity());
 		final String nameOfPersonInMovementEvent = event.getPerson().getName();
 		if (!personToPrerequisite.containsKey(nameOfPersonInMovementEvent))
@@ -268,20 +299,21 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 		
 		if (event instanceof MovementEvent) {
 			MovementEvent movementEvent = (MovementEvent) event;
-			this.setJobId(movementEvent.getProcessInstanceID()+" "+nameOfPersonInMovementEvent
-					+ " walks before "
-					+ event.getActivity() + " " + movementEvent.getActivityInstanceId());
 			// add to mapping of person to midasEvents
 			personToPrerequisite.get(nameOfPersonInMovementEvent).add(this);
-			final String jobID = 
+			String jobID = 
 					movementEvent.getProcessInstanceID()+" "+nameOfPersonInMovementEvent
 					+ " walks before "
-					+ event.getActivity();
+					+ event.getActivity() + " " + movementEvent.getActivityInstanceId();
+			this.setJobId(jobID);
 			this.setAssignment(nameOfPersonInMovementEvent
 					+ " walks to assemblyLine before "
 					+ event.getActivity());
 			if (movementEvent.getType().equals(EventType.ARIVE_AT_ASSEMBLY) && movementEvent.getPerson() != null) {
-				this.setJobId(jobID);
+				if (!completedEnterMovements.add(jobID))
+					return null;
+				String currentlyAT = (startedMovements.get(jobID) == null) ? "Factory hall" : startedMovements.get(jobID);
+				this.setJobId(jobID.replace("walks", "leaves "+currentlyAT));
 				this.setPerformedBy(movementEvent.getPerson().getName());
 				this.setType(MIDASEvent.getTypeForPersonInActivity(
 						movementEvent.getPerson(), movementEvent.getActivity(),
@@ -289,17 +321,36 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 						movementEvent.getProcessInstanceID(), ds));
 				this.setProductId(movementEvent.getProcessID());
 				this.setOperation(OperationEnum.finish);
+				AssemblyLine al = movementEvent.getAssemblyLine();
+				String location = null;
+				if (al == null)
+					location = "Factory hall";
+				else
+					location = al.getName();
+				
+				startedMovements.put(jobID, location);
 				return this;
 			}
 			if (movementEvent.getType().equals(EventType.LEAVE_ASSEMBLY) && movementEvent.getPerson() != null) {
-				this.setJobId(jobID);
+				if (!completedLeaveMovements.add(jobID))
+					return null;
+				AssemblyLine al = movementEvent.getAssemblyLine();
+				String location = null;
+				if (al == null)
+					location = "Factory hall";
+				else
+					location = al.getName();
+				movementEvent.withExecutionTime(movementEvent.getExecutionTime().minus(DistanceMatrixServiceImpl.DEFAULT_WALKING_DURATION.toMilliseconds().getMillis(), TimeUnit.MILLIS));
+				this.setTime(event.toXML().getTimeStamp());
+				startedMovements.put(jobID, location);
+				this.setJobId(jobID.replace("walks", "leaves "+location));
 				this.setPerformedBy(movementEvent.getPerson().getName());
 				this.setType(MIDASEvent.getTypeForPersonInActivity(
 						movementEvent.getPerson(), movementEvent.getActivity(),
 						movementEvent.getProcessID(),
 						movementEvent.getProcessInstanceID(), ds));
 				this.setProductId(movementEvent.getProcessID());
-				this.setOperation(OperationEnum.finish);
+				this.setOperation(OperationEnum.start);
 				return this;
 			}
 			
@@ -359,5 +410,10 @@ public class MIDASEvent implements Serializable, JSONConvertible<MIDASEvent> {
 			return this;
 		}
 		return null;
+	}
+
+	@Override
+	public int compareTo(MIDASEvent o) {
+		return this.getTime().compare(o.getTime());
 	}
 }

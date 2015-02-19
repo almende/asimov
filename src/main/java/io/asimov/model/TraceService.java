@@ -403,15 +403,20 @@ public class TraceService extends AbstractPersonTraceEventProducer
 							if (((ActivityEvent)x).getType().equals(EventType.STOP_ACTIVITY))
 								return -1;
 						}
-						else return 1;
+						else return -1;
 					} else if (y instanceof MaterialEvent) {
 							if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL))
 								return -1;
 							else if (((MaterialEvent)y).getType().equals(EventType.STOP_USE_MATERIAL))
 								return 1;
+					} else if (y instanceof MovementEvent) {
+						if (((MovementEvent)y).getType().equals(EventType.ARIVE_AT_ASSEMBLY))
+							return 1;
+						else if (((MovementEvent)y).getType().equals(EventType.LEAVE_ASSEMBLY))
+							return -1;
 					}
 				}
-				if (x instanceof MaterialEvent) {
+				else if (x instanceof MaterialEvent) {
 					if (y instanceof MaterialEvent) {
 						if (((MaterialEvent)x).getType().equals(EventType.START_USE_MATERIAL)) {
 							if (((MaterialEvent)y).getType().equals(EventType.STOP_USE_MATERIAL))
@@ -420,12 +425,41 @@ public class TraceService extends AbstractPersonTraceEventProducer
 							if (((MaterialEvent)x).getType().equals(EventType.STOP_USE_MATERIAL))
 								return -1;
 						}
-						else return 1;
+						else return -1;
 					} else if (y instanceof ActivityEvent) {
 						if (((ActivityEvent)y).getType().equals(EventType.START_ACTIVITY))
 							return 1;
 						else if (((ActivityEvent)y).getType().equals(EventType.STOP_ACTIVITY))
 							return -1;
+					}  else if (y instanceof MovementEvent) {
+						if (((MovementEvent)y).getType().equals(EventType.ARIVE_AT_ASSEMBLY))
+							return -1;
+						else if (((MovementEvent)y).getType().equals(EventType.LEAVE_ASSEMBLY))
+							return 1;
+					}
+				} else if (x instanceof MovementEvent) {
+//					if (y instanceof MovementEvent) {
+//						if (((MovementEvent)x).getType().equals(EventType.ARIVE_AT_ASSEMBLY)) {
+//							if (((MovementEvent)y).getType().equals(EventType.LEAVE_ASSEMBLY))
+//								return 1;
+//						} else if (((MovementEvent)y).getType().equals(EventType.ARIVE_AT_ASSEMBLY)) {
+//							if (((MovementEvent)x).getType().equals(EventType.LEAVE_ASSEMBLY))
+//								return -1;
+//						}
+//						else return -1;
+//					} 
+//					else 
+					if (y instanceof ActivityEvent) {
+						if (((ActivityEvent)y).getType().equals(EventType.START_ACTIVITY))
+							return -1;
+						else if (((ActivityEvent)y).getType().equals(EventType.STOP_ACTIVITY))
+							return 1;
+					} 
+					else if (y instanceof MaterialEvent) {
+						if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL))
+							return -1;
+						else if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL))
+							return 1;
 					}
 				}
 			}

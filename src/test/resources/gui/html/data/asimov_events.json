@@ -1,25 +1,25 @@
 var midas_data = [
 {
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A1 - Manufactoring interior of the Coffee machine by Vitek",
-  "time" : "2015-02-09T09:30:10.000+01:00",
+  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek leaves Factory hall before A1 - Manufactoring interior of the Coffee machine be87ab90-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423470600000,
   "performedBy" : "Vitek",
   "type" : "worker",
-  "assignment" : "A1 - Manufactoring interior of the Coffee machine",
+  "assignment" : "Vitek walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
   "productId" : "Coffee machine production process 1",
   "operation" : "start"
 },
 {
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A1 - Manufactoring interior of the Coffee machine by Rick",
-  "time" : "2015-02-09T09:30:10.000+01:00",
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick leaves Factory hall before A1 - Manufactoring interior of the Coffee machine bb9100d0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423470600000,
   "performedBy" : "Rick",
   "type" : "worker",
-  "assignment" : "A1 - Manufactoring interior of the Coffee machine",
+  "assignment" : "Rick walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
   "productId" : "Coffee machine production process 3",
   "operation" : "start"
 },
 {
   "jobId" : "999",
-  "time" : "2015-02-09T09:30:10.000+01:00",
+  "time" : 1423470610000,
   "performedBy" : "global",
   "type" : "global",
   "assignment" : "",
@@ -27,17 +27,8 @@ var midas_data = [
   "operation" : "startOfDay"
 },
 {
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T09:30:10.000+01:00",
-  "performedBy" : "Vitek",
-  "type" : "worker",
-  "assignment" : "Vitek walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T09:30:10.000+01:00",
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick leaves Factory hall before A1 - Manufactoring interior of the Coffee machine bb9100d0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423470610000,
   "performedBy" : "Rick",
   "type" : "worker",
   "assignment" : "Rick walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
@@ -45,35 +36,8 @@ var midas_data = [
   "operation" : "finish"
 },
 {
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T09:30:00.000+01:00",
-  "performedBy" : "Rick",
-  "type" : "worker",
-  "assignment" : "Rick walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T09:30:10.000+01:00",
-  "performedBy" : "Rick",
-  "type" : "worker",
-  "assignment" : "Rick walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T09:30:00.000+01:00",
-  "performedBy" : "Vitek",
-  "type" : "worker",
-  "assignment" : "Vitek walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T09:30:10.000+01:00",
+  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek leaves Factory hall before A1 - Manufactoring interior of the Coffee machine be87ab90-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423470610000,
   "performedBy" : "Vitek",
   "type" : "worker",
   "assignment" : "Vitek walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
@@ -82,7 +46,25 @@ var midas_data = [
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A1 - Manufactoring interior of the Coffee machine by Vitek",
-  "time" : "2015-02-09T11:40:10.000+01:00",
+  "time" : 1423470610000,
+  "performedBy" : "Vitek",
+  "type" : "worker",
+  "assignment" : "A1 - Manufactoring interior of the Coffee machine",
+  "productId" : "Coffee machine production process 1",
+  "operation" : "start"
+},
+{
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A1 - Manufactoring interior of the Coffee machine by Rick",
+  "time" : 1423470610000,
+  "performedBy" : "Rick",
+  "type" : "worker",
+  "assignment" : "A1 - Manufactoring interior of the Coffee machine",
+  "productId" : "Coffee machine production process 3",
+  "operation" : "start"
+},
+{
+  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A1 - Manufactoring interior of the Coffee machine by Vitek",
+  "time" : 1423478410000,
   "performedBy" : "Vitek",
   "type" : "worker",
   "assignment" : "A1 - Manufactoring interior of the Coffee machine",
@@ -91,7 +73,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A1 - Manufactoring interior of the Coffee machine by Rick",
-  "time" : "2015-02-09T11:40:10.000+01:00",
+  "time" : 1423478410000,
   "performedBy" : "Rick",
   "type" : "worker",
   "assignment" : "A1 - Manufactoring interior of the Coffee machine",
@@ -99,8 +81,80 @@ var midas_data = [
   "operation" : "finish"
 },
 {
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki leaves Factory hall before A2 - Test interior of the Coffee machine c1df6210-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423478410000,
+  "performedBy" : "Suki",
+  "type" : "rao",
+  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
+  "productId" : "Coffee machine production process 3",
+  "operation" : "start"
+},
+{
+  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine leaves Factory hall before A2 - Test interior of the Coffee machine c347f2c0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423478410000,
+  "performedBy" : "Yasmine",
+  "type" : "rao",
+  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
+  "productId" : "Coffee machine production process 1",
+  "operation" : "start"
+},
+{
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo leaves Factory hall before A2 - Test interior of the Coffee machine c1df6210-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423478410000,
+  "performedBy" : "Eduardo",
+  "type" : "worker",
+  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
+  "productId" : "Coffee machine production process 3",
+  "operation" : "start"
+},
+{
+  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni leaves Factory hall before A2 - Test interior of the Coffee machine c347f2c0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423478410000,
+  "performedBy" : "Giovanni",
+  "type" : "worker",
+  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
+  "productId" : "Coffee machine production process 1",
+  "operation" : "start"
+},
+{
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki leaves Factory hall before A2 - Test interior of the Coffee machine c1df6210-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423478420000,
+  "performedBy" : "Suki",
+  "type" : "rao",
+  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
+  "productId" : "Coffee machine production process 3",
+  "operation" : "finish"
+},
+{
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo leaves Factory hall before A2 - Test interior of the Coffee machine c1df6210-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423478420000,
+  "performedBy" : "Eduardo",
+  "type" : "worker",
+  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
+  "productId" : "Coffee machine production process 3",
+  "operation" : "finish"
+},
+{
+  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine leaves Factory hall before A2 - Test interior of the Coffee machine c347f2c0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423478420000,
+  "performedBy" : "Yasmine",
+  "type" : "rao",
+  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
+  "productId" : "Coffee machine production process 1",
+  "operation" : "finish"
+},
+{
+  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni leaves Factory hall before A2 - Test interior of the Coffee machine c347f2c0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423478420000,
+  "performedBy" : "Giovanni",
+  "type" : "worker",
+  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
+  "productId" : "Coffee machine production process 1",
+  "operation" : "finish"
+},
+{
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Eduardo",
-  "time" : "2015-02-09T11:40:20.000+01:00",
+  "time" : 1423478420000,
   "performedBy" : "Eduardo",
   "type" : "worker",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -109,7 +163,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Suki",
-  "time" : "2015-02-09T11:40:20.000+01:00",
+  "time" : 1423478420000,
   "performedBy" : "Suki",
   "type" : "rao",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -118,7 +172,7 @@ var midas_data = [
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Yasmine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
+  "time" : 1423478420000,
   "performedBy" : "Yasmine",
   "type" : "rao",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -127,7 +181,7 @@ var midas_data = [
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Giovanni",
-  "time" : "2015-02-09T11:40:20.000+01:00",
+  "time" : 1423478420000,
   "performedBy" : "Giovanni",
   "type" : "worker",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -135,116 +189,8 @@ var midas_data = [
   "operation" : "start"
 },
 {
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
-  "performedBy" : "Suki",
-  "type" : "rao",
-  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:10.000+01:00",
-  "performedBy" : "Suki",
-  "type" : "rao",
-  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
-  "performedBy" : "Suki",
-  "type" : "rao",
-  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
-  "performedBy" : "Eduardo",
-  "type" : "worker",
-  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
-  "performedBy" : "Yasmine",
-  "type" : "rao",
-  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:10.000+01:00",
-  "performedBy" : "Eduardo",
-  "type" : "worker",
-  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
-  "performedBy" : "Eduardo",
-  "type" : "worker",
-  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
-  "performedBy" : "Giovanni",
-  "type" : "worker",
-  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:10.000+01:00",
-  "performedBy" : "Yasmine",
-  "type" : "rao",
-  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
-  "performedBy" : "Yasmine",
-  "type" : "rao",
-  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:10.000+01:00",
-  "performedBy" : "Giovanni",
-  "type" : "worker",
-  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T11:40:20.000+01:00",
-  "performedBy" : "Giovanni",
-  "type" : "worker",
-  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Suki",
-  "time" : "2015-02-09T12:00:20.000+01:00",
+  "time" : 1423479620000,
   "performedBy" : "Suki",
   "type" : "rao",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -253,7 +199,7 @@ var midas_data = [
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Giovanni",
-  "time" : "2015-02-09T12:00:20.000+01:00",
+  "time" : 1423479620000,
   "performedBy" : "Giovanni",
   "type" : "worker",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -262,7 +208,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Eduardo",
-  "time" : "2015-02-09T12:00:20.000+01:00",
+  "time" : 1423479620000,
   "performedBy" : "Eduardo",
   "type" : "worker",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -271,7 +217,7 @@ var midas_data = [
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Yasmine",
-  "time" : "2015-02-09T12:00:20.000+01:00",
+  "time" : 1423479620000,
   "performedBy" : "Yasmine",
   "type" : "rao",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -280,7 +226,7 @@ var midas_data = [
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A4 - Wait for RAO to complete by Yasmine",
-  "time" : "2015-02-09T12:00:20.000+01:00",
+  "time" : 1423479620000,
   "performedBy" : "Yasmine",
   "type" : "rao",
   "assignment" : "A4 - Wait for RAO to complete",
@@ -288,17 +234,17 @@ var midas_data = [
   "operation" : "start"
 },
 {
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A6 - Major None Conformity Meeting by Eduardo c4e9bbe0-b834-11e4-af76-28cfdaf26984",
-  "time" : "2015-02-09T12:00:30.000+01:00",
-  "performedBy" : "Eduardo",
-  "type" : "worker",
-  "assignment" : "A6 - Major None Conformity Meeting",
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven leaves Factory hall before A6 - Major None Conformity Meeting c4e9bbe0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423479620000,
+  "performedBy" : "Sven",
+  "type" : "mt",
+  "assignment" : "Sven walks to assemblyLine before A6 - Major None Conformity Meeting",
   "productId" : "Coffee machine production process 3",
   "operation" : "start"
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A6 - Major None Conformity Meeting by Sven c4e9bbe0-b834-11e4-af76-28cfdaf26984",
-  "time" : "2015-02-09T12:00:30.000+01:00",
+  "time" : 1423479630000,
   "performedBy" : "Sven",
   "type" : "mt",
   "assignment" : "A6 - Major None Conformity Meeting",
@@ -306,8 +252,8 @@ var midas_data = [
   "operation" : "start"
 },
 {
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven walks before A6 - Major None Conformity Meeting",
-  "time" : "2015-02-09T12:00:30.000+01:00",
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven leaves Factory hall before A6 - Major None Conformity Meeting c4e9bbe0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423479630000,
   "performedBy" : "Sven",
   "type" : "mt",
   "assignment" : "Sven walks to assemblyLine before A6 - Major None Conformity Meeting",
@@ -315,26 +261,17 @@ var midas_data = [
   "operation" : "finish"
 },
 {
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven walks before A6 - Major None Conformity Meeting",
-  "time" : "2015-02-09T12:00:20.000+01:00",
-  "performedBy" : "Sven",
-  "type" : "mt",
-  "assignment" : "Sven walks to assemblyLine before A6 - Major None Conformity Meeting",
+  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A6 - Major None Conformity Meeting by Eduardo c4e9bbe0-b834-11e4-af76-28cfdaf26984",
+  "time" : 1423479630000,
+  "performedBy" : "Eduardo",
+  "type" : "worker",
+  "assignment" : "A6 - Major None Conformity Meeting",
   "productId" : "Coffee machine production process 3",
   "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven walks before A6 - Major None Conformity Meeting",
-  "time" : "2015-02-09T12:00:30.000+01:00",
-  "performedBy" : "Sven",
-  "type" : "mt",
-  "assignment" : "Sven walks to assemblyLine before A6 - Major None Conformity Meeting",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A4 - Wait for RAO to complete by Yasmine",
-  "time" : "2015-02-09T12:30:20.000+01:00",
+  "time" : 1423481420000,
   "performedBy" : "Yasmine",
   "type" : "rao",
   "assignment" : "A4 - Wait for RAO to complete",
@@ -343,7 +280,7 @@ var midas_data = [
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A3 - Manufactoring exterior of the Coffee machine by Vitek",
-  "time" : "2015-02-09T12:30:20.000+01:00",
+  "time" : 1423481420000,
   "performedBy" : "Vitek",
   "type" : "worker",
   "assignment" : "A3 - Manufactoring exterior of the Coffee machine",
@@ -352,7 +289,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A6 - Major None Conformity Meeting by Sven c4e9bbe0-b834-11e4-af76-28cfdaf26984",
-  "time" : "2015-02-09T13:00:30.000+01:00",
+  "time" : 1423483230000,
   "performedBy" : "Sven",
   "type" : "mt",
   "assignment" : "A6 - Major None Conformity Meeting",
@@ -361,7 +298,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A6 - Major None Conformity Meeting by Eduardo c4e9bbe0-b834-11e4-af76-28cfdaf26984",
-  "time" : "2015-02-09T13:00:30.000+01:00",
+  "time" : 1423483230000,
   "performedBy" : "Eduardo",
   "type" : "worker",
   "assignment" : "A6 - Major None Conformity Meeting",
@@ -370,7 +307,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Suki",
-  "time" : "2015-02-09T13:00:30.000+01:00",
+  "time" : 1423483230000,
   "performedBy" : "Suki",
   "type" : "rao",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -379,7 +316,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Eduardo",
-  "time" : "2015-02-09T13:00:30.000+01:00",
+  "time" : 1423483230000,
   "performedBy" : "Eduardo",
   "type" : "worker",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -388,7 +325,7 @@ var midas_data = [
 },
 {
   "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 performs activity A3 - Manufactoring exterior of the Coffee machine by Vitek",
-  "time" : "2015-02-09T13:05:20.000+01:00",
+  "time" : 1423483520000,
   "performedBy" : "Vitek",
   "type" : "worker",
   "assignment" : "A3 - Manufactoring exterior of the Coffee machine",
@@ -396,116 +333,8 @@ var midas_data = [
   "operation" : "finish"
 },
 {
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:20.000+01:00",
-  "performedBy" : "Vitek",
-  "type" : "worker",
-  "assignment" : "Vitek walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:30.000+01:00",
-  "performedBy" : "Vitek",
-  "type" : "worker",
-  "assignment" : "Vitek walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:20.000+01:00",
-  "performedBy" : "Vitek",
-  "type" : "worker",
-  "assignment" : "Vitek walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Vitek walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:30.000+01:00",
-  "performedBy" : "Vitek",
-  "type" : "worker",
-  "assignment" : "Vitek walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:20.000+01:00",
-  "performedBy" : "Yasmine",
-  "type" : "rao",
-  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:30.000+01:00",
-  "performedBy" : "Yasmine",
-  "type" : "rao",
-  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:20.000+01:00",
-  "performedBy" : "Giovanni",
-  "type" : "worker",
-  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:30.000+01:00",
-  "performedBy" : "Giovanni",
-  "type" : "worker",
-  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:20.000+01:00",
-  "performedBy" : "Yasmine",
-  "type" : "rao",
-  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Yasmine walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:30.000+01:00",
-  "performedBy" : "Yasmine",
-  "type" : "rao",
-  "assignment" : "Yasmine walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:20.000+01:00",
-  "performedBy" : "Giovanni",
-  "type" : "worker",
-  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "start"
-},
-{
-  "jobId" : "b53754f1-b834-11e4-af76-28cfdaf26984 Giovanni walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T13:05:30.000+01:00",
-  "performedBy" : "Giovanni",
-  "type" : "worker",
-  "assignment" : "Giovanni walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 1",
-  "operation" : "finish"
-},
-{
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Eduardo",
-  "time" : "2015-02-09T13:20:30.000+01:00",
+  "time" : 1423484430000,
   "performedBy" : "Eduardo",
   "type" : "worker",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -514,7 +343,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A2 - Test interior of the Coffee machine by Suki",
-  "time" : "2015-02-09T13:20:30.000+01:00",
+  "time" : 1423484430000,
   "performedBy" : "Suki",
   "type" : "rao",
   "assignment" : "A2 - Test interior of the Coffee machine",
@@ -523,7 +352,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A4 - Wait for RAO to complete by Suki",
-  "time" : "2015-02-09T13:20:30.000+01:00",
+  "time" : 1423484430000,
   "performedBy" : "Suki",
   "type" : "rao",
   "assignment" : "A4 - Wait for RAO to complete",
@@ -532,7 +361,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A4 - Wait for RAO to complete by Suki",
-  "time" : "2015-02-09T13:50:30.000+01:00",
+  "time" : 1423486230000,
   "performedBy" : "Suki",
   "type" : "rao",
   "assignment" : "A4 - Wait for RAO to complete",
@@ -541,7 +370,7 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A3 - Manufactoring exterior of the Coffee machine by Rick",
-  "time" : "2015-02-09T13:50:30.000+01:00",
+  "time" : 1423486230000,
   "performedBy" : "Rick",
   "type" : "worker",
   "assignment" : "A3 - Manufactoring exterior of the Coffee machine",
@@ -550,164 +379,20 @@ var midas_data = [
 },
 {
   "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 performs activity A3 - Manufactoring exterior of the Coffee machine by Rick",
-  "time" : "2015-02-09T14:25:30.000+01:00",
+  "time" : 1423488330000,
   "performedBy" : "Rick",
   "type" : "worker",
   "assignment" : "A3 - Manufactoring exterior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:30.000+01:00",
-  "performedBy" : "Eduardo",
-  "type" : "worker",
-  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:40.000+01:00",
-  "performedBy" : "Eduardo",
-  "type" : "worker",
-  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven walks before A6 - Major None Conformity Meeting",
-  "time" : "2015-02-09T14:25:30.000+01:00",
-  "performedBy" : "Sven",
-  "type" : "mt",
-  "assignment" : "Sven walks to assemblyLine before A6 - Major None Conformity Meeting",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven walks before A6 - Major None Conformity Meeting",
-  "time" : "2015-02-09T14:25:40.000+01:00",
-  "performedBy" : "Sven",
-  "type" : "mt",
-  "assignment" : "Sven walks to assemblyLine before A6 - Major None Conformity Meeting",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven walks before A6 - Major None Conformity Meeting",
-  "time" : "2015-02-09T14:25:30.000+01:00",
-  "performedBy" : "Sven",
-  "type" : "mt",
-  "assignment" : "Sven walks to assemblyLine before A6 - Major None Conformity Meeting",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Sven walks before A6 - Major None Conformity Meeting",
-  "time" : "2015-02-09T14:25:40.000+01:00",
-  "performedBy" : "Sven",
-  "type" : "mt",
-  "assignment" : "Sven walks to assemblyLine before A6 - Major None Conformity Meeting",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:30.000+01:00",
-  "performedBy" : "Rick",
-  "type" : "worker",
-  "assignment" : "Rick walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:40.000+01:00",
-  "performedBy" : "Rick",
-  "type" : "worker",
-  "assignment" : "Rick walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:30.000+01:00",
-  "performedBy" : "Suki",
-  "type" : "rao",
-  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:40.000+01:00",
-  "performedBy" : "Suki",
-  "type" : "rao",
-  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:30.000+01:00",
-  "performedBy" : "Rick",
-  "type" : "worker",
-  "assignment" : "Rick walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Rick walks before A1 - Manufactoring interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:40.000+01:00",
-  "performedBy" : "Rick",
-  "type" : "worker",
-  "assignment" : "Rick walks to assemblyLine before A1 - Manufactoring interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:30.000+01:00",
-  "performedBy" : "Suki",
-  "type" : "rao",
-  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Suki walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:40.000+01:00",
-  "performedBy" : "Suki",
-  "type" : "rao",
-  "assignment" : "Suki walks to assemblyLine before A2 - Test interior of the Coffee machine",
   "productId" : "Coffee machine production process 3",
   "operation" : "finish"
 },
 {
   "jobId" : "999",
-  "time" : "2015-02-09T14:25:40.000+01:00",
+  "time" : 1423488340000,
   "performedBy" : "global",
   "type" : "global",
   "assignment" : "",
   "productId" : "",
   "operation" : "endOfDay"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:30.000+01:00",
-  "performedBy" : "Eduardo",
-  "type" : "worker",
-  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "start"
-},
-{
-  "jobId" : "b52ca691-b834-11e4-af76-28cfdaf26984 Eduardo walks before A2 - Test interior of the Coffee machine",
-  "time" : "2015-02-09T14:25:40.000+01:00",
-  "performedBy" : "Eduardo",
-  "type" : "worker",
-  "assignment" : "Eduardo walks to assemblyLine before A2 - Test interior of the Coffee machine",
-  "productId" : "Coffee machine production process 3",
-  "operation" : "finish"
 }
 ];

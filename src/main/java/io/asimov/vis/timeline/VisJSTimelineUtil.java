@@ -5,21 +5,19 @@ import io.arum.model.MIDASEvent.OperationEnum;
 import io.arum.model.events.MaterialEvent;
 import io.arum.model.events.MovementEvent;
 import io.arum.model.events.PersonEvent;
-import io.arum.model.process.DistanceMatrixServiceImpl;
 import io.arum.model.resource.person.PersonRole;
 import io.asimov.db.Datasource;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
-import io.asimov.model.events.EventType;
 import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.log.LogUtil;
-import io.coala.time.TimeUnit;
 
 import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -192,29 +190,12 @@ public class VisJSTimelineUtil {
 
 		boolean day = false;
 		List<MIDASEvent> mEvents = new ArrayList<MIDASEvent>();
-		Set<String> startedJobs = new HashSet<String>();
 		Map<String, List<String>> pausedJobs = new HashMap<String,List<String>>();
 		for (PersonEvent<?> personEvent : list) {
 			MIDASEvent global = MIDASEvent.getGlobalEvent(personEvent);
 			MIDASEvent event = new MIDASEvent().fromPersonEvent(personEvent,
 					ds, includeMaterials);
 			if (event != null) {
-				if (!startedJobs.add(event.getJobId())
-						&& personEvent instanceof MovementEvent) {
-					// Assume default walking time
-					MovementEvent before = ((MovementEvent) personEvent)
-							.copy(((MovementEvent) personEvent)
-									.getExecutionTime()
-									.minus(DistanceMatrixServiceImpl.DEFAULT_WALKING_DURATION
-											.toMilliseconds().longValue(),
-											TimeUnit.MILLIS).doubleValue(),
-									EventType.ARIVE_AT_ASSEMBLY);
-
-					MIDASEvent nm = new MIDASEvent().fromPersonEvent(before,
-							ds, includeMaterials);
-					nm.setOperation(OperationEnum.start);
-					mEvents.add(nm);
-				}
 
 				if (global != null && !day) {
 					LOG.info("Adding GLOBAL MIDASEvent:" + global.toJSON());
@@ -280,10 +261,12 @@ public class VisJSTimelineUtil {
 			if (global != null && day) {
 				mEvents.add(global);
 			}
-
+			
 			if (global != null)
 				day = (day) ? false : true;
 		}
+		
+		Collections.sort(mEvents);
 
 		// Now make a huge string representation of it
 		final String startOfData = "var midas_data = [\n";
