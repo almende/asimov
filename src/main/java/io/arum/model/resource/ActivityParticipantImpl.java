@@ -368,7 +368,6 @@ public class ActivityParticipantImpl extends
 		final Material material = (Material) getWorld(
 				MaterialResourceManagementWorld.class).getEntity();
 
-		LOG.error(request.getStackTrace());
 
 		LOG.info(getOwnerID() + " Scheduling participation of material: "
 				+ material.getName());

@@ -7,6 +7,7 @@ import io.arum.model.resource.person.Person;
 import io.arum.model.resource.person.PersonResourceManagementOrganization;
 import io.arum.model.resource.supply.Material;
 import io.arum.model.resource.supply.MaterialResourceManagementOrganization;
+import io.arum.run.RunUseCase;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.agent.scenario.SimStatus;
@@ -151,7 +152,10 @@ public class ScenarioManagementWorldImpl extends AbstractARUMOrganizationtWorld
 				ReplicationConfig.class);
 
 		this.replication = ds.findReplication();
-		File simFileURI = new File(getProperty(SCENARIO_FILE_KEY).get());
+		
+		File simFileURI = (RunUseCase.sourceFile != null) ?
+				new File(RunUseCase.sourceFile.getAbsolutePath()) :
+				new File(getProperty(SCENARIO_FILE_KEY).get());
 		SimulationFile simFile = null;
 		InputStream is = FileUtil.getFileAsInputStream(simFileURI);
 		

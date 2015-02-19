@@ -99,7 +99,7 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 							getBinder().inject(ReplicatingCapability.class).pause();
 						}
 					}
-					LOG.error(getOwnerID()+" @ "+world.getCurrentLocation()+" with entity "+world.getEntity());
+					LOG.info(getOwnerID()+" @ "+world.getCurrentLocation()+" with entity "+world.getEntity());
 					if (world.getCurrentLocation().getValue().equals(PersonResourceManagementWorld.WORLD_NAME)){
 						try
 						{

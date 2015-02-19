@@ -1,6 +1,6 @@
 package io.asimov.test.sim;
 
-import io.asimov.agent.scenario.Replication;
+import io.arum.run.RunUseCase;
 import io.asimov.agent.scenario.ScenarioManagementOrganization;
 import io.asimov.db.Datasource;
 import io.coala.agent.AgentStatusObserver;
@@ -12,7 +12,10 @@ import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.capability.replicate.ReplicationConfig;
 import io.coala.exception.CoalaException;
 import io.coala.log.LogUtil;
+import io.coala.time.SimTime;
+import io.coala.time.TimeUnit;
 
+import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
 import javax.xml.bind.JAXBException;
@@ -20,6 +23,8 @@ import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import rx.Observer;
 
 /**
  * {@link ScenarioTest}
@@ -37,7 +42,7 @@ public class ScenarioTest
 	private static final Logger LOG = LogUtil.getLogger(ScenarioTest.class);
 
 	/** */
-	public static final long nofHours = (24 * 7);
+	public static final long nofHours = (24 * 2);
 
 	/** */
 	public static final long nofOccupants = 9;
@@ -90,28 +95,47 @@ public class ScenarioTest
 
 		final ReplicatingCapability simulator = binder
 				.inject(ReplicatingCapability.class);
-		/*simulator.getTimeUpdates().subscribe(new Observer<SimTime>()
-		{
-			@Override
-			public void onNext(final SimTime time)
-			{
-				System.err.println("Simulator " + simulator.getClockID()
-						+ " time is now " + time);
-			}
-
-			@Override
-			public void onCompleted()
-			{
-			}
-
-			@Override
-			public void onError(final Throwable t)
-			{
-				t.printStackTrace();
-			}
-		});*/
-
+		final SimTime endOfSimulation = simulator.getTime().plus(2,TimeUnit.DAYS);
 		final CountDownLatch latch = new CountDownLatch(1);
+
+		simulator.getTimeUpdates().subscribe(new Observer<SimTime>()
+				{
+					private SimTime	currentSimTime = simulator.getTime();
+
+					@Override
+					public void onNext(final SimTime time)
+					{
+
+						if (time.isAfter(endOfSimulation)) {
+							try {
+								new TimeLineWriter().writeTimeLine();
+								new MidasWriter().writeToMidas();
+								new EventTraceWriter().writeSimulatorOutput();
+								latch.countDown();
+							} catch (Exception e) {
+								LOG.error("Failed to write output of ASIMOV",e);
+								System.exit(1);
+							}
+						} else if (time.isAfter(currentSimTime)) {
+							System.out.println("Simulator " + simulator.getClockID()
+								+ " time is now " + time);
+							currentSimTime = time;
+						}
+					}
+
+					@Override
+					public void onCompleted()
+					{
+					}
+
+					@Override
+					public void onError(final Throwable t)
+					{
+						t.printStackTrace();
+					}
+				});
+
+
 		booterSvc.createAgent(scenarioName,
 				ScenarioManagementOrganization.class).subscribe(
 				new AgentStatusObserver()
@@ -127,19 +151,7 @@ public class ScenarioTest
 						{
 							LOG.info(binder.getID() + ": Starting sim!");
 							simulator.start();
-						} else if (update.getStatus().isFailedStatus())
-						{
-							latch.countDown();
-							LOG.info(binder.getID()
-									+ ": Agent failed, remaining: "
-									+ latch.getCount());
-						} else if (update.getStatus().isFinishedStatus())
-						{
-							latch.countDown();
-							LOG.info(binder.getID()
-									+ ": Agent finished, remaining: "
-									+ latch.getCount());
-						}
+						} 
 					}
 
 					@Override

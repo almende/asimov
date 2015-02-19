@@ -134,17 +134,16 @@ public class VisJSTimelineUtil {
 		}
 		return paired;
 	}
-
+	
+	
 	/**
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeTimelineData(final List<PersonEvent<?>> list)
+	public static void writeTimelineData(final List<PersonEvent<?>> list, File targetDirectory)
 			throws Exception {
-		outputFile = new File(
-				"src/test/resources/resource-usage-vis/usage.json");
-		styleSheetFile = new File(
-				"src/test/resources/resource-usage-vis/style.css");
+		outputFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/usage.json");
+		styleSheetFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/style.css");
 		FileWriter fw = new FileWriter(outputFile);
 		FileWriter fws = new FileWriter(styleSheetFile);
 		writeTimelineData(list, fw, fws);
@@ -154,10 +153,28 @@ public class VisJSTimelineUtil {
 	 * @param processTypes
 	 * @throws Exception
 	 */
+	public static void writeTimelineData(final List<PersonEvent<?>> list)
+			throws Exception {
+		writeTimelineData(list, new File(
+				"src/test/resources"));
+	}
+	
+	/**
+	 * @param processTypes
+	 * @throws Exception
+	 */
 	public static void writeMidasData(final List<PersonEvent<?>> list,
 			final Datasource ds, boolean includeMaterials) throws Exception {
-		outputFile = new File(
-				"src/test/resources/gui/html/data/asimov_events.json");
+		writeMidasData(list, ds, includeMaterials, new File("src/test/resources"));
+	}
+
+	/**
+	 * @param processTypes
+	 * @throws Exception
+	 */
+	public static void writeMidasData(final List<PersonEvent<?>> list,
+			final Datasource ds, boolean includeMaterials, File targetDirectory) throws Exception {
+		outputFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/asimov_events.json");
 		FileWriter fw = new FileWriter(outputFile);
 		writeMidasData(list, fw, ds, includeMaterials);
 	}
