@@ -53,13 +53,6 @@ public abstract class ProcessCompletion extends AbstractCoordinationFact
 		Request initiate(ScenarioReplication.Request cause,
 				String processTypeID, AgentID procMgrID) throws Exception;
 
-		/**
-		 * @param cause the failed attempt causing a retry/re-initiation
-		 * @return the {@link Request} that has been sent
-		 * @throws Exception
-		 */
-		Request reinitiate(SimTime delay, Result cause) throws Exception;
-
 	}
 
 	/**

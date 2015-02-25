@@ -12,6 +12,7 @@ import io.asimov.agent.scenario.ScenarioManagementWorld.ProcessEventType;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ResourceEvent;
 import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
+import io.asimov.messaging.ASIMOVMessage;
 import io.coala.agent.AgentID;
 import io.coala.agent.AgentStatusUpdate;
 import io.coala.bind.Binder;
@@ -47,6 +48,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import rx.Observer;
+import rx.Subscription;
 import rx.functions.Func1;
 
 /**
@@ -58,8 +60,7 @@ import rx.functions.Func1;
  */
 public class ScenarioReplicatorImpl extends
 		AbstractSelfInitiator<ScenarioReplication.Request> implements
-		ScenarioReplication.ScenarioReplicator
-{
+		ScenarioReplication.ScenarioReplicator {
 
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -88,19 +89,15 @@ public class ScenarioReplicatorImpl extends
 	/** */
 	private final Map<String, Set<String>> processInstancesByType = new ConcurrentSkipListMap<String, Set<String>>();
 
+	private final Map<AgentID, Subscription> processAgentResourceStateSubscription = new ConcurrentSkipListMap<AgentID, Subscription>();
+
 	/** */
 	private static boolean busy = false;
 
+	private int resourcesHash = 0;
+
 	/** FIXME handle pending replications! */
 	private Queue<ScenarioReplication.Request> pendingReplications = new LinkedBlockingQueue<ScenarioReplication.Request>();
-
-	public static final String PROCESS_STATUS_RUNNING = "PROCESS_RUNNING";
-
-	public static final String PROCESS_STATUS_PENDING = "PROCESS_PENDING";
-	
-	public static final String PROCESS_STATUS_DISABLED_TEST = "PROCESS_STATUS_DISABLED_TEST";
-
-	public static final Map<String, Map<AgentID, String>> processStatus = new TreeMap<String, Map<AgentID, String>>();
 
 	/**
 	 * {@link ScenarioReplicatorImpl} constructor
@@ -108,21 +105,18 @@ public class ScenarioReplicatorImpl extends
 	 * @param binder
 	 */
 	@Inject
-	private ScenarioReplicatorImpl(final Binder binder)
-	{
+	private ScenarioReplicatorImpl(final Binder binder) {
 		super(binder);
 	}
 
 	/** @return the agent's local {@link ScenarioManagementWorld} */
 	// @Override
-	protected ScenarioManagementWorld getWorld()
-	{
+	protected ScenarioManagementWorld getWorld() {
 		return getBinder().inject(ScenarioManagementWorld.class);
 	}
 
 	@Override
-	public void initialize()
-	{
+	public void initialize() {
 		// REQUIRED TO INITIALIZE ROLE
 		getBinder().inject(RouteProvider.class);
 
@@ -132,86 +126,67 @@ public class ScenarioReplicatorImpl extends
 
 		// subscribe to responses to nested ProcessCompletion requests
 		getReceiver().getIncoming().ofType(ProcessCompletion.Result.class)
-				.filter(new Func1<ProcessCompletion, Boolean>()
-				{
+				.filter(new Func1<ProcessCompletion, Boolean>() {
 					@Override
-					public Boolean call(final ProcessCompletion fact)
-					{
+					public Boolean call(final ProcessCompletion fact) {
 						return fact.getID().getType() == CoordinationFactType.STATED;
 					}
-				}).subscribe(new Observer<ProcessCompletion>()
-				{
+				}).subscribe(new Observer<ProcessCompletion>() {
 					@Override
-					public void onNext(final ProcessCompletion fact)
-					{
+					public void onNext(final ProcessCompletion fact) {
 						onNested((ProcessCompletion.Result) fact);
 					}
 
 					@Override
-					public void onCompleted()
-					{
+					public void onCompleted() {
 						//
 					}
 
 					@Override
-					public void onError(final Throwable e)
-					{
+					public void onError(final Throwable e) {
 						e.printStackTrace();
 					}
 				});
 	}
 
-	protected void onNested(final ProcessCompletion.Result result)
-	{
+	protected void onNested(final ProcessCompletion.Result result) {
 		// LOG.info("Got nested: " + result, new IllegalStateException(
 		// "NOT IMPLEMENTED"));
 	}
 
 	/** @see ScenarioReplicator#initiate() */
 	@Override
-	public ScenarioReplication.Request initiate() throws Exception
-	{
+	public ScenarioReplication.Request initiate() throws Exception {
 		return send(ScenarioReplication.Request.Builder.forProducer(this)
 				.build());
 	}
 
 	/** @see Executor#onRequested(CoordinationFact) */
 	@Override
-	public void onRequested(final ScenarioReplication.Request request)
-	{
+	public void onRequested(final ScenarioReplication.Request request) {
 		final CountDownLatch latch = new CountDownLatch(1);
-		getWorld().onResources().subscribe(new Observer<ResourceEvent>()
-		{
+		getWorld().onResources().subscribe(new Observer<ResourceEvent>() {
 			@Override
-			public void onNext(final ResourceEvent event)
-			{
-				switch (event.getEventType())
-				{
+			public void onNext(final ResourceEvent event) {
+				switch (event.getEventType()) {
 				case ADDED:
-					if (!allResources.add(event.getResourceID()))
-					{
+					if (!allResources.add(event.getResourceID())) {
 						LOG.trace("Already created resource, " + "skipping: "
 								+ event.getResourceID());
-					} else
-					{
+					} else {
 						latch.countDown();
-						try
-						{
+						try {
 							getBooter().createAgent(event.getResourceID(),
 									event.getResourceType()).subscribe(
-									new Observer<AgentStatusUpdate>()
-									{
+									new Observer<AgentStatusUpdate>() {
 										@Override
 										public void onNext(
-												final AgentStatusUpdate update)
-										{
+												final AgentStatusUpdate update) {
 											if (update.getStatus()
-													.isInitializedStatus())
-											{
+													.isInitializedStatus()) {
 												LOG.trace("Child agent has initialized: "
 														+ update.getAgentID());
-												synchronized (readyResources)
-												{
+												synchronized (readyResources) {
 													readyResources.add(update
 															.getAgentID());
 													readyResources.notifyAll();
@@ -220,36 +195,30 @@ public class ScenarioReplicatorImpl extends
 										}
 
 										@Override
-										public void onCompleted()
-										{
+										public void onCompleted() {
 											//
 										}
 
 										@Override
-										public void onError(final Throwable e)
-										{
+										public void onError(final Throwable e) {
 											e.printStackTrace();
 										}
 									});
-						} catch (final Exception e)
-						{
+						} catch (final Exception e) {
 							LOG.error("Problem booting resource mgr agent", e);
 						}
 					}
 					break;
 
 				case REMOVED:
-					if (!allResources.remove(event.getResourceID()))
-					{
+					if (!allResources.remove(event.getResourceID())) {
 						LOG.warn("Already removed resource: "
 								+ event.getResourceID());
 					} else
-						try
-						{
+						try {
 							getBinder().inject(DestroyingCapability.class)
 									.destroy(event.getResourceID());
-						} catch (final Exception e)
-						{
+						} catch (final Exception e) {
 							LOG.error("Problem killing resource mgr agent", e);
 						}
 					break;
@@ -257,74 +226,77 @@ public class ScenarioReplicatorImpl extends
 			}
 
 			@Override
-			public void onCompleted()
-			{
+			public void onCompleted() {
 			}
 
 			@Override
-			public void onError(final Throwable e)
-			{
+			public void onError(final Throwable e) {
 				e.printStackTrace();
 				latch.countDown();
 			}
 		});
-		try
-		{
+		try {
 			latch.await();
-		} catch (InterruptedException e1)
-		{
+		} catch (InterruptedException e1) {
 			;
 		}
 
-		while (!readyResources.containsAll(allResources))
-		{
+		while (!readyResources.containsAll(allResources)) {
 			final Set<AgentID> diff = new HashSet<AgentID>(allResources);
 			diff.removeAll(readyResources);
 			LOG.warn("Waiting for resource agents: " + diff);
-			synchronized (readyResources)
-			{
-				try
-				{
+			synchronized (readyResources) {
+				try {
 					readyResources.wait(1000);
-				} catch (InterruptedException e1)
-				{
+				} catch (InterruptedException e1) {
 					;
 				}
 			}
 		}
 
-		if (busy)
-		{
+		if (busy) {
 			LOG.warn("Problem handling request, added as pending: " + request,
 					new IllegalStateException("Replication already running"));
 			this.pendingReplications.add(request);
-		} else
-		{
+		} else {
 			busy = true;
 
 			final Replication replication = getWorld().getReplication();
 
 			LOG.trace("Handling request: " + request + " for replication: "
 					+ replication);
+			getWorld().resourceStatusHash().subscribe(new Observer<Integer>() {
 
-			getWorld().onProcessEvent().subscribe(new Observer<ProcessEvent>()
-			{
 				@Override
-				public void onNext(final ProcessEvent event)
-				{
-					if (event.getEventType().equals(ProcessEventType.REQUESTED))
-						scheduleNextBP(request, event.getProcessTypeID());
+				public void onCompleted() {
+					// Nothing special here.
 				}
 
 				@Override
-				public void onCompleted()
-				{
+				public void onError(Throwable e) {
+					LOG.error("Failed to observe resource status change", e);
+				}
+
+				@Override
+				public void onNext(Integer t) {
+					resourcesHash = t.intValue();
+
+				}
+			});
+			getWorld().onProcessEvent().subscribe(new Observer<ProcessEvent>() {
+				@Override
+				public void onNext(final ProcessEvent event) {
+					if (event.getEventType().equals(ProcessEventType.REQUESTED))
+						scheduleNextBP(request, event.getProcessTypeID(), -1);
+				}
+
+				@Override
+				public void onCompleted() {
 					//
 				}
 
 				@Override
-				public void onError(final Throwable e)
-				{
+				public void onError(final Throwable e) {
 					LOG.error("Error while retrieving processes ", e);
 				}
 			});
@@ -332,8 +304,7 @@ public class ScenarioReplicatorImpl extends
 	}
 
 	@Override
-	protected void onStated(final ScenarioReplication.Request state)
-	{
+	protected void onStated(final ScenarioReplication.Request state) {
 		LOG.info("Replication complete: " + state);
 	}
 
@@ -367,10 +338,9 @@ public class ScenarioReplicatorImpl extends
 	// LOG.info("exit:" + processInstanceID);
 	// }
 
-	private static final String SCHEDULE_NEXT_BP = "scheduleNextBP";
+	public static final String SCHEDULE_NEXT_BP = "scheduleNextBP";
 
-	private SimDuration drawProcessStartTimeOfDay(final String processTypeID)
-	{
+	private SimDuration drawProcessStartTimeOfDay(final String processTypeID) {
 		final RandomDistribution<SimDuration> dist = getBinder().inject(
 				ScenarioManagementWorld.class).getProcessStartTimeOfDayDist(
 				processTypeID);
@@ -381,12 +351,11 @@ public class ScenarioReplicatorImpl extends
 		return new SimDuration(0, TimeUnit.HOURS);
 	}
 
-	public SimTime getAbsProcessRepeatTime(final String processTypeID)
-	{
+	public SimTime getAbsProcessRepeatTime(final String processTypeID) {
 		final SimTime now = getTime();
-		if (getBinder().inject(
-				PersonResourceManagementWorld.class).onSiteDelay(now.plus(1, TimeUnit.HOURS)).doubleValue() == 0)
-			return now.plus(1, TimeUnit.HOURS);
+		if (getBinder().inject(PersonResourceManagementWorld.class)
+				.onSiteDelay(now.plus(1, TimeUnit.MINUTES)).doubleValue() == 0)
+			return now.plus(1, TimeUnit.MINUTES);
 		final SimDuration millisOfDay = new SimDuration(new DateTime(
 				now.getIsoTime()).getMillisOfDay(), TimeUnit.MILLIS);
 		final SimTime startOfDay = now.minus(millisOfDay);
@@ -407,8 +376,8 @@ public class ScenarioReplicatorImpl extends
 
 	@Schedulable(SCHEDULE_NEXT_BP)
 	protected void scheduleNextBP(final ScenarioReplication.Request cause,
-			final String processTypeID)
-	{
+			final String processTypeID, int invalidResourcesHash) {
+
 		// TODO determine appropriate delay, based on:
 		// - current distribution delta (compared to goal)
 		// - current process instance agent activity/failures
@@ -416,15 +385,23 @@ public class ScenarioReplicatorImpl extends
 		// for each BP type,
 		// draw next interval T for this BP type
 		// schedule scheduleNextBP method after interval T with this type
-
 		final SimTime onSiteStart = getAbsProcessRepeatTime(processTypeID);
+
+		if (invalidResourcesHash == resourcesHash) {
+			getSimulator().schedule(
+					ProcedureCall.create(this, this, SCHEDULE_NEXT_BP, cause,
+							processTypeID, resourcesHash),
+							Trigger.createAbsolute(onSiteStart));
+			return;
+		}
 		getSimulator().schedule(
 				ProcedureCall.create(this, this, ADD_PROCESS_MANAGER_AGENT,
 						cause, processTypeID),
 				Trigger.createAbsolute(onSiteStart));
 		getSimulator().schedule(
 				ProcedureCall.create(this, this, SCHEDULE_NEXT_BP, cause,
-						processTypeID), Trigger.createAbsolute(onSiteStart));
+						processTypeID, resourcesHash),
+				Trigger.createAbsolute(onSiteStart));
 	}
 
 	private static final String ADD_PROCESS_MANAGER_AGENT = "addProcessManagerAgent";
@@ -432,40 +409,23 @@ public class ScenarioReplicatorImpl extends
 	@Schedulable(ADD_PROCESS_MANAGER_AGENT)
 	protected synchronized void addProcessManagerAgent(
 			final ScenarioReplication.Request cause, final String processTypeID)
-			throws Exception
-	{
-					
+			throws Exception {
+
 		// FIXME hold if too many agents are competing for resources !!!???
 		final String processInstanceID = "ProcMgr" + PROCESS_INSTANCE_COUNT++;
 
 		LOG.info("Adding process agents for process instance: "
 				+ processInstanceID + " of type " + processTypeID);
-		
-		synchronized (processInstancesByType)
-		{
+
+		synchronized (processInstancesByType) {
 			getProcesses(processTypeID).add(processInstanceID);
 		}
 		final AgentID completerAgentID = newAgentID(processInstanceID);
-		if (processStatus.containsKey(processTypeID)
-				&& processStatus.get(processTypeID).values()
-						.contains(PROCESS_STATUS_RUNNING))
-			processStatus.get(processTypeID).put(completerAgentID,
-					PROCESS_STATUS_PENDING);
-		else
-		{
-			
-			if (!processStatus.containsKey(processTypeID))
-				processStatus
-						.put(processTypeID, new HashMap<AgentID, String>());
-			processStatus.get(processTypeID).put(completerAgentID,
-					PROCESS_STATUS_RUNNING);
-			bootAgent(completerAgentID, ProcessManagementOrganization.class,
-					ProcedureCall.create(this, this,
-							INITIATE_PROCESS_COMPLETION, cause, processTypeID,
-							completerAgentID));
-
-		}
-		
+		bootAgent(
+				completerAgentID,
+				ProcessManagementOrganization.class,
+				ProcedureCall.create(this, this, INITIATE_PROCESS_COMPLETION,
+						cause, processTypeID, completerAgentID));
 
 	}
 
@@ -475,8 +435,7 @@ public class ScenarioReplicatorImpl extends
 	protected void initiateProcessCompletion(
 			final ScenarioReplication.Request cause,
 			final String processTypeID, final AgentID completerID)
-			throws Exception
-	{
+			throws Exception {
 		getBinder().inject(ProcessCompletion.Initiator.class).initiate(cause,
 				processTypeID, completerID);
 	}
@@ -493,89 +452,64 @@ public class ScenarioReplicatorImpl extends
 	//
 	// }
 
-	/*	public void notifyProcessInitializing(final String processID)
-		{
-			final ProcessState oldState = processStates.put(processID,
-					ProcessState.INITIALIZING);
-			if (oldState != null)
-				LOG.warn(this.logPrefix + "(" + processID + ")"
-						+ "Unexpected state transition from " + oldState
-						+ ", expected: " + ProcessState.INITIALIZING
-						+ " as the start state.");
-			LOG.info(this.logPrefix + "Notified process initializing: " + processID);
-		}
+	/*
+	 * public void notifyProcessInitializing(final String processID) { final
+	 * ProcessState oldState = processStates.put(processID,
+	 * ProcessState.INITIALIZING); if (oldState != null) LOG.warn(this.logPrefix
+	 * + "(" + processID + ")" + "Unexpected state transition from " + oldState
+	 * + ", expected: " + ProcessState.INITIALIZING + " as the start state.");
+	 * LOG.info(this.logPrefix + "Notified process initializing: " + processID);
+	 * }
+	 * 
+	 * public void notifyProcessAllocating(final String processID) { final
+	 * ProcessState oldState = processStates.put(processID,
+	 * ProcessState.ALLOCATING); if (oldState != ProcessState.INITIALIZING)
+	 * LOG.warn(this.logPrefix + "(" + processID + ")" + "Unexpected state " +
+	 * oldState + ", expected transition: " + ProcessState.INITIALIZING + " -> "
+	 * + ProcessState.ALLOCATING); LOG.info(this.logPrefix +
+	 * "Notified process allocating: " + processID); }
+	 * 
+	 * public void notifyProcessFailed(final String processID) { final
+	 * ProcessState oldState = processStates.put(processID,
+	 * ProcessState.FAILED); LOG.info(this.logPrefix +
+	 * "Notified process failed: " + processID); if (oldState !=
+	 * ProcessState.ALLOCATING) LOG.warn(this.logPrefix + "(" + processID + ")"
+	 * + "Unexpected state " + oldState + ", expected transition: " +
+	 * ProcessState.ALLOCATING + " -> " + ProcessState.FAILED); else
+	 * scheduleProcessManagement(repeatIntervalDist.draw().getMillis() *
+	 * 100000);
+	 * 
+	 * }
+	 * 
+	 * public void notifyProcessStarted(final String processID) { final
+	 * ProcessState oldState = processStates.put(processID,
+	 * ProcessState.RUNNING); if (oldState != ProcessState.ALLOCATING)
+	 * LOG.warn(this.logPrefix + "(" + processID + ")" + "Unexpected state " +
+	 * oldState + ", expected transition: " + ProcessState.ALLOCATING + " -> " +
+	 * ProcessState.RUNNING); LOG.info(this.logPrefix +
+	 * "Notified process started: " + processID); }
+	 * 
+	 * public void notifyProcessComplete(final String processID) { final
+	 * ProcessState oldState = processStates.put(processID,
+	 * ProcessState.COMPLETE); LOG.info(this.logPrefix +
+	 * "Notified process complete: " + processID); if (oldState !=
+	 * ProcessState.RUNNING) LOG.warn(this.logPrefix + "(" + processID + ")" +
+	 * "Unexpected state " + oldState + ", expected transition: " +
+	 * ProcessState.RUNNING + " -> " + ProcessState.COMPLETE); else
+	 * scheduleProcessManagement(repeatIntervalDist.draw().getMillis()); }
+	 * 
+	 * public void notifyProcessRestarted(final String processID) { final
+	 * ProcessState oldState = processStates.put(processID,
+	 * ProcessState.RESTARTED); if (oldState != ProcessState.COMPLETE &&
+	 * oldState != ProcessState.FAILED) LOG.warn(this.logPrefix + "(" +
+	 * processID + ")" + "Unexpected state " + oldState +
+	 * ", expected transition: " + ProcessState.COMPLETE + " or " +
+	 * ProcessState.FAILED + " -> " + ProcessState.RESTARTED);
+	 * LOG.info(this.logPrefix + "Notified process restarted: " + processID); }
+	 */
 
-		public void notifyProcessAllocating(final String processID)
-		{
-			final ProcessState oldState = processStates.put(processID,
-					ProcessState.ALLOCATING);
-			if (oldState != ProcessState.INITIALIZING)
-				LOG.warn(this.logPrefix + "(" + processID + ")"
-						+ "Unexpected state " + oldState
-						+ ", expected transition: " + ProcessState.INITIALIZING
-						+ " -> " + ProcessState.ALLOCATING);
-			LOG.info(this.logPrefix + "Notified process allocating: " + processID);
-		}
-
-		public void notifyProcessFailed(final String processID)
-		{
-			final ProcessState oldState = processStates.put(processID,
-					ProcessState.FAILED);
-			LOG.info(this.logPrefix + "Notified process failed: " + processID);
-			if (oldState != ProcessState.ALLOCATING)
-				LOG.warn(this.logPrefix + "(" + processID + ")"
-						+ "Unexpected state " + oldState
-						+ ", expected transition: " + ProcessState.ALLOCATING
-						+ " -> " + ProcessState.FAILED);
-			else
-				scheduleProcessManagement(repeatIntervalDist.draw().getMillis() * 100000);
-
-		}
-
-		public void notifyProcessStarted(final String processID)
-		{
-			final ProcessState oldState = processStates.put(processID,
-					ProcessState.RUNNING);
-			if (oldState != ProcessState.ALLOCATING)
-				LOG.warn(this.logPrefix + "(" + processID + ")"
-						+ "Unexpected state " + oldState
-						+ ", expected transition: " + ProcessState.ALLOCATING
-						+ " -> " + ProcessState.RUNNING);
-			LOG.info(this.logPrefix + "Notified process started: " + processID);
-		}
-
-		public void notifyProcessComplete(final String processID)
-		{
-			final ProcessState oldState = processStates.put(processID,
-					ProcessState.COMPLETE);
-			LOG.info(this.logPrefix + "Notified process complete: " + processID);
-			if (oldState != ProcessState.RUNNING)
-				LOG.warn(this.logPrefix + "(" + processID + ")"
-						+ "Unexpected state " + oldState
-						+ ", expected transition: " + ProcessState.RUNNING + " -> "
-						+ ProcessState.COMPLETE);
-			else
-				scheduleProcessManagement(repeatIntervalDist.draw().getMillis());
-		}
-
-		public void notifyProcessRestarted(final String processID)
-		{
-			final ProcessState oldState = processStates.put(processID,
-					ProcessState.RESTARTED);
-			if (oldState != ProcessState.COMPLETE
-					&& oldState != ProcessState.FAILED)
-				LOG.warn(this.logPrefix + "(" + processID + ")"
-						+ "Unexpected state " + oldState
-						+ ", expected transition: " + ProcessState.COMPLETE
-						+ " or " + ProcessState.FAILED + " -> "
-						+ ProcessState.RESTARTED);
-			LOG.info(this.logPrefix + "Notified process restarted: " + processID);
-		}*/
-
-	private Set<String> getProcesses(final String processTypeID)
-	{
-		synchronized (processInstancesByType)
-		{
+	private Set<String> getProcesses(final String processTypeID) {
+		synchronized (processInstancesByType) {
 			if (!processInstancesByType.containsKey(processTypeID))
 				processInstancesByType.put(processTypeID,
 						Collections.synchronizedSet(new HashSet<String>()));

@@ -1,20 +1,27 @@
 package io.arum.model.resource.supply;
 
-import java.util.ArrayList;
-
 import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.Body;
 import io.asimov.model.ResourceType;
 import io.asimov.model.XMLConvertible;
+import io.asimov.model.xml.XmlUtil;
 import io.asimov.xml.TComponent;
+import io.coala.log.LogUtil;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.xml.datatype.Duration;
 
+import org.apache.log4j.Logger;
 import org.eclipse.persistence.nosql.annotations.Field;
 import org.eclipse.persistence.nosql.annotations.NoSql;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * {@link Material}
@@ -32,6 +39,9 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 
 	/** */
 	private static final long serialVersionUID = 1L;
+	
+	@JsonIgnore
+	private static Logger LOG = LogUtil.getLogger(Material.class);
 
 	/** */
 	@Embedded
@@ -50,6 +60,33 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	/** */
 	@Field(name = "inRoom")
 	private AssemblyLine inRoom;
+	
+	/**
+	 */
+	@Field(name = "availableFromTime")
+	private Long availableFromTime;
+
+	/**
+	 * @return the availableFromTime
+	 */
+	public Long getAvailableFromTime() {
+		return availableFromTime;
+	}
+
+	/**
+	 * @param availableFromTime the availableFromTime to set
+	 */
+	public void setAvailableFromTime(Long availableFromTime) {
+		this.availableFromTime = availableFromTime;
+	}
+
+	/**
+	 * @param availableFromTime the availableFromTime to set
+	 */
+	public Material withAvailableFromTime(Long availableFromTime) {
+		this.setAvailableFromTime(availableFromTime);
+		return this;
+	}
 
 	/** @param type the {@link SupplyType} to set */
 	protected void setTypes(final ArrayList<SupplyType> types)
@@ -141,6 +178,8 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	public Object toXML()
 	{
 		io.asimov.xml.TContext.Material m = new io.asimov.xml.TContext.Material().withMaterialId(getName());
+		if (getAvailableFromTime() != null)
+			m.setAvailableAfter(XmlUtil.toDuration(getAvailableFromTime()));
 		for (SupplyType t : getTypes()) {
 			TComponent component = new TComponent().withType(t.getName());
 			m.withComponent(component);
@@ -155,6 +194,10 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 		if (xmlBean instanceof io.asimov.xml.TContext.Material) {
 			io.asimov.xml.TContext.Material m = (io.asimov.xml.TContext.Material)xmlBean;
 			withName(m.getMaterialId());
+			Duration availableFromTime = m.getAvailableAfter();
+			if (availableFromTime != null) {
+				withAvailableFromTime(availableFromTime.getTimeInMillis(new Date(0L)));
+			}
 			ArrayList<SupplyType> types = new ArrayList<SupplyType>();
 			for (TComponent c : m.getComponent()) {
 				types.add(new SupplyType().withName(c.getType()));

@@ -27,6 +27,7 @@
 				<complexType>
 					<sequence>
 						<element name="materialId" type="string"></element>
+						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
 						<element name="component" type="asimovcim:tComponent" maxOccurs="unbounded" minOccurs="1"></element>
 					</sequence>
 				</complexType>
@@ -35,6 +36,7 @@
 				<complexType>
 					<sequence>
 						<element name="personId" type="string"></element>
+						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
 						<element name="role" type="asimovbpm:tRole" maxOccurs="unbounded" minOccurs="1"></element>
 					</sequence>
 				</complexType>
@@ -43,6 +45,7 @@
 				<complexType>
 					<sequence>
 						<element name="assemblyLineId" type="string"></element>
+						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
 						<element name="assemblyLineType" type="asimovcim:tAssemblyLineType" maxOccurs="unbounded" minOccurs="1"></element>
 					</sequence>
 				</complexType>

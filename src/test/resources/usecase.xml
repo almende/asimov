@@ -424,6 +424,7 @@
 <!-- Here we make the correlation between the specific assemblyLines and the generic types -->
                         <assemblyLine>
                             <assemblyLineId>CoffeeMachineProductionTable_1</assemblyLineId>
+                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
                             <assemblyLineType>
                                 <amount>1</amount>
                                 <type>CoffeeMachineProductionTable</type>
@@ -431,6 +432,7 @@
                         </assemblyLine>
                         <assemblyLine>
                             <assemblyLineId>CoffeeMachineProductionTable_2</assemblyLineId>
+                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
                             <assemblyLineType>
                                 <amount>1</amount>
                                 <type>CoffeeMachineProductionTable</type>
@@ -438,6 +440,7 @@
                         </assemblyLine>
                         <assemblyLine>
                             <assemblyLineId>CoffeeMachineProductionTable_3</assemblyLineId>
+                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
                             <assemblyLineType>
                                 <amount>1</amount>
                                 <type>CoffeeMachineProductionTable</type>
@@ -446,7 +449,7 @@
                     </context>
                     <process>
                         <id>Process_A.1</id>
-                        <name>Coffee machine production process 1</name>
+                        <name>Coffee machine production process</name>
                         <activity>
                             <id>A1.1</id>
                             <name>A1 - Manufactoring interior of the Coffee machine</name>
@@ -594,313 +597,8 @@
                             <nextActivityRef likelihood="10">A2.1</nextActivityRef>
                         </activity>
                     </process>
-                    <process>
-                        <id>Process_A.2</id>
-                        <name>Coffee machine production process 2</name>
-                        <activity>
-                            <id>A1.2</id>
-                            <name>A1 - Manufactoring interior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Pump</componentRef>
-                                <numberOf>1</numberOf>
-                                <timeOfUse>P0Y0M0DT1H</timeOfUse>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Dispencer</componentRef>
-                                <numberOf>1</numberOf>
-                                <timeOfUse>P0Y0M0DT1H</timeOfUse>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Framework</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Electronical Circuit Pack</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>Worker</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT02H10M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <nextActivityRef likelihood="10">A2.2</nextActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A2.2</id>
-                            <name>A2 - Test interior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Circuit Validator</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Pressure Measurement Device</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>RAO</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT00H20M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="5">A1.2</previousActivityRef>
-                            <previousActivityRef likelihood="1">A5.2</previousActivityRef>
-                            <previousActivityRef likelihood="4">A6.2</previousActivityRef>
-                            <nextActivityRef likelihood="5">A3.2</nextActivityRef>
-                            <nextActivityRef likelihood="5">A4.2</nextActivityRef>
-                            <nextActivityRef likelihood="2">A5.2</nextActivityRef>
-                            <nextActivityRef likelihood="8">A6.2</nextActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A3.2</id>
-                            <name>A3 - Manufactoring exterior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Coffee machine front panel</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Coffee machine rear panel</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Coffee machine cover</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>Worker</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT00H35M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="10">A2.2</previousActivityRef>
-                            <previousActivityRef likelihood="10">A4.2</previousActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A4.2</id>
-                            <name>A4 - Wait for RAO to complete</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>RAO</roleRef>
-                            </RoleInvolved>
-                            
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT00H30M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="10">A2.2</previousActivityRef>
-                            <nextActivityRef likelihood="10">A3.2</nextActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A5.2</id>
-                            <name>A5 - Minor None Conformity Meeting</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>Minor Manager</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT00H10M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="10">A2.2</previousActivityRef>
-                            <nextActivityRef likelihood="10">A2.2</nextActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A6.2</id>
-                            <name>A6 - Major None Conformity Meeting</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>Major Manager</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT01H00M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="10">A2.2</previousActivityRef>
-                            <nextActivityRef likelihood="10">A2.2</nextActivityRef>
-                        </activity>
-                    </process>
-                    <process>
-                        <id>Process_A.3</id>
-                        <name>Coffee machine production process 3</name>
-                        <activity>
-                            <id>A1.3</id>
-                            <name>A1 - Manufactoring interior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Pump</componentRef>
-                                <numberOf>1</numberOf>
-                                <timeOfUse>P0Y0M0DT1H</timeOfUse>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Dispencer</componentRef>
-                                <numberOf>1</numberOf>
-                                <timeOfUse>P0Y0M0DT1H</timeOfUse>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Framework</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Electronical Circuit Pack</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>Worker</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT02H10M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <nextActivityRef likelihood="10">A2.3</nextActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A2.3</id>
-                            <name>A2 - Test interior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Circuit Validator</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Pressure Measurement Device</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>RAO</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT00H20M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="5">A1.3</previousActivityRef>
-                            <previousActivityRef likelihood="1">A5.3</previousActivityRef>
-                            <previousActivityRef likelihood="4">A6.3</previousActivityRef>
-                            <nextActivityRef likelihood="5">A3.3</nextActivityRef>
-                            <nextActivityRef likelihood="5">A4.3</nextActivityRef>
-                            <nextActivityRef likelihood="2">A5.3</nextActivityRef>
-                            <nextActivityRef likelihood="8">A6.3</nextActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A3.3</id>
-                            <name>A3 - Manufactoring exterior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Coffee machine front panel</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Coffee machine rear panel</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Coffee machine cover</componentRef>
-                                <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>Worker</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT00H35M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="10">A2.3</previousActivityRef>
-                            <previousActivityRef likelihood="10">A4.3</previousActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A4.3</id>
-                            <name>A4 - Wait for RAO to complete</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>RAO</roleRef>
-                            </RoleInvolved>
-                            
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT00H30M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="10">A2.3</previousActivityRef>
-                            <nextActivityRef likelihood="10">A3.3</nextActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A5.3</id>
-                            <name>A5 - Minor None Conformity Meeting</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>Minor Manager</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT00H10M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="10">A2.3</previousActivityRef>
-                            <nextActivityRef likelihood="10">A2.3</nextActivityRef>
-                        </activity>
-                        <activity>
-                            <id>A6.3</id>
-                            <name>A6 - Major None Conformity Meeting</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>Major Manager</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
-                            <interruptable>true</interruptable>
-                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
-                            <executionTime>P00Y000DT01H00M00S</executionTime>
-                            <transportTime>P00Y000DT00H00M00S</transportTime>
-                            
-                            <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="10">A2.3</previousActivityRef>
-                            <nextActivityRef likelihood="10">A2.3</nextActivityRef>
-                        </activity>
-                    </process>
+                 
                     <processTemplate processRef="Process_A.1">
-                        <property name="totalToBePerformed" type="int">5</property>
-                    </processTemplate>
-                    <processTemplate processRef="Process_A.2">
-                        <property name="totalToBePerformed" type="int">5</property>
-                    </processTemplate>
-                    <processTemplate processRef="Process_A.3">
                         <property name="totalToBePerformed" type="int">5</property>
                     </processTemplate>
                 </usecase>

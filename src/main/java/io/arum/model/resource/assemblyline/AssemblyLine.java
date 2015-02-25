@@ -4,16 +4,23 @@ import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.Body;
 import io.asimov.model.ResourceType;
 import io.asimov.model.XMLConvertible;
+import io.asimov.model.xml.XmlUtil;
 import io.asimov.xml.TAssemblyLineType;
+import io.coala.log.LogUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.xml.datatype.Duration;
 
+import org.apache.log4j.Logger;
 import org.eclipse.persistence.nosql.annotations.Field;
 import org.eclipse.persistence.nosql.annotations.NoSql;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * {@link AssemblyLine}
@@ -27,6 +34,8 @@ import org.eclipse.persistence.nosql.annotations.NoSql;
 @NoSql(dataType = "assemblyLines")
 public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements ResourceType, XMLConvertible<Object, AssemblyLine>
 {
+	@JsonIgnore
+	private static Logger LOG = LogUtil.getLogger(AssemblyLine.class);
 
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -48,7 +57,34 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 	/** */
 	@Field(name = "inRoom")
 	private AssemblyLine inRoom;
+	
+	/**
+	 */
+	@Field(name = "availableFromTime")
+	private Long availableFromTime;
 
+	/**
+	 * @return the availableFromTime
+	 */
+	public Long getAvailableFromTime() {
+		return availableFromTime;
+	}
+
+	/**
+	 * @param availableFromTime the availableFromTime to set
+	 */
+	public void setAvailableFromTime(Long availableFromTime) {
+		this.availableFromTime = availableFromTime;
+	}
+
+	/**
+	 * @param availableFromTime the availableFromTime to set
+	 */
+	public AssemblyLine withAvailableFromTime(Long availableFromTime) {
+		this.setAvailableFromTime(availableFromTime);
+		return this;
+	}
+	
 	/** @param type the {@link AssbemblyLineType} to set */
 	protected void setTypes(final ArrayList<AssemblyLineType> types)
 	{
@@ -139,6 +175,9 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 	public Object toXML()
 	{
 		io.asimov.xml.TContext.AssemblyLine m = new io.asimov.xml.TContext.AssemblyLine().withAssemblyLineId(getName());
+		if (getAvailableFromTime() != null)
+				m.setAvailableAfter(XmlUtil.toDuration(getAvailableFromTime()));
+			
 		for (AssemblyLineType t : getTypes()) {
 			TAssemblyLineType component = new TAssemblyLineType().withType(t.getName());
 			m.withAssemblyLineType(component);
@@ -153,6 +192,10 @@ public class AssemblyLine extends AbstractEmbodied<AssemblyLine> implements Reso
 		if (xmlBean instanceof io.asimov.xml.TContext.AssemblyLine) {
 			io.asimov.xml.TContext.AssemblyLine m = (io.asimov.xml.TContext.AssemblyLine)xmlBean;
 			withName(m.getAssemblyLineId());
+			Duration availableFromTime = m.getAvailableAfter();
+			if (availableFromTime != null) {
+				withAvailableFromTime(availableFromTime.getTimeInMillis(new Date(0L)));
+			}
 			ArrayList<AssemblyLineType> types = new ArrayList<AssemblyLineType>();
 			for (TAssemblyLineType c : m.getAssemblyLineType()) {
 				types.add(new AssemblyLineType().withName(c.getType()));

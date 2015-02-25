@@ -1,22 +1,33 @@
 package io.arum.model.process.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.arum.model.resource.person.PersonResourceManagementWorld;
 import io.asimov.agent.process.ProcessCompletion;
+import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
 import io.asimov.agent.scenario.impl.ScenarioReplicatorImpl;
+import io.asimov.messaging.ASIMOVMessage;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
+import io.coala.enterprise.fact.FactID;
 import io.coala.enterprise.role.AbstractInitiator;
+import io.coala.invoke.ProcedureCall;
+import io.coala.invoke.Schedulable;
 import io.coala.log.InjectLogger;
 import io.coala.random.RandomDistribution;
 import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
+import io.coala.time.Trigger;
 
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+
+import rx.Observer;
 
 /**
  * {@link ProcessCompletionInitiator}
@@ -27,8 +38,7 @@ import org.apache.log4j.Logger;
  */
 public class ProcessCompletionInitiator extends
 		AbstractInitiator<ProcessCompletion.Result> implements
-		ProcessCompletion.Initiator
-{
+		ProcessCompletion.Initiator {
 
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -37,8 +47,12 @@ public class ProcessCompletionInitiator extends
 	@InjectLogger
 	private Logger LOG;
 
+	private int resourcesHash = 0;
+
 	/** */
 	private RandomDistribution<SimTime> retryDelayDist;
+
+	private ScenarioReplication.Request cause;
 
 	/**
 	 * {@link ProcessCompletionInitiator} constructor
@@ -46,22 +60,19 @@ public class ProcessCompletionInitiator extends
 	 * @param binder
 	 */
 	@Inject
-	protected ProcessCompletionInitiator(final Binder binder)
-	{
+	protected ProcessCompletionInitiator(final Binder binder) {
 		super(binder);
 	}
 
 	@Override
-	public void initialize() throws Exception
-	{
+	public void initialize() throws Exception {
 		super.initialize();
 
 		// TODO read from config?
 		this.retryDelayDist = newDist().getConstant(newTime(1, TimeUnit.HOURS));
 	}
 
-	protected ScenarioReplicator getReplicator()
-	{
+	protected ScenarioReplicator getReplicator() {
 		return getBinder().inject(ScenarioReplicator.class);
 	}
 
@@ -69,49 +80,33 @@ public class ProcessCompletionInitiator extends
 	public ProcessCompletion.Request initiate(
 			final ScenarioReplication.Request cause,
 			final String processTypeID, final AgentID procMgrID)
-			throws Exception
-	{
-		return send(
-				ProcessCompletion.Request.Builder
-						.forProducer(getReplicator(), cause)
-						.withProcessTypeID(processTypeID)
-						.withReceiverID(procMgrID).build());
+			throws Exception {
+		this.cause = cause;
+		return send(ProcessCompletion.Request.Builder
+				.forProducer(getReplicator(), cause)
+				.withProcessTypeID(processTypeID).withReceiverID(procMgrID)
+				.build());
 	}
 
 	@Override
-	public ProcessCompletion.Request reinitiate(final SimTime delay,
-			final ProcessCompletion.Result cause) throws Exception
-	{
-		// FIXME re-use process manager agent/org for another alloc attempt?
-		return send(
-				delay,
-				ProcessCompletion.Request.Builder
-						.forProducer(getReplicator(), cause)
-						.withProcessTypeID(cause.getProcessTypeID())
-						.withReceiverID(cause.getSenderID()).build());
-	}
-
-	@Override
-	public void onStated(final ProcessCompletion.Result result)
-	{
+	public void onStated(final ProcessCompletion.Result result) {
 		if (!((ProcessCompletion.Result) result).getSuccess())
-			try
-			{
-				final SimTime delay = this.retryDelayDist.draw();
-				// FIXME Assumes al persons have same desiredSiteEnterTime;
-				//LOG.warn("FIXME: Assumption that al persons have the same desired onSite time.");
-				SimDuration onSiteDelta = getBinder().inject(PersonResourceManagementWorld.class).onSiteDelay(getSimulator().getTime().plus(delay));
-				LOG.warn("Process allocation failed, retrying in " + delay.plus(onSiteDelta)
-						+ ": " + result);
-				//ScenarioReplicatorImpl.processStatus.get(result.getProcessTypeID()).put(result.getSenderID(),ScenarioReplicatorImpl.PROCESS_STATUS_PENDING);
-				reinitiate(delay.plus(onSiteDelta), result);
-			} catch (final Exception e)
-			{
+			try {
+				LOG.warn("Process allocation failed");
+			} catch (final Exception e) {
 				LOG.error("Problem retrying process completion", e);
 			}
 		else {
-			ScenarioReplicatorImpl.processStatus.get(result.getProcessTypeID()).remove(result.getSenderID());
+//			resourcesHash = ("" + getTime().hashCode() + result.hashCode())
+//					.hashCode(); // invalidate hash
 			LOG.warn("Process completed successfully!");
+//			ProcedureCall<?> pc = ProcedureCall.create(this, getBinder()
+//					.inject(ScenarioReplicator.class),
+//					ScenarioReplicatorImpl.SCHEDULE_NEXT_BP, this.cause, result
+//							.getProcessTypeID(), resourcesHash);
+//			getScheduler().schedule(pc, Trigger.createAbsolute(getTime()));
+			getBinder().inject(ScenarioManagementWorld.class)
+					.updateResourceStatusHash("");
 		}
 	}
 }

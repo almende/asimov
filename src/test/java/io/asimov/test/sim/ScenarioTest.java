@@ -48,7 +48,7 @@ public class ScenarioTest
 	public static final long nofOccupants = 9;
 
 	/** */
-	public static final String scenario = "src/test/resources/usecase.xml";
+	public static final String scenario = "src/test/resources/usecase_double_materials.xml";
 
 
 	/** */
@@ -107,15 +107,8 @@ public class ScenarioTest
 					{
 
 						if (time.isAfter(endOfSimulation)) {
-							try {
-								new TimeLineWriter().writeTimeLine();
-								new MidasWriter().writeToMidas();
-								new EventTraceWriter().writeSimulatorOutput();
-								latch.countDown();
-							} catch (Exception e) {
-								LOG.error("Failed to write output of ASIMOV",e);
-								System.exit(1);
-							}
+							wrapUp();
+							latch.countDown();
 						} else if (time.isAfter(currentSimTime)) {
 							System.out.println("Simulator " + simulator.getClockID()
 								+ " time is now " + time);
@@ -154,6 +147,7 @@ public class ScenarioTest
 						} if (update.getStatus().isFinishedStatus() || update.getStatus().isFailedStatus())
 						{
 							LOG.info(binder.getID() + ": Aborted simulation!");
+							wrapUp();
 							latch.countDown();
 						} 
 					}
@@ -176,5 +170,17 @@ public class ScenarioTest
 		latch.await();
 
 		LOG.info(binder.getID() + ": Test scenario complete");
+	}
+
+	protected void wrapUp() {
+		try {
+			new TimeLineWriter().writeTimeLine();
+			new MidasWriter().writeToMidas();
+			new EventTraceWriter().writeSimulatorOutput();
+			
+		} catch (Exception e) {
+			LOG.error("Failed to write output of ASIMOV",e);
+			System.exit(1);
+		}
 	}
 }

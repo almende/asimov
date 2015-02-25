@@ -9,6 +9,7 @@ import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.random.RandomDistribution;
 import io.coala.time.SimDuration;
+import io.coala.time.SimTime;
 
 import java.util.Set;
 
@@ -50,6 +51,12 @@ public interface ScenarioManagementWorld extends ARUMOrganizationWorld
 	Set<AgentID> getCurrentPersonIDs();
 
 	Set<AgentID> getCurrentMaterialIDs();
+	
+	int getCurrentResourceStatusHash();
+	
+	Observable<Integer> resourceStatusHash();
+	
+	void updateResourceStatusHash(String base);
 
 	/**
 	 * @param processTypeID
@@ -172,7 +179,7 @@ public interface ScenarioManagementWorld extends ARUMOrganizationWorld
 	 * @author <a href="mailto:Rick@almende.org">Rick</a>
 	 * 
 	 */
-	public interface ResourceEvent
+	public interface ResourceEvent extends Comparable<ResourceEvent>
 	{
 		/**
 		 * @return
@@ -189,6 +196,12 @@ public interface ScenarioManagementWorld extends ARUMOrganizationWorld
 		 * @return
 		 */
 		ResourceEventType getEventType();
+		
+		/**
+		 * the time to fire the event
+		 */
+		
+		SimTime getEventTime();
 	}
 
 }

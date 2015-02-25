@@ -423,7 +423,7 @@ public class LegacySLUtil implements ASIMOVAgents
 	}
 
 	public static Formula requestResourceAllocationForRequirement(
-			ResourceRequirement requirement, ResourceRequirement... equipment)
+			ResourceRequirement requirement)
 	{
 		Formula result = null;
 		VariableNode procesName = new VariableNode("procesName");
@@ -461,63 +461,13 @@ public class LegacySLUtil implements ASIMOVAgents
 						SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
 				.instantiate(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
 
-		if (equipment != null && equipment.length > 0)
-		{
-			LinkedHashSet<Formula> resourceFormulas = new LinkedHashSet<Formula>();
-			resourceFormulas.add(resourceFormula);
-			for (int i = 0; i < equipment.length; i++)
-			{
-				Term equipmentResourceMatchPattern = ResourceRequirement.TASK_RESOURCE_PATTERN
-						.instantiate(
-								ResourceRequirement.TASK_RESOURCE,
-								Resource.RESOURCE_PATTERN
-										// .instantiate(Resource.RESOURCE_NAME,agentName)
-										.instantiate(
-												Resource.RESOURCE_SUB_TYPE,
-												SL.string(equipment[i]
-														.getResource()
-														.getSubTypeID()
-														.getName()))
-										.instantiate(
-												Resource.RESOURCE_TYPE,
-												SL.string(equipment[i]
-														.getResource()
-														.getTypeID().getName())))
-						.instantiate(ResourceRequirement.TASK_RESOURCE_AMOUNT,
-								SL.integer(1))
-						.instantiate(
-								ResourceRequirement.TASK_RESOURCE_DURATION,
-								new Time().withMillisecond(0).toSL());
-				Formula equipmentResourceFormula = SLConvertible.ASIMOV_PROPERTY_SET_FORMULA
-						.instantiate(SLConvertible.sASIMOV_PROPERTY,
-								SL.string(ResourceRequirement.TASK_RESOURCE))
-						.instantiate(
-								SLConvertible.sASIMOV_KEY,
-								SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
-						.instantiate(SLConvertible.sASIMOV_VALUE,
-								equipmentResourceMatchPattern);
-				resourceFormulas.add(equipmentResourceFormula);
-			}
-			String andFormulaString = "(and";
-			for (Formula formula : resourceFormulas)
-			{
-				andFormulaString += " " + formula.toString();
-			}
-			andFormulaString += ")";
-//			if (!requirement.getResource().getTypeID().getName()
-//					.equalsIgnoreCase(ARUMResourceType.PERSON.name()) 
-//					|| !isExclusive(requirement))
-//				result = SL.formula(andFormulaString);
-//			else
-				result = new AndNode(notAllocated, SL.formula(andFormulaString));
-		} else
-		{
+	
 //			if (!requirement.getResource().getTypeID().getName()
 //					.equalsIgnoreCase(ARUMResourceType.PERSON.name()) || !isExclusive(requirement))
 //				result = resourceFormula;
 //			else
 				result = new AndNode(notAllocated, resourceFormula);
-		}
+		
 		//LOG.error(result);
 		return result;
 	}
