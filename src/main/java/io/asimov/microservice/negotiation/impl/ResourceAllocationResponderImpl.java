@@ -329,7 +329,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		return result.get(requirements);
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processAvailabilityCheck(eu.a4ee.negotiation.messages.AvailabilityCheck) */
+	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processAvailabilityCheck(eu.a4ee.negotiation.messages.UnAvailabilityRequest) */
 	@Override
 	public synchronized AvailabilityReply processAvailabilityCheck(
 			AvailabilityCheck availabilityCheck)
@@ -343,7 +343,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		return reply;
 	}
 	
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processAvailabilityCheck(eu.a4ee.negotiation.messages.AvailabilityCheck) */
+	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processAvailabilityCheck(eu.a4ee.negotiation.messages.UnAvailabilityRequest) */
 	@Override
 	public synchronized Proposal processProposalRequest(
 			ProposalRequest proposalRequest)

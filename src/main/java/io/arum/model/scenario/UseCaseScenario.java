@@ -10,6 +10,7 @@ import io.asimov.db.Datasource;
 import io.asimov.model.Body;
 import io.asimov.model.process.Process;
 import io.asimov.model.xml.XmlUtil;
+import io.asimov.unavailability.UnavailabilityDistribution;
 import io.asimov.xml.ProcessValueRefEnum;
 import io.asimov.xml.TAssemblyLineType;
 import io.asimov.xml.TComponent;
@@ -60,8 +61,7 @@ import org.w3c.dom.Node;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  *
  */
-public interface UseCaseScenario
-{
+public interface UseCaseScenario {
 
 	/**
 	 * @return
@@ -97,14 +97,21 @@ public interface UseCaseScenario
 			String processTypeID);
 
 	/**
+	 * 
+	 * @param resourceId
+	 * @return
+	 */
+	RandomDistribution<SimDuration> getResourceUnavailabilityDistribution(
+			String resourceId);
+
+	/**
 	 * {@link Builder}
 	 * 
 	 * @version $Revision: 1124 $
 	 * @author <a href="mailto:Rick@almende.org">Rick</a>
 	 *
 	 */
-	class Builder
-	{
+	class Builder {
 
 		/** */
 		private static final Logger LOG = LogUtil
@@ -125,6 +132,9 @@ public interface UseCaseScenario
 		/** */
 		private final Map<String, RandomDistribution<SimDuration>> processStartDelayDistributions = new HashMap<>();
 
+		/** */
+		private Map<String, RandomDistribution<SimDuration>> resourceUnavailabilityDistributions = new HashMap<>();
+
 		// private
 
 		/**
@@ -132,27 +142,27 @@ public interface UseCaseScenario
 		 * 
 		 * @param replicationConfig
 		 */
-		private Builder()
-		{
+		private Builder() {
 		}
 
 		public static Builder fromXML(final Replication replication,
 				final TUseCase useCase,
 				final RandomDistribution.Factory distFactory,
-				final RandomNumberStream rng)
-		{
+				final RandomNumberStream rng) {
 			final Builder result = new Builder();
 
-			final TContext context = UseCaseScenario.Util.importTContext(useCase.getContext());
-			
-			final List<TProcessType> processTypes = useCase.getProcess();
-			
-			Util.parseMaterialsAndAssemblyLines(context, result.materials, result.assemblyLines);
+			final TContext context = UseCaseScenario.Util
+					.importTContext(useCase.getContext());
 
+			final List<TProcessType> processTypes = useCase.getProcess();
+
+			Util.parseMaterialsAndAssemblyLines(context, result.materials,
+					result.assemblyLines);
+			result.withResourceUnavailablilityDistribution(new UnavailabilityDistribution(
+					distFactory, rng).fromXML(context).getRandomDistributionOfUnavailabilityDists());
 			final Map<String, Set<TDistribution>> processDists = new HashMap<>();
 			if (useCase.getProcessTemplate() != null)
-				for (TDistribution dist : useCase.getProcessTemplate())
-				{
+				for (TDistribution dist : useCase.getProcessTemplate()) {
 					if (!processDists.containsKey(dist.getProcessRef()))
 						processDists.put(dist.getProcessRef(),
 								new HashSet<TDistribution>());
@@ -160,62 +170,52 @@ public interface UseCaseScenario
 				}
 
 			if (distFactory != null && rng != null)
-				for (TProcessType processType : processTypes)
-				{
+				for (TProcessType processType : processTypes) {
 					final String processTypeID = processType.getName();
 					Process p = new Process().fromXML(processType);
 					if (p == null)
 						continue;
-					result.withProcessType(processTypeID,p);
+					result.withProcessType(processTypeID, p);
 
 					final Set<TDistribution> dists = processDists
 							.get(processTypeID);
-					if (dists == null)
-					{
+					if (dists == null) {
 						LOG.warn("No random distribution(s) parsed "
 								+ "for proces type " + processTypeID);
 						continue;
 					}
-					final RandomDistribution<SimDuration> dist = (processDists.isEmpty()) ? new RandomDistributionFactoryImpl()
+					final RandomDistribution<SimDuration> dist = (processDists
+							.isEmpty()) ? new RandomDistributionFactoryImpl()
 							.getConstant(SimDuration.ZERO.plus(1,
 									TimeUnit.HOURS)) : Util
 							.getProcessStartDelayDist(dists, distFactory, rng);
 					result.withProcessStartDelayDistribution(processTypeID,
 							dist);
 					/*
-					FIXME split PMF values and masses into separate TProperty/ies
-					
-					final List<ProbabilityMass<SimDuration, Number>> pmf = new ArrayList<ProbabilityMass<SimDuration, Number>>();
-					for (TDistribution dist : calibration.getProcessTemplate())
-					{
-						if (!dist.getProcessRef().equals(processTypeID))
-							continue;
-
-						if (!"startTime".equals(dist.getOtherRef()))
-							continue;
-
-						// first cache the values
-						final Map<String, SimDuration> valueCache = new HashMap<>();
-						for (TProperty prop : dist.getProperty())
-						{
-							final int pos = prop.getName().indexOf("value");
-							if (pos > 0)
-								valueCache.put(prop.getName().substring(0, pos),
-										new SimDuration((Number) prop.getValue(),
-												TimeUnit.MILLIS));
-						}
-						// then lookup the values for each mass
-						for (TProperty prop : dist.getProperty())
-						{
-							final int pos = prop.getName().indexOf("mass");
-							if (pos < 0)
-								continue;
-							pmf.add(ProbabilityMass.of(valueCache.get(prop
-									.getName().substring(0, pos)), (Number) prop
-									.getValue()));
-						}
-					}
-					*/
+					 * FIXME split PMF values and masses into separate
+					 * TProperty/ies
+					 * 
+					 * final List<ProbabilityMass<SimDuration, Number>> pmf =
+					 * new ArrayList<ProbabilityMass<SimDuration, Number>>();
+					 * for (TDistribution dist :
+					 * calibration.getProcessTemplate()) { if
+					 * (!dist.getProcessRef().equals(processTypeID)) continue;
+					 * 
+					 * if (!"startTime".equals(dist.getOtherRef())) continue;
+					 * 
+					 * // first cache the values final Map<String, SimDuration>
+					 * valueCache = new HashMap<>(); for (TProperty prop :
+					 * dist.getProperty()) { final int pos =
+					 * prop.getName().indexOf("value"); if (pos > 0)
+					 * valueCache.put(prop.getName().substring(0, pos), new
+					 * SimDuration((Number) prop.getValue(), TimeUnit.MILLIS));
+					 * } // then lookup the values for each mass for (TProperty
+					 * prop : dist.getProperty()) { final int pos =
+					 * prop.getName().indexOf("mass"); if (pos < 0) continue;
+					 * pmf.add(ProbabilityMass.of(valueCache.get(prop
+					 * .getName().substring(0, pos)), (Number) prop
+					 * .getValue())); } }
+					 */
 				}
 			Util.removeInfeasibleProcesses(processTypes, context);
 			final Set<Person> roleDistribution = Util
@@ -236,8 +236,7 @@ public interface UseCaseScenario
 		 * @param processType
 		 */
 		public Builder withProcessType(final String processTypeID,
-				final Process processType)
-		{
+				final Process processType) {
 			this.processTypes.put(processTypeID, processType);
 			return this;
 		}
@@ -248,16 +247,26 @@ public interface UseCaseScenario
 		 */
 		public Builder withProcessStartDelayDistribution(
 				final String processTypeID,
-				final RandomDistribution<SimDuration> dist)
-		{
+				final RandomDistribution<SimDuration> dist) {
 			this.processStartDelayDistributions.put(processTypeID, dist);
 			return this;
 		}
 
-		public UseCaseScenario build()
-		{
-			return new CIMScenarioImpl(this.materials, this.assemblyLines, this.persons,
-					this.processTypes, this.processStartDelayDistributions);
+		/**
+		 * @param resourceID
+		 * @param enumerated
+		 */
+		public Builder withResourceUnavailablilityDistribution(
+				final Map<String,RandomDistribution<SimDuration>> dist) {
+			this.resourceUnavailabilityDistributions = dist;
+			return this;
+		}
+
+		public UseCaseScenario build() {
+			return new CIMScenarioImpl(this.materials, this.assemblyLines,
+					this.persons, this.processTypes,
+					this.processStartDelayDistributions,
+					this.resourceUnavailabilityDistributions);
 		}
 
 	}
@@ -268,8 +277,7 @@ public interface UseCaseScenario
 	 * @version $Revision: 1124 $
 	 * @author <a href="mailto:Rick@almende.org">Rick</a>
 	 */
-	class CIMScenarioImpl implements UseCaseScenario
-	{
+	class CIMScenarioImpl implements UseCaseScenario {
 
 		/** */
 		private Set<Material> materials;
@@ -286,11 +294,13 @@ public interface UseCaseScenario
 		/** */
 		private Map<String, RandomDistribution<SimDuration>> processStartDelayDistributions;
 
+		/** */
+		private Map<String, RandomDistribution<SimDuration>> resourceUnavailabilityDistributions;
+
 		/**
 		 * {@link CIMScenarioImpl} constructor
 		 */
-		protected CIMScenarioImpl()
-		{
+		protected CIMScenarioImpl() {
 			//
 		}
 
@@ -309,8 +319,8 @@ public interface UseCaseScenario
 				final Set<AssemblyLine> assemblyLines,
 				final Set<Person> persons,
 				final Map<String, Process> processTypes,
-				final Map<String, RandomDistribution<SimDuration>> processStartDelayDistribution)
-		{
+				final Map<String, RandomDistribution<SimDuration>> processStartDelayDistribution,
+				final Map<String, RandomDistribution<SimDuration>> resourceUnavailablilityDistribution) {
 			this.materials = Collections.unmodifiableSet(materials);
 			this.assemblyLines = Collections.unmodifiableSet(assemblyLines);
 			this.persons = Collections.unmodifiableSet(persons);
@@ -318,43 +328,45 @@ public interface UseCaseScenario
 			this.materials = Collections.unmodifiableSet(materials);
 			this.processStartDelayDistributions = Collections
 					.unmodifiableMap(processStartDelayDistribution);
+			this.resourceUnavailabilityDistributions = Collections
+					.unmodifiableMap(resourceUnavailablilityDistribution);
 		}
 
 		@Override
-		public Set<Material> getMaterials()
-		{
+		public Set<Material> getMaterials() {
 			return this.materials;
 		}
 
 		@Override
-		public Set<AssemblyLine> getAssemblyLines()
-		{
+		public Set<AssemblyLine> getAssemblyLines() {
 			return this.assemblyLines;
 		}
 
 		@Override
-		public Set<Person> getPersons()
-		{
+		public Set<Person> getPersons() {
 			return this.persons;
 		}
 
 		@Override
-		public Set<String> getProcessTypeIDs()
-		{
+		public Set<String> getProcessTypeIDs() {
 			return this.processTypes.keySet();
 		}
 
 		@Override
-		public Process getProcess(final String processTypeID)
-		{
+		public Process getProcess(final String processTypeID) {
 			return this.processTypes.get(processTypeID);
 		}
 
 		@Override
 		public RandomDistribution<SimDuration> getProcessStartDelayDistribution(
-				final String processTypeID)
-		{
+				final String processTypeID) {
 			return this.processStartDelayDistributions.get(processTypeID);
+		}
+
+		@Override
+		public RandomDistribution<SimDuration> getResourceUnavailabilityDistribution(
+				String resourceId) {
+			return this.resourceUnavailabilityDistributions.get(resourceId);
 		}
 
 	}
@@ -366,20 +378,17 @@ public interface UseCaseScenario
 	 * @author <a href="mailto:Rick@almende.org">Rick</a>
 	 *
 	 */
-	class Util
-	{
+	class Util {
 		/** */
 		private static final Logger LOG = LogUtil
 				.getLogger(UseCaseScenario.Util.class);
-
 
 		/**
 		 * @param processes
 		 * @param gbXML
 		 */
 		public static void removeInfeasibleProcesses(
-				final Collection<TProcessType> processes, final TContext context)
-		{
+				final Collection<TProcessType> processes, final TContext context) {
 			if (processes.size() == 0 || context == null)
 				return;
 
@@ -387,56 +396,60 @@ public interface UseCaseScenario
 					processes);
 			final Set<TProcessType> unavailableProcesses = new HashSet<TProcessType>();
 
-			for (TProcessType process : processes)
-			{
-				for (TSkeletonActivityType activity : process.getActivity())
-				{
+			for (TProcessType process : processes) {
+				for (TSkeletonActivityType activity : process.getActivity()) {
 					boolean foundPersonRole = activity.getRoleInvolved().size() == 0;
 					if (!foundPersonRole)
 						for (RoleInvolved r : activity.getRoleInvolved()) {
-							for (io.asimov.xml.TContext.Person p : context.getPerson()) {
+							for (io.asimov.xml.TContext.Person p : context
+									.getPerson()) {
 								for (TRole tr : p.getRole())
-								if (r.getRoleRef().equalsIgnoreCase(tr.getId())) {
-									foundPersonRole = true;
-								}
+									if (r.getRoleRef().equalsIgnoreCase(
+											tr.getId())) {
+										foundPersonRole = true;
+									}
 							}
 						}
-					boolean foundAssemblyLineType = activity.getUsedAssemlyLineType().size() == 0;
+					boolean foundAssemblyLineType = activity
+							.getUsedAssemlyLineType().size() == 0;
 					if (!foundAssemblyLineType)
 						for (String t : activity.getUsedAssemlyLineType()) {
-							for (io.asimov.xml.TContext.AssemblyLine p : context.getAssemblyLine()) {
-								for (TAssemblyLineType tr : p.getAssemblyLineType())
-								if (t.equalsIgnoreCase(tr.getType())) {
-									foundAssemblyLineType = true;
-								}
+							for (io.asimov.xml.TContext.AssemblyLine p : context
+									.getAssemblyLine()) {
+								for (TAssemblyLineType tr : p
+										.getAssemblyLineType())
+									if (t.equalsIgnoreCase(tr.getType())) {
+										foundAssemblyLineType = true;
+									}
 							}
 						}
 					boolean foundMaterial = activity.getUsedComponent().size() == 0;
 					if (!foundMaterial)
 						for (UsedComponent t : activity.getUsedComponent()) {
-							for (io.asimov.xml.TContext.Material p : context.getMaterial()) {
+							for (io.asimov.xml.TContext.Material p : context
+									.getMaterial()) {
 								for (TComponent tr : p.getComponent())
-								if (t.getComponentRef().equalsIgnoreCase(tr.getType())) {
-									foundMaterial = true;
-								}
+									if (t.getComponentRef().equalsIgnoreCase(
+											tr.getType())) {
+										foundMaterial = true;
+									}
 							}
 						}
-					if (!foundPersonRole)
-					{
-						LOG.error("Activity " + activity.getName()
+					if (!foundPersonRole) {
+						LOG.error("Activity "
+								+ activity.getName()
 								+ " can not be applied on the context because of missing person role.");
 						if (availableProcesses.remove(process))
 							unavailableProcesses.add(process);
 					}
-					if (!foundAssemblyLineType)
-					{
-						LOG.error("Activity " + activity.getName()
+					if (!foundAssemblyLineType) {
+						LOG.error("Activity "
+								+ activity.getName()
 								+ " can not be applied on the context because of missing assemblyLine type.");
 						if (availableProcesses.remove(process))
 							unavailableProcesses.add(process);
 					}
-					if (!foundMaterial)
-					{
+					if (!foundMaterial) {
 						LOG.error("Activity "
 								+ activity.getName()
 								+ " needs more materials that are not in the context.");
@@ -448,8 +461,7 @@ public interface UseCaseScenario
 			LOG.info(availableProcesses.size() + " of " + processes.size()
 					+ " processes are feasible in "
 					+ " this contexts assemblyLine and material types");
-			if (unavailableProcesses.size() > 0)
-			{
+			if (unavailableProcesses.size() > 0) {
 				LOG.warn("Removing infeasible processes: "
 						+ unavailableProcesses);
 				processes.removeAll(unavailableProcesses);
@@ -504,15 +516,13 @@ public interface UseCaseScenario
 		public static RandomDistribution<SimDuration> getProcessStartDelayDist(
 				final Set<TDistribution> distributionsForProcessType,
 				final RandomDistribution.Factory distFactory,
-				final RandomNumberStream rng)
-		{
+				final RandomNumberStream rng) {
 			final List<ProbabilityMass<SimDuration, Number>> probabilities = new ArrayList<ProbabilityMass<SimDuration, Number>>();
 
 			// long lowestTime = Long.MAX_VALUE;
 			// long latestTime = Long.MIN_VALUE;
 
-			for (final TDistribution distForProcessType : distributionsForProcessType)
-			{
+			for (final TDistribution distForProcessType : distributionsForProcessType) {
 				if (distForProcessType.getValueRef().equals(
 						ProcessValueRefEnum.OTHER)
 						&& distForProcessType.getOtherRef().equals("startTime"))
@@ -528,8 +538,7 @@ public interface UseCaseScenario
 				// }
 				{
 					for (final TProperty startTimeProperty : distForProcessType
-							.getProperty())
-					{
+							.getProperty()) {
 						probabilities
 								.add(new ProbabilityMass<SimDuration, Number>(
 										new SimDuration(Long
@@ -577,8 +586,7 @@ public interface UseCaseScenario
 		 * @return
 		 */
 		public static Set<Person> createPersonRoleDistribution(
-				final Collection<TProcessType> processes, TUseCase useCase)
-		{
+				final Collection<TProcessType> processes, TUseCase useCase) {
 			final Set<Person> result = new HashSet<Person>();
 			if (!useCase.getContext().getPerson().isEmpty()) {
 				for (TContext.Person p : useCase.getContext().getPerson())
@@ -587,32 +595,26 @@ public interface UseCaseScenario
 			if (!result.isEmpty())
 				return result;
 			for (TProcessType process : processes)
-				for (TSkeletonActivityType activity : process.getActivity())
-				{
-					for (RoleInvolved roleInvolved : activity.getRoleInvolved())
-					{
+				for (TSkeletonActivityType activity : process.getActivity()) {
+					for (RoleInvolved roleInvolved : activity.getRoleInvolved()) {
 						int minNofPersonsRequired = 0;
 						int nofPersonsWithRoleFound = 0;
 						if (roleInvolved.getAverageNumberOfPersons() == null)
 							roleInvolved.setAverageNumberOfPersons(1.0f);
-						if (roleInvolved.getAverageNumberOfPersons() > 1)
-						{
+						if (roleInvolved.getAverageNumberOfPersons() > 1) {
 							minNofPersonsRequired = (int) Math
 									.ceil(roleInvolved
 											.getAverageNumberOfPersons());
-						} else
-						{
+						} else {
 							minNofPersonsRequired = 1;
 						}
-						for (Person occ : result)
-						{
+						for (Person occ : result) {
 							for (PersonRole r : occ.getTypes())
-								if (r.getName()
-									.equals(roleInvolved.getRoleRef()))
-								nofPersonsWithRoleFound++;
+								if (r.getName().equals(
+										roleInvolved.getRoleRef()))
+									nofPersonsWithRoleFound++;
 						}
-						for (int i = nofPersonsWithRoleFound; i < minNofPersonsRequired; i++)
-						{
+						for (int i = nofPersonsWithRoleFound; i < minNofPersonsRequired; i++) {
 							final String type = roleInvolved.getRoleRef();
 							ArrayList<PersonRole> roles = new ArrayList<PersonRole>();
 							roles.add(new PersonRole().withName(type));
@@ -629,14 +631,9 @@ public interface UseCaseScenario
 			return result;
 		}
 
-	
-
-
 		/** */
 		public static Collection<Material> parseMaterials(final TContext context)
-				throws JAXBException, IOException
-		{
-			
+				throws JAXBException, IOException {
 
 			final Collection<Material> result = new HashSet<>();
 			for (io.asimov.xml.TContext.Material m : context.getMaterial())
@@ -644,91 +641,81 @@ public interface UseCaseScenario
 			return result;
 		}
 
-		
 		/** */
-		public static Collection<AssemblyLine> parseAssemblyLines(final TContext context)
-				throws JAXBException, IOException
-		{
-			
+		public static Collection<AssemblyLine> parseAssemblyLines(
+				final TContext context) throws JAXBException, IOException {
 
 			final Collection<AssemblyLine> result = new HashSet<>();
-			for (io.asimov.xml.TContext.AssemblyLine m : context.getAssemblyLine())
+			for (io.asimov.xml.TContext.AssemblyLine m : context
+					.getAssemblyLine())
 				result.add(new AssemblyLine().fromXML(m));
 			return result;
 		}
 
-		
 		/** */
 		public static Collection<Person> parsePersons(final TContext context)
-				throws JAXBException, IOException
-		{
-			
+				throws JAXBException, IOException {
 
 			final Collection<Person> result = new HashSet<>();
 			for (io.asimov.xml.TContext.Person m : context.getPerson())
 				result.add(new Person().fromXML(m));
 			return result;
 		}
-		
+
 		/**
 		 * @param gbXML
 		 * @param materials
 		 * @param assemblyLines
 		 */
-		public static void parseMaterialsAndAssemblyLines(final TContext context,
-				final Set<Material> materials, final Set<AssemblyLine> assemblyLines)
-		{
+		public static void parseMaterialsAndAssemblyLines(
+				final TContext context, final Set<Material> materials,
+				final Set<AssemblyLine> assemblyLines) {
 			try {
 				materials.addAll(parseMaterials(context));
 				assemblyLines.addAll(parseAssemblyLines(context));
 			} catch (JAXBException | IOException e) {
-				LOG.error(e.getMessage(),e);
+				LOG.error(e.getMessage(), e);
 			}
 		}
 
-		
 		/**
 		 * @param xmlElement
 		 * @return
 		 */
-		public static TContext importTContext(final Object xmlElement)
-		{
+		public static TContext importTContext(final Object xmlElement) {
 			if (xmlElement == null)
 				throw new NullPointerException("No TContext node or file name!");
 
 			if (xmlElement instanceof TContext)
 				return (TContext) xmlElement;
 
-			if (xmlElement instanceof Node)
-			{
+			if (xmlElement instanceof Node) {
 				// Support the nested gbXML tags from CIMIM.
 				// cloning to make sure
 				Node node = (Node) xmlElement;
 				// System.err.println("node name: " + node.getNodeName()
 				// + " type: " + node.getClass().getName());
 				if (node.getFirstChild() != null
-						&& node.getFirstChild().getNodeName().contains("context"))
+						&& node.getFirstChild().getNodeName()
+								.contains("context"))
 					return importTContext(node.getFirstChild());
 
-				try
-				{
-					final Object result = XmlUtil.getCIMUnmarshaller().unmarshal(node);
+				try {
+					final Object result = XmlUtil.getCIMUnmarshaller()
+							.unmarshal(node);
 					if (result instanceof TContext)
 						return (TContext) result;
-				} catch (final Exception e)
-				{
+				} catch (final Exception e) {
 					throw new RuntimeException("Problem parsing TContext from "
 							+ xmlElement, e);
 				}
 			}
 
 			if (xmlElement instanceof String)
-				try
-				{
+				try {
 					return (TContext) XmlUtil.getCIMUnmarshaller().unmarshal(
 							FileUtil.getFileAsInputStream((String) xmlElement));
-				} catch (final Exception e)
-				{
+				} catch (final Exception e) {
 					throw new RuntimeException("Problem parsing GbXML from "
 							+ xmlElement, e);
 				}
@@ -736,8 +723,6 @@ public interface UseCaseScenario
 			throw new IllegalStateException("Unsupported gbXML element type "
 					+ xmlElement.getClass().getName());
 		}
-
-		
 
 		/**
 		 * @param configFile
@@ -751,9 +736,8 @@ public interface UseCaseScenario
 		 * @throws JAXBException
 		 */
 		public static Replication saveDefaultReplication(final Binder binder,
-				final File cimFile, final Amount<Duration> duration) throws CoalaException,
-				JAXBException
-		{
+				final File cimFile, final Amount<Duration> duration)
+				throws CoalaException, JAXBException {
 			final String replicationID = binder.getID().getModelID().getValue();
 
 			final io.asimov.db.Datasource ds = binder.inject(Datasource.class);
@@ -761,10 +745,8 @@ public interface UseCaseScenario
 			// remove the replication from the database
 			ds.removeReplication();
 
-
 			final Replication replication = new Replication.Builder()
-					.withId(replicationID)
-					.withStatus(SimStatus.PREPARING)
+					.withId(replicationID).withStatus(SimStatus.PREPARING)
 					.withContextUri(cimFile.getAbsolutePath())
 					.withDurationMS(duration.doubleValue(SI.MILLI(SI.SECOND)))
 					.build();

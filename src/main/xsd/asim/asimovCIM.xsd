@@ -21,6 +21,14 @@
 		namespace="http://io.asimov.almende.org/2015/schema/unit/">
 	</import>
 	
+	<complexType name="tUnavailablePeriodDistribution">
+		<sequence>
+			<element name="property" type="asimovunit:tProperty" maxOccurs="unbounded" minOccurs="0"/>
+		</sequence>
+		<attribute name="type" type="asimovunit:distributionTypeEnum" />
+		<attribute name="period" type="duration"/>
+	</complexType>
+	
 	<complexType name="tContext">
 		<sequence>
 			<element name="material" maxOccurs="unbounded" minOccurs="1">
@@ -29,6 +37,7 @@
 						<element name="materialId" type="string"></element>
 						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
 						<element name="component" type="asimovcim:tComponent" maxOccurs="unbounded" minOccurs="1"></element>
+						<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
 					</sequence>
 				</complexType>
 			</element>
@@ -38,6 +47,7 @@
 						<element name="personId" type="string"></element>
 						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
 						<element name="role" type="asimovbpm:tRole" maxOccurs="unbounded" minOccurs="1"></element>
+						<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
 					</sequence>
 				</complexType>
 			</element>
@@ -47,6 +57,7 @@
 						<element name="assemblyLineId" type="string"></element>
 						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
 						<element name="assemblyLineType" type="asimovcim:tAssemblyLineType" maxOccurs="unbounded" minOccurs="1"></element>
+						<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
 					</sequence>
 				</complexType>
 			</element>

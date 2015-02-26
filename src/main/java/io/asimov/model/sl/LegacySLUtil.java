@@ -71,8 +71,7 @@ import rx.Observer;
  * @author <a href="mailto:suki@almende.org">suki</a>
  *
  */
-public class LegacySLUtil implements ASIMOVAgents
-{
+public class LegacySLUtil implements ASIMOVAgents {
 
 	/** */
 	private static Logger LOG = LogUtil.getLogger(LegacySLUtil.class);
@@ -82,8 +81,7 @@ public class LegacySLUtil implements ASIMOVAgents
 	private static final String EXCLUSIVE_RESOURCE_ID_PROPERTY = "exclusiveResources";
 
 	public static void makeObservation(final Observer<Percept> result,
-			final Process cProcess, final AgentID agentID)
-	{
+			final Process cProcess, final AgentID agentID) {
 		// load rules
 		for (NodePercept rule : getRules(cProcess.getName(), agentID))
 			result.onNext(rule);
@@ -117,15 +115,12 @@ public class LegacySLUtil implements ASIMOVAgents
 	}
 
 	public static Serializable convertAgentID(final AgentID agentID,
-			final Serializable forumla)
-	{
+			final Serializable forumla) {
 		Formula f;
-		try
-		{
+		try {
 			f = JSAReasoningCapability.getSLForObject(Formula.class,
 					new SLParsableSerializable(forumla.toString()));
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			LOG.error("Failed to parse Serializable to formula", e);
 			return null;
 		}
@@ -148,12 +143,10 @@ public class LegacySLUtil implements ASIMOVAgents
 						SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
 				.instantiate(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
 		ListOfNodes formulas = new ListOfNodes();
-		if (f.childrenOfKind(Formula.class, formulas))
-		{
+		if (f.childrenOfKind(Formula.class, formulas)) {
 			Iterator<?> formulaIterator = formulas.iterator();
 			MatchResult matchedResourceResult = null;
-			while (matchedResourceResult == null && formulaIterator.hasNext())
-			{
+			while (matchedResourceResult == null && formulaIterator.hasNext()) {
 				Formula matching = (Formula) formulaIterator.next();
 				matchedResourceResult = resourceFormula.match(matching);
 			}
@@ -170,8 +163,7 @@ public class LegacySLUtil implements ASIMOVAgents
 					.instantiate(PROCESS_NAME, SL.string(agentID.getValue()));
 			resultList.add(result);
 
-			while (formulaIterator.hasNext())
-			{
+			while (formulaIterator.hasNext()) {
 				Formula matching = (Formula) formulaIterator.next();
 				MatchResult matchedEquipmentResult = resourceFormula
 						.match(matching);
@@ -189,8 +181,7 @@ public class LegacySLUtil implements ASIMOVAgents
 				return new SLParsableSerializable(result.toString());
 			String r = "(and ";
 			Iterator<?> it = resultList.iterator();
-			while (it.hasNext())
-			{
+			while (it.hasNext()) {
 				Formula ff = (Formula) it.next();
 				r = r + ff + ((it.hasNext()) ? " " : ")");
 			}
@@ -200,22 +191,19 @@ public class LegacySLUtil implements ASIMOVAgents
 	}
 
 	public static Formula getBelongsToProcessFormula(final String processName,
-			Term property)
-	{
+			Term property) {
 		return getStaticBelongsToProcessFormula(property).instantiate(
 				PROCESS_NAME, SL.string(processName));
 	}
 
 	@Deprecated
-	public static Formula getStaticBelongsToProcessFormula(Term property)
-	{
+	public static Formula getStaticBelongsToProcessFormula(Term property) {
 		return (Formula) SL.instantiate(BELONGS_TO_PROCESS_FORMULA,
 				PROCESS_PROPERTY, property);
 	}
 
 	public static class NodePercept implements Percept,
-			SLConvertible<NodePercept>
-	{
+			SLConvertible<NodePercept> {
 
 		/** */
 		private static final long serialVersionUID = 1L;
@@ -223,35 +211,30 @@ public class LegacySLUtil implements ASIMOVAgents
 		private Node node;
 
 		/** zero argument constructor */
-		public NodePercept()
-		{
+		public NodePercept() {
 			super();
 		}
 
-		public NodePercept(final Node node)
-		{
+		public NodePercept(final Node node) {
 			fromSL(node);
 		}
 
 		/** @see io.coala.jsa.sl.SLConvertible#toSL() */
 		@SuppressWarnings("unchecked")
 		@Override
-		public <N extends Node> N toSL()
-		{
+		public <N extends Node> N toSL() {
 			return (N) node;
 		}
 
 		/** @see io.coala.jsa.sl.SLConvertible#fromSL(jade.semantics.lang.sl.grammar.Node) */
 		@Override
-		public <N extends Node> NodePercept fromSL(N node)
-		{
+		public <N extends Node> NodePercept fromSL(N node) {
 			this.node = node;
 			return this;
 		}
 
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return (this.node == null) ? super.toString() : this.node
 					.toString();
 		}
@@ -259,8 +242,7 @@ public class LegacySLUtil implements ASIMOVAgents
 	}
 
 	private static java.util.ArrayList<NodePercept> getRules(
-			final String processTypeID, final AgentID requestor)
-	{
+			final String processTypeID, final AgentID requestor) {
 		final java.util.ArrayList<NodePercept> rules = new java.util.ArrayList<NodePercept>();
 		if (rulesAddedToAgentSet.contains(requestor))
 			return rules;
@@ -411,20 +393,19 @@ public class LegacySLUtil implements ASIMOVAgents
 
 		return rules;
 	}
-	
-	public static Formula countAllocationScore(final String keyName){
-		 VariableNode procesName = new VariableNode("procesName");
-		 VariableNode processCard = new VariableNode("?"+keyName);
-		 return SL.formula("(card "
-					+ new SomeNode(procesName, getStaticBelongsToProcessFormula(
-							ResourceAllocation.PATTERN).instantiate(PROCESS_NAME,
-							procesName)) + " " + processCard + ")");
-		 
+
+	public static Formula countAllocationScore(final String keyName) {
+		VariableNode procesName = new VariableNode("procesName");
+		VariableNode processCard = new VariableNode("?" + keyName);
+		return SL.formula("(card "
+				+ new SomeNode(procesName, getStaticBelongsToProcessFormula(
+						ResourceAllocation.PATTERN).instantiate(PROCESS_NAME,
+						procesName)) + " " + processCard + ")");
+
 	}
 
 	public static Formula requestResourceAllocationForRequirement(
-			ResourceRequirement requirement)
-	{
+			ResourceRequirement requirement) {
 		Formula result = null;
 		VariableNode procesName = new VariableNode("procesName");
 		VariableNode processCard = new VariableNode("?processCard");
@@ -461,39 +442,90 @@ public class LegacySLUtil implements ASIMOVAgents
 						SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
 				.instantiate(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
 
-	
-//			if (!requirement.getResource().getTypeID().getName()
-//					.equalsIgnoreCase(ARUMResourceType.PERSON.name()) || !isExclusive(requirement))
-//				result = resourceFormula;
-//			else
-				result = new AndNode(notAllocated, resourceFormula);
-		
-		//LOG.error(result);
+		// if (!requirement.getResource().getTypeID().getName()
+		// .equalsIgnoreCase(ARUMResourceType.PERSON.name()) ||
+		// !isExclusive(requirement))
+		// result = resourceFormula;
+		// else
+		result = new AndNode(notAllocated, resourceFormula);
+
+		// LOG.error(result);
+		return result;
+	}
+
+	public static Formula requestResourceAllocationForRequirement(
+			final String type, final String subType) {
+		Formula result = null;
+		VariableNode procesName = new VariableNode("procesName");
+		VariableNode processCard = new VariableNode("?processCard");
+		// (and (member ??processCard (set 0)) (card (some ?procesName
+		// (BELONGS_TO_PROCESS (RESOURCE_ALLOCATION :ALLOCATED_AGENT_AID
+		// ??ALLOCATED_AGENT_AID :RESOURCE_REQUIREMENT_ID
+		// ??RESOURCE_REQUIREMENT_ID) ?procesName)) ??processCard))
+		Formula notAllocated = new AndNode(SL.formula("(member " + processCard
+				+ " (set 0))"), SL.formula("(card "
+				+ new SomeNode(procesName, getStaticBelongsToProcessFormula(
+						ResourceAllocation.PATTERN).instantiate(PROCESS_NAME,
+						procesName)) + " " + processCard + ")"));
+		Term resourceMatchPattern = ResourceRequirement.TASK_RESOURCE_PATTERN
+				.instantiate(
+						ResourceRequirement.TASK_RESOURCE,
+						Resource.RESOURCE_PATTERN
+								// .instantiate(Resource.RESOURCE_NAME,agentName)
+								.instantiate(
+										Resource.RESOURCE_SUB_TYPE,
+										SL.string(subType))
+								.instantiate(
+										Resource.RESOURCE_TYPE,
+										SL.string(type)))
+				.instantiate(ResourceRequirement.TASK_RESOURCE_AMOUNT,
+						SL.integer(1))
+				.instantiate(ResourceRequirement.TASK_RESOURCE_DURATION,
+						new Time().withMillisecond(0).toSL());
+		Formula resourceFormula = SLConvertible.ASIMOV_PROPERTY_SET_FORMULA
+				.instantiate(SLConvertible.sASIMOV_PROPERTY,
+						SL.string(ResourceRequirement.TASK_RESOURCE))
+				.instantiate(SLConvertible.sASIMOV_KEY,
+						SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
+				.instantiate(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
+
+		// if (!requirement.getResource().getTypeID().getName()
+		// .equalsIgnoreCase(ARUMResourceType.PERSON.name()) ||
+		// !isExclusive(requirement))
+		// result = resourceFormula;
+		// else
+		result = new AndNode(notAllocated, resourceFormula);
+
+		// LOG.error(result);
 		return result;
 	}
 
 	/**
-	 * Check if a resource of a certain type or sub-type is exclusively allocated or not
-	 * @param requirement the {@see ResourceRequirement}
-	 * @return false if instance can be claimed by multiple allocators, otherwise true.
+	 * Check if a resource of a certain type or sub-type is exclusively
+	 * allocated or not
+	 * 
+	 * @param requirement
+	 *            the {@see ResourceRequirement}
+	 * @return false if instance can be claimed by multiple allocators,
+	 *         otherwise true.
 	 */
 	private static boolean isExclusive(ResourceRequirement requirement) {
-		CoalaPropertyGetter getter = new CoalaPropertyGetter(EXCLUSIVE_RESOURCE_ID_PROPERTY);
+		CoalaPropertyGetter getter = new CoalaPropertyGetter(
+				EXCLUSIVE_RESOURCE_ID_PROPERTY);
 		if (getter != null) {
 			String[] result = getter.getJSON(String[].class);
 			if (result != null) {
-				for (int i = 0 ; i < result.length; i++) {
-					if (result[i].equals("*") || requirement.getResource().getTypeID().getName()
-							.equalsIgnoreCase(result[i]) || requirement.getResource().getSubTypeID().getName()
-						.equalsIgnoreCase(result[i]) 
-						)
+				for (int i = 0; i < result.length; i++) {
+					if (result[i].equals("*")
+							|| requirement.getResource().getTypeID().getName()
+									.equalsIgnoreCase(result[i])
+							|| requirement.getResource().getSubTypeID()
+									.getName().equalsIgnoreCase(result[i]))
 						return true;
 				}
-			} 
+			}
 		}
 		return false;
 	}
-	
-	
 
 }

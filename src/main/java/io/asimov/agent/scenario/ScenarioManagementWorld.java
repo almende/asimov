@@ -64,6 +64,14 @@ public interface ScenarioManagementWorld extends ARUMOrganizationWorld
 	 */
 	RandomDistribution<SimDuration> getProcessStartTimeOfDayDist(
 			final String processTypeID);
+	
+	/**
+	 * @param resourceId
+	 * @return
+	 */
+	RandomDistribution<SimDuration> getResourceUnavailabilityDist(
+			final String resourceId);
+
 
 	/**
 	 * @return

@@ -481,6 +481,13 @@ public class ScenarioManagementWorldImpl extends AbstractARUMOrganizationtWorld
 			final String processTypeID) {
 		return this.scenario.getProcessStartDelayDistribution(processTypeID);
 	}
+	
+	/** @see ScenarioManagementWorld#getResourceUnavailabilityDist(String) */
+	@Override
+	public RandomDistribution<SimDuration> getResourceUnavailabilityDist(
+			final String resourceId) {
+		return this.scenario.getResourceUnavailabilityDistribution(resourceId);
+	}
 
 	public synchronized void setReplication(final SimStatus status,
 			final Number progressPerc) {

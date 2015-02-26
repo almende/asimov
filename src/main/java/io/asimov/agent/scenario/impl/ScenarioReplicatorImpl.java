@@ -3,7 +3,12 @@ package io.asimov.agent.scenario.impl;
 import io.arum.model.process.ProcessManagementOrganization;
 import io.arum.model.resource.RouteLookup.RouteProvider;
 import io.arum.model.resource.assemblyline.AssemblyLine;
+import io.arum.model.resource.assemblyline.AssemblyLineType;
+import io.arum.model.resource.person.Person;
 import io.arum.model.resource.person.PersonResourceManagementWorld;
+import io.arum.model.resource.person.PersonRole;
+import io.arum.model.resource.supply.Material;
+import io.arum.model.resource.supply.SupplyType;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
@@ -12,7 +17,9 @@ import io.asimov.agent.scenario.ScenarioManagementWorld.ProcessEventType;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ResourceEvent;
 import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
-import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.db.Datasource;
+import io.asimov.unavailability.MonkeyAgent;
+import io.asimov.unavailability.UnAvailabilityRequest;
 import io.coala.agent.AgentID;
 import io.coala.agent.AgentStatusUpdate;
 import io.coala.bind.Binder;
@@ -32,12 +39,10 @@ import io.coala.time.Trigger;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -48,7 +53,6 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import rx.Observer;
-import rx.Subscription;
 import rx.functions.Func1;
 
 /**
@@ -65,6 +69,8 @@ public class ScenarioReplicatorImpl extends
 	/** */
 	private static final long serialVersionUID = 1L;
 
+	private static final String UNAVAILABILITY = "UNAVAILABILITY";
+
 	/** */
 	@InjectLogger
 	private Logger LOG;
@@ -75,21 +81,9 @@ public class ScenarioReplicatorImpl extends
 	/** */
 	private final Set<AgentID> readyResources = new HashSet<>();
 
-	/** */
-	// private RandomDistribution<SimTime> repeatIntervalDist;
-
-	/** */
-	// FIXME Do not make static
-	// private final Map<String, ProcessState> processStates = new
-	// ConcurrentSkipListMap<String, ProcessState>();
-
-	/** */
-	// private final Set<String> processTypeIDs = new HashSet<String>();
-
+	
 	/** */
 	private final Map<String, Set<String>> processInstancesByType = new ConcurrentSkipListMap<String, Set<String>>();
-
-	private final Map<AgentID, Subscription> processAgentResourceStateSubscription = new ConcurrentSkipListMap<AgentID, Subscription>();
 
 	/** */
 	private static boolean busy = false;
@@ -161,6 +155,90 @@ public class ScenarioReplicatorImpl extends
 				.build());
 	}
 
+	@Schedulable(UNAVAILABILITY)
+	public void scheduledUnavailability(final AgentID resource) {
+		final SimDuration duration = getWorld().getResourceUnavailabilityDist(
+				resource.getValue()).draw();
+		if (duration.longValue() != 0) {
+			LOG.error("SCHEDULE UNAVAILABILITY: "+resource);
+			String id = resource.getValue() + "_absence_"
+					+ getTime().longValue();
+			final AgentID completerAgentID = newAgentID(id);
+			getBooter().createAgent(completerAgentID, MonkeyAgent.class)
+					.subscribe(new Observer<AgentStatusUpdate>() {
+
+						@Override
+						public void onCompleted() {
+							// Nothing to do
+						}
+
+						@Override
+						public void onError(Throwable e) {
+							LOG.error("Failed to boot monkey agent for absence management of resources");
+						}
+
+						@Override
+						public void onNext(AgentStatusUpdate t) {
+							if (t.getStatus().isInitializedStatus()) {
+								for (Map<String,String> type : getTypesForAgent(resource)) {
+									UnAvailabilityRequest r = new UnAvailabilityRequest(
+											getTime(), getOwnerID(), t.getAgentID());
+									r.setResourceType(type.keySet().iterator().next());
+									r.setResourceSubType(type.values().iterator().next());
+									r.setUnavailablePeriod(duration);
+									r.setUnavailableResource(resource);
+									try {
+										getMessenger().send(r);
+									} catch (Exception e) {
+										LOG.error(
+												"Failed to send unavailability request",
+												e);
+									}
+								}
+							}
+						}
+					});
+			
+		} else {
+			LOG.error("DID NOT SCHEDULE UNAVAILABILITY: "+resource);
+		}
+		getScheduler().schedule(
+				ProcedureCall.create(this, this, UNAVAILABILITY, resource),
+				Trigger.createAbsolute(getTime().plus(0.99999, TimeUnit.DAYS)));
+	}
+	
+	private Set<Map<String,String>> getTypesForAgent(AgentID agentId) {
+		LOG.error("");
+		Set<Map<String,String>> result = new HashSet<Map<String,String>>();
+		for (Person r : getWorld().getPersons()) {
+			if (!r.getName().equals(agentId.getValue()))
+				continue;
+			LOG.error("Monkey will attack:"+r);
+			for (PersonRole rt : r.getTypes())
+				result.add(Collections.singletonMap(Person.class.getCanonicalName(),rt.getValue()));
+			return result;
+		}
+		
+		for (AssemblyLine r : getWorld().getAssemblyLines()) {
+			if (!r.getName().equals(agentId.getValue()))
+				continue;
+			LOG.error("Monkey will attack:"+r);
+			for (AssemblyLineType rt : r.getTypes())
+				result.add(Collections.singletonMap(AssemblyLine.class.getCanonicalName(),rt.getValue()));
+			return result;
+		
+		}
+		for (Material r : getWorld().getMaterials()) {
+			if (!r.getName().equals(agentId.getValue()))
+				continue;
+			LOG.error("Monkey will attack:"+r);
+			for (SupplyType rt : r.getTypes())
+				result.add(Collections.singletonMap(Material.class.getCanonicalName(),rt.getValue()));
+			return result;
+		}
+		return result;
+	}
+
 	/** @see Executor#onRequested(CoordinationFact) */
 	@Override
 	public void onRequested(final ScenarioReplication.Request request) {
@@ -191,6 +269,7 @@ public class ScenarioReplicatorImpl extends
 															.getAgentID());
 													readyResources.notifyAll();
 												}
+												scheduledUnavailability(update.getAgentID());
 											}
 										}
 
@@ -283,6 +362,7 @@ public class ScenarioReplicatorImpl extends
 
 				}
 			});
+			// Schedule processes
 			getWorld().onProcessEvent().subscribe(new Observer<ProcessEvent>() {
 				@Override
 				public void onNext(final ProcessEvent event) {
@@ -300,6 +380,7 @@ public class ScenarioReplicatorImpl extends
 					LOG.error("Error while retrieving processes ", e);
 				}
 			});
+			
 		}
 	}
 
@@ -391,7 +472,7 @@ public class ScenarioReplicatorImpl extends
 			getSimulator().schedule(
 					ProcedureCall.create(this, this, SCHEDULE_NEXT_BP, cause,
 							processTypeID, resourcesHash),
-							Trigger.createAbsolute(onSiteStart));
+					Trigger.createAbsolute(onSiteStart));
 			return;
 		}
 		getSimulator().schedule(
@@ -421,9 +502,7 @@ public class ScenarioReplicatorImpl extends
 			getProcesses(processTypeID).add(processInstanceID);
 		}
 		final AgentID completerAgentID = newAgentID(processInstanceID);
-		bootAgent(
-				completerAgentID,
-				ProcessManagementOrganization.class,
+		bootAgent(completerAgentID, ProcessManagementOrganization.class,
 				ProcedureCall.create(this, this, INITIATE_PROCESS_COMPLETION,
 						cause, processTypeID, completerAgentID));
 
