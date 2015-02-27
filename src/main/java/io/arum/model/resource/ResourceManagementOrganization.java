@@ -85,6 +85,7 @@ public class ResourceManagementOrganization<T extends ResourceManagementWorld<?>
 	@Override
 	public void initialize() throws Exception
 	{
+		super.initialize();
 		resourceReadyListner = getBinder().inject(ResourceReadyListener.class);
 		final Observer<Percept> beliefObserver = new Observer<Percept>()
 		{

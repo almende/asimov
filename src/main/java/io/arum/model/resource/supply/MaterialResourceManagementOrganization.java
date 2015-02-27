@@ -38,5 +38,6 @@ public class MaterialResourceManagementOrganization extends
 	{
 		super(binder);
 	}
+	
 
 }

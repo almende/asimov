@@ -531,7 +531,7 @@ public class ManageProcessActionImpl extends
 			LOG.info("Reached end of process instance " + getID());
 			try
 			{
-				getMessenger().send(
+				send(
 						ProcessCompletion.Result.Builder.forProducer(this,
 								cause).withSuccess(true).build());
 			} catch (Exception e)
@@ -834,7 +834,7 @@ public class ManageProcessActionImpl extends
 		{
 			try
 			{
-				getMessenger().send(r);
+				send(r);
 			} catch (Exception e)
 			{
 				LOG.error("Failed to send Activity Participantion Request", e);

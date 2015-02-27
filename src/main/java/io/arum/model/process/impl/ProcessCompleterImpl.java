@@ -387,7 +387,7 @@ public class ProcessCompleterImpl extends
 								ProcessCompleterImpl.this,
 								MANAGE_PROCESSES_METHOD, cause),
 						Trigger.createAbsolute(getTime()));
-				getMessenger().send(
+				send(
 						new ASIMOVMessage(getTime(), getOwnerID(), cause
 								.getSenderID(), "AvailableResourcesChange:"
 								+ getTime().hashCode()));

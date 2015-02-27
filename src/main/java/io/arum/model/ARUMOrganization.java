@@ -2,12 +2,16 @@ package io.arum.model;
 
 import io.asimov.messaging.ASIMOVMessage;
 import io.coala.agent.AgentID;
+import io.coala.agent.AgentStatusUpdate;
 import io.coala.agent.BasicAgent;
+import io.coala.agent.BasicAgentStatus;
 import io.coala.bind.Binder;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.factory.ClassUtil;
 import io.coala.json.JsonUtil;
+import io.coala.lifecycle.LifeCycleHooks;
+import io.coala.lifecycle.MachineUtil;
 import io.coala.log.InjectLogger;
 import io.coala.message.Message;
 import io.coala.model.ModelComponent;
@@ -58,6 +62,25 @@ public class ARUMOrganization<W extends ARUMOrganizationWorld> extends
 	protected ARUMOrganization(final Binder binder)
 	{
 		super(binder);
+		super.getStatusHistory().subscribe(new Observer<BasicAgentStatus>(){
+
+			@Override
+			public void onCompleted() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onError(Throwable e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNext(BasicAgentStatus t) {
+				System.err.println("STATUSUPDATE: "+getID()+" - "+t);
+				System.err.flush();
+			}});
 	}
 
 	private OutputStream jsonSniffer;
@@ -96,6 +119,7 @@ public class ARUMOrganization<W extends ARUMOrganizationWorld> extends
 	@Override
 	public void initialize() throws Exception
 	{
+//		getTime(); // FIXME Workaround for bug in coala
 		final File file = new File("sniffer.json");
 		file.delete();
 		this.jsonSniffer = FileUtil.getFileAsOutputStream(file, true);
@@ -157,6 +181,8 @@ public class ARUMOrganization<W extends ARUMOrganizationWorld> extends
 								.toBelief(msg.content));
 					}
 				});
+//		MachineUtil.setStatus(this, BasicAgentStatus., false);
+//		((LifeCycleHooks)getReceiver()).activate();// FIXME Yet another workaround for yet another bug in coala
 	}
 
 	/** @return the organization's world */
