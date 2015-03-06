@@ -18,6 +18,7 @@ import io.asimov.model.ResourceRequirement;
 import io.asimov.model.Time;
 import io.asimov.model.TraceService;
 import io.asimov.model.events.EventType;
+import io.asimov.model.sl.SL;
 import io.asimov.model.sl.SLConvertible;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
@@ -27,7 +28,6 @@ import io.coala.factory.ClassUtil;
 import io.coala.log.InjectLogger;
 import io.coala.model.ModelComponentIDFactory;
 import io.coala.time.SimTime;
-import jade.semantics.lang.sl.tools.SL;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;

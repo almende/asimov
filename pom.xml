@@ -304,11 +304,11 @@
 			<artifactId>coala-enterprise-ontology</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>io.coala</groupId>
 			<artifactId>coala-jsa-adapter</artifactId>
 			<version>1.0.0</version>
-		</dependency>
+		</dependency> -->
 		
 		<dependency>
 			<groupId>org.mongodb</groupId>

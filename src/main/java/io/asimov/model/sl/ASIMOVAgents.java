@@ -6,9 +6,6 @@ package io.asimov.model.sl;
 
 import io.asimov.model.ResourceAllocation;
 import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.Formula;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.SL;
 
 
 /**
@@ -29,16 +26,15 @@ public interface ASIMOVAgents {
 	public static final String PROCESS_PROPERTY = "PROCESS_PROPERTY";
 
 	/** */
-	public static final Formula BELONGS_TO_PROCESS_FORMULA = SL.formula(String
-			.format("(%s ??%s ??%s)", BELONGS_TO_PROCESS_FORMULA_NAME, PROCESS_PROPERTY,
-					PROCESS_NAME));
+	public static final ASIMOVFormula BELONGS_TO_PROCESS_FORMULA = new ASIMOVFormula()
+			.withName(BELONGS_TO_PROCESS_FORMULA_NAME)
+			.instantiate(PROCESS_PROPERTY,null)
+			.instantiate(PROCESS_NAME,null);
 
 	
-    public static final Term REQUEST_ALLOCATION_ACTION_TERM = SL.term(
-			String.format("(ALLOCATE_RESOURCE :%s ??%s :%s ??%s)",
-					ResourceAllocation.RESOURCE_REQUIREMENT_ID,ResourceAllocation.RESOURCE_REQUIREMENT_ID,
-					PROCESS_NAME,PROCESS_NAME
-					)
-			);
+    public static final ASIMOVTerm REQUEST_ALLOCATION_ACTION_TERM = new ASIMOVTerm()
+    		.withName("ALLOCATE_RESOURCE")
+    			.instantiate(ResourceAllocation.RESOURCE_REQUIREMENT_ID,null)
+    			.instantiate(PROCESS_NAME,null);
       
 }

@@ -1,9 +1,9 @@
 package io.asimov.model;
 
-import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.SL;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.sl.SL;
+import io.asimov.model.sl.SLConvertible;
 
 import javax.persistence.Embeddable;
 
@@ -41,12 +41,11 @@ public class ResourceAllocation extends AbstractNamed<ResourceAllocation>
 	public static final String RESOURCE_REQUIREMENT_ID = "RESOURCE_REQUIREMENT_ID";
 
 	/** */
-	public static final Term PATTERN = SL.term(
-			String.format("(%s :%s ??%s :%s ??%s)", RESOURCE_ALLOCATION_TERM,
-					ALLOCATED_AGENT_AID, ALLOCATED_AGENT_AID,
-					RESOURCE_REQUIREMENT_ID, RESOURCE_REQUIREMENT_ID))
-			.instantiate(RESOURCE_ALLOCATION_TERM,
-					SL.string(ResourceAllocation.class.getName()));
+	public static final ASIMOVTerm PATTERN = new ASIMOVTerm()
+		.withName(RESOURCE_ALLOCATION_TERM)
+		.instantiate(ALLOCATED_AGENT_AID, null)
+		.instantiate(RESOURCE_REQUIREMENT_ID, null)
+		.instantiate(RESOURCE_ALLOCATION_TERM, SL.string(ResourceAllocation.class.getName()));
 
 	/** */
 	private static long counter = 0L;
@@ -99,10 +98,10 @@ public class ResourceAllocation extends AbstractNamed<ResourceAllocation>
 	/** @see SLConvertible#toSL() */
 	@Override
 	@SuppressWarnings("unchecked")
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
 		return PATTERN.instantiate(ALLOCATED_AGENT_AID,
-				SL.term(getAllocatedAgentID())).instantiate(
+				new ASIMOVTerm().withName(getAllocatedAgentID())).instantiate(
 				RESOURCE_REQUIREMENT_ID, SL.string(getResourceRequirementID()));
 	}
 
@@ -124,7 +123,7 @@ public class ResourceAllocation extends AbstractNamed<ResourceAllocation>
 
 	/** @see SLConvertible#fromSL(Term) */
 	@Override
-	public ResourceAllocation fromSL(final Node term)
+	public <N extends ASIMOVNode<N>> ResourceAllocation fromSL(final N term)
 	{
 		// FIXME implement
 		return this;

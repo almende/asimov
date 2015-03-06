@@ -2,8 +2,6 @@ package io.arum.model.process.impl;
 
 import io.arum.model.resource.ARUMResourceType;
 import io.arum.model.resource.assemblyline.AssemblyLineType;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.SupplyType;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessManagementWorld;
@@ -15,6 +13,7 @@ import io.asimov.model.process.Activity;
 import io.asimov.model.process.Next;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
+import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.LegacySLUtil;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.xml.TProcessType;
@@ -35,14 +34,11 @@ import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 import io.coala.time.Trigger;
-import jade.semantics.lang.sl.grammar.Formula;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
@@ -353,7 +349,7 @@ public class ManageProcessActionImpl extends
 
 		if (resourceSubTypeToAgentIdMap.isEmpty())
 		{
-			final Formula query = LegacySLUtil
+			final ASIMOVFormula query = LegacySLUtil
 					.getStaticBelongsToProcessFormula(ResourceAllocation.PATTERN);
 			// LOG.warn("Current KBase: "
 			// + ((FilterKBase) getBinder().inject(ReasonerService.class)

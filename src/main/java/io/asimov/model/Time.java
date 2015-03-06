@@ -1,10 +1,9 @@
 package io.asimov.model;
 
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.sl.SL;
 import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.MatchResult;
-import jade.semantics.lang.sl.tools.SL;
 
 import javax.persistence.Entity;
 
@@ -29,11 +28,10 @@ public class Time extends AbstractEntity<Time> implements SLConvertible<Time>, X
 	public static final String MILLISECOND = "MILLISECOND";
 	
 	/** Pattern for a {@link Time} {@link Term} representation */
-	public static Term PATTERN = SL.term(String.format(
-			"(%s (::? :%s ??%s))", TERM_NAME, 
-			MILLISECOND,  MILLISECOND));
+	public static ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
+			.instantiate(MILLISECOND,  null);
 	
-	protected Term getPattern(){
+	protected ASIMOVTerm getPattern(){
 		return PATTERN;
 	}
 
@@ -100,18 +98,16 @@ public class Time extends AbstractEntity<Time> implements SLConvertible<Time>, X
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
-		Term result = getPattern()
+		ASIMOVTerm result = getPattern()
 				.instantiate(MILLISECOND,SL.integer(getMillisecond()));
 		return result;
 	}
 
 	@Override
-	public Time fromSL(Node term)
-	{
-		MatchResult mr = getPattern().match(term);
-		this.setMillisecond(Long.valueOf(mr.term(MILLISECOND).toString()));
+	public <N extends ASIMOVNode<N>> Time fromSL(N term) {
+		this.setMillisecond((Long)term.getPropertyValue(MILLISECOND));
 		return this;
 	}
 

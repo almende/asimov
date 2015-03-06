@@ -2,10 +2,9 @@ package io.asimov.model.process;
 
 import io.asimov.model.AbstractEntity;
 import io.asimov.model.XMLConvertible;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
 import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.SL;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -47,10 +46,11 @@ public class Activity extends AbstractEntity<Activity> implements
 	public final static String PROCESS_AGENT_AID = "PROCESS_AGENT_AID";
 
 	/** */
-	public static final Term PATTERN = SL.term(String.format(
-			"(%s :%s %s :%s ??%s :%s ??%s :%s ??%s)", TERM_NAME, TASK,
-			Task.PATTERN, ACTIVITY_NAME, Task.TASK_NAME, ACTIVITY_TIME_TOKEN,
-			ACTIVITY_TIME_TOKEN, PROCESS_AGENT_AID, PROCESS_AGENT_AID));
+	public static final ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
+			.instantiate(TASK,Task.PATTERN)
+			.instantiate(ACTIVITY_NAME, null)
+			.instantiate(ACTIVITY_TIME_TOKEN,null)
+			.instantiate(PROCESS_AGENT_AID, null);
 
 	/** */
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
@@ -112,7 +112,7 @@ public class Activity extends AbstractEntity<Activity> implements
 	/** @see SLConvertible#toSL() */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");
@@ -136,7 +136,7 @@ public class Activity extends AbstractEntity<Activity> implements
 
 	/** @see SLConvertible#fromSL(Term) */
 	@Override
-	public Activity fromSL(Node term)
+	public <N extends ASIMOVNode<N>> Activity fromSL(N term)
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");

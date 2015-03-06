@@ -6,13 +6,13 @@ import io.asimov.model.Resource;
 import io.asimov.model.ResourceRequirement;
 import io.asimov.model.Time;
 import io.asimov.model.XMLConvertible;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.sl.ASIMOVTermSequenceNode;
+import io.asimov.model.sl.SL;
 import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.ListOfTerm;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.grammar.TermSequenceNode;
-import jade.semantics.lang.sl.tools.SL;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,17 +22,7 @@ import java.util.Set;
 
 import javax.persistence.Embeddable;
 
-/**
- * {@link Task} describes the type of {@link Activity} that can occur for some
- * {@link ProcessType}
- * 
- * @see ASIMOVAgents.A4EEAgents.FerilliFactory.Task
- * 
- * @date $Date: 2014-03-28 11:22:14 +0100 (Fri, 28 Mar 2014) $
- * @version $Revision: 806 $
- * @author <a href="mailto:Rick@almende.org">Rick</a>
- * 
- */
+
 @Embeddable
 public class Task extends AbstractNamed<Task> implements SLConvertible<Task>,
 		XMLConvertible<Object, Task>
@@ -204,18 +194,19 @@ public class Task extends AbstractNamed<Task> implements SLConvertible<Task>,
 	public static final String CASE_IDS = "CASE_IDS";
 
 	/** Pattern for a {@link Task}'s {@link Term} representation */
-	public static final Term PATTERN = SL.term(String.format(
-			"(%s :%s ??%s :%s ??%s (::? :%s ??%s) :%s ??%s)", TERM_NAME, TASK_NAME,
-			TASK_NAME, TASK_DESCRIPTION, TASK_DESCRIPTION, TASK_RESOURCE_RESERVATION_SET,
-			TASK_RESOURCE_RESERVATION_SET, CASE_IDS, CASE_IDS));
+	public static final ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
+			.instantiate(TASK_NAME,null)
+			.instantiate(TASK_DESCRIPTION,null)
+			.instantiate(TASK_RESOURCE_RESERVATION_SET,null)
+			.instantiate(CASE_IDS, null);
 
 	/** @see SLConvertible#toSL() */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
-		final ListOfTerm resourceTerms = new ListOfTerm();
-		final ListOfTerm caseIdTerms = new ListOfTerm();
+		final List<ASIMOVTerm> resourceTerms = new ArrayList<ASIMOVTerm>();
+		final List<ASIMOVTerm> caseIdTerms = new ArrayList<ASIMOVTerm>();
 
 		if (getResources() != null)
 			for (ResourceRequirement resource : getResources().values())
@@ -226,12 +217,12 @@ public class Task extends AbstractNamed<Task> implements SLConvertible<Task>,
 			for (String caseID : getCaseIDs())
 				caseIdTerms.add(SL.string(caseID));
 
-		final Term result = ((Term) SL.instantiate(PATTERN))
+		final ASIMOVTerm result = ((ASIMOVTerm) PATTERN)
 				.instantiate(TASK_NAME, SL.string(getName()))
 				.instantiate(TASK_DESCRIPTION, SL.string(getDescription()))
 				.instantiate(TASK_RESOURCE_RESERVATION_SET,
-						new TermSequenceNode(resourceTerms))
-				.instantiate(CASE_IDS, new TermSequenceNode(caseIdTerms));
+						new ASIMOVTermSequenceNode(resourceTerms))
+				.instantiate(CASE_IDS, new ASIMOVTermSequenceNode(caseIdTerms));
 
 		return result;
 	}
@@ -302,7 +293,7 @@ public class Task extends AbstractNamed<Task> implements SLConvertible<Task>,
 
 	/** @see SLConvertible#fromSL(Term) */
 	@Override
-	public Task fromSL(final Node term)
+	public <N extends ASIMOVNode<N>> Task fromSL(final N term)
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");

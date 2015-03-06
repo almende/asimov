@@ -1,10 +1,10 @@
 package io.asimov.model;
 
+import io.asimov.model.sl.ASIMOVFormula;
+import io.asimov.model.sl.ASIMOVNode;
+import io.coala.agent.AgentID;
 import io.coala.capability.embody.Percept;
 import io.coala.jsa.sl.SLConvertible;
-import jade.core.AID;
-import jade.semantics.lang.sl.grammar.Formula;
-import jade.semantics.lang.sl.grammar.Node;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,9 +57,9 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 		/** @see io.coala.jsa.sl.SLConvertible#toSL() */
 		@SuppressWarnings("unchecked")
 		@Override
-		public <N extends Node> N toSL()
+		public <N extends ASIMOVNode<N>> N toSL()
 		{
-			if (internalBelief instanceof Node)
+			if (internalBelief instanceof ASIMOVNode)
 				return (N) internalBelief;
 			else
 				throw new IllegalStateException("Non SL node can not be returned");
@@ -67,13 +67,13 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 
 		/** @see io.coala.jsa.sl.SLConvertible#fromSL(jade.semantics.lang.sl.grammar.Node) */
 		@Override
-		public <N extends Node> InitialASIMOVPercept fromSL(N node)
+		public <N extends ASIMOVNode<N>> InitialASIMOVPercept fromSL(N node)
 		{
 			this.internalBelief = node;
 			return this;
 		}
 		
-		public static <N extends Node> InitialASIMOVPercept toBelief(N node)
+		public static <N extends ASIMOVNode<N>> InitialASIMOVPercept toBelief(N node)
 		{
 			InitialASIMOVPercept result = new InitialASIMOVPercept();
 			result.internalBelief = node;
@@ -89,7 +89,7 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 	}
 	
 	@Deprecated
-	public Set<Formula> getInitialAgentKBFormulaSet(final AID agentID,String container) {
+	public Set<ASIMOVFormula> getInitialAgentKBFormulaSet(final AgentID agentID,String container) {
 		throw new IllegalStateException("getInitialAgentKBFormulaSet() method with AID is depreacted, use agentID instead.");
 	}
 	
