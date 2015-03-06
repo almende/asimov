@@ -368,8 +368,10 @@ public class LegacySLUtil implements ASIMOVAgents {
 //	}
 
 	public static ASIMOVNode<?> countAllocationScore(final String keyName) {
-		ASIMOVCountNode(getStaticBelongsToProcessFormula(
-						ResourceAllocation.PATTERN)).withCountKeyName(keyName);
+		return new ASIMOVFunctionNode(getStaticBelongsToProcessFormula(
+						ResourceAllocation.PATTERN))
+					.withFunctionType(ASIMOVFunctionNode.CARDINALITY)
+					.withResultKey(keyName);
 
 	}
 

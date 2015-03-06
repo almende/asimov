@@ -2,6 +2,7 @@ package io.coala.jsa.sl;
 
 import io.asimov.model.sl.ASIMOVAndNode;
 import io.asimov.model.sl.ASIMOVFormula;
+import io.asimov.model.sl.ASIMOVFunctionNode;
 import io.asimov.model.sl.ASIMOVNode;
 
 import java.util.ArrayList;
@@ -167,6 +168,15 @@ public class KBase implements List<ASIMOVNode<?>> {
 					result.put(hornKey, hornResult.get(hornKey));
 			}
 			anyMatch = true;
+		} else if (formula.getNodeType().equals("FUNCTION")) {
+			ASIMOVFunctionNode function = (ASIMOVFunctionNode)formula;
+			for (String functionKey : function.getKeys()) {
+				if (function.getResultKey() != functionKey)
+					function.eval((ASIMOVNode<?>)function.getPropertyValue(functionKey));
+				else
+					result.put(functionKey, result.get(functionKey));
+			}
+			anyMatch = true;
 		} else if (formula.getNodeType().equals(fact.getNodeType()) && formula.getName().equals(fact.getName())) {
 			final Set<String> matchKeys = new HashSet<String>();
 			boolean matched = true;
@@ -188,14 +198,14 @@ public class KBase implements List<ASIMOVNode<?>> {
 					}
 				}
 					
-			}
+			} 
 			if (matched || (formula instanceof NotNode && !matched)) {
 				anyMatch = true;
 				for (final String key : matchKeys) {
 					result.put(key,fact.getPropertyValue(key));
 				}
 			}
-		}
+		} 
 		if (anyMatch) {
 			return result;
 		} else {
