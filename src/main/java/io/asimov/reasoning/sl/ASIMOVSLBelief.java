@@ -1,16 +1,16 @@
-package io.coala.jsa.sl;
+package io.asimov.reasoning.sl;
 
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVNode;
 import io.coala.capability.know.ReasoningCapability.Belief;
 
 /**
- * {@link JSABelief}
+ * {@link ASIMOVSLBelief}
  * 
  * @version $Revision$
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  */
-public class JSABelief implements Belief {
+public class ASIMOVSLBelief implements Belief {
 	
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -19,7 +19,7 @@ public class JSABelief implements Belief {
 	
 	private String stringValue;
 	
-	public JSABelief(ASIMOVNode<?> node) {
+	public ASIMOVSLBelief(ASIMOVNode<?> node) {
 		super();
 		this.node = node;
 	}
@@ -48,6 +48,6 @@ public class JSABelief implements Belief {
 	@Override
 	public Belief negate()
 	{
-		return new JSABelief(new NotNode((ASIMOVFormula)getNode()));	
+		return new ASIMOVSLBelief(new NotNode((ASIMOVFormula)getNode()));	
 	}
 }

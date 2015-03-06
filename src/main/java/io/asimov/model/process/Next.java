@@ -25,7 +25,7 @@ import io.asimov.model.XMLConvertible;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.SL;
-import io.coala.jsa.sl.SLConvertible;
+import io.asimov.reasoning.sl.SLConvertible;
 
 import org.eclipse.persistence.nosql.annotations.NoSql;
 

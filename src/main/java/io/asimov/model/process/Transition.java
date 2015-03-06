@@ -6,7 +6,7 @@ import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.ASIMOVTermSequenceNode;
 import io.asimov.model.sl.SL;
-import io.coala.jsa.sl.SLConvertible;
+import io.asimov.reasoning.sl.SLConvertible;
 
 import java.util.ArrayList;
 import java.util.HashSet;

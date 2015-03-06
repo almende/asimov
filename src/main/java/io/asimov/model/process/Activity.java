@@ -4,7 +4,7 @@ import io.asimov.model.AbstractEntity;
 import io.asimov.model.XMLConvertible;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
-import io.coala.jsa.sl.SLConvertible;
+import io.asimov.reasoning.sl.SLConvertible;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;

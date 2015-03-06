@@ -1,4 +1,4 @@
-package io.coala.jsa.sl;
+package io.asimov.reasoning.sl;
 
 import io.asimov.model.sl.ASIMOVAndNode;
 import io.asimov.model.sl.ASIMOVFormula;
@@ -213,11 +213,14 @@ public class KBase implements List<ASIMOVNode<?>> {
 		}
 	}
 
-	public Set<Map<String,Object>> query(ASIMOVFormula query) {
+	public Set<Map<String,Object>> query(ASIMOVNode<?> query) {
 		boolean matched = false;
 		Set<Map<String,Object>> queryResult = new HashSet<Map<String, Object>>();
 		for (ASIMOVNode<?> node : this.kbase) {
-			if (node.getNodeType().equals("FORMULA")) {
+			if (node.getNodeType().equals("FORMULA") || 
+					node.getNodeType().equals("AND") ||
+					node.getNodeType().equals("FUNCTION") || 
+					node.getNodeType().equals("NOT")) {
 				Map<String,Object> row = matchNode(query,node);
 				if (row != null) {
 					matched = true;

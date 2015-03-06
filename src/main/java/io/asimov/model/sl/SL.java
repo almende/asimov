@@ -2,7 +2,7 @@ package io.asimov.model.sl;
 
 public class SL {
 	
-		public static ASIMOVNode<?> instantiate(final ASIMOVNode<?> node,final String key, final ASIMOVNode<?> value) {
+	public static ASIMOVNode<?> instantiate(final ASIMOVNode<?> node,final String key, final ASIMOVNode<?> value) {
 		return node.instantiate(key, value);
 	}
 		

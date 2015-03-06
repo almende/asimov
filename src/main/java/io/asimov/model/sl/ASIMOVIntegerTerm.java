@@ -5,18 +5,21 @@ import java.util.Set;
 
 public class ASIMOVIntegerTerm extends ASIMOVTerm {
 	
-	long value;
+	
+	public ASIMOVIntegerTerm(){
+		super();
+	}
 	
 	@Override
 	public Set<String> getKeys() {
-		return Collections.singleton("value");
+		return Collections.singleton("integerValue");
 	}
 
 	@Override
 	public Object getPropertyValue(String key) {
-		if (!key.equals("value"))
+		if (!key.equals("integerValue"))
 			throw new IllegalStateException("ASIMOVStringTerm is a primitive node only 'value' can be requested");
-		return value;
+		return integerValue;
 	}
 	
 	@Override
@@ -24,9 +27,15 @@ public class ASIMOVIntegerTerm extends ASIMOVTerm {
 		return "INTEGER";
 	}
 	
-	public ASIMOVIntegerTerm withValue(final long string){
-		this.value = string;
+	public ASIMOVIntegerTerm withValue(final long integer){
+		this.integerValue = integer;
 		return this;
 	}
+	
+	@Override
+	public String toString(){
+		return this.toJSON();
+	}
+
 	
 }

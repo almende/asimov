@@ -2,9 +2,9 @@ package io.asimov.model;
 
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.reasoning.sl.SLConvertible;
 import io.coala.agent.AgentID;
 import io.coala.capability.embody.Percept;
-import io.coala.jsa.sl.SLConvertible;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +54,7 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 		private Object internalBelief;
 		
 		
-		/** @see io.coala.jsa.sl.SLConvertible#toSL() */
+		/** @see io.asimov.reasoning.sl.SLConvertible#toSL() */
 		@SuppressWarnings("unchecked")
 		@Override
 		public <N extends ASIMOVNode<N>> N toSL()
@@ -65,7 +65,7 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 				throw new IllegalStateException("Non SL node can not be returned");
 		}
 
-		/** @see io.coala.jsa.sl.SLConvertible#fromSL(jade.semantics.lang.sl.grammar.Node) */
+		/** @see io.asimov.reasoning.sl.SLConvertible#fromSL(jade.semantics.lang.sl.grammar.Node) */
 		@Override
 		public <N extends ASIMOVNode<N>> InitialASIMOVPercept fromSL(N node)
 		{

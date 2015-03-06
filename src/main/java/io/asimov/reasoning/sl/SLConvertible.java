@@ -1,7 +1,7 @@
-package io.coala.jsa.sl;
+package io.asimov.reasoning.sl;
 
 import io.asimov.model.sl.ASIMOVNode;
-import io.coala.jsa.sl.SLConvertible;
+import io.asimov.reasoning.sl.SLConvertible;
 
 
 

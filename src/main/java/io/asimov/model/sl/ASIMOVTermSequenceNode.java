@@ -12,18 +12,21 @@ import java.util.Set;
 
 public class ASIMOVTermSequenceNode implements ASIMOVNode<ASIMOVTermSequenceNode> {
 	
-	String type = getNodeType();
+	public String type = getNodeType();
 	
-	String termName;
+	public String name;
 	
-	List<ASIMOVTerm> termSequence;
+	public List<ASIMOVTerm> termSequence;
 
 
 	public ASIMOVTermSequenceNode() {
 		super();
+		getTermSequence();
 	}
 	
 	public ASIMOVTermSequenceNode(List<ASIMOVTerm> terms) {
+		if (termSequence == null)
+			termSequence = new ArrayList<ASIMOVTerm>();
 		termSequence = terms;
 	}
 	
@@ -58,7 +61,7 @@ public class ASIMOVTermSequenceNode implements ASIMOVNode<ASIMOVTermSequenceNode
 
 	@Override
 	public ASIMOVTermSequenceNode instantiate(String key, ASIMOVNode<?> value) {
-		final ASIMOVTermSequenceNode copy = new ASIMOVTermSequenceNode().withName(this.termName);
+		final ASIMOVTermSequenceNode copy = new ASIMOVTermSequenceNode().withName(this.name);
 		copy.termSequence = new ArrayList<ASIMOVTerm>();
 		if (this.termSequence != null)
 			for (ASIMOVTerm  entry : this.termSequence)
@@ -73,13 +76,13 @@ public class ASIMOVTermSequenceNode implements ASIMOVNode<ASIMOVTermSequenceNode
 
 	@Override
 	public ASIMOVTermSequenceNode withName(String name) {
-		termName = name;
+		this.name = name;
 		return this;
 	}
 
 	@Override
 	public String getName() {
-		return termName;
+		return name;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -106,6 +109,16 @@ public class ASIMOVTermSequenceNode implements ASIMOVNode<ASIMOVTermSequenceNode
 	public Object getPropertyValue(String index) {
 		return termSequence.get(Integer.valueOf(index));
 	}
+	
+	@Override
+	public String toString(){
+		return this.toJSON();
+	}
+
+	public List<ASIMOVTerm> getTermSequence() {
+		return termSequence;
+	}
+
 
 
 }

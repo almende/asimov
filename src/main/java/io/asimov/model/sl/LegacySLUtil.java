@@ -27,12 +27,12 @@ import io.asimov.model.Time;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
 import io.asimov.model.process.Transition;
+import io.asimov.reasoning.sl.ASIMOVSLReasoningCapability;
+import io.asimov.reasoning.sl.KBase;
+import io.asimov.reasoning.sl.NotNode;
 import io.coala.agent.AgentID;
 import io.coala.capability.embody.Percept;
 import io.coala.config.CoalaPropertyGetter;
-import io.coala.jsa.sl.JSAReasoningCapability;
-import io.coala.jsa.sl.KBase;
-import io.coala.jsa.sl.NotNode;
 import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.log.LogUtil;
 
@@ -94,7 +94,7 @@ public class LegacySLUtil implements ASIMOVAgents {
 			final Serializable forumla) {
 		ASIMOVNode<?> f;
 		try {
-			f = JSAReasoningCapability.getSLForObject(ASIMOVNode.class,
+			f = ASIMOVSLReasoningCapability.getSLForObject(ASIMOVNode.class,
 					new SLParsableSerializable(forumla.toString()));
 		} catch (Exception e) {
 			LOG.error("Failed to parse Serializable to formula", e);

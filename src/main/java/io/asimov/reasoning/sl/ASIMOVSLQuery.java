@@ -1,17 +1,17 @@
-package io.coala.jsa.sl;
+package io.asimov.reasoning.sl;
 
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVNode;
 import io.coala.capability.know.ReasoningCapability.Query;
 
 /**
- * {@link JSAQuery}
+ * {@link ASIMOVSLQuery}
  * 
  * @version $Revision: 237 $
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  *
  */
-public class JSAQuery implements Query
+public class ASIMOVSLQuery implements Query
 {
 
 	/** */
@@ -19,7 +19,7 @@ public class JSAQuery implements Query
 
 	protected final ASIMOVNode<?> node;
 
-	public JSAQuery(ASIMOVNode<?> node)
+	public ASIMOVSLQuery(ASIMOVNode<?> node)
 	{
 		super();
 		this.node = node;
@@ -40,7 +40,7 @@ public class JSAQuery implements Query
 	@Override
 	public Query negate()
 	{
-		return new JSAQuery(new NotNode((ASIMOVFormula) getNode()));
+		return new ASIMOVSLQuery(new NotNode((ASIMOVFormula) getNode()));
 	}
 
 }

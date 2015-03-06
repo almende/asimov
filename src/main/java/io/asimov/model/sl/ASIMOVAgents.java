@@ -5,7 +5,7 @@
 package io.asimov.model.sl;
 
 import io.asimov.model.ResourceAllocation;
-import io.coala.jsa.sl.SLConvertible;
+import io.asimov.reasoning.sl.SLConvertible;
 
 
 /**

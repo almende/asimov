@@ -13,11 +13,27 @@ import java.util.Set;
 
 public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 	
-	String type = getNodeType();
+	public String type = getNodeType();
 	
-	String termName;
+	public String name;
 	
-	Map<String,ASIMOVNode<?>> termProperties;
+	public String stringValue;
+	
+	public long integerValue;
+	
+	
+	public Map<String,ASIMOVTerm> termProperties;
+	
+	public ASIMOVTerm(){
+		super();
+		getTermProperties();
+	}
+	
+	public Map<String, ASIMOVTerm> getTermProperties() {
+		if (this.termProperties == null)
+			this.termProperties = new HashMap<String, ASIMOVTerm>();
+		return termProperties;
+	}
 
 	@Override
 	public String toJSON() {
@@ -50,12 +66,12 @@ public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 
 	@Override
 	public ASIMOVTerm instantiate(String key, ASIMOVNode<?> value) {
-		final ASIMOVTerm copy = new ASIMOVTerm().withName(this.termName);
-		copy.termProperties = new HashMap<String, ASIMOVNode<?>>();
+		final ASIMOVTerm copy = new ASIMOVTerm().withName(this.name);
+		copy.termProperties = new HashMap<String, ASIMOVTerm>();
 		if (this.termProperties != null)
-			for (Entry<String, ASIMOVNode<?>>  entry : this.termProperties.entrySet())
+			for (Entry<String, ASIMOVTerm>  entry : this.termProperties.entrySet())
 				copy.termProperties.put(entry.getKey(), entry.getValue());
-		this.termProperties.put(key, value);
+		copy.termProperties.put(key,(ASIMOVTerm)value);
 		return copy;
 	}
 
@@ -66,13 +82,13 @@ public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 
 	@Override
 	public ASIMOVTerm withName(String name) {
-		termName = name;
+		this.name = name;
 		return this;
 	}
 
 	@Override
 	public String getName() {
-		return termName;
+		return name;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -95,6 +111,11 @@ public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 	@Override
 	public Object getPropertyValue(String key) {
 		return termProperties.get(key);
+	}
+
+	@Override
+	public String toString(){
+		return this.toJSON();
 	}
 
 

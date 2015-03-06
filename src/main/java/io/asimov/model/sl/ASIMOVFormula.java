@@ -17,10 +17,20 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	
 	public String type = getNodeType();
 	
-	public String formulaName;
+	public String name;
 	
-	public Map<String,ASIMOVNode<?>> formulaProperties;
+	public Map<String,ASIMOVTerm> formulaProperties;
+	
+	public ASIMOVFormula(){
+		super();
+		getFormulaProperties();
+	}
 
+	public Map<String, ASIMOVTerm> getFormulaProperties() {
+		if (this.formulaProperties == null)
+			this.formulaProperties = new HashMap<String, ASIMOVTerm>();
+		return formulaProperties;
+	}
 
 	@Override
 	public String toJSON() {
@@ -53,12 +63,14 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 
 	@Override
 	public ASIMOVFormula instantiate(String key, ASIMOVNode<?> value) {
-		final ASIMOVFormula copy = new ASIMOVFormula().withName(this.formulaName);
-		copy.formulaProperties = new HashMap<String, ASIMOVNode<?>>();
+		final ASIMOVFormula copy = new ASIMOVFormula().withName(this.name);
+		copy.formulaProperties = new HashMap<String, ASIMOVTerm>();
+		copy.isNotNode = isNotNode;
+		copy.type = type;
 		if (this.formulaProperties != null)
-			for (Entry<String, ASIMOVNode<?>>  entry : this.formulaProperties.entrySet())
+			for (Entry<String, ASIMOVTerm>  entry : this.formulaProperties.entrySet())
 				copy.formulaProperties.put(entry.getKey(), entry.getValue());
-		this.formulaProperties.put(key, value);
+		copy.formulaProperties.put(key,(ASIMOVTerm)value);
 		return copy;
 	}
 	
@@ -78,13 +90,13 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 
 	@Override
 	public ASIMOVFormula withName(String name) {
-		formulaName = name;
+		this.name = name;
 		return this;
 	}
 
 	@Override
 	public String getName() {
-		return formulaName;
+		return name;
 	}
 
 
@@ -110,4 +122,10 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 		return formulaProperties.get(key);
 	}
 
+	@Override
+	public String toString(){
+		return this.toJSON();
+	}
+
+	
 }

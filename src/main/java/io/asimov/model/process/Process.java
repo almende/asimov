@@ -19,13 +19,13 @@ import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.ASIMOVTermSequenceNode;
 import io.asimov.model.sl.SL;
 import io.asimov.model.xml.XmlUtil;
+import io.asimov.reasoning.sl.KBase;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.NextActivityRef;
 import io.asimov.xml.TSkeletonActivityType.PreviousActivityRef;
 import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
 import io.asimov.xml.TSkeletonActivityType.UsedComponent;
-import io.coala.jsa.sl.KBase;
 import io.coala.log.LogUtil;
 
 import java.io.IOException;

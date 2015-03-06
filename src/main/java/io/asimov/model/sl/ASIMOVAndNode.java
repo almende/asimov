@@ -11,12 +11,25 @@ import java.util.Set;
 
 public class ASIMOVAndNode implements ASIMOVNode<ASIMOVAndNode> {
 
-	Map<String,ASIMOVFormula> namedChildren;
+	public Map<String,ASIMOVFormula> namedChildren;
 	
+	public String name;
 	
-	String type = getNodeType();
+	public ASIMOVAndNode() {
+		super();
+		getNamedChildren();
+	}
+	
+	public Map<String, ASIMOVFormula> getNamedChildren() {
+		if (this.namedChildren == null)
+			this.namedChildren = new HashMap<String, ASIMOVFormula>();
+		return namedChildren;
+	}
+
+	public String type = getNodeType();
 	
 	public ASIMOVAndNode(ASIMOVFormula... formulas) {
+		this();
 		int count = 0;
 		if (namedChildren != null)
 			count = namedChildren.size();
@@ -99,6 +112,11 @@ public class ASIMOVAndNode implements ASIMOVNode<ASIMOVAndNode> {
 	@Override
 	public Object getPropertyValue(String key) {
 		return namedChildren.get(key);
+	}
+	
+	@Override
+	public String toString(){
+		return this.toJSON();
 	}
 
 }

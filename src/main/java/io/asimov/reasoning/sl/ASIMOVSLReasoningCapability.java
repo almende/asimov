@@ -1,27 +1,9 @@
-/* $Id: JSAReasonerService.java 327 2014-07-10 13:06:54Z krevelen $
- * $URL: https://dev.almende.com/svn/abms/jsa-util/src/main/java/com/almende/coala/jsa/JSAReasonerService.java $
- * 
- * Part of the EU project Adapt4EE, see http://www.adapt4ee.eu/
- * 
- * @license
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy
- * of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- * 
- * Copyright (c) 2010-2014 Almende B.V. 
- */
-package io.coala.jsa.sl;
+package io.asimov.reasoning.sl;
 
+import io.arum.model.resource.DirectoryLookup.Result;
 import io.asimov.model.sl.ASIMOVAndNode;
 import io.asimov.model.sl.ASIMOVFormula;
+import io.asimov.model.sl.ASIMOVFunctionNode;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.JsaUtil;
@@ -30,6 +12,7 @@ import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.exception.CoalaExceptionFactory;
+import io.coala.json.JsonUtil;
 import io.coala.log.InjectLogger;
 import io.coala.log.LogUtil;
 
@@ -57,7 +40,7 @@ import rx.subjects.Subject;
  * @version $Revision: 327 $
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  */
-public class JSAReasoningCapability extends BasicCapability implements ReasoningCapability//<KBase>
+public class ASIMOVSLReasoningCapability extends BasicCapability implements ReasoningCapability//<KBase>
 {
 	
 	/** */
@@ -66,18 +49,13 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 	private final KBase kbase;
 	
 	private static final Logger LOG = LogUtil
-			.getLogger(JSAReasoningCapability.class);;
+			.getLogger(ASIMOVSLReasoningCapability.class);;
 	
 	@InjectLogger
 	private Logger log;
 	
 	private static JsaUtil JSA = JsaUtil.getInstance();
 	
-	private Map<Object, Observer> observers = new HashMap<Object, Observer>();
-	
-	private Map<Object, Subject<?,?>> subjects = new HashMap<Object, Subject<?,?>>();
-	
-	private Map<Object, Subscription> subscriptions = new HashMap<Object, Subscription>();
 	
 	public static enum Ontology {
 		FORMULA(ASIMOVFormula.class),
@@ -106,7 +84,7 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 	public static Ontology SLTypes;
 
 	@Inject
-	protected JSAReasoningCapability(final Binder binder)
+	protected ASIMOVSLReasoningCapability(final Binder binder)
 	{
 		super(binder);
 		
@@ -124,8 +102,20 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 	}
 			
 	
-	public static ASIMOVFormula getFormulaForObject(Object javaObject, Map<String,Object> keyValuePairs) throws Exception {
-		return getSLForObject(ASIMOVFormula.class, javaObject, toParameters(keyValuePairs));
+	public static ASIMOVNode<?> getFormulaForObject(Object javaObject, Map<String,Object> keyValuePairs) throws Exception {
+		ASIMOVNode<?> result;
+		try {
+		result = getSLForObject(ASIMOVFormula.class, javaObject, keyValuePairs);
+		} catch (ClassCastException ce) {
+			try {
+				result = getSLForObject(ASIMOVAndNode.class, javaObject, keyValuePairs);
+			} catch (ClassCastException ce2) {
+				result = getSLForObject(ASIMOVFunctionNode.class, javaObject, keyValuePairs);
+				ce.printStackTrace();
+				ce2.printStackTrace();
+			}
+		}
+		return result;
 	}
 	
 	
@@ -140,8 +130,18 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 	 * @return
 	 * @throws Exception
 	 */
-	public static ASIMOVFormula getFormulaForObject(Object javaObject, Object... params) throws Exception {
-		return getSLForObject(ASIMOVFormula.class, javaObject, params);
+	public static ASIMOVNode<?> getFormulaForObject(Object javaObject, Object... params) throws Exception {
+		ASIMOVNode<?> result;
+		try {
+		result = getSLForObject(ASIMOVFormula.class, javaObject, params);
+		} catch (Exception ce) {
+			try {
+				result = getSLForObject(ASIMOVAndNode.class, javaObject, params);
+			} catch (Exception ce2) {
+				result = getSLForObject(ASIMOVFunctionNode.class, javaObject, params);
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -192,10 +192,10 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 			final Subject<Map<String, Object>,Map<String, Object>> result;
 			result = ReplaySubject.create();
 			
-			ASIMOVFormula query = null;
+			ASIMOVNode<?> query = null;
 			try
 			{
-				query = JSAReasoningCapability.getFormulaForObject(
+				query = ASIMOVSLReasoningCapability.getFormulaForObject(
 						javaObject,
 						params
 						);
@@ -204,57 +204,22 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 				log.error("Query "+javaObject+" could not be created.", e1);
 				return null;
 			}
-			
+			LOG.info("QUERY:"+query.toString());
 			Set<Map<String,Object>> values = null;
 			
 			
 			
 			values = this.getKBase().query(query);
-			for (Map<String,Object> next : values) {
-							result.onNext(next);
+			if (values == null) {
+				result.onNext(null);
+			}
+			else { 
+				for (Map<String,Object> next : values) {
+								result.onNext(next);
+				}
 			}
 			result.onCompleted();
 			
-			
-			subscriptions.put(javaObject, 
-			result.subscribe(new rx.Observer<Map<String,Object>>()
-				{
-	
-					private void removeSubscriptionAndObserver(){
-						Subscription s = subscriptions.get(javaObject);
-						if (s != null) {
-							s.unsubscribe();
-							subscriptions.remove(javaObject);
-							subjects.remove(javaObject);
-							log.trace("Removed observer for "+javaObject.toString());
-						} else {
-							log.warn("Failed to cleanup observer for "+javaObject.toString());
-						}
-					}
-				
-					@Override
-					public void onCompleted()
-					{
-						removeSubscriptionAndObserver();
-					}
-	
-					@Override
-					public void onError(Throwable t)
-					{
-						removeSubscriptionAndObserver();
-						t.printStackTrace();
-					}
-	
-					@Override
-					public void onNext(Map<String, Object> args)
-					{
-						;// nothing to do
-					}
-				}
-				)
-			);
-			
-			subjects.put(javaObject,result);
 			
 			return result.asObservable();
 		
@@ -272,8 +237,22 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 		if (javaObject instanceof SLConvertible) {
 			node = ((SLConvertible<?>)javaObject).toSL();
 		} else if (javaObject instanceof SLParsable || javaObject instanceof ASIMOVNode<?>) {
-		LOG.trace("Parsing SL parsable string"+javaObject);
-		node = JSA.instantiateAsSL(slNodeType, javaObject);
+		LOG.info("Parsing SL parsable string"+javaObject);
+		if (slNodeType.equals(ASIMOVNode.class)) {
+			final String nodeType = JsonUtil.toJSON(javaObject).path("type").asText();
+			if (nodeType.equals("NOT") || nodeType.equals("FORMULA"))
+				node = (T) JSA.instantiateAsSL(ASIMOVFormula.class, javaObject);
+			else if (nodeType.equals("AND")) {
+				node = (T) JSA.instantiateAsSL(ASIMOVAndNode.class, javaObject);
+			} else if (nodeType.equals("FUNCTION")) {
+				node = (T) JSA.instantiateAsSL(ASIMOVFunctionNode.class, javaObject);
+			} else {
+				LOG.error("Failed to parse SL Node type: "+nodeType+" for "+javaObject,new Exception());
+				return null;
+			}
+		} else {
+			node = JSA.instantiateAsSL(slNodeType, javaObject);
+		}
 		if (params.length % 2 != 0)
 			throw new Exception("Invalid amount of paramters, expected key value pairs");
 		String key = null;
@@ -288,7 +267,7 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 			}
 			if (value == null) {
 				if ((params[i] instanceof Belief))
-					value = (ASIMOVNode<?>)((JSABelief)params[i]).getNode();
+					value = (ASIMOVNode<?>)((ASIMOVSLBelief)params[i]).getNode();
 				else if (params[i] instanceof ASIMOVNode)
 					value = (ASIMOVNode<?>)params[i];
 				else
@@ -299,7 +278,7 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 			value = null;
 		}
 		} else {
-			LOG.trace("Converting string to SLString: "+javaObject);
+			LOG.info("Converting string to SLString: "+javaObject);
 			node = (T) SL.string(javaObject.toString());
 		}
 		return node;
@@ -323,7 +302,7 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 			log.error("Failed to create SL Node", e);
 			return null;
 		}
-		return new JSABelief(slNode);
+		return new ASIMOVSLBelief(slNode);
 	}
 
 	@Override
@@ -332,11 +311,11 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 	{
 		try
 		{
-			return new JSAQuery(getFormulaForObject(javaObject, params));
+			return new ASIMOVSLQuery(getFormulaForObject(javaObject, params));
 		} 
 		 catch (ClassCastException ce)
 			{
-			 	log.warn("The String: \""+javaObject+"\" is not a valid query.");
+			 	log.warn("The String: \""+javaObject+"\" is not a valid query.",ce);
 				return null;
 			}
 		catch (Exception e)
@@ -349,44 +328,44 @@ public class JSAReasoningCapability extends BasicCapability implements Reasoning
 	@Override
 	public void addBeliefToKBase(Belief belief)
 	{
-		ASIMOVNode<?> node = ((JSABelief)belief).getNode();
+		ASIMOVNode<?> node = ((ASIMOVSLBelief)belief).getNode();
 		if (node instanceof NotNode) {
 			log.info("Found not node in:"+belief.toString());
 			ASIMOVFormula childNode = ((NotNode) node).negate();
 			log.info("Removing node from KBASE:"+childNode.toString());
-			removeBeliefFromKBase(new JSABelief((ASIMOVFormula)childNode));
+			removeBeliefFromKBase(new ASIMOVSLBelief((ASIMOVFormula)childNode));
 		}
 		else if (node instanceof ASIMOVAndNode) {
 			log.info("Found and node in:"+belief.toString());
 			for (final String childKey : node.getKeys()) {
 				ASIMOVFormula childNode = (ASIMOVFormula)node.getPropertyValue(childKey);
 				log.info("Adding node to KBASE:"+childNode.toString());
-				addBeliefToKBase(new JSABelief((ASIMOVFormula)childNode));
+				addBeliefToKBase(new ASIMOVSLBelief((ASIMOVFormula)childNode));
 			}
 		}
 		else 
-			addNodeToKBase(((JSABelief)belief).getNode());
+			addNodeToKBase(((ASIMOVSLBelief)belief).getNode());
 	}
 
 	@Override
 	public void removeBeliefFromKBase(Belief belief)
 	{
-		ASIMOVNode<?> node = ((JSABelief)belief).getNode();
+		ASIMOVNode<?> node = ((ASIMOVSLBelief)belief).getNode();
 		if (node instanceof ASIMOVAndNode) {
 			log.info("Found and node in:"+belief.toString());
 			for (final String childKey : node.getKeys()) {
 				ASIMOVFormula childNode = (ASIMOVFormula)node.getPropertyValue(childKey);
 				log.info("Removing node from KBASE:"+childNode.toString());
-				removeBeliefFromKBase(new JSABelief((ASIMOVFormula)childNode));
+				removeBeliefFromKBase(new ASIMOVSLBelief((ASIMOVFormula)childNode));
 			}
 		}
-		retractNodeFromKBase((((JSABelief)belief).getNode()));
+		retractNodeFromKBase((((ASIMOVSLBelief)belief).getNode()));
 	}
 
 	@Override
 	public Observable<Map<String, Object>> queryToKBase(Query query)
 	{
-		return queryToKBase((((JSAQuery)query).getNode()));
+		return queryToKBase((((ASIMOVSLQuery)query).getNode()));
 	}
 
 	@Override

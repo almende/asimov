@@ -11,7 +11,7 @@ import java.util.Iterator;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  * 
  */
-public interface SLConvertible<T extends SLConvertible<?>> extends io.coala.jsa.sl.SLConvertible<T>
+public interface SLConvertible<T extends SLConvertible<?>> extends io.asimov.reasoning.sl.SLConvertible<T>
 {
 
 	/** */

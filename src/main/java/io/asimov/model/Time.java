@@ -3,7 +3,7 @@ package io.asimov.model;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.SL;
-import io.coala.jsa.sl.SLConvertible;
+import io.asimov.reasoning.sl.SLConvertible;
 
 import javax.persistence.Entity;
 

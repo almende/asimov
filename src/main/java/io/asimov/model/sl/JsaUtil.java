@@ -3,6 +3,7 @@ package io.asimov.model.sl;
 import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
 import io.coala.exception.CoalaExceptionFactory;
+import io.coala.json.JsonUtil;
 import io.coala.log.LogUtil;
 import io.coala.util.Util;
 
@@ -64,6 +65,7 @@ public class JsaUtil implements Util
 	@SuppressWarnings("unchecked")
 	public <T extends ASIMOVNode<T>> T instantiateAsSL(Class<T> slNodeType, Object javaObject){
 		T result = null;
+		
 		if (slNodeType.equals(ASIMOVTerm.class)) {
 			if (javaObject instanceof AgentID)
 				result = (T) getCachedSLNode(javaObject, new Converter<ASIMOVTerm>()
@@ -86,7 +88,6 @@ public class JsaUtil implements Util
 					}
 				});
 		} else if (slNodeType.equals(ASIMOVFormula.class)) {
-			
 				result = (T) getCachedSLNode(javaObject, new Converter<ASIMOVFormula>()
 						{
 
@@ -97,34 +98,44 @@ public class JsaUtil implements Util
 					}
 				});
 		}  
-//		else if (slNodeType.equals(ASIMOVNode.class)) {
-//			
-//			result = (T) getCachedSLNode(javaObject, new Converter<ASIMOVNode>()
-//					{
-//
-//				@Override
-//				public ASIMOVNode<T> convert(Object node)
-//				{
-//					ASIMOVNode<T> slNode = null;
-//					try
-//					{
-//						slNode = SLParser.getParser().parseTerm(node.toString(),true);
-//					} catch (jade.semantics.lang.sl.parser.ParseException e)
-//					{
-//						try
-//						{
-//							slNode = SLParser.getParser().parseFormula(node.toString(),true);
-//						} catch (jade.semantics.lang.sl.parser.ParseException e1)
-//						{
-//							LOG.error("Failed to create SL term",e);
-//							LOG.error("Failed to create SL formula",e1);
-//							return null;
-//						}
-//					}
-//					return slNode;
-//				}
-//			});
-//	   }  
+		else if (slNodeType.equals(ASIMOVAndNode.class) ) {
+			result = (T) getCachedSLNode(javaObject, new Converter<T>()
+					{
+
+				@Override
+				public T convert(Object node)
+				{
+					ASIMOVNode<T> slNode = null;
+					try
+					{
+						slNode = (ASIMOVNode<T>) new ASIMOVAndNode().fromJSON(node.toString());
+					} catch (Exception e)
+					{
+						LOG.error("Failed to create SL AndNode",e);
+					}
+					return (T)slNode;
+				}
+			});
+	   }   else if (slNodeType.equals(ASIMOVFunctionNode.class)) {
+
+			result = (T) getCachedSLNode(javaObject, new Converter<T>()
+					{
+
+				@Override
+				public T convert(Object node)
+				{
+					ASIMOVNode<T> slNode = null;
+					try
+					{
+						slNode = (ASIMOVNode<T>) new ASIMOVFunctionNode().fromJSON(node.toString());
+					} catch (Exception e)
+					{
+						LOG.error("Failed to create SL FunctionNode",e);
+					}
+					return (T)slNode;
+				}
+			});
+	   }
 		else
 			CoalaExceptionFactory.VALUE_NOT_ALLOWED.create(javaObject, "Failed to convert JavaType to SL Node of type: "+slNodeType.getSimpleName());
 		return (T)result;

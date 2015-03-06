@@ -1,6 +1,6 @@
 package io.asimov.model.sl;
 
-import io.coala.jsa.sl.KBase;
+import io.asimov.reasoning.sl.KBase;
 import io.coala.json.JsonUtil;
 
 import java.io.ByteArrayInputStream;
@@ -14,19 +14,32 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 	
 	public static final String CARDINALITY = "CARDINALITY";
 
-	String functionType;
+	public String functionType;
 	
-	Map<String,ASIMOVNode<?>> namedChildren;
+	public Map<String,ASIMOVFormula> namedChildren;
 	
-	String resultKey;
+	public String name;
+
+	public ASIMOVFunctionNode(){
+		super();
+		getNamedChildren();
+	}
 	
-	private transient ASIMOVNode<?> result;
+	public Map<String, ASIMOVFormula> getNamedChildren() {
+		if (this.namedChildren == null)
+			this.namedChildren = new HashMap<String, ASIMOVFormula>();
+		return namedChildren;
+	}
+
+	public String resultKey;
 	
-	String type = getNodeType();
+	public ASIMOVTerm result;
+	
+	public String type = getNodeType();
 	
 	public ASIMOVFunctionNode(ASIMOVFormula... formulas) {
 		int count = 0;
-		if (namedChildren != null)
+		if (getNamedChildren() != null)
 			count = namedChildren.size();
 		if (formulas != null)
 			for (ASIMOVFormula f : formulas) {
@@ -34,6 +47,7 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 			}
 				
 	}
+	
 	
 	public void eval(ASIMOVNode<?> parameter){
 		if (this.getFunctionType() == CARDINALITY) {
@@ -125,8 +139,8 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 	@Override
 	public ASIMOVNode<ASIMOVFunctionNode> instantiate(String key, ASIMOVNode<?> value) {
 		if (this.namedChildren == null)
-			this.namedChildren = new HashMap<String, ASIMOVNode<?>>();
-		this.namedChildren.put(key, value);
+			this.namedChildren = new HashMap<String, ASIMOVFormula>();
+		this.namedChildren.put(key, (ASIMOVFormula)value);
 		return this;
 	}
 
@@ -143,5 +157,11 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 			return result;
 		return namedChildren.get(key);
 	}
+	
+	@Override
+	public String toString(){
+		return this.toJSON();
+	}
+
 
 }
