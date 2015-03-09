@@ -206,7 +206,7 @@ public class Process extends AbstractEntity<Process> implements
 			// update the Tasks
 			for (Task task : getTasks())
 			{
-				Map<String,Object> taskMR = KBase.matchNode(Task.PATTERN,task.toSL());
+				Map<String,Object> taskMR = new KBase().matchNode(Task.PATTERN,task.toSL());
 				for (Task compareTask : allTransitionTasks)
 				{
 					final ASIMOVTerm compareTaskTerm = compareTask.toSL();
@@ -295,7 +295,7 @@ public class Process extends AbstractEntity<Process> implements
 	{
 		for (Transition transition : getTransitions())
 		{
-			Map<String,Object> transitionMR = KBase.matchNode(Transition.PATTERN,transition
+			Map<String,Object> transitionMR = new KBase().matchNode(Transition.PATTERN,transition
 					.toSL());
 			if (transitionMR.get(Transition.INPUT_TASK_NAMES).equals(
 					inputTaskNames))

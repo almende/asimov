@@ -22,16 +22,16 @@ public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 	public long integerValue;
 	
 	
-	public Map<String,ASIMOVTerm> termProperties;
+	public Map<String,ASIMOVNode<?>> termProperties;
 	
 	public ASIMOVTerm(){
 		super();
 		getTermProperties();
 	}
 	
-	public Map<String, ASIMOVTerm> getTermProperties() {
+	public Map<String, ASIMOVNode<?>> getTermProperties() {
 		if (this.termProperties == null)
-			this.termProperties = new HashMap<String, ASIMOVTerm>();
+			this.termProperties = new HashMap<String, ASIMOVNode<?>>();
 		return termProperties;
 	}
 
@@ -67,11 +67,11 @@ public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 	@Override
 	public ASIMOVTerm instantiate(String key, ASIMOVNode<?> value) {
 		final ASIMOVTerm copy = new ASIMOVTerm().withName(this.name);
-		copy.termProperties = new HashMap<String, ASIMOVTerm>();
+		copy.termProperties = new HashMap<String, ASIMOVNode<?>>();
 		if (this.termProperties != null)
-			for (Entry<String, ASIMOVTerm>  entry : this.termProperties.entrySet())
+			for (Entry<String, ASIMOVNode<?>>  entry : this.termProperties.entrySet())
 				copy.termProperties.put(entry.getKey(), entry.getValue());
-		copy.termProperties.put(key,(ASIMOVTerm)value);
+		copy.termProperties.put(key,value);
 		return copy;
 	}
 

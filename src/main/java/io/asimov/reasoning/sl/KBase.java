@@ -1,12 +1,14 @@
 package io.asimov.reasoning.sl;
 
 import io.asimov.model.sl.ASIMOVAndNode;
-import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVFunctionNode;
+import io.asimov.model.sl.ASIMOVIntegerTerm;
 import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVStringTerm;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -72,16 +74,22 @@ public class KBase implements List<ASIMOVNode<?>> {
 
 	@Override
 	public boolean addAll(Collection<? extends ASIMOVNode<?>> c) {
+		for (int i =0 ; i <c.size(); i++);
+		System.out.print('+');
 		return kbase.addAll(c);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends ASIMOVNode<?>> c) {
+		for (int i =0 ; i <c.size(); i++);
+			System.out.print('+');
 		return kbase.addAll(index, c);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
+		for (int i =0 ; i <c.size(); i++);
+			System.out.print('-');
 		return kbase.removeAll(c);
 	}
 
@@ -107,11 +115,13 @@ public class KBase implements List<ASIMOVNode<?>> {
 
 	@Override
 	public void add(int index, ASIMOVNode<?> element) {
+		System.out.print('+');	
 		kbase.add(index,element);
 	}
 
 	@Override
 	public ASIMOVNode<?> remove(int index) {
+		System.out.print('-');	
 		return kbase.remove(index);
 	}
 
@@ -140,18 +150,44 @@ public class KBase implements List<ASIMOVNode<?>> {
 		return kbase.subList(fromIndex, toIndex);
 	}
 	
-	public static Map<String,Object> matchNode(Object formulaObject, Object factObject) {
+	public static Object parsePrimitives(final Object inFormulaObject) {
+		final ASIMOVNode<?> formulaObject = ((ASIMOVNode<?>)inFormulaObject);
+		final String nodeType = formulaObject.getNodeType();
+		Object result;
+		if (nodeType.equals("STRING")) {
+			result = ((ASIMOVStringTerm)formulaObject).stringValue;
+		} else if (nodeType.equals("INTEGER")) {
+			result = new Long(((ASIMOVIntegerTerm)formulaObject).integerValue);
+		} else {
+			result = inFormulaObject;
+		}
+		return result;
+	}
+	
+	public Map<String,Object> matchNode(final Object inFormulaObject, final Object inFactObject) {
+		if (inFormulaObject == null || inFactObject == null)
+			return Collections.emptyMap();
+		System.out.print('.');	
+		Object formulaObject = parsePrimitives(inFormulaObject);
+		
+		Object factObject = parsePrimitives(inFactObject);
+		
 		if ((formulaObject instanceof ASIMOVNode<?>) == false)
 		{
 			if ((factObject instanceof ASIMOVNode<?>) == false)
 			{
-				if (formulaObject.equals(factObject))
+				if (formulaObject.equals(factObject)) {
 					return new HashMap<String,Object>();
-				else
+				} else {
 					return null;
+				}
 			} else {
 				return null;
 			}
+		}
+		if ((factObject instanceof ASIMOVNode<?>) == false)
+		{
+			return null;
 		}
 		
 		ASIMOVNode<?> formula = (ASIMOVNode<?>)formulaObject;
@@ -159,22 +195,55 @@ public class KBase implements List<ASIMOVNode<?>> {
 		boolean anyMatch = false;
 		final Map<String,Object> result = new HashMap<String, Object>();
 		if (formulaObject instanceof ASIMOVAndNode) {
-			ASIMOVAndNode andFormula = (ASIMOVAndNode)formulaObject;
-			for (String andKey : andFormula.getKeys()) {
-				final Map<String,Object> hornResult = matchNode(andFormula.getPropertyValue(andKey), factObject);
-				if (hornResult == null)
-					return null;
-				for (final String hornKey : hornResult.keySet())
-					result.put(hornKey, hornResult.get(hornKey));
+			final ASIMOVAndNode andFormula = ((ASIMOVAndNode)formulaObject);
+			final Set<String> andKeys = new HashSet<String>();
+			andKeys.addAll(andFormula.getKeys());
+			andKeyLoop: for (final String andKey : andKeys) {
+					kBaseFactLoop: for (final ASIMOVNode<?> aFact : this.kbase) {
+						{
+							if (aFact == factObject) {
+								final Map<String,Object> hornResult = matchNode(andFormula.getPropertyValue(andKey), factObject);
+								if (hornResult != null) {
+									System.out.print("<&"+andFormula.getKeys()+"."+andKeys.size()+">");
+									for (final String hornKey : hornResult.keySet()) {
+										result.put(hornKey, hornResult.get(hornKey));
+										andFormula.namedChildren.remove(andKey);
+									}
+								}
+							} else {
+								final Map<String,Object> otherHornResult = matchNode(andFormula.getPropertyValue(andKey), aFact);
+								if (otherHornResult != null) {
+									System.out.print("<&"+andFormula.getKeys()+"."+andKeys.size()+">");
+									for (final String hornKey : otherHornResult.keySet()) {
+										result.put(hornKey, otherHornResult.get(hornKey));
+										andFormula.namedChildren.remove(andKey);
+									}
+								}
+							}
+							if (andFormula.getKeys().size() == 0) {
+								anyMatch = true;
+								break andKeyLoop;
+							}
+						}
+					}			
 			}
-			anyMatch = true;
+			if (!anyMatch) {
+				System.out.print("<!&>");
+				System.out.flush();
+				System.err.println("|- REASON = (AND) NOT KNOWN:"+andFormula.namedChildren);
+				System.err.flush();
+				return null;
+			}
 		} else if (formula.getNodeType().equals("FUNCTION")) {
 			ASIMOVFunctionNode function = (ASIMOVFunctionNode)formula;
 			for (String functionKey : function.getKeys()) {
-				if (function.getResultKey() != functionKey)
+				if (function.getResultKey() != functionKey) {
+					System.out.print("<f(x)>");
 					function.eval((ASIMOVNode<?>)function.getPropertyValue(functionKey));
-				else
+				} else {
+					System.out.print("<x>");
 					result.put(functionKey, result.get(functionKey));
+				}
 			}
 			anyMatch = true;
 		} else if (formula.getNodeType().equals(fact.getNodeType()) && formula.getName().equals(fact.getName())) {
@@ -182,6 +251,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 			boolean matched = true;
 			for (final String key : formula.getKeys()) {
 				if (formula.getPropertyValue(key) == null) { 
+					System.out.print("<?>");
 					matchKeys.add(key);
 				} else {
 					Object formulaProperty = formula.getPropertyValue(key);
@@ -189,10 +259,14 @@ public class KBase implements List<ASIMOVNode<?>> {
 					
 					Map<String,Object> childMatches = matchNode(formulaProperty, factProperty);
 					if (childMatches == null) {
+						System.out.print("<!>");
 						matched = false;
+						System.err.println("|- REASON = ("+formula.getNodeType()+") NOT KNOWN :"+formulaProperty);
+						System.err.flush();
 						break;
 					} else {
 						for (final String childMatchKey : childMatches.keySet()) {
+							System.out.print("<"+childMatchKey+".found>");
 							result.put(childMatchKey, childMatches.get(childMatchKey));
 						}
 					}
@@ -200,13 +274,14 @@ public class KBase implements List<ASIMOVNode<?>> {
 					
 			} 
 			if (matched || (formula instanceof NotNode && !matched)) {
+				System.out.print("<ok>");
 				anyMatch = true;
 				for (final String key : matchKeys) {
 					result.put(key,fact.getPropertyValue(key));
 				}
 			}
 		} 
-		if (anyMatch) {
+		if (anyMatch || (formula instanceof NotNode && !anyMatch)) {
 			return result;
 		} else {
 			return null; // FALSE
@@ -214,6 +289,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 	}
 
 	public Set<Map<String,Object>> query(ASIMOVNode<?> query) {
+		System.err.println("-> QUERY  := "+query);
 		boolean matched = false;
 		Set<Map<String,Object>> queryResult = new HashSet<Map<String, Object>>();
 		for (ASIMOVNode<?> node : this.kbase) {
@@ -222,16 +298,22 @@ public class KBase implements List<ASIMOVNode<?>> {
 					node.getNodeType().equals("FUNCTION") || 
 					node.getNodeType().equals("NOT")) {
 				Map<String,Object> row = matchNode(query,node);
+				System.err.println((row != null) ? "|-TRUE" : "|-(FALSE)" + node);
+				if (row != null)
+					System.err.println("|-(WITH)"+row);
 				if (row != null) {
 					matched = true;
 					queryResult.add(row);
 				}
 			}
 		}
-		if (matched)
+		if (matched) {
+			System.err.println("-> TRUE  := "+query);
 			return queryResult;
-		else
+		} else {
+			System.err.println("-> FALSE := "+query);
 			return null; // FALSE
+		}
 	}
 
 }

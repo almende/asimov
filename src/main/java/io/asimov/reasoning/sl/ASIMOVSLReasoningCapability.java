@@ -1,9 +1,7 @@
 package io.asimov.reasoning.sl;
 
-import io.arum.model.resource.DirectoryLookup.Result;
 import io.asimov.model.sl.ASIMOVAndNode;
 import io.asimov.model.sl.ASIMOVFormula;
-import io.asimov.model.sl.ASIMOVFunctionNode;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.JsaUtil;
@@ -12,13 +10,10 @@ import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.exception.CoalaExceptionFactory;
-import io.coala.json.JsonUtil;
 import io.coala.log.InjectLogger;
 import io.coala.log.LogUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,8 +24,6 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
 import rx.Observable;
-import rx.Observer;
-import rx.Subscription;
 import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
 
@@ -104,23 +97,13 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	
 	public static ASIMOVNode<?> getFormulaForObject(Object javaObject, Map<String,Object> keyValuePairs) throws Exception {
 		ASIMOVNode<?> result;
-		try {
-		result = getSLForObject(ASIMOVFormula.class, javaObject, keyValuePairs);
-		} catch (ClassCastException ce) {
-			try {
-				result = getSLForObject(ASIMOVAndNode.class, javaObject, keyValuePairs);
-			} catch (ClassCastException ce2) {
-				result = getSLForObject(ASIMOVFunctionNode.class, javaObject, keyValuePairs);
-				ce.printStackTrace();
-				ce2.printStackTrace();
-			}
-		}
+		result = getSLForObject(javaObject, keyValuePairs);
 		return result;
 	}
 	
 	
 	public static ASIMOVTerm getTermForObject(Object javaObject, Map<String,Object> keyValuePairs) throws Exception {
-		return getSLForObject(ASIMOVTerm.class, javaObject, toParameters(keyValuePairs));
+		return getSLForObject(javaObject, toParameters(keyValuePairs));
 	}
 	
 	/**
@@ -132,15 +115,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	 */
 	public static ASIMOVNode<?> getFormulaForObject(Object javaObject, Object... params) throws Exception {
 		ASIMOVNode<?> result;
-		try {
-		result = getSLForObject(ASIMOVFormula.class, javaObject, params);
-		} catch (Exception ce) {
-			try {
-				result = getSLForObject(ASIMOVAndNode.class, javaObject, params);
-			} catch (Exception ce2) {
-				result = getSLForObject(ASIMOVFunctionNode.class, javaObject, params);
-			}
-		}
+		result = getSLForObject(javaObject, params);
 		return result;
 	}
 	
@@ -152,7 +127,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	 * @throws Exception
 	 */
 	public static ASIMOVTerm getTermForObject(Object javaObject, Object... params) throws Exception {
-		return getSLForObject(ASIMOVTerm.class, javaObject, params);
+		return getSLForObject(javaObject, params);
 	}
 	
 	public void addNodeToKBase(final Object javaObject, final Object... params){
@@ -225,34 +200,16 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 		
 	}
 	
-	public static <T extends ASIMOVNode<T>> T getSLForObject(Class<T> slNodeType, Object javaObject, Map<String,Object> keyValuePairs) throws Exception  {
-		return getSLForObject(slNodeType, javaObject, toParameters(keyValuePairs));
+	public static <T extends ASIMOVNode<T>> T getSLForObject(Object javaObject, Map<String,Object> keyValuePairs) throws Exception  {
+		return getSLForObject(javaObject, toParameters(keyValuePairs));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends ASIMOVNode<T>> T getSLForObject(Class<T> slNodeType, Object javaObject, Object... params) throws Exception {
+	public static <T extends ASIMOVNode<T>> T getSLForObject(Object javaObject, Object... params) throws Exception {
 		if (javaObject == null)
 			throw new NullPointerException("Can not instantiate null object.");
 		T node;
-		if (javaObject instanceof SLConvertible) {
-			node = ((SLConvertible<?>)javaObject).toSL();
-		} else if (javaObject instanceof SLParsable || javaObject instanceof ASIMOVNode<?>) {
-		LOG.info("Parsing SL parsable string"+javaObject);
-		if (slNodeType.equals(ASIMOVNode.class)) {
-			final String nodeType = JsonUtil.toJSON(javaObject).path("type").asText();
-			if (nodeType.equals("NOT") || nodeType.equals("FORMULA"))
-				node = (T) JSA.instantiateAsSL(ASIMOVFormula.class, javaObject);
-			else if (nodeType.equals("AND")) {
-				node = (T) JSA.instantiateAsSL(ASIMOVAndNode.class, javaObject);
-			} else if (nodeType.equals("FUNCTION")) {
-				node = (T) JSA.instantiateAsSL(ASIMOVFunctionNode.class, javaObject);
-			} else {
-				LOG.error("Failed to parse SL Node type: "+nodeType+" for "+javaObject,new Exception());
-				return null;
-			}
-		} else {
-			node = JSA.instantiateAsSL(slNodeType, javaObject);
-		}
+		node = JSA.instantiateAsSL(javaObject);
 		if (params.length % 2 != 0)
 			throw new Exception("Invalid amount of paramters, expected key value pairs");
 		String key = null;
@@ -271,15 +228,11 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 				else if (params[i] instanceof ASIMOVNode)
 					value = (ASIMOVNode<?>)params[i];
 				else
-					value = getSLForObject(ASIMOVNode.class, params[i]);
+					value = getSLForObject(params[i]);
 			}
 			node = (T) SL.instantiate(node,key,value);
 			key = null;
 			value = null;
-		}
-		} else {
-			LOG.info("Converting string to SLString: "+javaObject);
-			node = (T) SL.string(javaObject.toString());
 		}
 		return node;
 	}
@@ -296,7 +249,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 		ASIMOVNode<?> slNode;
 		try
 		{
-			slNode = getSLForObject(ASIMOVNode.class, javaObject, params);
+			slNode = getSLForObject(javaObject, params);
 		} catch (Exception e)
 		{
 			log.error("Failed to create SL Node", e);

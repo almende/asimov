@@ -53,7 +53,7 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 		if (this.getFunctionType() == CARDINALITY) {
 			long cardinality = 0;
 			for (String key : namedChildren.keySet()) {
-				if (KBase.matchNode(namedChildren.get(key), parameter) != null)
+				if (new KBase().matchNode(namedChildren.get(key), parameter) != null)
 					cardinality++;
 			}
 			result = SL.integer(cardinality);

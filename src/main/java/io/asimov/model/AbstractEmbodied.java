@@ -51,7 +51,7 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 		/** */
 		private static final long serialVersionUID = 1L;
 		
-		private Object internalBelief;
+		private ASIMOVNode<?> internalBelief;
 		
 		
 		/** @see io.asimov.reasoning.sl.SLConvertible#toSL() */

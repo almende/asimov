@@ -19,16 +19,16 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	
 	public String name;
 	
-	public Map<String,ASIMOVTerm> formulaProperties;
+	public Map<String,ASIMOVNode<?>> formulaProperties;
 	
 	public ASIMOVFormula(){
 		super();
 		getFormulaProperties();
 	}
 
-	public Map<String, ASIMOVTerm> getFormulaProperties() {
+	public Map<String, ASIMOVNode<?>> getFormulaProperties() {
 		if (this.formulaProperties == null)
-			this.formulaProperties = new HashMap<String, ASIMOVTerm>();
+			this.formulaProperties = new HashMap<String, ASIMOVNode<?>>();
 		return formulaProperties;
 	}
 
@@ -64,13 +64,13 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	@Override
 	public ASIMOVFormula instantiate(String key, ASIMOVNode<?> value) {
 		final ASIMOVFormula copy = new ASIMOVFormula().withName(this.name);
-		copy.formulaProperties = new HashMap<String, ASIMOVTerm>();
+		copy.formulaProperties = new HashMap<String, ASIMOVNode<?>>();
 		copy.isNotNode = isNotNode;
 		copy.type = type;
 		if (this.formulaProperties != null)
-			for (Entry<String, ASIMOVTerm>  entry : this.formulaProperties.entrySet())
+			for (Entry<String, ASIMOVNode<?>>  entry : this.formulaProperties.entrySet())
 				copy.formulaProperties.put(entry.getKey(), entry.getValue());
-		copy.formulaProperties.put(key,(ASIMOVTerm)value);
+		copy.formulaProperties.put(key,value);
 		return copy;
 	}
 	

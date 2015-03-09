@@ -15,6 +15,8 @@ public class NotNode extends ASIMOVFormula {
 	}
 	
 	public NotNode(){
+		super();
 		super.isNotNode = true;
+		super.type = super.getNodeType();
 	}
 }

@@ -94,7 +94,7 @@ public class LegacySLUtil implements ASIMOVAgents {
 			final Serializable forumla) {
 		ASIMOVNode<?> f;
 		try {
-			f = ASIMOVSLReasoningCapability.getSLForObject(ASIMOVNode.class,
+			f = ASIMOVSLReasoningCapability.getSLForObject(
 					new SLParsableSerializable(forumla.toString()));
 		} catch (Exception e) {
 			LOG.error("Failed to parse Serializable to formula", e);
@@ -124,7 +124,7 @@ public class LegacySLUtil implements ASIMOVAgents {
 			Map<String,Object> matchedResourceResult = null;
 			while (matchedResourceResult == null && formulaIterator.hasNext()) {
 				ASIMOVFormula matching = (ASIMOVFormula) formulaIterator.next();
-				matchedResourceResult = KBase.matchNode(resourceFormula,matching);
+				matchedResourceResult = new KBase().matchNode(resourceFormula,matching);
 			}
 
 			List<ASIMOVFormula> resultList = new ArrayList<ASIMOVFormula>();
@@ -140,7 +140,7 @@ public class LegacySLUtil implements ASIMOVAgents {
 
 			while (formulaIterator.hasNext()) {
 				ASIMOVFormula matching = (ASIMOVFormula) formulaIterator.next();
-				Map<String,Object> matchedEquipmentResult = KBase.matchNode(resourceFormula
+				Map<String,Object> matchedEquipmentResult = new KBase().matchNode(resourceFormula
 						,matching);
 				if (matchedEquipmentResult != null)
 					resultList.add(BELONGS_TO_PROCESS_FORMULA.instantiate(

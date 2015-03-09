@@ -1,6 +1,8 @@
 package io.asimov.model.sl;
 
-import io.coala.agent.Agent;
+import io.asimov.reasoning.sl.NotNode;
+import io.asimov.reasoning.sl.SLParsable;
+import io.asimov.reasoning.sl.SLConvertible;
 import io.coala.agent.AgentID;
 import io.coala.exception.CoalaExceptionFactory;
 import io.coala.json.JsonUtil;
@@ -9,10 +11,12 @@ import io.coala.util.Util;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class JsaUtil implements Util
 {
@@ -52,105 +56,66 @@ public class JsaUtil implements Util
 	}
 	
 	@SuppressWarnings("unchecked")
-	<T extends ASIMOVNode<T>> T getCachedSLNode(final Object node, final Converter<T> converter) {
+	<T extends ASIMOVNode<T>> T getCachedSLNode(final Object node) {
 		T result = (T) cachedSLNode.get(node);
 		if (result == null) {
-			result = converter.convert(node);
-			cachedSLNode.put(node, result);
+			if (node instanceof SLConvertible) {
+				result = ((SLConvertible<T>)node).toSL();
+			} if (result == null && node instanceof SLParsable) {
+				result = getNodeFromJsonNode(JsonUtil.fromJSON(node.toString()));
+			} if (result == null && node instanceof JsonNode) {
+				result = getNodeFromJsonNode((JsonNode)node);
+			} if (result == null && node instanceof Number) {
+				result = (T) SL.integer(((Number)node).longValue());
+			} if (result == null && node instanceof String) {
+				result = (T) SL.string(node.toString());
+			}
+			if (result != null) 
+				cachedSLNode.put(node, result);
 		}
 		return (T) result;
 	}
 	
 	
 	@SuppressWarnings("unchecked")
-	public <T extends ASIMOVNode<T>> T instantiateAsSL(Class<T> slNodeType, Object javaObject){
+	public <T extends ASIMOVNode<T>> T getNodeFromJsonNode(final JsonNode jsonNode) {
+			if (jsonNode.path("type") == null)
+				return (T) null;
+			final String nodeType = jsonNode.path("type").textValue();
+			try {
+				if (nodeType.equals("FORMULA")) {
+					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVFormula.class);
+				} else if (nodeType.equals("AND")) {	
+					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVAndNode.class);
+				} else if (nodeType.equals("FORMULA")) {				
+					return (T)  JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVTerm.class);
+				} else if (nodeType.equals("TERM")) {					
+					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVStringTerm.class);
+				} else if (nodeType.equals("STRING")) {					
+					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVIntegerTerm.class);
+				} else if (nodeType.equals("INTEGER")) {				
+					return (T) JsonUtil.getJOM().treeToValue(jsonNode, NotNode.class);
+				} else if (nodeType.equals("NOT")) {				
+					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVFormula.class);
+				} else if (nodeType.equals("FUNCTION")) {					
+					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVFormula.class);
+				}
+			} catch (JsonProcessingException e) {
+				LOG.error("Failed to parse JSON to SL",e);
+			}	
+			return (T) null;
+	}
+	
+	public <T extends ASIMOVNode<T>> T instantiateAsSL(Object javaObject){
 		T result = null;
-		
-		if (slNodeType.equals(ASIMOVTerm.class)) {
-			if (javaObject instanceof AgentID)
-				result = (T) getCachedSLNode(javaObject, new Converter<ASIMOVTerm>()
-						{
-
-					@Override
-					public ASIMOVTerm convert(Object node)
-					{
-						return SL.string(node.toString());
-					}
-				});
-			else
-				result = (T) getCachedSLNode(javaObject, new Converter<ASIMOVTerm>()
-						{
-
-					@Override
-					public ASIMOVTerm convert(Object node)
-					{
-						return SL.term(node.toString());
-					}
-				});
-		} else if (slNodeType.equals(ASIMOVFormula.class)) {
-				result = (T) getCachedSLNode(javaObject, new Converter<ASIMOVFormula>()
-						{
-
-					@Override
-					public ASIMOVFormula convert(Object node)
-					{
-						return SL.formula(node.toString());
-					}
-				});
-		}  
-		else if (slNodeType.equals(ASIMOVAndNode.class) ) {
-			result = (T) getCachedSLNode(javaObject, new Converter<T>()
-					{
-
-				@Override
-				public T convert(Object node)
-				{
-					ASIMOVNode<T> slNode = null;
-					try
-					{
-						slNode = (ASIMOVNode<T>) new ASIMOVAndNode().fromJSON(node.toString());
-					} catch (Exception e)
-					{
-						LOG.error("Failed to create SL AndNode",e);
-					}
-					return (T)slNode;
-				}
-			});
-	   }   else if (slNodeType.equals(ASIMOVFunctionNode.class)) {
-
-			result = (T) getCachedSLNode(javaObject, new Converter<T>()
-					{
-
-				@Override
-				public T convert(Object node)
-				{
-					ASIMOVNode<T> slNode = null;
-					try
-					{
-						slNode = (ASIMOVNode<T>) new ASIMOVFunctionNode().fromJSON(node.toString());
-					} catch (Exception e)
-					{
-						LOG.error("Failed to create SL FunctionNode",e);
-					}
-					return (T)slNode;
-				}
-			});
-	   }
-		else
-			CoalaExceptionFactory.VALUE_NOT_ALLOWED.create(javaObject, "Failed to convert JavaType to SL Node of type: "+slNodeType.getSimpleName());
+		result = getCachedSLNode(javaObject);
+		if (result == null)
+			CoalaExceptionFactory.VALUE_NOT_ALLOWED.create(javaObject, "Failed to convert JavaType to SL Node.");
 		return (T)result;
 	}
 	
 	public ASIMOVTerm getTermForAgentID(final AgentID agentID){
-		return getCachedSLNode(agentID, new Converter<ASIMOVTerm>()
-		{
-
-			@Override
-			public ASIMOVTerm convert(Object node)
-			{
-				return SL.string(node.toString());
-			}
-		});
+		return getCachedSLNode(SL.string(agentID.toString()));
 	}
 
 	
