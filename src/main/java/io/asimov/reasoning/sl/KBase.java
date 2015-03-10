@@ -1,10 +1,12 @@
 package io.asimov.reasoning.sl;
 
 import io.asimov.model.sl.ASIMOVAndNode;
+import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVFunctionNode;
 import io.asimov.model.sl.ASIMOVIntegerTerm;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVStringTerm;
+import io.asimov.model.sl.ASIMOVNotNode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -194,33 +196,43 @@ public class KBase implements List<ASIMOVNode<?>> {
 		ASIMOVNode<?> fact = (ASIMOVNode<?>)factObject;
 		boolean anyMatch = false;
 		final Map<String,Object> result = new HashMap<String, Object>();
-		if (formulaObject instanceof ASIMOVAndNode) {
+		if (formulaObject instanceof ASIMOVNotNode) {
+			ASIMOVFormula f = ((ASIMOVNotNode) formulaObject).negate();
+			for (final ASIMOVNode<?> aFact : this.kbase) {
+				if (matchNode(f, aFact) != null) {
+					System.out.print("<not=false>");
+					return null;
+				} else
+					anyMatch = true;
+			}
+			if (anyMatch)
+				System.out.print("<not=true>");
+		} else if (formulaObject instanceof ASIMOVAndNode) {
 			final ASIMOVAndNode andFormula = ((ASIMOVAndNode)formulaObject);
 			final Set<String> andKeys = new HashSet<String>();
-			andKeys.addAll(andFormula.getKeys());
-			andKeyLoop: for (final String andKey : andKeys) {
-					kBaseFactLoop: for (final ASIMOVNode<?> aFact : this.kbase) {
+			andKeyLoop: for (final String andKey : andFormula.getKeys()) {
+					for (final ASIMOVNode<?> aFact : this.kbase) {
 						{
 							if (aFact == factObject) {
 								final Map<String,Object> hornResult = matchNode(andFormula.getPropertyValue(andKey), factObject);
 								if (hornResult != null) {
 									System.out.print("<&"+andFormula.getKeys()+"."+andKeys.size()+">");
 									for (final String hornKey : hornResult.keySet()) {
-										result.put(hornKey, hornResult.get(hornKey));
-										andFormula.namedChildren.remove(andKey);
+										result.put(hornKey, hornResult);
 									}
+									andKeys.add(andKey);
 								}
 							} else {
 								final Map<String,Object> otherHornResult = matchNode(andFormula.getPropertyValue(andKey), aFact);
 								if (otherHornResult != null) {
-									System.out.print("<&"+andFormula.getKeys()+"."+andKeys.size()+">");
+									System.out.print("<&"+andFormula.getKeys()+"."+andKeys+">");
 									for (final String hornKey : otherHornResult.keySet()) {
 										result.put(hornKey, otherHornResult.get(hornKey));
-										andFormula.namedChildren.remove(andKey);
 									}
+									andKeys.add(andKey);
 								}
 							}
-							if (andFormula.getKeys().size() == 0) {
+							if (andKeys.containsAll(andFormula.getKeys())) {
 								anyMatch = true;
 								break andKeyLoop;
 							}
@@ -273,7 +285,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 				}
 					
 			} 
-			if (matched || (formula instanceof NotNode && !matched)) {
+			if (matched) {
 				System.out.print("<ok>");
 				anyMatch = true;
 				for (final String key : matchKeys) {
@@ -281,7 +293,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 				}
 			}
 		} 
-		if (anyMatch || (formula instanceof NotNode && !anyMatch)) {
+		if (anyMatch) {
 			return result;
 		} else {
 			return null; // FALSE

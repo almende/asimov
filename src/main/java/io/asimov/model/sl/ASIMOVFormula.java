@@ -10,11 +10,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	
-	public boolean isNotNode;
-	
+	@JsonIgnore
 	public String type = getNodeType();
 	
 	public String name;
@@ -65,7 +66,6 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	public ASIMOVFormula instantiate(String key, ASIMOVNode<?> value) {
 		final ASIMOVFormula copy = new ASIMOVFormula().withName(this.name);
 		copy.formulaProperties = new HashMap<String, ASIMOVNode<?>>();
-		copy.isNotNode = isNotNode;
 		copy.type = type;
 		if (this.formulaProperties != null)
 			for (Entry<String, ASIMOVNode<?>>  entry : this.formulaProperties.entrySet())
@@ -74,18 +74,13 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 		return copy;
 	}
 	
-	public ASIMOVFormula negate() {
-		if (this.isNotNode) 
-			this.isNotNode = false;
-		else 
-			this.isNotNode = true;
-		this.type = getNodeType();
-		return this;
+	public ASIMOVNotNode negate() {
+		return new ASIMOVNotNode(this);
 	}
 
 	@Override
 	public String getNodeType() {
-		return (isNotNode) ? "NOT" : "FORMULA";
+		return "FORMULA";
 	}
 
 	@Override

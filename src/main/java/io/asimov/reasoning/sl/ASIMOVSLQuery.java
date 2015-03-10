@@ -2,6 +2,7 @@ package io.asimov.reasoning.sl;
 
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVNotNode;
 import io.coala.capability.know.ReasoningCapability.Query;
 
 /**
@@ -40,7 +41,7 @@ public class ASIMOVSLQuery implements Query
 	@Override
 	public Query negate()
 	{
-		return new ASIMOVSLQuery(new NotNode((ASIMOVFormula) getNode()));
+		return new ASIMOVSLQuery(new ASIMOVNotNode((ASIMOVFormula) getNode()));
 	}
 
 }

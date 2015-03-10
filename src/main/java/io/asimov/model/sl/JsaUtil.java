@@ -1,6 +1,5 @@
 package io.asimov.model.sl;
 
-import io.asimov.reasoning.sl.NotNode;
 import io.asimov.reasoning.sl.SLParsable;
 import io.asimov.reasoning.sl.SLConvertible;
 import io.coala.agent.AgentID;
@@ -94,7 +93,7 @@ public class JsaUtil implements Util
 				} else if (nodeType.equals("STRING")) {					
 					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVIntegerTerm.class);
 				} else if (nodeType.equals("INTEGER")) {				
-					return (T) JsonUtil.getJOM().treeToValue(jsonNode, NotNode.class);
+					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVNotNode.class);
 				} else if (nodeType.equals("NOT")) {				
 					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVFormula.class);
 				} else if (nodeType.equals("FUNCTION")) {					

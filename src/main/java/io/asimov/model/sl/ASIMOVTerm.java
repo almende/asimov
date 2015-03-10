@@ -10,9 +10,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 	
+	@JsonIgnore
 	public String type = getNodeType();
 	
 	public String name;

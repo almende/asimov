@@ -10,8 +10,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ASIMOVTermSequenceNode implements ASIMOVNode<ASIMOVTermSequenceNode> {
 	
+	@JsonIgnore
 	public String type = getNodeType();
 	
 	public String name;

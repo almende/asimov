@@ -29,7 +29,6 @@ import io.asimov.model.process.Task;
 import io.asimov.model.process.Transition;
 import io.asimov.reasoning.sl.ASIMOVSLReasoningCapability;
 import io.asimov.reasoning.sl.KBase;
-import io.asimov.reasoning.sl.NotNode;
 import io.coala.agent.AgentID;
 import io.coala.capability.embody.Percept;
 import io.coala.config.CoalaPropertyGetter;
@@ -120,6 +119,9 @@ public class LegacySLUtil implements ASIMOVAgents {
 				.instantiate(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
 		List<ASIMOVFormula> formulas = new ArrayList<ASIMOVFormula>();
 		if (f instanceof ASIMOVAndNode) {
+			for (String andChildKey : ((ASIMOVAndNode)f).getKeys())
+				if (((ASIMOVAndNode)f).getPropertyValue(andChildKey) instanceof ASIMOVFormula)
+					formulas.add((ASIMOVFormula)((ASIMOVAndNode)f).getPropertyValue(andChildKey));
 			Iterator<?> formulaIterator = formulas.iterator();
 			Map<String,Object> matchedResourceResult = null;
 			while (matchedResourceResult == null && formulaIterator.hasNext()) {
@@ -147,8 +149,8 @@ public class LegacySLUtil implements ASIMOVAgents {
 							PROCESS_PROPERTY,
 							ResourceAllocation.PATTERN.instantiate(
 									ResourceAllocation.RESOURCE_REQUIREMENT_ID,
-									SL.string(matchedEquipmentResult
-											.get(Resource.RESOURCE_SUB_TYPE).toString())))
+									(ASIMOVNode<?>)matchedResourceResult
+											.get(Resource.RESOURCE_SUB_TYPE)))
 							.instantiate(PROCESS_NAME,
 									SL.string(agentID.getValue())));
 			}
@@ -389,7 +391,7 @@ public class LegacySLUtil implements ASIMOVAgents {
 //				+ new SomeNode(procesName, getStaticBelongsToProcessFormula(
 //						ResourceAllocation.PATTERN).instantiate(PROCESS_NAME,
 //						procesName)) + " " + processCard + ")"));
-		ASIMOVFormula notAllocated = new NotNode(getStaticBelongsToProcessFormula(
+		ASIMOVNotNode notAllocated = new ASIMOVNotNode(getStaticBelongsToProcessFormula(
 						ResourceAllocation.PATTERN));
 						//.instantiate(PROCESS_NAME,
 						//procesName));
@@ -442,7 +444,7 @@ public class LegacySLUtil implements ASIMOVAgents {
 //				+ new SomeNode(procesName, getStaticBelongsToProcessFormula(
 //						ResourceAllocation.PATTERN).instantiate(PROCESS_NAME,
 //						procesName)) + " " + processCard + ")"));
-		ASIMOVFormula notAllocated = new NotNode(getStaticBelongsToProcessFormula(
+		ASIMOVNotNode notAllocated = new ASIMOVNotNode(getStaticBelongsToProcessFormula(
 				ResourceAllocation.PATTERN));
 		ASIMOVTerm resourceMatchPattern = ResourceRequirement.TASK_RESOURCE_PATTERN
 				.instantiate(

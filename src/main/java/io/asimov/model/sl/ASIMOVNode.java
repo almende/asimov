@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import io.asimov.model.XMLConvertible;
-import io.asimov.reasoning.sl.NotNode;
 import io.asimov.reasoning.sl.SLParsable;
 import io.coala.json.JSONConvertible;
 
@@ -17,7 +16,7 @@ import io.coala.json.JSONConvertible;
 	    include = JsonTypeInfo.As.PROPERTY,  
 	    property = "type")  
 @JsonSubTypes({  
-		@Type(value = NotNode.class, name = "NOT"),
+		@Type(value = ASIMOVNotNode.class, name = "NOT"),
     	@Type(value = ASIMOVFormula.class, name = "FORMULA"),  
 	    @Type(value = ASIMOVTerm.class, name = "TERM"),  
 	    @Type(value = ASIMOVAndNode.class, name = "AND"),

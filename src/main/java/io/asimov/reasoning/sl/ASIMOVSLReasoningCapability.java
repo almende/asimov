@@ -5,6 +5,7 @@ import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.JsaUtil;
+import io.asimov.model.sl.ASIMOVNotNode;
 import io.asimov.model.sl.SL;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;
@@ -282,9 +283,9 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	public void addBeliefToKBase(Belief belief)
 	{
 		ASIMOVNode<?> node = ((ASIMOVSLBelief)belief).getNode();
-		if (node instanceof NotNode) {
+		if (node instanceof ASIMOVNotNode) {
 			log.info("Found not node in:"+belief.toString());
-			ASIMOVFormula childNode = ((NotNode) node).negate();
+			ASIMOVFormula childNode = ((ASIMOVNotNode) node).negate();
 			log.info("Removing node from KBASE:"+childNode.toString());
 			removeBeliefFromKBase(new ASIMOVSLBelief((ASIMOVFormula)childNode));
 		}

@@ -2,6 +2,7 @@ package io.asimov.reasoning.sl;
 
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVNotNode;
 import io.coala.capability.know.ReasoningCapability.Belief;
 
 /**
@@ -48,6 +49,6 @@ public class ASIMOVSLBelief implements Belief {
 	@Override
 	public Belief negate()
 	{
-		return new ASIMOVSLBelief(new NotNode((ASIMOVFormula)getNode()));	
+		return new ASIMOVSLBelief(new ASIMOVNotNode((ASIMOVFormula)getNode()));	
 	}
 }

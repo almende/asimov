@@ -10,13 +10,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 	
 	public static final String CARDINALITY = "CARDINALITY";
 
+	
 	public String functionType;
 	
-	public Map<String,ASIMOVFormula> namedChildren;
+	public Map<String,ASIMOVNode<?>> namedChildren;
 	
 	public String name;
 
@@ -25,24 +28,26 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 		getNamedChildren();
 	}
 	
-	public Map<String, ASIMOVFormula> getNamedChildren() {
+	public Map<String, ASIMOVNode<?>> getNamedChildren() {
 		if (this.namedChildren == null)
-			this.namedChildren = new HashMap<String, ASIMOVFormula>();
+			this.namedChildren = new HashMap<String, ASIMOVNode<?>>();
 		return namedChildren;
 	}
 
 	public String resultKey;
 	
-	public ASIMOVTerm result;
+	@JsonIgnore
+	public ASIMOVNode<?> result;
 	
+	@JsonIgnore
 	public String type = getNodeType();
 	
-	public ASIMOVFunctionNode(ASIMOVFormula... formulas) {
+	public ASIMOVFunctionNode(ASIMOVNode<?>... formulas) {
 		int count = 0;
 		if (getNamedChildren() != null)
 			count = namedChildren.size();
 		if (formulas != null)
-			for (ASIMOVFormula f : formulas) {
+			for (ASIMOVNode<?> f : formulas) {
 				this.instantiate(""+(count++), f);
 			}
 				
@@ -123,12 +128,13 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 
 	@Override
 	public ASIMOVNode<ASIMOVFunctionNode> withName(String name) {
+		this.name = name;
 		return this;
 	}
 
 	@Override
 	public String getName() {
-		return "&&";
+		return getFunctionType();
 	}
 
 	@Override
@@ -139,8 +145,8 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 	@Override
 	public ASIMOVNode<ASIMOVFunctionNode> instantiate(String key, ASIMOVNode<?> value) {
 		if (this.namedChildren == null)
-			this.namedChildren = new HashMap<String, ASIMOVFormula>();
-		this.namedChildren.put(key, (ASIMOVFormula)value);
+			this.namedChildren = new HashMap<String, ASIMOVNode<?>>();
+		this.namedChildren.put(key, value);
 		return this;
 	}
 
