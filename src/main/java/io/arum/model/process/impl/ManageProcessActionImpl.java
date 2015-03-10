@@ -13,6 +13,7 @@ import io.asimov.model.process.Activity;
 import io.asimov.model.process.Next;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
+import io.asimov.model.process.Transition;
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.LegacySLUtil;
 import io.asimov.model.xml.XmlUtil;
@@ -37,8 +38,10 @@ import io.coala.time.Trigger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
@@ -46,6 +49,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import rx.Observer;
+import cern.colt.Arrays;
 
 import com.eaio.uuid.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -421,7 +425,8 @@ public class ManageProcessActionImpl extends
 		// ignore throw new IllegalStateException("NOT IMPLEMENTED");
 	}
 
-	
+	final Map<String,Transition> availableTransitions = new HashMap<String,Transition>();
+
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -439,42 +444,56 @@ public class ManageProcessActionImpl extends
 			processXML = process.toXML();
 		}
 
-		if (!this.getDataStore(cause).containsKey(sSTART_ACTIVITY_TIME_TOKEN))
-			getReasoner()
-					.queryToKBase(
-							getReasoner()
-									.toQuery(
-											LegacySLUtil
-													.getStaticBelongsToProcessFormula(Activity.PATTERN),
-											Activity.ACTIVITY_NAME,
-											Task.START_OF_PROCESS.getName()
-													+ "_" + processType))
-					.subscribe(new Observer<Map<String, Object>>()
-					{
-
-						@Override
-						public void onError(final Throwable e)
-						{
-							LOG.error("Problem querying KB", e);
-						}
-
-						@Override
-						public void onNext(final Map<String, Object> value)
-						{
-							getDataStore(cause).put(sSTART_ACTIVITY_TIME_TOKEN,
-									value.get(Activity.ACTIVITY_TIME_TOKEN));
-							LOG.info("Located start of process");
-						}
-
-						@Override
-						public void onCompleted()
-						{
-							synchronized (getDataStore(cause))
-							{
-								getDataStore(cause).notifyAll();
-							}
-						}
-					});
+		if (!this.getDataStore(cause).containsKey(sSTART_ACTIVITY_TIME_TOKEN)) {
+			for (Transition t : process.getTransitions()) {
+				if (t.getFromTasks().contains(Task.START_OF_PROCESS.getName()
+													+ "_" + processType)) {
+					for (final String caseId : t.getTraceIDs())
+						availableTransitions.put(caseId+"_"+t.getName(),t);
+					break;
+				}
+			}
+			
+			LOG.info("Located start of process");
+			synchronized (getDataStore(cause))
+			{
+				getDataStore(cause).notifyAll();
+			}
+//			getReasoner()
+//					.queryToKBase(
+//							getReasoner()
+//									.toQuery(
+//											LegacySLUtil
+//													.getStaticBelongsToProcessFormula(Activity.PATTERN),
+//											Activity.ACTIVITY_NAME,
+//											Task.START_OF_PROCESS.getName()
+//													+ "_" + processType))
+//					.subscribe(new Observer<Map<String, Object>>()
+//					{
+//
+//						@Override
+//						public void onError(final Throwable e)
+//						{
+//							LOG.error("Problem querying KB", e);
+//						}
+//
+//						@Override
+//						public void onNext(final Map<String, Object> value)
+//						{
+//							getDataStore(cause).put(sSTART_ACTIVITY_TIME_TOKEN,
+//									value.get(Activity.ACTIVITY_TIME_TOKEN));
+//							LOG.info("Located start of process");
+//						}
+//
+//						@Override
+//						public void onCompleted()
+//						{
+//							synchronized (getDataStore(cause))
+//							{
+//								getDataStore(cause).notifyAll();
+//							}
+//						}
+//					});
 		// do the management
 		// ...
 		// Create and Distribute Activities and Next's
@@ -482,7 +501,10 @@ public class ManageProcessActionImpl extends
 
 		// TODO notify scenario replicator
 		// processGeneratorService.notifyProcessStarted(getOwnerID().getValue());
-
+		ArrayList<String> keys = new ArrayList<String>(availableTransitions.keySet());
+		long pick = getRandomizer().getRNG().nextInt(keys.size());
+		getDataStore(cause).put(sSTART_ACTIVITY_TIME_TOKEN,
+				availableTransitions.get(keys.get((int) pick)));
 		while (!this.getDataStore(cause)
 				.containsKey(sSTART_ACTIVITY_TIME_TOKEN))
 		{
@@ -503,6 +525,7 @@ public class ManageProcessActionImpl extends
 						.get(sSTART_ACTIVITY_TIME_TOKEN).toString());
 		final SimTime now = getTime();
 		getSimulator().schedule(nextActivityJob, Trigger.createAbsolute(now));
+		}
 	}
 
 	private final static String NEXT_ACTIVITY_METHOD_ID = "processManagementNextActivty";

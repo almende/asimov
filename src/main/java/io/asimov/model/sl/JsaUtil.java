@@ -73,8 +73,8 @@ public class JsaUtil implements Util {
 				LOG.warn(
 						"Unable to parse "
 								+ node
-								+ " to SL because it is not wrapped in the right object type assuming it's toString() value.",
-						new Exception());
+								+ " to SL because it is not wrapped in the right object type assuming it's toString() value."
+						);
 				result = (T) SL.string(node.toString());
 			}
 			if (result != null)
