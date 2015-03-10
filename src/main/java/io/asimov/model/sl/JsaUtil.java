@@ -17,29 +17,25 @@ import org.apache.log4j.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class JsaUtil implements Util
-{
-	
-	private static final Map<Object,ASIMOVNode<?>> cachedSLNode = Collections
-			.synchronizedMap(new HashMap<Object,ASIMOVNode<?>>());
-	
-	private static JsaUtil INSTANCE;
-	
-	private Logger LOG = LogUtil.getLogger(JsaUtil.class);
-	
+public class JsaUtil implements Util {
 
-	private JsaUtil()
-	{
+	private static final Map<Object, ASIMOVNode<?>> cachedSLNode = Collections
+			.synchronizedMap(new HashMap<Object, ASIMOVNode<?>>());
+
+	private static JsaUtil INSTANCE;
+
+	private Logger LOG = LogUtil.getLogger(JsaUtil.class);
+
+	private JsaUtil() {
 		// utility methods only
 	}
-	
+
 	public static synchronized JsaUtil getInstance() {
 		if (INSTANCE == null)
 			INSTANCE = new JsaUtil();
 		return INSTANCE;
 	}
 
-	
 	/**
 	 * 
 	 * {@link Converter} that converts the object to a SL node.
@@ -53,70 +49,88 @@ public class JsaUtil implements Util
 	public interface Converter<T extends ASIMOVNode<T>> {
 		T convert(Object node);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	<T extends ASIMOVNode<T>> T getCachedSLNode(final Object node) {
 		T result = (T) cachedSLNode.get(node);
 		if (result == null) {
 			if (node instanceof SLConvertible) {
-				result = ((SLConvertible<T>)node).toSL();
-			} if (result == null && node instanceof SLParsable) {
-				result = getNodeFromJsonNode(JsonUtil.fromJSON(node.toString()));
-			} if (result == null && node instanceof JsonNode) {
-				result = getNodeFromJsonNode((JsonNode)node);
-			} if (result == null && node instanceof Number) {
-				result = (T) SL.integer(((Number)node).longValue());
-			} if (result == null && node instanceof String) {
+				result = (T) ((SLConvertible<T>) node).toSL();
+			}
+			if (result == null && node instanceof SLParsable) {
+				result = (T) getNodeFromJsonNode(JsonUtil.fromJSON(node.toString()));
+			}
+			if (result == null && node instanceof JsonNode) {
+				result = (T) getNodeFromJsonNode((JsonNode) node);
+			}
+			if (result == null && node instanceof Number) {
+				result = (T) SL.integer(((Number) node).longValue());
+			}
+			if (result == null && node instanceof String) {
 				result = (T) SL.string(node.toString());
 			}
-			if (result != null) 
+			if (result == null) {
+				LOG.warn(
+						"Unable to parse "
+								+ node
+								+ " to SL because it is not wrapped in the right object type assuming it's toString() value.",
+						new Exception());
+				result = (T) SL.string(node.toString());
+			}
+			if (result != null)
 				cachedSLNode.put(node, result);
 		}
 		return (T) result;
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
-	public <T extends ASIMOVNode<T>> T getNodeFromJsonNode(final JsonNode jsonNode) {
-			if (jsonNode.path("type") == null)
-				return (T) null;
-			final String nodeType = jsonNode.path("type").textValue();
-			try {
-				if (nodeType.equals("FORMULA")) {
-					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVFormula.class);
-				} else if (nodeType.equals("AND")) {	
-					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVAndNode.class);
-				} else if (nodeType.equals("FORMULA")) {				
-					return (T)  JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVTerm.class);
-				} else if (nodeType.equals("TERM")) {					
-					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVStringTerm.class);
-				} else if (nodeType.equals("STRING")) {					
-					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVIntegerTerm.class);
-				} else if (nodeType.equals("INTEGER")) {				
-					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVNotNode.class);
-				} else if (nodeType.equals("NOT")) {				
-					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVFormula.class);
-				} else if (nodeType.equals("FUNCTION")) {					
-					return (T) JsonUtil.getJOM().treeToValue(jsonNode, ASIMOVFormula.class);
-				}
-			} catch (JsonProcessingException e) {
-				LOG.error("Failed to parse JSON to SL",e);
-			}	
+	public <T extends ASIMOVNode<T>> T getNodeFromJsonNode(
+			final JsonNode jsonNode) {
+		if (jsonNode.path("type") == null)
 			return (T) null;
-	}
-	
-	public <T extends ASIMOVNode<T>> T instantiateAsSL(Object javaObject){
-		T result = null;
-		result = getCachedSLNode(javaObject);
-		if (result == null)
-			CoalaExceptionFactory.VALUE_NOT_ALLOWED.create(javaObject, "Failed to convert JavaType to SL Node.");
-		return (T)result;
-	}
-	
-	public ASIMOVTerm getTermForAgentID(final AgentID agentID){
-		return getCachedSLNode(SL.string(agentID.toString()));
+		final String nodeType = jsonNode.path("type").textValue();
+		try {
+			if (nodeType.equals("FORMULA")) {
+				return (T) JsonUtil.getJOM().treeToValue(jsonNode,
+						ASIMOVFormula.class);
+			} else if (nodeType.equals("AND")) {
+				return (T) JsonUtil.getJOM().treeToValue(jsonNode,
+						ASIMOVAndNode.class);
+			} else if (nodeType.equals("TERM")) {
+				return (T) JsonUtil.getJOM().treeToValue(jsonNode,
+						ASIMOVTerm.class);
+			} else if (nodeType.equals("STRING")) {
+				return (T) JsonUtil.getJOM().treeToValue(jsonNode,
+						ASIMOVStringTerm.class);
+			} else if (nodeType.equals("INTEGER")) {
+				return (T) JsonUtil.getJOM().treeToValue(jsonNode,
+						ASIMOVIntegerTerm.class);
+			} else if (nodeType.equals("NOT")) {
+				return (T) JsonUtil.getJOM().treeToValue(jsonNode,
+						ASIMOVNotNode.class);
+			} else if (nodeType.equals("FUNCTION")) {
+				return (T) JsonUtil.getJOM().treeToValue(jsonNode,
+						ASIMOVFunctionNode.class);
+			}
+		} catch (JsonProcessingException e) {
+			LOG.error("Failed to parse JSON to SL", e);
+		}
+		return (T) null;
 	}
 
-	
+	@SuppressWarnings("unchecked")
+	public <T extends ASIMOVNode<T>> T instantiateAsSL(Object javaObject) {
+		T result = null;
+		result = (T) getCachedSLNode(javaObject);
+		if (result == null)
+			CoalaExceptionFactory.VALUE_NOT_ALLOWED.create(javaObject,
+					"Failed to convert JavaType to SL Node.");
+		return (T) result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends ASIMOVNode<T>> T getTermForAgentID(final AgentID agentID) {
+		return (T) getCachedSLNode(SL.string(agentID.toString()));
+	}
 
 }

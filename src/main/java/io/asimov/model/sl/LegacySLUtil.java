@@ -29,10 +29,10 @@ import io.asimov.model.process.Task;
 import io.asimov.model.process.Transition;
 import io.asimov.reasoning.sl.ASIMOVSLReasoningCapability;
 import io.asimov.reasoning.sl.KBase;
+import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.capability.embody.Percept;
 import io.coala.config.CoalaPropertyGetter;
-import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.log.LogUtil;
 
 import java.io.Serializable;

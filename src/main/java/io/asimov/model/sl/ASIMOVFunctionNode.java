@@ -16,16 +16,24 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 	
 	public static final String CARDINALITY = "CARDINALITY";
 
-	
 	public String functionType;
 	
 	public Map<String,ASIMOVNode<?>> namedChildren;
 	
 	public String name;
+	
+	public String resultKey;
+	
+	@JsonIgnore
+	public ASIMOVNode<?> result;
+	
+	@JsonIgnore
+	public String type = getNodeType();
 
 	public ASIMOVFunctionNode(){
 		super();
 		getNamedChildren();
+		this.name = getFunctionType();
 	}
 	
 	public Map<String, ASIMOVNode<?>> getNamedChildren() {
@@ -34,15 +42,9 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 		return namedChildren;
 	}
 
-	public String resultKey;
-	
-	@JsonIgnore
-	public ASIMOVNode<?> result;
-	
-	@JsonIgnore
-	public String type = getNodeType();
 	
 	public ASIMOVFunctionNode(ASIMOVNode<?>... formulas) {
+		this();
 		int count = 0;
 		if (getNamedChildren() != null)
 			count = namedChildren.size();
@@ -53,16 +55,20 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 				
 	}
 	
-	
-	public void eval(ASIMOVNode<?> parameter){
-		if (this.getFunctionType() == CARDINALITY) {
+	/** returns true when no evaluation is required anymore */
+	public boolean eval(ASIMOVNode<?> parameter){
+		if (this.getFunctionType().equals(CARDINALITY)) {
 			long cardinality = 0;
 			for (String key : namedChildren.keySet()) {
 				if (new KBase().matchNode(namedChildren.get(key), parameter) != null)
 					cardinality++;
 			}
 			result = SL.integer(cardinality);
+			return false;
+		} else {
+			System.err.println(this.getFunctionType()+" function node is not yet implemented");
 		}
+		return true;
 	}
 	
 	public String getFunctionType() {
@@ -115,11 +121,11 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <N extends ASIMOVNode<N>> N toSL() {
 		return (N) this;
 	}
-
 	@Override
 	public <N extends ASIMOVNode<N>> ASIMOVNode<ASIMOVFunctionNode> fromSL(N node) {
 		this.fromJSON(node.toJSON());
@@ -132,6 +138,7 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 		return this;
 	}
 
+	
 	@Override
 	public String getName() {
 		return getFunctionType();

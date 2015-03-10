@@ -8,12 +8,12 @@ import io.asimov.microservice.negotiation.ResourceAllocationRequestor.Allocation
 import io.asimov.microservice.negotiation.messages.AvailabilityCheck;
 import io.asimov.microservice.negotiation.messages.AvailabilityReply;
 import io.asimov.microservice.negotiation.messages.Claimed;
+import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.interact.SendingCapability;
-import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.log.LogUtil;
 import io.coala.message.AbstractMessage;
 import io.coala.message.Message;

@@ -248,16 +248,20 @@ public class KBase implements List<ASIMOVNode<?>> {
 			}
 		} else if (formula.getNodeType().equals("FUNCTION")) {
 			ASIMOVFunctionNode function = (ASIMOVFunctionNode)formula;
-			for (String functionKey : function.getKeys()) {
-				if (function.getResultKey() != functionKey) {
-					System.out.print("<f(x)>");
-					function.eval((ASIMOVNode<?>)function.getPropertyValue(functionKey));
-				} else {
-					System.out.print("<x>");
-					result.put(functionKey, result.get(functionKey));
-				}
+			System.out.print("<f(x)>");
+			for (final ASIMOVNode<?> aFact : this.kbase) 
+			{
+				if (function.eval(aFact))
+					break;
 			}
-			anyMatch = true;
+			Object r =  function.getPropertyValue(function.getResultKey());
+			if (r != null) {
+				anyMatch = true;
+				System.out.print("<"+function.getName()+"(x)=true>");
+				result.put(function.getResultKey(),r);
+			} else {
+				System.out.print("<"+function.getName()+"(x)=false>");
+			}	
 		} else if (formula.getNodeType().equals(fact.getNodeType()) && formula.getName().equals(fact.getName())) {
 			final Set<String> matchKeys = new HashSet<String>();
 			boolean matched = true;

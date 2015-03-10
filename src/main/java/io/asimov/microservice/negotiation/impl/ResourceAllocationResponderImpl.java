@@ -10,6 +10,7 @@ import io.asimov.microservice.negotiation.messages.Claimed;
 import io.asimov.microservice.negotiation.messages.Proposal;
 import io.asimov.microservice.negotiation.messages.ProposalRequest;
 import io.asimov.model.ResourceAllocation;
+import io.asimov.reasoning.sl.KBase;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;
@@ -314,7 +315,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 //						LOG.info(requirements + " returns: " + args);
 
 						if (args != null) {
-							result.put(requirements,Double.valueOf(args.get("score").toString()));
+							result.put(requirements,Double.valueOf(KBase.parsePrimitives(args.get("score")).toString()));
 							wasTrue.countDown();
 						}
 					}

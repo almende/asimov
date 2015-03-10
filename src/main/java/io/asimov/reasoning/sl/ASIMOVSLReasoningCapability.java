@@ -103,8 +103,9 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	}
 	
 	
-	public static ASIMOVTerm getTermForObject(Object javaObject, Map<String,Object> keyValuePairs) throws Exception {
-		return getSLForObject(javaObject, toParameters(keyValuePairs));
+	@SuppressWarnings("unchecked")
+	public static <T extends ASIMOVNode<T>> T getTermForObject(Object javaObject, Map<String,Object> keyValuePairs) throws Exception {
+		return (T) getSLForObject(javaObject, toParameters(keyValuePairs));
 	}
 	
 	/**
@@ -127,8 +128,9 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	 * @return
 	 * @throws Exception
 	 */
-	public static ASIMOVTerm getTermForObject(Object javaObject, Object... params) throws Exception {
-		return getSLForObject(javaObject, params);
+	@SuppressWarnings("unchecked")
+	public static <T extends ASIMOVNode<T>> T getTermForObject(Object javaObject, Object... params) throws Exception {
+		return (T) getSLForObject(javaObject, params);
 	}
 	
 	public void addNodeToKBase(final Object javaObject, final Object... params){
@@ -201,8 +203,9 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T extends ASIMOVNode<T>> T getSLForObject(Object javaObject, Map<String,Object> keyValuePairs) throws Exception  {
-		return getSLForObject(javaObject, toParameters(keyValuePairs));
+		return (T) getSLForObject(javaObject, toParameters(keyValuePairs));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -210,7 +213,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 		if (javaObject == null)
 			throw new NullPointerException("Can not instantiate null object.");
 		T node;
-		node = JSA.instantiateAsSL(javaObject);
+		node = (T) JSA.instantiateAsSL(javaObject);
 		if (params.length % 2 != 0)
 			throw new Exception("Invalid amount of paramters, expected key value pairs");
 		String key = null;
