@@ -119,4 +119,11 @@ public class ASIMOVAndNode implements ASIMOVNode<ASIMOVAndNode> {
 		return this.toJSON();
 	}
 
+	@Override
+	public ASIMOVNode<ASIMOVAndNode> replace(String key, ASIMOVNode<?> value) {
+		if (getKeys().contains(key))
+			instantiate(key, value);
+		return this;
+	}
+
 }

@@ -122,4 +122,11 @@ public class ASIMOVNotNode implements ASIMOVNode<ASIMOVNotNode> {
 	public String toString(){
 		return this.toJSON();
 	}
+	
+	@Override
+	public ASIMOVNode<ASIMOVNotNode> replace(String key, ASIMOVNode<?> value) {
+		if (getKeys().contains(key))
+			instantiate(key, value);
+		return this;
+	}
 }

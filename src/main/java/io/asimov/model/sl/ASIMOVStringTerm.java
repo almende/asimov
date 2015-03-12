@@ -33,7 +33,7 @@ public class ASIMOVStringTerm extends ASIMOVTerm {
 	
 	@Override
 	public String toString(){
-		return this.toJSON();
+		return this.stringValue;
 	}
 
 	

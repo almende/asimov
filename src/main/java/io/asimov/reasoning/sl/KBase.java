@@ -34,13 +34,11 @@ public class KBase implements List<ASIMOVNode<?>> {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return kbase.isEmpty();
 	}
 
 	@Override
 	public boolean contains(Object o) {
-		// TODO Auto-generated method stub
 		return kbase.contains(o);
 	}
 
@@ -76,21 +74,21 @@ public class KBase implements List<ASIMOVNode<?>> {
 
 	@Override
 	public boolean addAll(Collection<? extends ASIMOVNode<?>> c) {
-		for (int i =0 ; i <c.size(); i++);
-		System.out.print('+');
+		for (int i =0 ; i <c.size(); i++)
+			System.out.print('+');
 		return kbase.addAll(c);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends ASIMOVNode<?>> c) {
-		for (int i =0 ; i <c.size(); i++);
+		for (int i =0 ; i <c.size(); i++)
 			System.out.print('+');
 		return kbase.addAll(index, c);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		for (int i =0 ; i <c.size(); i++);
+		for (int i =0 ; i < c.size(); i++)
 			System.out.print('-');
 		return kbase.removeAll(c);
 	}

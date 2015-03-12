@@ -121,5 +121,11 @@ public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 		return this.toJSON();
 	}
 
+	@Override
+	public ASIMOVNode<ASIMOVTerm> replace(String key, ASIMOVNode<?> value) {
+		if (getKeys().contains(key))
+			this.termProperties.put(key, value);
+		return this;
+	}
 
 }

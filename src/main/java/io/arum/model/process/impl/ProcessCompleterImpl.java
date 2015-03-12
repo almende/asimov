@@ -18,10 +18,14 @@ import io.asimov.model.ActivityParticipation.Result;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.ResourceRequirement;
 import io.asimov.model.process.Task;
+import io.asimov.model.sl.ASIMOVFormula;
+import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.LegacySLUtil;
+import io.asimov.model.sl.SLConvertible;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.embody.Percept;
+import io.coala.capability.know.ReasoningCapability.Belief;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.enterprise.fact.CoordinationFact;
 import io.coala.enterprise.role.AbstractExecutor;
@@ -326,15 +330,15 @@ public class ProcessCompleterImpl extends
 							for (AgentID aid : resources.keySet()) {
 								SLParsableSerializable f = new SLParsableSerializable(
 										resources.get(aid).toString());
+								Belief b = getReasoner()
+								.toBelief(
+										f,
+										ResourceAllocation.ALLOCATED_AGENT_AID,
+										aid);
 								getReasoner()
-										.addBeliefToKBase(
-												getReasoner()
-														.toBelief(
-																f,
-																ResourceAllocation.ALLOCATED_AGENT_AID,
-																aid));
+										.addBeliefToKBase(b);
 								LOG.info(aid + " is allocated as: "
-										+ resources.get(aid));
+										+ b.toString());
 							}
 							LOG.info("All resources are allocated for process instance: "
 									+ getID());

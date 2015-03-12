@@ -121,6 +121,13 @@ public class ASIMOVTermSequenceNode implements ASIMOVNode<ASIMOVTermSequenceNode
 	public List<ASIMOVTerm> getTermSequence() {
 		return termSequence;
 	}
+	
+	@Override
+	public ASIMOVNode<ASIMOVTermSequenceNode> replace(String key, ASIMOVNode<?> value) {
+		for (ASIMOVTerm t : this.termSequence)
+			t.replace(key, value);
+		return this;
+	}
 
 
 

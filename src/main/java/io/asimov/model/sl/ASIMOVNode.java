@@ -43,4 +43,6 @@ public interface ASIMOVNode<T> extends JSONConvertible<ASIMOVNode<T>>, XMLConver
 	@JsonIgnore
 	Object getPropertyValue(final String key);
 	
+	ASIMOVNode<T> replace(final String key, final ASIMOVNode<?> value);
+	
 }

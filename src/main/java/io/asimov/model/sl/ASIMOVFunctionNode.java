@@ -176,5 +176,12 @@ public class ASIMOVFunctionNode implements ASIMOVNode<ASIMOVFunctionNode> {
 		return this.toJSON();
 	}
 
+	@Override
+	public ASIMOVNode<ASIMOVFunctionNode> replace(String key, ASIMOVNode<?> value) {
+		if (getKeys().contains(key))
+			this.namedChildren.put(key, value);
+		return this;
+	}
+	
 
 }

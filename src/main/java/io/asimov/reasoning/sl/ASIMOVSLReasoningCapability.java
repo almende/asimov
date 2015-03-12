@@ -234,7 +234,8 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 				else
 					value = getSLForObject(params[i]);
 			}
-			node = (T) SL.instantiate(node,key,value);
+			if (!recursiveReplace(node, key, value))
+				node = (T) SL.instantiate(node,key,value);
 			key = null;
 			value = null;
 		}
@@ -245,6 +246,25 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	public KBase getKBase()
 	{
 		return kbase;
+	}
+	
+	static boolean recursiveReplace(ASIMOVNode<?> sl, String searchKey, ASIMOVNode<?> value) {
+		boolean replaced = false;
+		if (value != null) {
+			for (String nodeKey : sl.getKeys()) {
+				if (nodeKey.equals(searchKey)) {
+					sl.replace(nodeKey, value);
+					replaced = true;
+				} else {
+					Object propertyValue = sl.getPropertyValue(nodeKey);
+					if (propertyValue instanceof ASIMOVNode<?>) {
+						boolean rReplace = recursiveReplace(((ASIMOVNode<?>)propertyValue),searchKey,value);
+						replaced = rReplace || replaced;
+					}
+				}
+			}
+		}
+		return replaced;
 	}
 
 	@Override

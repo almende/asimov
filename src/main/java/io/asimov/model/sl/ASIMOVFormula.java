@@ -74,6 +74,7 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 		return copy;
 	}
 	
+	
 	public ASIMOVNotNode negate() {
 		return new ASIMOVNotNode(this);
 	}
@@ -120,6 +121,13 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	@Override
 	public String toString(){
 		return this.toJSON();
+	}
+	
+	@Override
+	public ASIMOVNode<ASIMOVFormula> replace(String key, ASIMOVNode<?> value) {
+		if (getKeys().contains(key))
+			this.formulaProperties.put(key, value);
+		return this;
 	}
 
 	
