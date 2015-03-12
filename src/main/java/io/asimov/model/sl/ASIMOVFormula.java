@@ -16,6 +16,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	
 	@JsonIgnore
+	int cachedHashCode;
+	
+	@JsonIgnore
+	boolean hashCacheIsValid = false;
+	
+	
+	@JsonIgnore
 	public String type = getNodeType();
 	
 	public String name;
@@ -30,6 +37,7 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	public Map<String, ASIMOVNode<?>> getFormulaProperties() {
 		if (this.formulaProperties == null)
 			this.formulaProperties = new HashMap<String, ASIMOVNode<?>>();
+		hashCacheIsValid = false;
 		return formulaProperties;
 	}
 
@@ -40,6 +48,7 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 
 	@Override
 	public ASIMOVFormula fromJSON(String jsonValue) {
+		hashCacheIsValid = false;
 		InputStream is = new ByteArrayInputStream(jsonValue.getBytes());
 		ASIMOVFormula result = JsonUtil.fromJSON(is,ASIMOVFormula.class);
 		try {
@@ -86,6 +95,7 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 
 	@Override
 	public ASIMOVFormula withName(String name) {
+		hashCacheIsValid = false;
 		this.name = name;
 		return this;
 	}
@@ -125,9 +135,26 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	
 	@Override
 	public ASIMOVNode<ASIMOVFormula> replace(String key, ASIMOVNode<?> value) {
+		hashCacheIsValid = false;
 		if (getKeys().contains(key))
 			this.formulaProperties.put(key, value);
 		return this;
+	}
+	
+
+	@Override
+	public boolean equals(Object other){
+		if (other == null)
+			return false;
+		return (this.hashCode() == other.hashCode());
+	}
+
+	
+	@Override
+	public int hashCode(){
+		if (!hashCacheIsValid)
+			cachedHashCode = toString().hashCode();
+		return cachedHashCode;
 	}
 
 	

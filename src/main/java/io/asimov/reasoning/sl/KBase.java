@@ -59,11 +59,16 @@ public class KBase implements List<ASIMOVNode<?>> {
 
 	@Override
 	public boolean add(ASIMOVNode<?> e) {
-		return kbase.add(e);
+		System.out.print('+');
+		if (!kbase.contains(e))
+			return kbase.add(e);
+		else
+			return false;
 	}
 
 	@Override
 	public boolean remove(Object o) {
+		System.out.print('-');
 		return kbase.remove(o);
 	}
 
