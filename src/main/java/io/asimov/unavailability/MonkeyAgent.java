@@ -7,13 +7,13 @@ import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.Conversio
 import io.asimov.microservice.negotiation.ResourceAllocationRequestor.AllocationCallback;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.sl.LegacySLUtil;
+import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.admin.DestroyingCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
-import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.log.LogUtil;
 import io.coala.time.TimeUnit;
 import io.coala.time.Trigger;

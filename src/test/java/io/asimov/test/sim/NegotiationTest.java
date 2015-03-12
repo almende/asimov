@@ -1,5 +1,8 @@
 package io.asimov.test.sim;
 
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.reasoning.sl.KBase;
+import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.agent.AgentStatusUpdate;
 import io.coala.agent.BasicAgent;
@@ -10,12 +13,10 @@ import io.coala.capability.admin.DestroyingCapability;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.exception.CoalaException;
-import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.log.LogUtil;
 import io.coala.model.ModelID;
-import jade.semantics.kbase.filters.FilterKBase;
-import jade.util.leap.Iterator;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -170,10 +171,10 @@ public class NegotiationTest
 										failureLatch.countDown();
 									else
 										successLatch.countDown();
-									Iterator it =  ((FilterKBase)r.getKBase()).toStrings().iterator();
+									Iterator<ASIMOVNode<?>> it =  ((KBase)r.getKBase()).iterator();
 									
 									while (it.hasNext())
-										LOG.info((String)it.next());
+										LOG.info(it.next().toString());
 								}
 							});
 				}

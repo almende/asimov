@@ -377,12 +377,12 @@ public class ManageProcessActionImpl extends
 
 	public void obtainAvailableTransitions(final String currentTaskId) {
 		availableTransitions.clear();
-		outerLoop: for (Transition t : process.getTransitions()) {
+		 for (Transition t : process.getTransitions()) {
 			for (Task task : t.getFromTasks()) {
 				if (task.getName().equals(currentTaskId)) {
 					for (final String caseId : t.getTraceIDs())
 						availableTransitions.put(caseId + "_" + t.getName(), t);
-					break outerLoop;
+					//break outerLoop;
 				}
 			}
 		}
@@ -530,9 +530,7 @@ public class ManageProcessActionImpl extends
 		long pick = getRandomizer().getRNG().nextInt(tokenDistribution.size());
 
 		final String nextActivtyTimeToken = tokenDistribution.get((int) pick);
-		final String currentActivityName = availableTransitions
-				.get(nextActivtyTimeToken).getToTasks().iterator().next()
-				.getName();
+		final String currentActivityName = nextActivtyTimeToken;
 		obtainAvailableTransitions(currentActivityName);
 		LOG.info("Found next distribution:" + nextDistribution);
 
@@ -742,7 +740,6 @@ public class ManageProcessActionImpl extends
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	private Map<AgentID, List<String>> getNextDistributionPerResource(
 			final ProcessCompletion.Request cause,
 			final String currentActivityTimeToken) {
@@ -782,8 +779,9 @@ public class ManageProcessActionImpl extends
 					}
 
 					for (int i = 0; i < chance; i++)
-						distribution.add(transition.getToTasks().iterator()
-								.next().getName());
+						for (Task t : transition.getToTasks()) {
+							distribution.add(t.getName());
+						}
 				}
 			}
 
@@ -866,7 +864,10 @@ public class ManageProcessActionImpl extends
 		// {
 		// }
 		// }
-
+		if (result.values().isEmpty()) {
+			getDataStore(cause).put(sREACHED_EOP, true);
+			return result; // Actor reached end of process!
+		}
 		return result;
 	}
 

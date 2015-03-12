@@ -1,7 +1,6 @@
 package io.asimov.model;
 
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.SL;
+import io.asimov.model.sl.ASIMOVTerm;
 
 import javax.persistence.Entity;
 
@@ -24,11 +23,11 @@ public class ConnectionTo extends Connection
 	public static final String TARGET_BODY = "TARGET_BODY";
 	
 	/** Pattern for a {@link ConnectionTo} {@link Term} representation */
-	public static Term PATTERN = SL.term(String.format(
-			"(%s :%s ??%s :%s ??%s)", TERM_NAME, 
-			DELAY,  DELAY, TARGET_BODY, TARGET_BODY));
+	public static ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
+			.instantiate(DELAY,  null)
+			.instantiate(TARGET_BODY, null);
 	
-	protected Term getPattern(){
+	protected ASIMOVTerm getPattern(){
 		return PATTERN;
 	}
 

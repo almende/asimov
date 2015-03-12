@@ -17,22 +17,22 @@ import org.apache.log4j.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class JsaUtil implements Util {
+public class ASIMOVSLUtil implements Util {
 
 	private static final Map<Object, ASIMOVNode<?>> cachedSLNode = Collections
 			.synchronizedMap(new HashMap<Object, ASIMOVNode<?>>());
 
-	private static JsaUtil INSTANCE;
+	private static ASIMOVSLUtil INSTANCE;
 
-	private Logger LOG = LogUtil.getLogger(JsaUtil.class);
+	private Logger LOG = LogUtil.getLogger(ASIMOVSLUtil.class);
 
-	private JsaUtil() {
+	private ASIMOVSLUtil() {
 		// utility methods only
 	}
 
-	public static synchronized JsaUtil getInstance() {
+	public static synchronized ASIMOVSLUtil getInstance() {
 		if (INSTANCE == null)
-			INSTANCE = new JsaUtil();
+			INSTANCE = new ASIMOVSLUtil();
 		return INSTANCE;
 	}
 
