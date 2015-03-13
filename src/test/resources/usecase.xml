@@ -213,6 +213,7 @@
                             </component>
                         </material>
                         
+                        
                         <!-- Here we make the correlation between the specific persons and the generic roles -->
                         <person>
                             <personId>Giovanni</personId>

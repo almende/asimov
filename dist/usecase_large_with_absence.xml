@@ -1,0 +1,2630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p1:SimulationFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://io.asimov.almende.org/2015/schema/cim/ ../src/main/xsd/asim/main.xsd"
+ xmlns:asimovcim="http://io.asimov.almende.org/2015/schema/cim/"
+ xmlns:asimovevent="http://io.asimov.almende.org/2015/schema/event/"
+ xmlns:p1="http://io.asimov.almende.org/2015/schema/cim/"
+ xmlns:asimovunit="http://io.asimov.almende.org/2015/schema/units/"
+ xmlns:asimovbpm="http://io.asimov.almende.org/2015/schema/bpm/">
+   <id>ARUMMovie</id>
+   <simulations>
+       <simulationCase>
+           <id>ARUM Toy Model Movie</id>
+                <usecase>
+                    <id>IHF</id>
+                    <context>
+<!-- Here we make the correlation between the specific materials and the generic components -->
+                        <material>
+                            <materialId>Pump A</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump B</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 1</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Aluminium Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Steel Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1242 Board set</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP134 FrontPanel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2378 rear panel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B234</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 1</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 2</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 3</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device A</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device B</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Another Pump A</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Pump B</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 1</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Aluminium Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Steel Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1242 Board set</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP134 FrontPanel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2378 rear panel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B234</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 1</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 2</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 3</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device A</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device B</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        <!--  Start missing for third and fourth process required materials  -->
+                        <material>
+                            <materialId>Pump C</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump D</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 3</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Gold Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Wooden Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1444 Board set</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP145 FrontPanel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2847 rear panel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B084</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 6</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 7</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 8</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device R</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device T</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Pump S</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump M</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 3</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Gold Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Wooden Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1444 Board set</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP145 FrontPanel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2847 rear panel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B084</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 6</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 7</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 8</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device R</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device T</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <!-- End missing for third and fourth process required materials -->
+                        
+                        <!-- Start Material available after 2 days -->
+                        <material>
+                            <materialId>Pump A.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>  
+                        </material>
+                        <material>
+                            <materialId>Pump B.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 1.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Aluminium Framework.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Steel Framework.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1242 Board set.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP134 FrontPanel.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2378 rear panel.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B234.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 1.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 2.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 3.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device A.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device B.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Another Pump A.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Pump B.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 1.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Aluminium Framework.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Steel Framework.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1242 Board set.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP134 FrontPanel.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2378 rear panel.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B234.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 1.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 2.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 3.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device A.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device B.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        <material>
+                            <materialId>Pump C.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump D.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 3.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Gold Framework.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Wooden Framework.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1444 Board set.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP145 FrontPanel.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2847 rear panel.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B084.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 6.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 7.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 8.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device R.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device T.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Pump S.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump M.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 3.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Gold Framework.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Wooden Framework.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1444 Board set.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP145 FrontPanel.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2847 rear panel.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B084.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 6.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 7.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 8.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device R.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device T.2</materialId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <!-- End Material available after 2 days -->
+                        
+                        <!-- Start Material available after 3 days -->
+                        <material>
+                            <materialId>Pump A.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>  
+                        </material>
+                        <material>
+                            <materialId>Pump B.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 1.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Aluminium Framework.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Steel Framework.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1242 Board set.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP134 FrontPanel.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2378 rear panel.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B234.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 1.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 2.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 3.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device A.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device B.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Another Pump A.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Pump B.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 1.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Aluminium Framework.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Steel Framework.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1242 Board set.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP134 FrontPanel.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2378 rear panel.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B234.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 1.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 2.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 3.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device A.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device B.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        <material>
+                            <materialId>Pump C.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump D.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 3.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Gold Framework.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Wooden Framework.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1444 Board set.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP145 FrontPanel.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2847 rear panel.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B084.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 6.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 7.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 8.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device R.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device T.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Pump S.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump M.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 3.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Gold Framework.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Wooden Framework.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1444 Board set.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP145 FrontPanel.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2847 rear panel.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B084.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 6.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 7.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 8.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device R.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device T.3</materialId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <!-- End Material available after 3 days -->
+                        <!-- Start Material available after 4 days -->
+                        <material>
+                            <materialId>Pump A.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>  
+                        </material>
+                        <material>
+                            <materialId>Pump B.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 1.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Aluminium Framework.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Steel Framework.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1242 Board set.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP134 FrontPanel.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2378 rear panel.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B234.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 1.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 2.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 3.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device A.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device B.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Another Pump A.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Pump B.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 1.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Aluminium Framework.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Steel Framework.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1242 Board set.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP134 FrontPanel.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2378 rear panel.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B234.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 1.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 2.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 3.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device A.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device B.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        <material>
+                            <materialId>Pump C.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump D.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 3.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Gold Framework.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Wooden Framework.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1444 Board set.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP145 FrontPanel.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2847 rear panel.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B084.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 6.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 7.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 8.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device R.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device T.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Pump S.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump M.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 3.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Gold Framework.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Wooden Framework.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1444 Board set.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP145 FrontPanel.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2847 rear panel.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B084.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 6.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 7.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 8.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device R.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device T.4</materialId>
+                            <availableAfter>P00Y004DT00H00M00S</availableAfter>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <!-- End Material available after 4 days -->
+                        
+                        <!-- Here we make the correlation between the specific persons and the generic roles -->
+                        <person>
+                            <personId>Giovanni</personId>
+                            <role>
+                                <id>Minor Manager</id>
+                                <roleName>Floor Manager</roleName>
+                            </role>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Victor</personId>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Edward</personId>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Suki</personId>
+                            <role>
+                                <id>RAO</id>
+                                <roleName>Tester (RAO)</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Mario</personId>
+                            <role>
+                                <id>Major Manager</id>
+                                <roleName>IHF Board Member</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Anthony</personId>
+                            <role>
+                                <id>Minor Manager</id>
+                                <roleName>Floor Manager</roleName>
+                            </role>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Vitek</personId>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Eduardo</personId>
+                             <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Rick</personId>
+                            <role>
+                                <id>RAO</id>
+                                <roleName>Tester (RAO)</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Sven</personId>
+                            <role>
+                                <id>Major Manager</id>
+                                <roleName>IHF Board Member</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        
+                        
+                        <person>
+                            <personId>Elza</personId>
+                            <role>
+                                <id>Minor Manager</id>
+                                <roleName>Floor Manager</roleName>
+                            </role>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Hannah</personId>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Judith</personId>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Chloe</personId>
+                            <role>
+                                <id>RAO</id>
+                                <roleName>Tester (RAO)</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Mark</personId>
+                            <role>
+                                <id>Major Manager</id>
+                                <roleName>IHF Board Member</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Alex</personId>
+                            <role>
+                                <id>Minor Manager</id>
+                                <roleName>Floor Manager</roleName>
+                            </role>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Jurek</personId>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Iwona</personId>
+                            <role>
+                                <id>Electrical Engineer</id>
+                                <roleName>Certified Electrical Engineer</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Yasmine</personId>
+                            <role>
+                                <id>RAO</id>
+                                <roleName>Tester (RAO)</roleName>
+                            </role>
+                            <role>
+                                <id>Worker</id>
+                                <roleName>IHF Worker</roleName>
+                            </role>
+                        	<unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        <person>
+                            <personId>Rosalie</personId>
+                            <role>
+                                <id>Major Manager</id>
+                                <roleName>IHF Board Member</roleName>
+                            </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                        </person>
+                        
+<!-- Here we make the correlation between the specific assemblyLines and the generic types -->
+                        <assemblyLine>
+                            <assemblyLineId>CoffeeMachineProductionTable_1</assemblyLineId>
+                            <assemblyLineType>
+                                <amount>1</amount>
+                                <type>CoffeeMachineProductionTable</type>
+                            </assemblyLineType>
+                        </assemblyLine>
+                        <assemblyLine>
+                            <assemblyLineId>CoffeeMachineProductionTable_2</assemblyLineId>
+                           	<availableAfter>P00Y001DT00H00M00S</availableAfter>
+                            <assemblyLineType>
+                                <amount>1</amount>
+                                <type>CoffeeMachineProductionTable</type>
+                            </assemblyLineType>
+                        </assemblyLine>
+                        <assemblyLine>
+                            <assemblyLineId>CoffeeMachineProductionTable_3</assemblyLineId>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
+                            <assemblyLineType>
+                                <amount>1</amount>
+                                <type>CoffeeMachineProductionTable</type>
+                            </assemblyLineType>
+                        </assemblyLine>
+                    </context>
+                    <process>
+                        <id>Process_A.1</id>
+                        <name>Coffee machine production process 1</name>
+                        <activity>
+                            <id>A1.1</id>
+                            <name>A1 - Manufactoring interior of the Coffee machine</name>
+                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
+                            <usedComponent>
+                                <componentRef>Pump</componentRef>
+                                <numberOf>1</numberOf>
+                                <timeOfUse>P0Y0M0DT1H</timeOfUse>
+                            </usedComponent>
+                            <usedComponent>
+                                <componentRef>Dispencer</componentRef>
+                                <numberOf>1</numberOf>
+                                <timeOfUse>P0Y0M0DT1H</timeOfUse>
+                            </usedComponent>
+                            <usedComponent>
+                                <componentRef>Framework</componentRef>
+                                <numberOf>1</numberOf>
+                            </usedComponent>
+                            <usedComponent>
+                                <componentRef>Electronical Circuit Pack</componentRef>
+                                <numberOf>1</numberOf>
+                            </usedComponent>
+                            <RoleInvolved>
+                                <roleRef>Worker</roleRef>
+                            </RoleInvolved>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT02H10M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <nextActivityRef likelihood="10">A2.1</nextActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A2.1</id>
+                            <name>A2 - Test interior of the Coffee machine</name>
+                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
+                            <usedComponent>
+                                <componentRef>Circuit Validator</componentRef>
+                                <numberOf>1</numberOf>
+                            </usedComponent>
+                            <usedComponent>
+                                <componentRef>Pressure Measurement Device</componentRef>
+                                <numberOf>1</numberOf>
+                            </usedComponent>
+                            <RoleInvolved>
+                                <roleRef>RAO</roleRef>
+                            </RoleInvolved>
+                            <RoleInvolved>
+                                <roleRef>Electrical Engineer</roleRef>
+                            </RoleInvolved>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT00H20M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="5">A1.1</previousActivityRef>
+                            <previousActivityRef likelihood="1">A5.1</previousActivityRef>
+                            <previousActivityRef likelihood="4">A6.1</previousActivityRef>
+                            <nextActivityRef likelihood="5">A3.1</nextActivityRef>
+                            <nextActivityRef likelihood="5">A4.1</nextActivityRef>
+                            <nextActivityRef likelihood="2">A5.1</nextActivityRef>
+                            <nextActivityRef likelihood="8">A6.1</nextActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A3.1</id>
+                            <name>A3 - Manufactoring exterior of the Coffee machine</name>
+                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
+                            <usedComponent>
+                                <componentRef>Coffee machine front panel</componentRef>
+                                <numberOf>1</numberOf>
+                            </usedComponent>
+                            <usedComponent>
+                                <componentRef>Coffee machine rear panel</componentRef>
+                                <numberOf>1</numberOf>
+                            </usedComponent>
+                            <usedComponent>
+                                <componentRef>Coffee machine cover</componentRef>
+                                <numberOf>1</numberOf>
+                            </usedComponent>
+                            <RoleInvolved>
+                                <roleRef>Worker</roleRef>
+                            </RoleInvolved>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT00H35M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="10">A2.1</previousActivityRef>
+                            <previousActivityRef likelihood="10">A4.1</previousActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A4.1</id>
+                            <name>A4 - Wait for RAO to complete</name>
+                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
+                            <RoleInvolved>
+                                <roleRef>RAO</roleRef>
+                            </RoleInvolved>
+                            
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT00H30M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="10">A2.1</previousActivityRef>
+                            <nextActivityRef likelihood="10">A3.1</nextActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A5.1</id>
+                            <name>A5 - Minor None Conformity Meeting</name>
+                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
+                            <RoleInvolved>
+                                <roleRef>Minor Manager</roleRef>
+                            </RoleInvolved>
+                            <RoleInvolved>
+                                <roleRef>Electrical Engineer</roleRef>
+                            </RoleInvolved>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT00H10M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="10">A2.1</previousActivityRef>
+                            <nextActivityRef likelihood="10">A2.1</nextActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A6.1</id>
+                            <name>A6 - Major None Conformity Meeting</name>
+                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
+                            <RoleInvolved>
+                                <roleRef>Major Manager</roleRef>
+                            </RoleInvolved>
+                            <RoleInvolved>
+                                <roleRef>Electrical Engineer</roleRef>
+                            </RoleInvolved>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT01H00M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="10">A2.1</previousActivityRef>
+                            <nextActivityRef likelihood="10">A2.1</nextActivityRef>
+                        </activity>
+                    </process>
+                   
+                    <processTemplate processRef="Process_A.1">
+                        <property name="totalToBePerformed" type="int">5</property>
+                    </processTemplate>
+                    
+                </usecase>
+           <simulationResult>
+               <simulationID>IHF</simulationID>
+               <eventTrace>
+                   <!-- Here is an example of the output of ASIMOV all event types -->
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <activityType>Person arrives at AssemblyLine (AL corresponds to AL in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <activityType>Person starts executing some Business Activity</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>ECP 1242 Board set</materialRef>
+                       <activityType>Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Pump A</materialRef>
+                       <activityType>Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Aluminium Framework</materialRef>
+                       <activityType>Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Dispencer Box 1</materialRef>
+                       <activityType>Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T10:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Pump A</materialRef>
+                       <activityType>Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T10:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Dispencer Box 1</materialRef>
+                       <activityType>Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T11:40:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Aluminium Framework</materialRef>
+                       <activityType>Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T11:40:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>ECP 1242 Board set</materialRef>
+                       <activityType>Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T11:40:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <activityType>Person stops executing some Business Activity</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <!-- Here will be other event events about the preceding activitities within Process_A_instance1 -->
+                   <eventRecord>
+                       <timeStamp>2015-05-30T17:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>ECP 1242 Board set</materialRef>
+                       <activityType>Person leaves AssemblyLine (AL corresponds to AL in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+               </eventTrace>
+           </simulationResult>
+           <roles>
+               <role>
+                   <id>Worker</id>
+                   <roleName>IHF Worker</roleName>
+               </role>
+               <role>
+                   <id>Electrical Engineer</id>
+                   <roleName>Certified Electrical Engineer</roleName>
+               </role>
+               <role>
+                   <id>Minor Manager</id>
+                   <roleName>Floor Manager</roleName>
+               </role>
+               <role>
+                   <id>Major Manager</id>
+                   <roleName>IHF Board Member</roleName>
+               </role>
+               <role>
+                   <id>RAO</id>
+                   <roleName>Tester (RAO)</roleName>
+               </role>
+           </roles>
+       </simulationCase>
+   </simulations>
+</p1:SimulationFile>
+
