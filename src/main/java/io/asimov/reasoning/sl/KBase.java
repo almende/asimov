@@ -19,7 +19,14 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+
 public class KBase implements List<ASIMOVNode<?>> {
+	
+	private static boolean showProgressOnStdOut = false;
+
+	private static boolean showReasoningStdErr = false;
+
+	
 	
 	List<ASIMOVNode<?>> kbase;
 	
@@ -59,11 +66,16 @@ public class KBase implements List<ASIMOVNode<?>> {
 
 	@Override
 	public boolean add(ASIMOVNode<?> e) {
-		return kbase.add(e);
+		if (showProgressOnStdOut) System.out.print('+');
+		if (!kbase.contains(e))
+			return kbase.add(e);
+		else
+			return false;
 	}
 
 	@Override
 	public boolean remove(Object o) {
+		if (showProgressOnStdOut) System.out.print('-');
 		return kbase.remove(o);
 	}
 
@@ -75,21 +87,21 @@ public class KBase implements List<ASIMOVNode<?>> {
 	@Override
 	public boolean addAll(Collection<? extends ASIMOVNode<?>> c) {
 		for (int i =0 ; i <c.size(); i++)
-			System.out.print('+');
+			if (showProgressOnStdOut) System.out.print('+');
 		return kbase.addAll(c);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends ASIMOVNode<?>> c) {
 		for (int i =0 ; i <c.size(); i++)
-			System.out.print('+');
+			if (showProgressOnStdOut) System.out.print('+');
 		return kbase.addAll(index, c);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		for (int i =0 ; i < c.size(); i++)
-			System.out.print('-');
+			if (showProgressOnStdOut) System.out.print('-');
 		return kbase.removeAll(c);
 	}
 
@@ -115,13 +127,13 @@ public class KBase implements List<ASIMOVNode<?>> {
 
 	@Override
 	public void add(int index, ASIMOVNode<?> element) {
-		System.out.print('+');	
+		if (showProgressOnStdOut) System.out.print('+');	
 		kbase.add(index,element);
 	}
 
 	@Override
 	public ASIMOVNode<?> remove(int index) {
-		System.out.print('-');	
+		if (showProgressOnStdOut) System.out.print('-');	
 		return kbase.remove(index);
 	}
 
@@ -167,7 +179,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 	public Map<String,Object> matchNode(final Object inFormulaObject, final Object inFactObject) {
 		if (inFormulaObject == null || inFactObject == null)
 			return Collections.emptyMap();
-		System.out.print('.');	
+		if (showProgressOnStdOut) System.out.print('.');	
 		Object formulaObject = parsePrimitives(inFormulaObject);
 		
 		Object factObject = parsePrimitives(inFactObject);
@@ -198,13 +210,13 @@ public class KBase implements List<ASIMOVNode<?>> {
 			ASIMOVFormula f = ((ASIMOVNotNode) formulaObject).negate();
 			for (final ASIMOVNode<?> aFact : this.kbase) {
 				if (matchNode(f, aFact) != null) {
-					System.out.print("<not=false>");
+					if (showProgressOnStdOut) System.out.print("<not=false>");
 					return null;
 				} else
 					anyMatch = true;
 			}
 			if (anyMatch)
-				System.out.print("<not=true>");
+				if (showProgressOnStdOut) System.out.print("<not=true>");
 		} else if (formulaObject instanceof ASIMOVAndNode) {
 			final ASIMOVAndNode andFormula = ((ASIMOVAndNode)formulaObject);
 			final Set<String> andKeys = new HashSet<String>();
@@ -214,7 +226,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 							if (aFact == factObject) {
 								final Map<String,Object> hornResult = matchNode(andFormula.getPropertyValue(andKey), factObject);
 								if (hornResult != null) {
-									System.out.print("<&"+andFormula.getKeys()+"."+andKeys.size()+">");
+									if (showProgressOnStdOut) System.out.print("<&"+andFormula.getKeys()+"."+andKeys.size()+">");
 									for (final String hornKey : hornResult.keySet()) {
 										result.put(hornKey, hornResult);
 									}
@@ -223,7 +235,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 							} else {
 								final Map<String,Object> otherHornResult = matchNode(andFormula.getPropertyValue(andKey), aFact);
 								if (otherHornResult != null) {
-									System.out.print("<&"+andFormula.getKeys()+"."+andKeys+">");
+									if (showProgressOnStdOut) System.out.print("<&"+andFormula.getKeys()+"."+andKeys+">");
 									for (final String hornKey : otherHornResult.keySet()) {
 										result.put(hornKey, otherHornResult.get(hornKey));
 									}
@@ -238,15 +250,15 @@ public class KBase implements List<ASIMOVNode<?>> {
 					}			
 			}
 			if (!anyMatch) {
-				System.out.print("<!&>");
-				System.out.flush();
-				System.err.println("|- REASON = (AND) NOT KNOWN:"+andFormula.namedChildren);
-				System.err.flush();
+				if (showProgressOnStdOut) System.out.print("<!&>");
+				if (showProgressOnStdOut) System.out.flush();
+				if (showReasoningStdErr) System.err.println("|- REASON = (AND) NOT KNOWN:"+andFormula.namedChildren);
+				if (showReasoningStdErr) System.err.flush();
 				return null;
 			}
 		} else if (formula.getNodeType().equals("FUNCTION")) {
 			ASIMOVFunctionNode function = (ASIMOVFunctionNode)formula;
-			System.out.print("<f(x)>");
+			if (showProgressOnStdOut) System.out.print("<f(x)>");
 			for (final ASIMOVNode<?> aFact : this.kbase) 
 			{
 				if (function.eval(aFact))
@@ -255,17 +267,17 @@ public class KBase implements List<ASIMOVNode<?>> {
 			Object r =  function.getPropertyValue(function.getResultKey());
 			if (r != null) {
 				anyMatch = true;
-				System.out.print("<"+function.getName()+"(x)=true>");
+				if (showProgressOnStdOut) System.out.print("<"+function.getName()+"(x)=true>");
 				result.put(function.getResultKey(),r);
 			} else {
-				System.out.print("<"+function.getName()+"(x)=false>");
+				if (showProgressOnStdOut) System.out.print("<"+function.getName()+"(x)=false>");
 			}	
 		} else if (formula.getNodeType().equals(fact.getNodeType()) && formula.getName().equals(fact.getName())) {
 			final Set<String> matchKeys = new HashSet<String>();
 			boolean matched = true;
 			for (final String key : formula.getKeys()) {
 				if (formula.getPropertyValue(key) == null) { 
-					System.out.print("<?>");
+					if (showProgressOnStdOut) System.out.print("<?>");
 					matchKeys.add(key);
 				} else {
 					Object formulaProperty = formula.getPropertyValue(key);
@@ -273,14 +285,14 @@ public class KBase implements List<ASIMOVNode<?>> {
 					
 					Map<String,Object> childMatches = matchNode(formulaProperty, factProperty);
 					if (childMatches == null) {
-						System.out.print("<!>");
+						if (showProgressOnStdOut) System.out.print("<!>");
 						matched = false;
-						System.err.println("|- REASON = ("+formula.getNodeType()+") NOT KNOWN :"+formulaProperty);
-						System.err.flush();
+						if (showReasoningStdErr) System.err.println("|- REASON = ("+formula.getNodeType()+") NOT KNOWN :"+formulaProperty);
+						if (showReasoningStdErr) System.err.flush();
 						break;
 					} else {
 						for (final String childMatchKey : childMatches.keySet()) {
-							System.out.print("<"+childMatchKey+".found>");
+							if (showProgressOnStdOut) System.out.print("<"+childMatchKey+".found>");
 							result.put(childMatchKey, childMatches.get(childMatchKey));
 						}
 					}
@@ -288,7 +300,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 					
 			} 
 			if (matched) {
-				System.out.print("<ok>");
+				if (showProgressOnStdOut) System.out.print("<ok>");
 				anyMatch = true;
 				for (final String key : matchKeys) {
 					result.put(key,fact.getPropertyValue(key));
@@ -303,7 +315,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 	}
 
 	public Set<Map<String,Object>> query(ASIMOVNode<?> query) {
-		System.err.println("-> QUERY  := "+query);
+		if (showReasoningStdErr) System.err.println("-> QUERY  := "+query);
 		boolean matched = false;
 		Set<Map<String,Object>> queryResult = new HashSet<Map<String, Object>>();
 		for (ASIMOVNode<?> node : this.kbase) {
@@ -312,9 +324,9 @@ public class KBase implements List<ASIMOVNode<?>> {
 					node.getNodeType().equals("FUNCTION") || 
 					node.getNodeType().equals("NOT")) {
 				Map<String,Object> row = matchNode(query,node);
-				System.err.println((row != null) ? "|-TRUE" : "|-(FALSE)" + node);
+				if (showReasoningStdErr) System.err.println((row != null) ? "|-TRUE" : "|-(FALSE)" + node);
 				if (row != null)
-					System.err.println("|-(WITH)"+row);
+					if (showReasoningStdErr) System.err.println("|-(WITH)"+row);
 				if (row != null) {
 					matched = true;
 					queryResult.add(row);
@@ -322,10 +334,10 @@ public class KBase implements List<ASIMOVNode<?>> {
 			}
 		}
 		if (matched) {
-			System.err.println("-> TRUE  := "+query);
+			if (showReasoningStdErr) System.err.println("-> TRUE  := "+query);
 			return queryResult;
 		} else {
-			System.err.println("-> FALSE := "+query);
+			if (showReasoningStdErr) System.err.println("-> FALSE := "+query);
 			return null; // FALSE
 		}
 	}

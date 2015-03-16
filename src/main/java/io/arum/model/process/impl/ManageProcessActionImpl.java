@@ -10,9 +10,6 @@ import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipationResourceInformation;
 import io.asimov.model.ResourceAllocation;
-import io.asimov.model.ResourceRequirement;
-import io.asimov.model.process.Activity;
-import io.asimov.model.process.Next;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
 import io.asimov.model.process.Transition;
@@ -26,7 +23,6 @@ import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
 import io.asimov.xml.TSkeletonActivityType.UsedComponent;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
-import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.enterprise.fact.FactID;
 import io.coala.enterprise.role.AbstractExecutor;
@@ -41,18 +37,14 @@ import io.coala.time.Trigger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
 import rx.Observer;
-import cern.colt.Arrays;
 
 import com.eaio.uuid.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -497,6 +489,17 @@ public class ManageProcessActionImpl extends
 
 	private static final String REQUEST_ACTIVITY_PARTICIPATION = "requestActivityParticipation";
 
+	public static final String DESTROY = "DESTROY";
+	
+	@Schedulable(DESTROY)
+	public void destroy(){
+		try {
+			getFinalizer().destroy();
+		} catch (Exception e) {
+			LOG.error("Failed to destroy process agent",e);
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	@Schedulable(NEXT_ACTIVITY_METHOD_ID)
 	public void nextActivity(final ProcessCompletion.Request cause,
@@ -515,11 +518,16 @@ public class ManageProcessActionImpl extends
 			try {
 				send(ProcessCompletion.Result.Builder.forProducer(this, cause)
 						.withSuccess(true).build());
+				getScheduler().schedule(
+						ProcedureCall.create(this, this, DESTROY),
+						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
 			} catch (Exception e) {
 				LOG.error("Failed to send process completion response", e);
 			}
 			return;
 		}
+		
+		
 
 		final List<String> tokenDistribution = new ArrayList<String>();
 

@@ -57,7 +57,6 @@ public class MaterialResourceManagementWorldImpl extends
 	private Logger LOG;
 
 	
-
 	/** */
 	private Subject<MaterialEvent, MaterialEvent> usage = PublishSubject
 			.create();
@@ -106,6 +105,7 @@ public class MaterialResourceManagementWorldImpl extends
 						.createAgentID(occupantName), equipmentName,
 				assemblyLineRef, this.usage);
 	}
+
 
 	
 

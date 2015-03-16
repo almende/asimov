@@ -66,6 +66,8 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 	@Field(name = "availableFromTime")
 	private Long availableFromTime;
 
+	
+	
 	/**
 	 * @return the availableFromTime
 	 */
@@ -171,8 +173,8 @@ public class Material extends AbstractEmbodied<Material> implements ResourceType
 		setBody( body );
 		return this;
 	}
-
-
+	
+	
 	/** @see XMLConvertible#toXML() */
 	@Override
 	public Object toXML()

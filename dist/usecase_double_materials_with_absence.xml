@@ -213,6 +213,206 @@
                             </component>
                         </material>
                         
+                        <!--  Start missing for third and fourth process required materials  -->
+                        <material>
+                            <materialId>Pump C</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump D</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Dispencer Box 3</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Gold Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Wooden Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>ECP 1444 Board set</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>FP145 FrontPanel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>RP 2847 rear panel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Yellow Cover B084</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 6</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 7</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Circuit Validator 8</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device R</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Pressure Measurement Device T</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        
+                        
+                        <material>
+                            <materialId>Pump S</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Pump M</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pump</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Dispencer Box 3</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Dispencer</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Gold Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another Wooden Framework</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Framework</type>
+                            </component>    
+                        </material>
+                        <material>
+                            <materialId>Another ECP 1444 Board set</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Electronical Circuit Pack</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another FP145 FrontPanel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine front panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another RP 2847 rear panel</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine rear panel</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Yellow Cover B084</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Coffee machine cover</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 6</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 7</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Circuit Validator 8</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Circuit Validator</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device R</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <material>
+                            <materialId>Another Pressure Measurement Device T</materialId>
+                            <component>
+                                <amount>1</amount>
+                                <type>Pressure Measurement Device</type>
+                            </component>
+                        </material>
+                        <!-- End missing for third and fourth process required materials -->
                         
                         <!-- Here we make the correlation between the specific persons and the generic roles -->
                         <person>
@@ -229,9 +429,12 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
+                          
+                           <!-- 
+                           Always on holiday
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
                                 <property name="pmf" type="int">1</property>
                             </unavailable>
@@ -244,6 +447,7 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
+                             -->
                         </person>
                         <person>
                             <personId>Victor</personId>
@@ -251,7 +455,7 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -277,7 +481,7 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -303,7 +507,7 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -325,7 +529,7 @@
                                 <id>Major Manager</id>
                                 <roleName>IHF Board Member</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -355,7 +559,7 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -377,7 +581,7 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -403,7 +607,7 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -429,7 +633,7 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -451,7 +655,7 @@
                                 <id>Major Manager</id>
                                 <roleName>IHF Board Member</roleName>
                             </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
                             <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
@@ -483,6 +687,21 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Hannah</personId>
@@ -490,6 +709,21 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Judith</personId>
@@ -501,6 +735,21 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Chloe</personId>
@@ -512,6 +761,21 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Mark</personId>
@@ -519,6 +783,21 @@
                                 <id>Major Manager</id>
                                 <roleName>IHF Board Member</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Alex</personId>
@@ -534,6 +813,21 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Jurek</personId>
@@ -541,6 +835,21 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Iwona</personId>
@@ -552,6 +861,21 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Yasmine</personId>
@@ -563,6 +887,21 @@
                                 <id>Worker</id>
                                 <roleName>IHF Worker</roleName>
                             </role>
+                        	<unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         <person>
                             <personId>Rosalie</personId>
@@ -570,12 +909,26 @@
                                 <id>Major Manager</id>
                                 <roleName>IHF Board Member</roleName>
                             </role>
+                        <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
                         </person>
                         
 <!-- Here we make the correlation between the specific assemblyLines and the generic types -->
                         <assemblyLine>
                             <assemblyLineId>CoffeeMachineProductionTable_1</assemblyLineId>
-                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
                             <assemblyLineType>
                                 <amount>1</amount>
                                 <type>CoffeeMachineProductionTable</type>
@@ -583,7 +936,7 @@
                         </assemblyLine>
                         <assemblyLine>
                             <assemblyLineId>CoffeeMachineProductionTable_2</assemblyLineId>
-                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
+                           	<availableAfter>P00Y001DT00H00M00S</availableAfter>
                             <assemblyLineType>
                                 <amount>1</amount>
                                 <type>CoffeeMachineProductionTable</type>
@@ -591,7 +944,7 @@
                         </assemblyLine>
                         <assemblyLine>
                             <assemblyLineId>CoffeeMachineProductionTable_3</assemblyLineId>
-                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
+                            <availableAfter>P00Y003DT00H00M00S</availableAfter>
                             <assemblyLineType>
                                 <amount>1</amount>
                                 <type>CoffeeMachineProductionTable</type>
@@ -600,7 +953,7 @@
                     </context>
                     <process>
                         <id>Process_A.1</id>
-                        <name>Coffee machine production process</name>
+                        <name>Coffee machine production process 1</name>
                         <activity>
                             <id>A1.1</id>
                             <name>A1 - Manufactoring interior of the Coffee machine</name>
@@ -748,10 +1101,11 @@
                             <nextActivityRef likelihood="10">A2.1</nextActivityRef>
                         </activity>
                     </process>
-                 
+                   
                     <processTemplate processRef="Process_A.1">
                         <property name="totalToBePerformed" type="int">5</property>
                     </processTemplate>
+                    
                 </usecase>
            <simulationResult>
                <simulationID>IHF</simulationID>
