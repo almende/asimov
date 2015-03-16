@@ -287,6 +287,5 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	 */
 	boolean hasReplication(String replicationID);
 
-
 	
 }

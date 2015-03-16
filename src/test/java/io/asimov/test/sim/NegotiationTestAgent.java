@@ -7,6 +7,12 @@ import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.Conversio
 import io.asimov.microservice.negotiation.ResourceAllocationRequestor.AllocationCallback;
 import io.asimov.microservice.negotiation.ResourceAllocationResponder;
 import io.asimov.model.ResourceAllocation;
+import io.asimov.model.sl.ASIMOVFormula;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.SL;
+import io.asimov.reasoning.sl.ASIMOVSLReasoningCapability;
+import io.asimov.reasoning.sl.KBase;
+import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.agent.AgentStatusUpdate;
 import io.coala.agent.BasicAgent;
@@ -15,18 +21,14 @@ import io.coala.capability.admin.CreatingCapability;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.know.ReasoningCapability.Belief;
-import io.coala.jsa.JSAReasoningCapability;
-import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.lifecycle.ActivationType;
 import io.coala.log.InjectLogger;
-import jade.semantics.kbase.KBase;
-import jade.semantics.lang.sl.grammar.Formula;
-import jade.semantics.lang.sl.grammar.ListOfNodes;
-import jade.semantics.lang.sl.tools.SL;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -150,7 +152,7 @@ public class NegotiationTestAgent extends BasicAgent
 					+ getBinder().inject(ReasoningCapability.class).getKBase()
 					+ "):"
 					+ ((KBase) getBinder().inject(ReasoningCapability.class)
-							.getKBase()).toStrings());
+							.getKBase()));
 		}
 	}
 
@@ -170,7 +172,7 @@ public class NegotiationTestAgent extends BasicAgent
 						.addBeliefToKBase(belief);
 				LOG.info("STATE_UPDATE:"
 						+ ((KBase) getBinder().inject(ReasoningCapability.class)
-								.getKBase()).toStrings());
+								.getKBase()));
 			}
 
 			die();
@@ -273,25 +275,27 @@ public class NegotiationTestAgent extends BasicAgent
 														.toString()), patients);
 								ConversionCallback conversion = new ConversionCallback()
 								{
-									Formula lastFormula = null;
+									ASIMOVFormula lastFormula = null;
 
 									@Override
 									public Serializable convert(Serializable f)
 									{
 										try
 										{
-											Formula formula = JSAReasoningCapability
+											ASIMOVNode<?> formula = (ASIMOVFormula) ASIMOVSLReasoningCapability
 													.getFormulaForObject(f);
-											ListOfNodes formulas = new ListOfNodes();
+											List<ASIMOVNode<?>> formulas = new ArrayList<ASIMOVNode<?>>();
 
-											if (formula.childrenOfKind(
-													Formula.class, formulas))
+											for (String key: formula.getKeys())
+												if (formula.getPropertyValue(key) instanceof ASIMOVFormula)
+													formulas.add((ASIMOVFormula)formula.getPropertyValue(key));
+											if (formulas.size() > 0)
 											{
-												lastFormula = (Formula) formulas
+												lastFormula = (ASIMOVFormula) formulas
 														.get(formulas.size() - 1);
 											} else
 											{
-												lastFormula = formula;
+												lastFormula = (ASIMOVFormula)formula;
 											}
 											LOG.info("CONVERSION: IF "
 													+ f.toString() + " THEN "

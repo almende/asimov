@@ -18,6 +18,7 @@ import io.asimov.model.ResourceRequirement;
 import io.asimov.model.Time;
 import io.asimov.model.TraceService;
 import io.asimov.model.events.EventType;
+import io.asimov.model.sl.SL;
 import io.asimov.model.sl.SLConvertible;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
@@ -27,7 +28,6 @@ import io.coala.factory.ClassUtil;
 import io.coala.log.InjectLogger;
 import io.coala.model.ModelComponentIDFactory;
 import io.coala.time.SimTime;
-import jade.semantics.lang.sl.tools.SL;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -264,6 +264,44 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 			return this.coordinates;
 		return CoordinationUtil.getCoordinatesForNonMovingElement(getBinder()
 				.inject(Datasource.class), getCurrentLocation());
+	}
+	
+	@Override
+	public boolean isAvailable() {
+		return !getEntity().isUnAvailable();
+	}
+	
+
+	@Override
+	public void setAvailable() {
+		getEntity().setUnAvailable(false);
+		if (getEntity() instanceof AssemblyLine)
+		{
+			getBinder().inject(Datasource.class).save((AssemblyLine)getEntity());
+		} else if (getEntity() instanceof Material)
+		{
+			getBinder().inject(Datasource.class).save((Material)getEntity());
+		} else if (getEntity() instanceof Person)
+		{
+			getBinder().inject(Datasource.class).save((Person)getEntity());
+		}
+		
+	}
+	
+	@Override
+	public void setUnavailable() {
+		getEntity().setUnAvailable(true);
+		if (getEntity() instanceof AssemblyLine)
+		{
+			getBinder().inject(Datasource.class).save((AssemblyLine)getEntity());
+		} else if (getEntity() instanceof Material)
+		{
+			getBinder().inject(Datasource.class).save((Material)getEntity());
+		} else if (getEntity() instanceof Person)
+		{
+			getBinder().inject(Datasource.class).save((Person)getEntity());
+		}
+		
 	}
 
 }

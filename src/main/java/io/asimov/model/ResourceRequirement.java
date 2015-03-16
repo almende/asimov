@@ -1,9 +1,9 @@
 package io.asimov.model;
 
-import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.SL;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.sl.SL;
+import io.asimov.model.sl.SLConvertible;
 
 import javax.persistence.Embeddable;
 
@@ -90,16 +90,17 @@ public class ResourceRequirement extends AbstractNamed<ResourceRequirement>
 	public static final String TASK_RESOURCE_DURATION = "TASK_RESOURCE_DURATION";
 
 	/** */
-	public static final Term TASK_RESOURCE_PATTERN = SL.term(String.format(
-			"(%s :%s ??%s :%s ??%s :%s ??%s)", TASK_RESOURCE_TERM_NAME, TASK_RESOURCE,
-			TASK_RESOURCE, TASK_RESOURCE_AMOUNT, TASK_RESOURCE_AMOUNT, TASK_RESOURCE_DURATION, TASK_RESOURCE_DURATION));
+	public static final ASIMOVTerm TASK_RESOURCE_PATTERN = new ASIMOVTerm()
+		.withName(TASK_RESOURCE_TERM_NAME)
+		.instantiate(TASK_RESOURCE,null)
+		.instantiate(TASK_RESOURCE_AMOUNT, null)
+		.instantiate(TASK_RESOURCE_DURATION, null);
 
 	/** @see SLConvertible#toSL() */
 	@Override
-	@SuppressWarnings("unchecked")
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
-		return ((Term) SL.instantiate(TASK_RESOURCE_PATTERN))
+		return TASK_RESOURCE_PATTERN
 				.instantiate(TASK_RESOURCE, getResource().toSL())
 				.instantiate(TASK_RESOURCE_AMOUNT, SL.integer(getAmount().intValue()))
 				.instantiate(TASK_RESOURCE_DURATION, getDuration().toSL());
@@ -163,7 +164,7 @@ public class ResourceRequirement extends AbstractNamed<ResourceRequirement>
 
 	/** @see SLConvertible#fromSL(Term) */
 	@Override
-	public ResourceRequirement fromSL(final Node term)
+	public <N extends ASIMOVNode<N>> ResourceRequirement fromSL(final N term)
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");

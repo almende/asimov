@@ -1,6 +1,10 @@
 package io.asimov.agent.gui;
 
 import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.model.sl.ASIMOVFormula;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.SL;
+import io.asimov.reasoning.sl.KBase;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.admin.DestroyingCapability;
@@ -11,15 +15,6 @@ import io.coala.capability.plan.TimingCapability;
 import io.coala.log.LogUtil;
 import io.coala.message.Message;
 import io.coala.time.SimTime;
-import jade.semantics.kbase.KBase;
-import jade.semantics.kbase.QueryResult;
-import jade.semantics.lang.sl.grammar.Formula;
-import jade.semantics.lang.sl.grammar.IdentifyingExpression;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.SL;
-import jade.util.leap.ArrayList;
-import jade.util.leap.HashMap;
-import jade.util.leap.Iterator;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -30,6 +25,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -129,7 +129,10 @@ public class SemanticAgentGui extends JFrame
 			{
 				public void stateChanged(ChangeEvent e)
 				{
-					kbaseList.setListData(knowledgeBase.toStrings().toArray());
+					ArrayList<String> strings = new ArrayList<String>();
+					for (ASIMOVNode<?> node : knowledgeBase)
+						strings.add(node.toString());
+					kbaseList.setListData(strings.toArray());
 				}
 			});
 		} else
@@ -291,7 +294,7 @@ public class SemanticAgentGui extends JFrame
 
 				public void actionPerformed(ActionEvent evt)
 				{
-					Formula result;
+					ASIMOVFormula result;
 					if (text.getText() != null
 							&& !text.getText().trim().equals(""))
 					{
@@ -302,51 +305,51 @@ public class SemanticAgentGui extends JFrame
 					}
 					if (result != null)
 					{
-						knowledgeBase.assertFormula(result);
+						knowledgeBase.add(result);
 						// kbaseList.setListData(((SemanticAgent)agent).getSemanticCapabilities().getBeliefBase().toStrings().toArray());
 					}
 
 				}
 			}));
-			p.add(new JButton(new AbstractAction("QueryRef")
-			{
-
-				/** */
-				private static final long serialVersionUID = 1L;
-
-				public void actionPerformed(ActionEvent evt)
-				{
-					// if ( kbaseList.getSelectedIndex() != -1 ) {
-					// Formula formPattern =
-					// SL.formula(kbaseList.getSelectedValue().toString());
-					// ((SemanticAgent)agent).getSemanticCapabilities().getBeliefBase().retractFormula(formPattern);
-					// //
-					// kbaseList.setListData(((SemanticAgent)agent).getSemanticCapabilities().getBeliefBase().toStrings().toArray());
-					// }}
-					IdentifyingExpression result;
-					if (text.getText() != null
-							&& !text.getText().trim().equals(""))
-					{
-						result = (IdentifyingExpression) SL.term(text.getText());
-					} else
-					{
-						result = null;
-					}
-					if (result != null)
-					{
-						ArrayList reasons = new ArrayList();
-						Term solution = knowledgeBase.queryRef(result, reasons);
-						if (solution == null)
-						{
-							answer.setText("UNKNOWN, because\n" + reasons);
-						} else
-						{
-							answer.setText(solution.toString());
-						}
-					}
-
-				}
-			}));
+//			p.add(new JButton(new AbstractAction("QueryRef")
+//			{
+//
+//				/** */
+//				private static final long serialVersionUID = 1L;
+//
+//				public void actionPerformed(ActionEvent evt)
+//				{
+//					// if ( kbaseList.getSelectedIndex() != -1 ) {
+//					// Formula formPattern =
+//					// SL.formula(kbaseList.getSelectedValue().toString());
+//					// ((SemanticAgent)agent).getSemanticCapabilities().getBeliefBase().retractFormula(formPattern);
+//					// //
+//					// kbaseList.setListData(((SemanticAgent)agent).getSemanticCapabilities().getBeliefBase().toStrings().toArray());
+//					// }}
+//					IdentifyingExpression result;
+//					if (text.getText() != null
+//							&& !text.getText().trim().equals(""))
+//					{
+//						result = (IdentifyingExpression) SL.term(text.getText());
+//					} else
+//					{
+//						result = null;
+//					}
+//					if (result != null)
+//					{
+//						ArrayList reasons = new ArrayList();
+//						Term solution = knowledgeBase.queryRef(result, reasons);
+//						if (solution == null)
+//						{
+//							answer.setText("UNKNOWN, because\n" + reasons);
+//						} else
+//						{
+//							answer.setText(solution.toString());
+//						}
+//					}
+//
+//				}
+//			}));
 			p.add(new JButton(new AbstractAction("Query")
 			{
 				/** */
@@ -354,7 +357,7 @@ public class SemanticAgentGui extends JFrame
 
 				public void actionPerformed(ActionEvent e)
 				{
-					Formula query;
+					ASIMOVFormula query;
 					if (text.getText() != null
 							&& !text.getText().trim().equals(""))
 					{
@@ -366,8 +369,8 @@ public class SemanticAgentGui extends JFrame
 					if (query != null)
 					{
 						ArrayList reasons = new ArrayList();
-						QueryResult result = knowledgeBase
-								.query(query, reasons);
+						Set<Map<String,Object>> result = knowledgeBase
+								.query(query);
 						if (result == null)
 						{
 							answer.setText("UNKNOWN, because\n" + reasons);
@@ -388,7 +391,7 @@ public class SemanticAgentGui extends JFrame
 
 				public void actionPerformed(ActionEvent evt)
 				{
-					kbaseList.setListData(knowledgeBase.toStrings().toArray());
+					kbaseList.setListData(knowledgeBase.toArray());
 				}
 			}));
 
@@ -400,7 +403,7 @@ public class SemanticAgentGui extends JFrame
 
 				public void actionPerformed(ActionEvent evt)
 				{
-					Iterator it = knowledgeBase.toStrings().iterator();
+					Iterator<ASIMOVNode<?>> it = knowledgeBase.iterator();
 					String result = "";
 					for (int i = 0; it.hasNext(); i++)
 					{
@@ -594,7 +597,7 @@ public class SemanticAgentGui extends JFrame
 	/**
 	 * HashMap containing agent and clothing representations.
 	 */
-	static final HashMap images = new HashMap();
+	static final HashMap<String, ImageIcon> images = new HashMap<String, ImageIcon>();
 
 	/**
 	 * Returns the GIF image icon the name is the given one
@@ -693,7 +696,10 @@ public class SemanticAgentGui extends JFrame
 	@SuppressWarnings("unchecked")
 	public void refresh()
 	{
-		kbaseList.setListData(this.knowledgeBase.toStrings().toArray());
+		ArrayList<String> strings = new ArrayList<String>();
+		for (ASIMOVNode<?> node : knowledgeBase)
+			strings.add(node.toString());
+		kbaseList.setListData(strings.toArray());
 	};
 
 }

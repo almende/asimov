@@ -3,12 +3,12 @@ package io.asimov.test.sim;
 import io.asimov.agent.gui.SemanticAgentGui;
 import io.asimov.messaging.ASIMOVBasicAgent;
 import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.reasoning.sl.SLParsable;
 import io.coala.agent.BasicAgent;
 import io.coala.bind.Binder;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.know.ReasoningCapability.Query;
-import io.coala.jsa.sl.SLParsable;
 import io.coala.lifecycle.ActivationType;
 import io.coala.log.InjectLogger;
 

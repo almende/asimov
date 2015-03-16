@@ -1,5 +1,6 @@
 package io.arum.model.process.impl;
 
+import io.arum.model.resource.ARUMResourceType;
 import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.arum.model.resource.person.Person;
 import io.arum.model.resource.supply.Material;
@@ -12,16 +13,24 @@ import io.asimov.messaging.ASIMOVMessage;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.ConversionCallback;
 import io.asimov.microservice.negotiation.ResourceAllocationRequestor.AllocationCallback;
+import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.AbstractNamed;
 import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipation.Result;
+import io.asimov.model.Resource;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.ResourceRequirement;
 import io.asimov.model.process.Task;
+import io.asimov.model.sl.ASIMOVFormula;
+import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.LegacySLUtil;
+import io.asimov.model.sl.SLConvertible;
+import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
+import io.coala.capability.admin.DestroyingCapability;
 import io.coala.capability.embody.Percept;
+import io.coala.capability.know.ReasoningCapability.Belief;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.enterprise.fact.CoordinationFact;
 import io.coala.enterprise.role.AbstractExecutor;
@@ -29,7 +38,6 @@ import io.coala.enterprise.role.Executor;
 import io.coala.event.grant.Paced;
 import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
-import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.log.InjectLogger;
 import io.coala.log.LogUtil;
 import io.coala.model.ModelID;
@@ -226,6 +234,10 @@ public class ProcessCompleterImpl extends
 						+ ta.minus(tn).getMillis() + "ms");
 				continue;
 			}
+			if (((AbstractEmbodied<?>)subject).isUnAvailable()) {
+				wasUnavailable = true;
+				continue;
+			}
 			final String name = ((AbstractNamed<?>) subject).getName();
 			recipientSet.add(newAgentID(name));
 		}
@@ -326,15 +338,15 @@ public class ProcessCompleterImpl extends
 							for (AgentID aid : resources.keySet()) {
 								SLParsableSerializable f = new SLParsableSerializable(
 										resources.get(aid).toString());
+								Belief b = getReasoner()
+								.toBelief(
+										f,
+										ResourceAllocation.ALLOCATED_AGENT_AID,
+										aid);
 								getReasoner()
-										.addBeliefToKBase(
-												getReasoner()
-														.toBelief(
-																f,
-																ResourceAllocation.ALLOCATED_AGENT_AID,
-																aid));
+										.addBeliefToKBase(b);
 								LOG.info(aid + " is allocated as: "
-										+ resources.get(aid));
+										+ b.toString());
 							}
 							LOG.info("All resources are allocated for process instance: "
 									+ getID());
@@ -402,7 +414,9 @@ public class ProcessCompleterImpl extends
 						.withSuccess(
 								getAllocCallback(cause.getSenderID())
 										.wasSucces()).build());
-				
+				getScheduler().schedule(
+						ProcedureCall.create(this, this, DESTROY),
+						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
 			} catch (Exception e1) {
 				LOG.error(
 						"An exception occured while trying to send process completion outcome",
@@ -450,6 +464,17 @@ public class ProcessCompleterImpl extends
 
 	AllocationCallback theCallback;
 
+	public static final String DESTROY = "DESTROY";
+	
+	@Schedulable(DESTROY)
+	public void destroy(){
+		try {
+			getFinalizer().destroy();
+		} catch (Exception e) {
+			LOG.error("Failed to destroy process agent",e);
+		}
+	}
+	
 	private final AllocationCallback getAllocCallback(final AgentID scenario) {
 		if (theCallback == null)
 			theCallback = new AllocationCallback() {

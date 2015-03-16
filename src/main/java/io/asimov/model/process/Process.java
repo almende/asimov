@@ -15,7 +15,11 @@ import io.asimov.model.ResourceRequirement;
 import io.asimov.model.ResourceType;
 import io.asimov.model.Time;
 import io.asimov.model.XMLConvertible;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.sl.ASIMOVTermSequenceNode;
+import io.asimov.model.sl.SL;
 import io.asimov.model.xml.XmlUtil;
+import io.asimov.reasoning.sl.KBase;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.NextActivityRef;
@@ -23,11 +27,6 @@ import io.asimov.xml.TSkeletonActivityType.PreviousActivityRef;
 import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
 import io.asimov.xml.TSkeletonActivityType.UsedComponent;
 import io.coala.log.LogUtil;
-import jade.semantics.lang.sl.grammar.ListOfTerm;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.grammar.TermSequenceNode;
-import jade.semantics.lang.sl.tools.MatchResult;
-import jade.semantics.lang.sl.tools.SL;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -207,14 +206,12 @@ public class Process extends AbstractEntity<Process> implements
 			// update the Tasks
 			for (Task task : getTasks())
 			{
-				MatchResult taskMR = Task.PATTERN.match(task.toSL());
+				Map<String,Object> taskMR = new KBase().matchNode(Task.PATTERN,task.toSL());
 				for (Task compareTask : allTransitionTasks)
 				{
-					final Term compareTaskTerm = compareTask.toSL();
-					final MatchResult transitionTaskMR = Task.PATTERN
-							.match(compareTaskTerm);
-					if (transitionTaskMR.term(Task.TASK_NAME).equals(
-							taskMR.term(Task.TASK_NAME)))
+					final ASIMOVTerm compareTaskTerm = compareTask.toSL();
+					if (compareTaskTerm.equals(
+							taskMR.get(Task.TASK_NAME)))
 					{
 						// Node caseIdsNode =
 						// transitionTaskMR.term(Task.CASE_IDS);
@@ -273,36 +270,36 @@ public class Process extends AbstractEntity<Process> implements
 	private Transition findTransitionByTasks(String[] inputTaskNames,
 			String[] outputTaskNames)
 	{
-		Term[] iTaskTerms = new Term[inputTaskNames.length];
+		ASIMOVTerm[] iTaskTerms = new ASIMOVTerm[inputTaskNames.length];
 		for (int i = 0; i < inputTaskNames.length; i++)
 		{
 			iTaskTerms[i] = SL.string(inputTaskNames[i]);
 		}
-		TermSequenceNode inputTaskNamesTermSequence = new TermSequenceNode(
-				new ListOfTerm(iTaskTerms));
+		ASIMOVTermSequenceNode inputTaskNamesTermSequence = new ASIMOVTermSequenceNode(
+				Arrays.asList(iTaskTerms));
 
-		Term[] oTaskTerms = new Term[outputTaskNames.length];
+		ASIMOVTerm[] oTaskTerms = new ASIMOVTerm[outputTaskNames.length];
 		for (int i = 0; i < outputTaskNames.length; i++)
 		{
 			oTaskTerms[i] = SL.string(outputTaskNames[i]);
 		}
-		TermSequenceNode outputTaskNamesTermSequence = new TermSequenceNode(
-				new ListOfTerm(oTaskTerms));
+		ASIMOVTermSequenceNode outputTaskNamesTermSequence = new ASIMOVTermSequenceNode(
+				Arrays.asList(oTaskTerms));
 
 		return findTransitionByTasks(inputTaskNamesTermSequence,
 				outputTaskNamesTermSequence);
 	}
 
-	private Transition findTransitionByTasks(Term inputTaskNames,
-			Term outputTaskNames)
+	private Transition findTransitionByTasks(ASIMOVTermSequenceNode inputTaskNames,
+			ASIMOVTermSequenceNode outputTaskNames)
 	{
 		for (Transition transition : getTransitions())
 		{
-			MatchResult transitionMR = Transition.PATTERN.match(transition
+			Map<String,Object> transitionMR = new KBase().matchNode(Transition.PATTERN,transition
 					.toSL());
-			if (transitionMR.term(Transition.INPUT_TASK_NAMES).equals(
+			if (transitionMR.get(Transition.INPUT_TASK_NAMES).equals(
 					inputTaskNames))
-				if (transitionMR.term(Transition.OUTPUT_TASK_NAMES).equals(
+				if (transitionMR.get(Transition.OUTPUT_TASK_NAMES).equals(
 						outputTaskNames))
 					return transition;
 		}

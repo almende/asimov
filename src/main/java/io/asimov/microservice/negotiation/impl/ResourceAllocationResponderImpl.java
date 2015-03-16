@@ -10,6 +10,8 @@ import io.asimov.microservice.negotiation.messages.Claimed;
 import io.asimov.microservice.negotiation.messages.Proposal;
 import io.asimov.microservice.negotiation.messages.ProposalRequest;
 import io.asimov.model.ResourceAllocation;
+import io.asimov.reasoning.sl.KBase;
+import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;
 import io.coala.capability.interact.ReceivingCapability;
@@ -240,7 +242,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 	{
 		ReasoningCapability reasonerService = agentServiceProxy.getBinder()
 				.inject(ReasoningCapability.class);
-		Query query = reasonerService.toQuery(requirements);
+		Query query = reasonerService.toQuery(new SLParsableSerializable(requirements.toString()));
 		final CountDownLatch latch = new CountDownLatch(1);
 		final CountDownLatch wasTrue = new CountDownLatch(1);
 		reasonerService.queryToKBase(query).take(1)
@@ -313,7 +315,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 //						LOG.info(requirements + " returns: " + args);
 
 						if (args != null) {
-							result.put(requirements,Double.valueOf(args.get("score").toString()));
+							result.put(requirements,Double.valueOf(KBase.parsePrimitives(args.get("score")).toString()));
 							wasTrue.countDown();
 						}
 					}

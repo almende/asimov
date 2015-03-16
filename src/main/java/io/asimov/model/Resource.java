@@ -1,10 +1,10 @@
 package io.asimov.model;
 
 import io.arum.model.resource.ResourceSubtype;
-import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.SL;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.sl.SL;
+import io.asimov.model.sl.SLConvertible;
 
 import javax.persistence.Embeddable;
 
@@ -31,6 +31,7 @@ public class Resource extends AbstractNamed<Resource> implements
 
 	/** */
 	private ResourceSubtype subTypeID;
+	
 
 	/** @return the typeID */
 	public Class<? extends ResourceType> getTypeID()
@@ -89,17 +90,17 @@ public class Resource extends AbstractNamed<Resource> implements
 	 *  Where the resourceName indicates if it is a unique instance of the resource over the process.
 	 *  If the resourceName is equal to the resourceSubType it can be any resource for that type, otherwise it is a unique instance.
 	 * */
-	public static final Term RESOURCE_PATTERN = SL.term(String.format(
-			"(%s :%s ??%s :%s ??%s :%s ??%s)", TERM_NAME, RESOURCE_NAME,
-			RESOURCE_NAME, RESOURCE_TYPE, RESOURCE_TYPE, RESOURCE_SUB_TYPE,
-			RESOURCE_SUB_TYPE));
+	public static final ASIMOVTerm RESOURCE_PATTERN = new ASIMOVTerm().withName(TERM_NAME)
+			.instantiate(RESOURCE_NAME,null)
+			.instantiate(RESOURCE_TYPE, null)
+			.instantiate(RESOURCE_SUB_TYPE,null);
 
 	/** @see SLConvertible#toSL() */
 	@Override
 	@SuppressWarnings("unchecked")
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
-		Term result = ((Term) SL.instantiate(RESOURCE_PATTERN))
+		ASIMOVTerm result = ((ASIMOVTerm) RESOURCE_PATTERN)
 				.instantiate(RESOURCE_TYPE, SL.string(getTypeID().getName()))
 				.instantiate(RESOURCE_SUB_TYPE,
 						SL.string(getSubTypeID().getName()));
@@ -110,7 +111,7 @@ public class Resource extends AbstractNamed<Resource> implements
 
 	/** @see SLConvertible#fromSL(Term) */
 	@Override
-	public Resource fromSL(final Node term)
+	public <N extends ASIMOVNode<N>> Resource fromSL(final N term)
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");
@@ -165,7 +166,7 @@ public class Resource extends AbstractNamed<Resource> implements
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

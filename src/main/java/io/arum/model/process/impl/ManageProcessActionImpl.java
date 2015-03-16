@@ -1,9 +1,8 @@
 package io.arum.model.process.impl;
 
 import io.arum.model.resource.ARUMResourceType;
+import io.arum.model.resource.ResourceSubtype;
 import io.arum.model.resource.assemblyline.AssemblyLineType;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.SupplyType;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessManagementWorld;
@@ -11,19 +10,19 @@ import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipationResourceInformation;
 import io.asimov.model.ResourceAllocation;
-import io.asimov.model.process.Activity;
-import io.asimov.model.process.Next;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
+import io.asimov.model.process.Transition;
+import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.LegacySLUtil;
 import io.asimov.model.xml.XmlUtil;
+import io.asimov.reasoning.sl.KBase;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
 import io.asimov.xml.TSkeletonActivityType.UsedComponent;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
-import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.enterprise.fact.FactID;
 import io.coala.enterprise.role.AbstractExecutor;
@@ -35,15 +34,11 @@ import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 import io.coala.time.Trigger;
-import jade.semantics.lang.sl.grammar.Formula;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
@@ -63,8 +58,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class ManageProcessActionImpl extends
 		AbstractExecutor<ProcessCompletion> implements
-		ManageProcessActionService
-{
+		ManageProcessActionService {
 
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -77,8 +71,7 @@ public class ManageProcessActionImpl extends
 
 	private Map<ProcessCompletion.Request, Map<String, Object>> _dss = new HashMap<ProcessCompletion.Request, Map<String, Object>>();
 
-	private Map<String, Object> getDataStore(ProcessCompletion.Request cause)
-	{
+	private Map<String, Object> getDataStore(ProcessCompletion.Request cause) {
 		if (_dss.containsKey(cause))
 			return _dss.get(cause);
 		final Map<String, Object> ds = new HashMap<String, Object>();
@@ -120,8 +113,7 @@ public class ManageProcessActionImpl extends
 	private ProcedureCall<?> nextActivityjob = null;
 
 	@Inject
-	protected ManageProcessActionImpl(final Binder binder)
-	{
+	protected ManageProcessActionImpl(final Binder binder) {
 		super(binder);
 		// sim = getBinder().bind(SimulatorService.class);
 		// reasoner = getBinder().bind(ReasonerService.class);
@@ -130,230 +122,187 @@ public class ManageProcessActionImpl extends
 	}
 
 	/*
-		
-		@Override
-		public void perform(OntoActionBehaviour behaviour) {
-			DataStore ds = behaviour.getDataStore();
-			switch (behaviour.getState()) {
-				case OntoActionBehaviour.START :
-				case OntoActionBehaviour.RUNNING :
-					if (ds.get("DONE_EXECUTING_MAIN_BEHAVIOUR") == null) {
-						QueryResult holdUpQueryResult = getSemanticCapabilities().getMyKBase().query(
-								ProcessAgent.getStaticCurrentProcessStateFormula(
-										Next.PATTERN
-								).instantiate(Next.LATTER_ACTIVITY_TIME_TOKEN, (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN))
-							);
-						if (holdUpQueryResult != null && !holdUpQueryResult.isEmpty()) {
-							behaviour.setState(OntoActionBehaviour.RUNNING);
-							break;
-						}
-						ProcessAgent.LOG.trace("Now the process agent will distribute the activities and the nexts from "+(Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN));
-						// do the management
-						// ...
-						// Create and Distribute Activities and Next's
-						// Get Activities
-						QueryResult qr = getSemanticCapabilities().getMyKBase().query(
-								ProcessAgent.getStaticBelongsToProcessFormula(
-										Activity.PATTERN
-										.instantiate(Activity.ACTIVITY_TIME_TOKEN, (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN))
-								)
-							);
-						TermSequenceNode requiredResources = new TermSequenceNode();
-						if (qr != null && !qr.isEmpty()){
-							ArrayList activityTerms = new ArrayList();
-							Iterator it = qr.getResults().iterator();
-							while (it.hasNext()) {
-								MatchResult activityMatchResult =  (MatchResult) it.next();
-								if (!activityMatchResult.term(Activity.ACTIVITY_NAME).toString().replace("\"", "").equals(Task.START_OF_PROCESS.getName()+"_"+this.processAgent.cProcess.getName()))
-									requiredResources = (TermSequenceNode)activityMatchResult.term(Task.TASK_RESOURCE_RESERVATION_SET);
-							}
-							ProcessAgent.LOG.trace("Distributing next's for resources:"+requiredResources);
-						} else {
-							ProcessAgent.LOG.trace("NO RESULT FOR:"+ProcessAgent.getStaticBelongsToProcessFormula(
-									Activity.PATTERN
-									)
-								);
-						}
-						
-						// Get Next's
-						QueryResult allocatedResourcesQueryResult =
-								getSemanticCapabilities().getMyKBase().query(
-								new AndNode(
-								ProcessAgent.getStaticBelongsToProcessFormula(
-										ResourceAllocation.PATTERN
-								),
-								SL.formula("(member ??"+ResourceAllocation.RESOURCE_REQUIREMENT_ID+" "+requiredResources+")")
-								)
-								
-							);
-						if (allocatedResourcesQueryResult == null 
-								|| allocatedResourcesQueryResult.isEmpty()){
-							behaviour.setState(OntoActionBehaviour.RUNNING);
-							ds.put("DONE_EXECUTING_MAIN_BEHAVIOUR",true);
-							break;
-						}
-						Iterator allocatedResourcesIterator = 
-							allocatedResourcesQueryResult.getResults().iterator();
-						Term nextActivityTimeToken = null;
-						while (allocatedResourcesIterator.hasNext()) {
-							MatchResult allocatedResourcesMatchResult = (MatchResult)
-									allocatedResourcesIterator.next();
-							Term actor = allocatedResourcesMatchResult.term(ResourceAllocation.ALLOCATED_AGENT_AID);
-							
-							QueryResult qrn = null;
-							if (nextActivityTimeToken == null) {
-								qrn = getSemanticCapabilities().getMyKBase().query(
-									ProcessAgent.getStaticBelongsToProcessFormula(
-											Next.PATTERN
-										
-										.instantiate(Next.ACTOR_AGENT_AID, actor)
-										.instantiate(Next.FORMER_ACTIVITY_TIME_TOKEN, (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN))
-									)
-								);
-								ProcessAgent.LOG.info("query:"+ProcessAgent.getStaticBelongsToProcessFormula(
-										Next.PATTERN
-										
-									.instantiate(Next.ACTOR_AGENT_AID, actor)
-									.instantiate(Next.FORMER_ACTIVITY_TIME_TOKEN, (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN))
-								));
-							}else
-								qrn = getSemanticCapabilities().getMyKBase().query(
-										ProcessAgent.getStaticBelongsToProcessFormula(
-												Next.OPTION_PATTERN
-											
-											.instantiate(Next.ACTOR_AGENT_AID, actor)
-											.instantiate(Next.FORMER_ACTIVITY_TIME_TOKEN, (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN))
-											.instantiate(Next.LATTER_ACTIVITY_TIME_TOKEN, nextActivityTimeToken)
-										)
-									);
-							if (qrn != null && !qrn.isEmpty()){
-								ArrayList nextTerms = new ArrayList();
-								Iterator it = qrn.getResults().iterator();
-								while (it.hasNext()) {
-									MatchResult nextMatchResult =  (MatchResult) it.next();
-									if (nextActivityTimeToken == null)
-										nextActivityTimeToken = nextMatchResult.term(Next.LATTER_ACTIVITY_TIME_TOKEN);
-									Term nextTerm = ((Term) 
-											SL.instantiate(Next.PATTERN
-													.instantiate(Next.FORMER_ACTIVITY_TIME_TOKEN, (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN))
-													.instantiate(Next.LATTER_ACTIVITY_TIME_TOKEN, nextActivityTimeToken)
-													.instantiate(Next.ACTOR_AGENT_AID, actor), nextMatchResult))
-											.instantiate(Activity.PROCESS_AGENT_AID, Tools.AID2Term(this.processAgent.getAID())
-											);
-									nextTerms.add(nextTerm);
-									//LOG.trace("Sending to "+actor.toString()+": "+nextTerm.toString());
-									Formula processStateFormula = ProcessAgent.getStaticCurrentProcessStateFormula(nextTerm)
-											.instantiate(ProcessAgent.PROCESS_NAME, nextMatchResult.term(ProcessAgent.PROCESS_NAME));
-									getSemanticCapabilities()
-										.getMyKBase().assertFormula(processStateFormula);
-									
-									ArrayList resources = (ArrayList)allocatedResourcesQueryResult.getResults().clone();
-									Iterator resourceIterator = resources.iterator();
-									while (resourceIterator.hasNext()) {
-										MatchResult resourceMatchResult = (MatchResult)resourceIterator.next();
-										// FIXME will not work when resource allocation changes
-										if (resourceMatchResult.term(ResourceAllocation.ALLOCATED_AGENT_AID) != actor) {
-											Formula resourceRequirementFormula =
-													ProcessAgent.getStaticBelongsToProcessFormula(ResourceRequirement.TASK_RESOURCE_PATTERN)
-													.instantiate(ResourceRequirement.TASK_RESOURCE, Resource.RESOURCE_PATTERN
-															.instantiate(Resource.RESOURCE_NAME, resourceMatchResult.term(ResourceAllocation.RESOURCE_REQUIREMENT_ID))
-													);
-											QueryResult resourceRequirementQuery = 
-													getSemanticCapabilities().getMyKBase().query(resourceRequirementFormula);
-											jade.util.leap.Iterator resourceResultIterator = resourceRequirementQuery.getResults().iterator();
-											while (resourceResultIterator.hasNext())
-												getSemanticCapabilities()
-												.inform((Formula)SL.instantiate(resourceRequirementFormula,(MatchResult)resourceResultIterator.next()),actor);
-											getSemanticCapabilities()
-											.inform((Formula)SL.instantiate(ProcessAgent.getStaticBelongsToProcessFormula(ResourceAllocation.PATTERN),resourceMatchResult), actor);
-										}
-									}
-									getSemanticCapabilities()
-										.inform(processStateFormula, actor);
-								}
-								ds.put(Next.TERM_NAME, nextTerms);
-								behaviour.setState(OntoActionBehaviour.RUNNING);
-							} else {
-								ProcessAgent.LOG.trace("NO RESULT FOR:"+ProcessAgent.getStaticBelongsToProcessFormula(
-										Next.PATTERN
-										)
-									);
-								behaviour.setState(OntoActionBehaviour.EXECUTION_FAILURE);
-								this.processAgent.logSevere("Process failed!");
-								break;
-							}
-						}
-						// ....
-						// Notify Process start
-						// ....
-						// Wait for end of process notification
-						// ....
-						// now we should be done functionally
-	//						if (
-	//						getSemanticCapabilities().getMyKBase().query(
-	//							Process.getStaticBelongsToProcessFormula(
-	//									Activity.PATTERN
-	//							)
-	//							.instantiate(Activity.ACTIVITY_NAME, SL.string(Process.END_OF_PROCESS))
-	//							.instantiate(Activity.ACTIVITY_TIME_TOKEN, nextActivityTimeToken)
-	//						) == null) {
-	//							ds.put("DONE_EXECUTING_MAIN_BEHAVIOUR", true);
-	//						} else {
-							ds.remove(ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN));
-							ds.put(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN, nextActivityTimeToken);
-						break;
-						//}
-					}
-					if (!this.processAgent.checkIfActionEndTimeIsFeasible(this)) {
-						behaviour.setState(OntoActionBehaviour.RUNNING);
-						break;
-				    }
-					ProcessAgent.LOG.trace("Process was succes!");
-					if (this.processAgent.isCyclic) {
-						java.util.ArrayList<String> args = new java.util.ArrayList<String>();
-						for (Object arg : this.processAgent.getArguments())
-							args.add(arg.toString());
-						String[] strArgs = new String[args.size()];
-						args.toArray(strArgs);
-						try
-						{
-							ActionExpression createProcessAgentActionExpression = this.processAgent.createAgentIfNotExistsWithClassTypeAndAttributesAndReturnAID(ProcessAgent.PROCESS_AGENT_CLASS, ProcessAgent.PROCESS_AGENT_TYPE, strArgs, this.processAgent.ASAP+this.processAgent.REPEAT_INTERVAL, this.processAgent.ASAP+this.processAgent.REPEAT_INTERVAL);
-							createProcessAgentActionExpression = (ActionExpression) createProcessAgentActionExpression.instantiate("PROPOSED_AGENT_NAME", SL.string(ProcessAgent.PROCESS_AGENT_TYPE+"_"+(new UUID().toString())));
-							getSemanticCapabilities().interpret(ProcessAgent.createIntendActionDone(createProcessAgentActionExpression));
-							ProcessAgent.LOG.trace("Replicating process with name: "+this.processAgent.getAID().getName());
-							ds.put("replicatedProcess", true);
-						} catch (ControllerException e)
-						{
-							this.processAgent.logSevere("Failed to create new procces agent instance for cyclic process.",e);
-							e.printStackTrace();
-						}
-					} 
-					behaviour.setState(OntoActionBehaviour.SUCCESS);
-					if (this.processAgent.shutDownAfterProcess) {
-						ChronosService.getInstance(this.processAgent.replicationID).removeFromFederation(this.processAgent.getAID());
-					}
-					ProcessGeneratorService.getInstance(this.processAgent.getContainer().getContainerName(), this.processAgent.replicationID).notifyProcessComplete(this.processAgent.getLocalName());
-					break;
-					
-			}
-			
-		}
-		
-		*/
+	 * 
+	 * @Override public void perform(OntoActionBehaviour behaviour) { DataStore
+	 * ds = behaviour.getDataStore(); switch (behaviour.getState()) { case
+	 * OntoActionBehaviour.START : case OntoActionBehaviour.RUNNING : if
+	 * (ds.get("DONE_EXECUTING_MAIN_BEHAVIOUR") == null) { QueryResult
+	 * holdUpQueryResult = getSemanticCapabilities().getMyKBase().query(
+	 * ProcessAgent.getStaticCurrentProcessStateFormula( Next.PATTERN
+	 * ).instantiate(Next.LATTER_ACTIVITY_TIME_TOKEN,
+	 * (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN)) ); if
+	 * (holdUpQueryResult != null && !holdUpQueryResult.isEmpty()) {
+	 * behaviour.setState(OntoActionBehaviour.RUNNING); break; }
+	 * ProcessAgent.LOG.trace(
+	 * "Now the process agent will distribute the activities and the nexts from "
+	 * +(Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN)); // do the
+	 * management // ... // Create and Distribute Activities and Next's // Get
+	 * Activities QueryResult qr = getSemanticCapabilities().getMyKBase().query(
+	 * ProcessAgent.getStaticBelongsToProcessFormula( Activity.PATTERN
+	 * .instantiate(Activity.ACTIVITY_TIME_TOKEN,
+	 * (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN)) ) );
+	 * TermSequenceNode requiredResources = new TermSequenceNode(); if (qr !=
+	 * null && !qr.isEmpty()){ ArrayList activityTerms = new ArrayList();
+	 * Iterator it = qr.getResults().iterator(); while (it.hasNext()) {
+	 * MatchResult activityMatchResult = (MatchResult) it.next(); if
+	 * (!activityMatchResult
+	 * .term(Activity.ACTIVITY_NAME).toString().replace("\"",
+	 * "").equals(Task.START_OF_PROCESS
+	 * .getName()+"_"+this.processAgent.cProcess.getName())) requiredResources =
+	 * (
+	 * TermSequenceNode)activityMatchResult.term(Task.TASK_RESOURCE_RESERVATION_SET
+	 * ); }
+	 * ProcessAgent.LOG.trace("Distributing next's for resources:"+requiredResources
+	 * ); } else { ProcessAgent.LOG.trace("NO RESULT FOR:"+ProcessAgent.
+	 * getStaticBelongsToProcessFormula( Activity.PATTERN ) ); }
+	 * 
+	 * // Get Next's QueryResult allocatedResourcesQueryResult =
+	 * getSemanticCapabilities().getMyKBase().query( new AndNode(
+	 * ProcessAgent.getStaticBelongsToProcessFormula( ResourceAllocation.PATTERN
+	 * ),
+	 * SL.formula("(member ??"+ResourceAllocation.RESOURCE_REQUIREMENT_ID+" "+
+	 * requiredResources+")") )
+	 * 
+	 * ); if (allocatedResourcesQueryResult == null ||
+	 * allocatedResourcesQueryResult.isEmpty()){
+	 * behaviour.setState(OntoActionBehaviour.RUNNING);
+	 * ds.put("DONE_EXECUTING_MAIN_BEHAVIOUR",true); break; } Iterator
+	 * allocatedResourcesIterator =
+	 * allocatedResourcesQueryResult.getResults().iterator(); Term
+	 * nextActivityTimeToken = null; while
+	 * (allocatedResourcesIterator.hasNext()) { MatchResult
+	 * allocatedResourcesMatchResult = (MatchResult)
+	 * allocatedResourcesIterator.next(); Term actor =
+	 * allocatedResourcesMatchResult
+	 * .term(ResourceAllocation.ALLOCATED_AGENT_AID);
+	 * 
+	 * QueryResult qrn = null; if (nextActivityTimeToken == null) { qrn =
+	 * getSemanticCapabilities().getMyKBase().query(
+	 * ProcessAgent.getStaticBelongsToProcessFormula( Next.PATTERN
+	 * 
+	 * .instantiate(Next.ACTOR_AGENT_AID, actor)
+	 * .instantiate(Next.FORMER_ACTIVITY_TIME_TOKEN,
+	 * (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN)) ) );
+	 * ProcessAgent
+	 * .LOG.info("query:"+ProcessAgent.getStaticBelongsToProcessFormula(
+	 * Next.PATTERN
+	 * 
+	 * .instantiate(Next.ACTOR_AGENT_AID, actor)
+	 * .instantiate(Next.FORMER_ACTIVITY_TIME_TOKEN,
+	 * (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN)) )); }else qrn =
+	 * getSemanticCapabilities().getMyKBase().query(
+	 * ProcessAgent.getStaticBelongsToProcessFormula( Next.OPTION_PATTERN
+	 * 
+	 * .instantiate(Next.ACTOR_AGENT_AID, actor)
+	 * .instantiate(Next.FORMER_ACTIVITY_TIME_TOKEN,
+	 * (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN))
+	 * .instantiate(Next.LATTER_ACTIVITY_TIME_TOKEN, nextActivityTimeToken) ) );
+	 * if (qrn != null && !qrn.isEmpty()){ ArrayList nextTerms = new
+	 * ArrayList(); Iterator it = qrn.getResults().iterator(); while
+	 * (it.hasNext()) { MatchResult nextMatchResult = (MatchResult) it.next();
+	 * if (nextActivityTimeToken == null) nextActivityTimeToken =
+	 * nextMatchResult.term(Next.LATTER_ACTIVITY_TIME_TOKEN); Term nextTerm =
+	 * ((Term) SL.instantiate(Next.PATTERN
+	 * .instantiate(Next.FORMER_ACTIVITY_TIME_TOKEN,
+	 * (Term)ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN))
+	 * .instantiate(Next.LATTER_ACTIVITY_TIME_TOKEN, nextActivityTimeToken)
+	 * .instantiate(Next.ACTOR_AGENT_AID, actor), nextMatchResult))
+	 * .instantiate(Activity.PROCESS_AGENT_AID,
+	 * Tools.AID2Term(this.processAgent.getAID()) ); nextTerms.add(nextTerm);
+	 * //LOG.trace("Sending to "+actor.toString()+": "+nextTerm.toString());
+	 * Formula processStateFormula =
+	 * ProcessAgent.getStaticCurrentProcessStateFormula(nextTerm)
+	 * .instantiate(ProcessAgent.PROCESS_NAME,
+	 * nextMatchResult.term(ProcessAgent.PROCESS_NAME));
+	 * getSemanticCapabilities()
+	 * .getMyKBase().assertFormula(processStateFormula);
+	 * 
+	 * ArrayList resources =
+	 * (ArrayList)allocatedResourcesQueryResult.getResults().clone(); Iterator
+	 * resourceIterator = resources.iterator(); while
+	 * (resourceIterator.hasNext()) { MatchResult resourceMatchResult =
+	 * (MatchResult)resourceIterator.next(); // FIXME will not work when
+	 * resource allocation changes if
+	 * (resourceMatchResult.term(ResourceAllocation.ALLOCATED_AGENT_AID) !=
+	 * actor) { Formula resourceRequirementFormula =
+	 * ProcessAgent.getStaticBelongsToProcessFormula
+	 * (ResourceRequirement.TASK_RESOURCE_PATTERN)
+	 * .instantiate(ResourceRequirement.TASK_RESOURCE, Resource.RESOURCE_PATTERN
+	 * .instantiate(Resource.RESOURCE_NAME,
+	 * resourceMatchResult.term(ResourceAllocation.RESOURCE_REQUIREMENT_ID)) );
+	 * QueryResult resourceRequirementQuery =
+	 * getSemanticCapabilities().getMyKBase().query(resourceRequirementFormula);
+	 * jade.util.leap.Iterator resourceResultIterator =
+	 * resourceRequirementQuery.getResults().iterator(); while
+	 * (resourceResultIterator.hasNext()) getSemanticCapabilities()
+	 * .inform((Formula)SL.instantiate(resourceRequirementFormula,(MatchResult)
+	 * resourceResultIterator.next()),actor); getSemanticCapabilities()
+	 * .inform((
+	 * Formula)SL.instantiate(ProcessAgent.getStaticBelongsToProcessFormula
+	 * (ResourceAllocation.PATTERN),resourceMatchResult), actor); } }
+	 * getSemanticCapabilities() .inform(processStateFormula, actor); }
+	 * ds.put(Next.TERM_NAME, nextTerms);
+	 * behaviour.setState(OntoActionBehaviour.RUNNING); } else {
+	 * ProcessAgent.LOG
+	 * .trace("NO RESULT FOR:"+ProcessAgent.getStaticBelongsToProcessFormula(
+	 * Next.PATTERN ) );
+	 * behaviour.setState(OntoActionBehaviour.EXECUTION_FAILURE);
+	 * this.processAgent.logSevere("Process failed!"); break; } } // .... //
+	 * Notify Process start // .... // Wait for end of process notification //
+	 * .... // now we should be done functionally // if ( //
+	 * getSemanticCapabilities().getMyKBase().query( //
+	 * Process.getStaticBelongsToProcessFormula( // Activity.PATTERN // ) //
+	 * .instantiate(Activity.ACTIVITY_NAME, SL.string(Process.END_OF_PROCESS))
+	 * // .instantiate(Activity.ACTIVITY_TIME_TOKEN, nextActivityTimeToken) // )
+	 * == null) { // ds.put("DONE_EXECUTING_MAIN_BEHAVIOUR", true); // } else {
+	 * ds.remove(ds.get(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN));
+	 * ds.put(ProcessAgent.sCURRENT_ACTIVITY_TIME_TOKEN, nextActivityTimeToken);
+	 * break; //} } if (!this.processAgent.checkIfActionEndTimeIsFeasible(this))
+	 * { behaviour.setState(OntoActionBehaviour.RUNNING); break; }
+	 * ProcessAgent.LOG.trace("Process was succes!"); if
+	 * (this.processAgent.isCyclic) { java.util.ArrayList<String> args = new
+	 * java.util.ArrayList<String>(); for (Object arg :
+	 * this.processAgent.getArguments()) args.add(arg.toString()); String[]
+	 * strArgs = new String[args.size()]; args.toArray(strArgs); try {
+	 * ActionExpression createProcessAgentActionExpression = this.processAgent.
+	 * createAgentIfNotExistsWithClassTypeAndAttributesAndReturnAID
+	 * (ProcessAgent.PROCESS_AGENT_CLASS, ProcessAgent.PROCESS_AGENT_TYPE,
+	 * strArgs, this.processAgent.ASAP+this.processAgent.REPEAT_INTERVAL,
+	 * this.processAgent.ASAP+this.processAgent.REPEAT_INTERVAL);
+	 * createProcessAgentActionExpression = (ActionExpression)
+	 * createProcessAgentActionExpression.instantiate("PROPOSED_AGENT_NAME",
+	 * SL.string(ProcessAgent.PROCESS_AGENT_TYPE+"_"+(new UUID().toString())));
+	 * getSemanticCapabilities().interpret(ProcessAgent.createIntendActionDone(
+	 * createProcessAgentActionExpression));
+	 * ProcessAgent.LOG.trace("Replicating process with name: "
+	 * +this.processAgent.getAID().getName()); ds.put("replicatedProcess",
+	 * true); } catch (ControllerException e) { this.processAgent.logSevere(
+	 * "Failed to create new procces agent instance for cyclic process.",e);
+	 * e.printStackTrace(); } } behaviour.setState(OntoActionBehaviour.SUCCESS);
+	 * if (this.processAgent.shutDownAfterProcess) {
+	 * ChronosService.getInstance(this
+	 * .processAgent.replicationID).removeFromFederation
+	 * (this.processAgent.getAID()); }
+	 * ProcessGeneratorService.getInstance(this.processAgent
+	 * .getContainer().getContainerName(),
+	 * this.processAgent.replicationID).notifyProcessComplete
+	 * (this.processAgent.getLocalName()); break;
+	 * 
+	 * }
+	 * 
+	 * }
+	 */
 
 	// @Override
-	protected ProcessManagementWorld getWorld()
-	{
+	protected ProcessManagementWorld getWorld() {
 		return getBinder().inject(ProcessManagementWorld.class);
 	}
 
 	@SuppressWarnings("deprecation")
-	private String getAgentIDByResourceSubType(final String resourceSubType)
-	{
+	private String getAgentIDByResourceSubType(final String resourceSubType) {
 
-		if (resourceSubTypeToAgentIdMap.isEmpty())
-		{
-			final Formula query = LegacySLUtil
+		if (resourceSubTypeToAgentIdMap.isEmpty()) {
+			final ASIMOVFormula query = LegacySLUtil
 					.getStaticBelongsToProcessFormula(ResourceAllocation.PATTERN);
 			// LOG.warn("Current KBase: "
 			// + ((FilterKBase) getBinder().inject(ReasonerService.class)
@@ -361,54 +310,46 @@ public class ManageProcessActionImpl extends
 			// .replace(",", ",\n\t"));
 			// LOG.warn("Querying: " + query);
 			getReasoner().queryToKBase(getReasoner().toQuery(query)).subscribe(
-					new Observer<Map<String, Object>>()
-					{
+					new Observer<Map<String, Object>>() {
 
 						@Override
-						public void onError(final Throwable e)
-						{
+						public void onError(final Throwable e) {
 							LOG.error("Problem querying KB", e);
 						}
 
 						@Override
-						public void onNext(final Map<String, Object> value)
-						{
-							LOG.info(value
-									.get(ResourceAllocation.RESOURCE_REQUIREMENT_ID)
+						public void onNext(final Map<String, Object> value) {
+							LOG.info(KBase
+									.parsePrimitives(
+											value.get(ResourceAllocation.RESOURCE_REQUIREMENT_ID))
 									.toString().toUpperCase()
 									+ "==>"
 									+ value.get(
 											ResourceAllocation.ALLOCATED_AGENT_AID)
 											.toString());
-							resourceSubTypeToAgentIdMap
-									.put(value
-											.get(ResourceAllocation.RESOURCE_REQUIREMENT_ID)
+							resourceSubTypeToAgentIdMap.put(
+									KBase.parsePrimitives(
+											value.get(ResourceAllocation.RESOURCE_REQUIREMENT_ID))
 											.toString().toUpperCase(),
-											value.get(
-													ResourceAllocation.ALLOCATED_AGENT_AID)
-													.toString());
+									value.get(
+											ResourceAllocation.ALLOCATED_AGENT_AID)
+											.toString());
 						}
 
 						@Override
-						public void onCompleted()
-						{
-							synchronized (resourceSubTypeToAgentIdMap)
-							{
+						public void onCompleted() {
+							synchronized (resourceSubTypeToAgentIdMap) {
 								resourceSubTypeToAgentIdMap.notifyAll();
 							}
 						}
 					});
 		}
-		while (resourceSubTypeToAgentIdMap.isEmpty())
-		{
-			synchronized (resourceSubTypeToAgentIdMap)
-			{
-				try
-				{
+		while (resourceSubTypeToAgentIdMap.isEmpty()) {
+			synchronized (resourceSubTypeToAgentIdMap) {
+				try {
 					LOG.info("Waiting for start time...");
 					resourceSubTypeToAgentIdMap.wait();
-				} catch (final InterruptedException ignore)
-				{
+				} catch (final InterruptedException ignore) {
 				}
 			}
 		}
@@ -420,423 +361,385 @@ public class ManageProcessActionImpl extends
 	}
 
 	@Override
-	public void onRequested(final ProcessCompletion request)
-	{
+	public void onRequested(final ProcessCompletion request) {
 		// ignore throw new IllegalStateException("NOT IMPLEMENTED");
 	}
 
-	
+	final Map<String, Transition> availableTransitions = new HashMap<String, Transition>();
+
+	public void obtainAvailableTransitions(final String currentTaskId) {
+		availableTransitions.clear();
+		 for (Transition t : process.getTransitions()) {
+			for (Task task : t.getFromTasks()) {
+				if (task.getName().equals(currentTaskId)) {
+					for (final String caseId : t.getTraceIDs())
+						availableTransitions.put(caseId + "_" + t.getName(), t);
+					//break outerLoop;
+				}
+			}
+		}
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void manageProcessInstanceForType(
-			final ProcessCompletion.Request cause)
-	{
+			final ProcessCompletion.Request cause) {
 		final String processType = cause.getProcessTypeID();
 
 		// this.setRequestBuilder(requestBuilder);
 		// this.responseBuilder = responseBuilder;
 		LOG.info("Managing process: " + processType);
-		if (process == null)
-		{
+		if (process == null) {
 			process = getWorld().getProcess(processType);
 			processXML = process.toXML();
 		}
 
-		if (!this.getDataStore(cause).containsKey(sSTART_ACTIVITY_TIME_TOKEN))
-			getReasoner()
-					.queryToKBase(
-							getReasoner()
-									.toQuery(
-											LegacySLUtil
-													.getStaticBelongsToProcessFormula(Activity.PATTERN),
-											Activity.ACTIVITY_NAME,
-											Task.START_OF_PROCESS.getName()
-													+ "_" + processType))
-					.subscribe(new Observer<Map<String, Object>>()
-					{
+		// HashSet<Task> transitionToTasks = new
+		// HashSet<Task>(process.getTasks());
 
-						@Override
-						public void onError(final Throwable e)
-						{
-							LOG.error("Problem querying KB", e);
-						}
+		if (!this.getDataStore(cause).containsKey(sSTART_ACTIVITY_TIME_TOKEN)) {
+			// for (Transition t : process.getTransitions()) {
+			// if (t.getFromTasks().contains(Task.START_OF_PROCESS.getName()
+			// + "_" + processType)) {
+			// for (final String caseId : t.getTraceIDs())
+			// availableTransitions.put(caseId+"_"+t.getName(),t);
+			// break;
+			// }
+			// }
+			obtainAvailableTransitions(Task.START_OF_PROCESS.getName() + "_"
+					+ processType);
 
-						@Override
-						public void onNext(final Map<String, Object> value)
-						{
-							getDataStore(cause).put(sSTART_ACTIVITY_TIME_TOKEN,
-									value.get(Activity.ACTIVITY_TIME_TOKEN));
-							LOG.info("Located start of process");
-						}
+			LOG.info("Located start of process");
+			synchronized (getDataStore(cause)) {
+				getDataStore(cause).notifyAll();
+			}
+			// getReasoner()
+			// .queryToKBase(
+			// getReasoner()
+			// .toQuery(
+			// LegacySLUtil
+			// .getStaticBelongsToProcessFormula(Activity.PATTERN),
+			// Activity.ACTIVITY_NAME,
+			// Task.START_OF_PROCESS.getName()
+			// + "_" + processType))
+			// .subscribe(new Observer<Map<String, Object>>()
+			// {
+			//
+			// @Override
+			// public void onError(final Throwable e)
+			// {
+			// LOG.error("Problem querying KB", e);
+			// }
+			//
+			// @Override
+			// public void onNext(final Map<String, Object> value)
+			// {
+			// getDataStore(cause).put(sSTART_ACTIVITY_TIME_TOKEN,
+			// value.get(Activity.ACTIVITY_TIME_TOKEN));
+			// LOG.info("Located start of process");
+			// }
+			//
+			// @Override
+			// public void onCompleted()
+			// {
+			// synchronized (getDataStore(cause))
+			// {
+			// getDataStore(cause).notifyAll();
+			// }
+			// }
+			// });
+			// do the management
+			// ...
+			// Create and Distribute Activities and Next's
+			// Get Activities
 
-						@Override
-						public void onCompleted()
-						{
-							synchronized (getDataStore(cause))
-							{
-								getDataStore(cause).notifyAll();
-							}
-						}
-					});
-		// do the management
-		// ...
-		// Create and Distribute Activities and Next's
-		// Get Activities
-
-		// TODO notify scenario replicator
-		// processGeneratorService.notifyProcessStarted(getOwnerID().getValue());
-
-		while (!this.getDataStore(cause)
-				.containsKey(sSTART_ACTIVITY_TIME_TOKEN))
-		{
-			synchronized (getDataStore(cause))
-			{
-				LOG.info("Waiting for start time...");
-				try
-				{
-					this.getDataStore(cause).wait(1000L);
-				} catch (final InterruptedException ignore)
-				{
+			// TODO notify scenario replicator
+			// processGeneratorService.notifyProcessStarted(getOwnerID().getValue());
+			ArrayList<String> keys = new ArrayList<String>(
+					availableTransitions.keySet());
+			long pick = getRandomizer().getRNG().nextInt(keys.size());
+			getDataStore(cause).put(sSTART_ACTIVITY_TIME_TOKEN,
+					availableTransitions.get(keys.get((int) pick)));
+			// LOG.info("availableTransitions:"+availableTransitions);
+			// LOG.info("KEYS:"+keys);
+			// LOG.info("DS:"+getDataStore(cause));
+			// System.exit(1);
+			while (!this.getDataStore(cause).containsKey(
+					sSTART_ACTIVITY_TIME_TOKEN)) {
+				synchronized (getDataStore(cause)) {
+					LOG.info("Waiting for start time...");
+					try {
+						this.getDataStore(cause).wait(1000L);
+					} catch (final InterruptedException ignore) {
+					}
 				}
 			}
-		}
 
-		final ProcedureCall<?> nextActivityJob = ProcedureCall.create(this,
-				this, NEXT_ACTIVITY_METHOD_ID, cause, this.getDataStore(cause)
-						.get(sSTART_ACTIVITY_TIME_TOKEN).toString());
-		final SimTime now = getTime();
-		getSimulator().schedule(nextActivityJob, Trigger.createAbsolute(now));
+			final ProcedureCall<?> nextActivityJob = ProcedureCall.create(this,
+					this, NEXT_ACTIVITY_METHOD_ID, cause,
+					this.getDataStore(cause).get(sSTART_ACTIVITY_TIME_TOKEN)
+							.toString());
+			final SimTime now = getTime();
+			getSimulator().schedule(nextActivityJob,
+					Trigger.createAbsolute(now));
+		}
 	}
 
 	private final static String NEXT_ACTIVITY_METHOD_ID = "processManagementNextActivty";
 
 	private static final String REQUEST_ACTIVITY_PARTICIPATION = "requestActivityParticipation";
 
+	public static final String DESTROY = "DESTROY";
+	
+	@Schedulable(DESTROY)
+	public void destroy(){
+		try {
+			getFinalizer().destroy();
+		} catch (Exception e) {
+			LOG.error("Failed to destroy process agent",e);
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	@Schedulable(NEXT_ACTIVITY_METHOD_ID)
 	public void nextActivity(final ProcessCompletion.Request cause,
-			final String currentActivityTimeToken)
-	{
+			final String currentActivityTimeToken) {
 
 		final Map<AgentID, List<String>> nextDistribution = getNextDistributionPerResource(
 				cause, currentActivityTimeToken);
 
-		if (getDataStore(cause).get(sREACHED_EOP) != null)
-		{
-			getBinder().inject(ResourceAllocationNegotiator.class).deAllocate(cause.getSenderID().getValue());
+		if (getDataStore(cause).get(sREACHED_EOP) != null) {
+			getBinder().inject(ResourceAllocationNegotiator.class).deAllocate(
+					cause.getSenderID().getValue());
 			// TODO notify scenario replicator
 			// processGeneratorService.notifyProcessComplete(getOwnerID()
 			// .getValue());
 			LOG.info("Reached end of process instance " + getID());
-			try
-			{
-				send(
-						ProcessCompletion.Result.Builder.forProducer(this,
-								cause).withSuccess(true).build());
-			} catch (Exception e)
-			{
+			try {
+				send(ProcessCompletion.Result.Builder.forProducer(this, cause)
+						.withSuccess(true).build());
+				getScheduler().schedule(
+						ProcedureCall.create(this, this, DESTROY),
+						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
+			} catch (Exception e) {
 				LOG.error("Failed to send process completion response", e);
 			}
 			return;
 		}
+		
+		
 
 		final List<String> tokenDistribution = new ArrayList<String>();
 
-		for (List<String> dist : nextDistribution.values())
-		{
+		for (List<String> dist : nextDistribution.values()) {
 			tokenDistribution.addAll(dist);
 		}
 
 		long pick = getRandomizer().getRNG().nextInt(tokenDistribution.size());
 
 		final String nextActivtyTimeToken = tokenDistribution.get((int) pick);
-
+		final String currentActivityName = nextActivtyTimeToken;
+		obtainAvailableTransitions(currentActivityName);
 		LOG.info("Found next distribution:" + nextDistribution);
 
-		final CountDownLatch latch = new CountDownLatch(1);
-		ReasoningCapability.Query myQuery = getReasoner()
-				.toQuery(
-						LegacySLUtil
-								.getStaticBelongsToProcessFormula(Activity.PATTERN),
-						Activity.ACTIVITY_TIME_TOKEN, currentActivityTimeToken);
-		getReasoner().queryToKBase(myQuery).take(1)
-				.subscribe(new Observer<Map<String, Object>>()
-				{
+		// LOG.info("Got respone to query: "+value);
+		if (currentActivityName == null)
+			return;
 
-					@Override
-					public void onNext(final Map<String, Object> value)
-					{
-						// LOG.info("Got respone to query: "+value);
-						if (value == null)
-							latch.countDown();
+		nextActivityjob = null;
+		SimDuration activityDuration = SimDuration.ZERO;
+		final String activityID = currentActivityName;
+		final String activityInstanceId = new UUID().toString();
+		if (activityID.contains(Task.START_OF_PROCESS.getName())) {
+			getSimulator().schedule(
+					ProcedureCall.create(ManageProcessActionImpl.this,
+							ManageProcessActionImpl.this,
+							NEXT_ACTIVITY_METHOD_ID, cause,
+							nextActivtyTimeToken),
+					Trigger.createAbsolute(getTime()));
+		} else {// if
+				// (!activityID.contains(Task.END_OF_PROCESS.getName()))
+				// {
+			LOG.info("Now the process agent will distribute the activities and the nexts from "
+					+ currentActivityTimeToken + " at simTime: " + getTime());
 
-						nextActivityjob = null;
-						SimDuration activityDuration = SimDuration.ZERO;
-						final String activityID = value.get(Activity.ACTIVITY_NAME)
-								.toString();
-						final String activityInstanceId = new UUID().toString();
-						if (activityID.contains(Task.START_OF_PROCESS.getName()))
-						{
-							getSimulator().schedule(
-									ProcedureCall.create(
-											ManageProcessActionImpl.this,
-											ManageProcessActionImpl.this,
-											NEXT_ACTIVITY_METHOD_ID, cause,
-											nextActivtyTimeToken),
-									Trigger.createAbsolute(getTime()));
-						} else
-						{// if
-							// (!activityID.contains(Task.END_OF_PROCESS.getName()))
-							// {
-							LOG.info("Now the process agent will distribute the activities and the nexts from "
-									+ currentActivityTimeToken
-									+ " at simTime: " + getTime());
+			nextActivityjob = ProcedureCall.create(
+					ManageProcessActionImpl.this, ManageProcessActionImpl.this,
+					NEXT_ACTIVITY_METHOD_ID, cause, nextActivtyTimeToken);
+			TSkeletonActivityType activityXML = null;
+			for (TSkeletonActivityType activity : processXML.getActivity())
+				if (activity.getId().equals(activityID)) {
+					if (activity.getExecutionTime() != null)
+						activityDuration = new SimDuration(
+								XmlUtil.gDurationToLong(activity
+										.getExecutionTime()), TimeUnit.MILLIS);
+					activityXML = activity;
+				}
+			List<ActivityParticipationResourceInformation> resourceParticipationInfo = new ArrayList<ActivityParticipationResourceInformation>();
 
-							nextActivityjob = ProcedureCall.create(
-									ManageProcessActionImpl.this,
-									ManageProcessActionImpl.this,
-									NEXT_ACTIVITY_METHOD_ID, cause,
-									nextActivtyTimeToken);
-							TSkeletonActivityType activityXML = null;
-							for (TSkeletonActivityType activity : processXML
-									.getActivity())
-								if (activity.getId().equals(activityID))
-								{
-									if (activity.getExecutionTime() != null)
-										activityDuration = new SimDuration(
-												XmlUtil.gDurationToLong(activity
-														.getExecutionTime()),
-												TimeUnit.MILLIS);
-									activityXML = activity;
+			participantLoop: for (AgentID agent : nextDistribution.keySet()) {
+				ARUMResourceType type = ARUMResourceType.ASSEMBLY_LINE;
+				String resourceName = agent.getValue();
+				// LOG.warn("CHECK ROLES ----------------:");
+				for (RoleInvolved roleInvolved : activityXML.getRoleInvolved()) {
+					String requiredAgentID = getAgentIDByResourceSubType(roleInvolved
+							.getRoleRef());
+					if (requiredAgentID.equals(agent.toString())) {
+						// LOG.warn("Required: "+requiredAgentID+" == "+agent);
+						if (activityXML.getExecutionTime() != null)
+							activityDuration = new SimDuration(
+									XmlUtil.gDurationToLong(activityXML
+											.getExecutionTime()),
+									TimeUnit.MILLIS);
+						type = ARUMResourceType.PERSON;
+						resourceName = roleInvolved.getRoleRef();
+						LOG.info(agent.getValue() + " is a "
+								+ roleInvolved.getRoleRef());
+					} else {
+						// LOG.warn("Required: "+requiredAgentID+" != "+agent);
+
+						LOG.info(agent.getValue() + " is not a "
+								+ roleInvolved.getRoleRef());
+					}
+				}
+				// LOG.warn("DONE CHECK ----------------:");
+				if (type == ARUMResourceType.ASSEMBLY_LINE) {
+					for (UsedComponent componentUsed : activityXML
+							.getUsedComponent()) {
+						String requiredAgentID = getAgentIDByResourceSubType(componentUsed
+								.getComponentRef());
+						if (requiredAgentID.equals(agent.toString())) {
+							// LOG.warn("Required: "+requiredAgentID+" == "+agent);
+							for (UsedComponent usedMaterial : activityXML
+									.getUsedComponent())
+								if (getAgentIDByResourceSubType(
+										usedMaterial.getComponentRef())
+										.equalsIgnoreCase(agent.toString())) {
+									activityDuration = new SimDuration(
+											XmlUtil.gDurationToLong(usedMaterial
+													.getTimeOfUse()),
+											TimeUnit.MILLIS);
+									break;
 								}
-							List<ActivityParticipationResourceInformation> resourceParticipationInfo = new ArrayList<ActivityParticipationResourceInformation>();
+							type = ARUMResourceType.MATERIAL;
+							resourceName = componentUsed.getComponentRef();
+							LOG.info(agent.getValue() + " is a "
+									+ componentUsed.getComponentRef());
+						} else {
+							// LOG.warn("Required: "+requiredAgentID+" != "+agent);
 
-							participantLoop: for (AgentID agent : nextDistribution
-									.keySet())
-							{
-								ARUMResourceType type = ARUMResourceType.ASSEMBLY_LINE;
-								String resourceName = agent.getValue();
-								// LOG.warn("CHECK ROLES ----------------:");
-								for (RoleInvolved roleInvolved : activityXML
-										.getRoleInvolved())
-								{
-									String requiredAgentID = getAgentIDByResourceSubType(roleInvolved
-											.getRoleRef());
-									if (requiredAgentID.equals(agent.toString()))
-									{
-										// LOG.warn("Required: "+requiredAgentID+" == "+agent);
-										if (activityXML.getExecutionTime() != null)
-											activityDuration = new SimDuration(
-													XmlUtil.gDurationToLong(activityXML
-															.getExecutionTime()),
-													TimeUnit.MILLIS);
-										type = ARUMResourceType.PERSON;
-										resourceName = roleInvolved
-												.getRoleRef();
-										LOG.info(agent.getValue() + " is a "
-												+ roleInvolved.getRoleRef());
-									} else
-									{
-										// LOG.warn("Required: "+requiredAgentID+" != "+agent);
-
-										LOG.info(agent.getValue()
-												+ " is not a "
-												+ roleInvolved.getRoleRef());
-									}
-								}
-								// LOG.warn("DONE CHECK ----------------:");
-								if (type == ARUMResourceType.ASSEMBLY_LINE)
-								{
-									for (UsedComponent componentUsed : activityXML
-											.getUsedComponent())
-									{
-										String requiredAgentID = getAgentIDByResourceSubType(componentUsed
-												.getComponentRef());
-										if (requiredAgentID.equals(agent.toString()))
-										{
-											// LOG.warn("Required: "+requiredAgentID+" == "+agent);
-											for (UsedComponent usedMaterial : activityXML
-													.getUsedComponent())
-												if (getAgentIDByResourceSubType(
-														usedMaterial.getComponentRef()).equalsIgnoreCase(
-														agent.toString()))
-												{
-													activityDuration = new SimDuration(
-															XmlUtil.gDurationToLong(usedMaterial
-																	.getTimeOfUse()),
-															TimeUnit.MILLIS);
-													break;
-												}
-											type = ARUMResourceType.MATERIAL;
-											resourceName = componentUsed
-													.getComponentRef();
-											LOG.info(agent.getValue() + " is a "
-													+ componentUsed.getComponentRef());
-										} else
-										{
-											// LOG.warn("Required: "+requiredAgentID+" != "+agent);
-
-											LOG.info(agent.getValue()
-													+ " is not a "
-													+ componentUsed.getComponentRef());
-										}
-									}
-								if (type == ARUMResourceType.ASSEMBLY_LINE)
-								{
-									try
-									{
-										List<AssemblyLineType> assemblyLineTypes = getWorld()
-												.getAssemblyLineTypesForAgentID(agent);
-										List<String> assemblyLines = new ArrayList<String>();
-										for (AssemblyLineType at : assemblyLineTypes)
-											assemblyLines.add(at.getName());
-										for (String usedAssemblyLineType : activityXML
-												.getUsedAssemlyLineType())
-											if (!assemblyLines.contains(usedAssemblyLineType))
-											{
-												LOG.info("Ignoring assemblyLine of types: "
-														+ assemblyLines
-														+ " because "
-														+ usedAssemblyLineType
-														+ " was required!");
-												continue participantLoop;
-											}
-									} catch (NullPointerException ne)
-									{
-										continue participantLoop;
-										// No assemblyLine and not the right type of
-										// person so continue
-									}
-
-								}
-								// FIXME Choose a assemblyLine if more are available
-								// accoring to a random distribution.
-								
-								
-
-								}
-
-								// -----------------------------------------------------------------------------
-								ActivityParticipationResourceInformation p = new ActivityParticipationResourceInformation()
-								.withResourceType(type)
-								.withActivityName(activityID)
-								.withActivityInstanceId(activityInstanceId)
-								.withResourceUsageDuration(
-										activityDuration)
-								.withResourceAgent(agent)
-								.withResourceName(resourceName)
-								.withProcessID(
-										cause.getProcessTypeID())
-								.withInstanceProcessID(
-										cause.getID()
-												.getValue()
-												.toString());
-								if (type ==  ARUMResourceType.MATERIAL)
-									p.withResourceInstanceName(agent.getValue());
-								resourceParticipationInfo
-										.add(p);
-
-//								
-							}
-
-							synchronized (participatingFactIds)
-							{
-								List<ActivityParticipation.Request> participatingFacts = new ArrayList<ActivityParticipation.Request>();
-								SimTime startOfParticipation = getBinder().inject(ReplicatingCapability.class).getTime();
-								for (ActivityParticipationResourceInformation participant : resourceParticipationInfo)
-								{
-									List<ActivityParticipationResourceInformation> others = new ArrayList<ActivityParticipationResourceInformation>();
-									for (ActivityParticipationResourceInformation otherParticipant : resourceParticipationInfo)
-									{
-										if (!participant
-												.equals(otherParticipant))
-											others.add(otherParticipant);
-									}
-									try
-									{
-//										if (participant.getResourceType() == ARUMResourceType.ASSEMBLY_LINE
-//												&& participant
-//														.getResourceAgent()
-//														.getValue()
-//														.startsWith("Person"))
-//											throw new IllegalStateException(
-//													"Huh WT@%$! Abort");
-										ActivityParticipation.Request activityParticipationRequest = ActivityParticipation.Request.Builder
-												.forProducer(
-														ManageProcessActionImpl.this,
-														cause)
-												.withReceiverID(
-														participant
-																.getResourceAgent())
-												.withResourceInfo(participant)
-												.withOtherResourceInfo(others)
-												.build();
-										
-										participatingFactIds
-												.add(activityParticipationRequest
-														.getID());
-										participatingFacts
-												.add(activityParticipationRequest);
-									} catch (Exception e)
-									{
-										LOG.error(
-												"Failed to create Activity Participantion Request",
-												e);
-									}
-								}
-								ProcedureCall<?> job = ProcedureCall.create(
-										ManageProcessActionImpl.this,
-										ManageProcessActionImpl.this,
-										REQUEST_ACTIVITY_PARTICIPATION,
-										participatingFacts);
-								getSimulator().schedule(job, Trigger.createAbsolute(startOfParticipation));
-							}
+							LOG.info(agent.getValue() + " is not a "
+									+ componentUsed.getComponentRef());
 						}
-						// else {
-						// LOG.info("Reached end of process instance "+getID());
-						// getBinder().bind(ResourceAllocationNegotiator.class).deAllocate();
-						// processGeneratorService.notifyProcessComplete(getOwnerID()
-						// .getValue());
-						// }
 					}
+					if (type == ARUMResourceType.ASSEMBLY_LINE) {
+						try {
+							List<AssemblyLineType> assemblyLineTypes = getWorld()
+									.getAssemblyLineTypesForAgentID(agent);
+							List<String> assemblyLines = new ArrayList<String>();
+							for (AssemblyLineType at : assemblyLineTypes)
+								assemblyLines.add(at.getName());
+							for (String usedAssemblyLineType : activityXML
+									.getUsedAssemlyLineType())
+								if (!assemblyLines
+										.contains(usedAssemblyLineType)) {
+									LOG.info("Ignoring assemblyLine of types: "
+											+ assemblyLines + " because "
+											+ usedAssemblyLineType
+											+ " was required!");
+									continue participantLoop;
+								}
+						} catch (NullPointerException ne) {
+							continue participantLoop;
+							// No assemblyLine and not the right
+							// type of
+							// person so continue
+						}
 
-					@Override
-					public void onCompleted()
-					{
-						latch.countDown();
 					}
+					// FIXME Choose a assemblyLine if more are
+					// available
+					// accoring to a random distribution.
 
-					@Override
-					public void onError(final Throwable e)
-					{
-						e.printStackTrace();
+				}
+
+				// -----------------------------------------------------------------------------
+				ActivityParticipationResourceInformation p = new ActivityParticipationResourceInformation()
+						.withResourceType(type)
+						.withActivityName(activityID)
+						.withActivityInstanceId(activityInstanceId)
+						.withResourceUsageDuration(activityDuration)
+						.withResourceAgent(agent)
+						.withResourceName(resourceName)
+						.withProcessID(cause.getProcessTypeID())
+						.withInstanceProcessID(
+								cause.getID().getValue().toString());
+				if (type == ARUMResourceType.MATERIAL)
+					p.withResourceInstanceName(agent.getValue());
+				resourceParticipationInfo.add(p);
+
+				//
+			}
+
+			synchronized (participatingFactIds) {
+				List<ActivityParticipation.Request> participatingFacts = new ArrayList<ActivityParticipation.Request>();
+				SimTime startOfParticipation = getBinder().inject(
+						ReplicatingCapability.class).getTime();
+				for (ActivityParticipationResourceInformation participant : resourceParticipationInfo) {
+					List<ActivityParticipationResourceInformation> others = new ArrayList<ActivityParticipationResourceInformation>();
+					for (ActivityParticipationResourceInformation otherParticipant : resourceParticipationInfo) {
+						if (!participant.equals(otherParticipant))
+							others.add(otherParticipant);
 					}
-				});
+					try {
+						// if (participant.getResourceType() ==
+						// ARUMResourceType.ASSEMBLY_LINE
+						// && participant
+						// .getResourceAgent()
+						// .getValue()
+						// .startsWith("Person"))
+						// throw new IllegalStateException(
+						// "Huh WT@%$! Abort");
+						ActivityParticipation.Request activityParticipationRequest = ActivityParticipation.Request.Builder
+								.forProducer(ManageProcessActionImpl.this,
+										cause)
+								.withReceiverID(participant.getResourceAgent())
+								.withResourceInfo(participant)
+								.withOtherResourceInfo(others).build();
 
-		while (latch.getCount() > 0)
-		{
-			LOG.info("Waiting for reasonable :-) activity start time...");
-			try
-			{
-				latch.await(1, java.util.concurrent.TimeUnit.SECONDS);
-			} catch (final InterruptedException ignore)
-			{
+						participatingFactIds.add(activityParticipationRequest
+								.getID());
+						participatingFacts.add(activityParticipationRequest);
+					} catch (Exception e) {
+						LOG.error(
+								"Failed to create Activity Participantion Request",
+								e);
+					}
+				}
+				ProcedureCall<?> job = ProcedureCall.create(
+						ManageProcessActionImpl.this,
+						ManageProcessActionImpl.this,
+						REQUEST_ACTIVITY_PARTICIPATION, participatingFacts);
+				getSimulator().schedule(job,
+						Trigger.createAbsolute(startOfParticipation));
 			}
 		}
+		// else {
+		// LOG.info("Reached end of process instance "+getID());
+		// getBinder().bind(ResourceAllocationNegotiator.class).deAllocate();
+		// processGeneratorService.notifyProcessComplete(getOwnerID()
+		// .getValue());
+		// }
+
 	}
 
 	@Schedulable(REQUEST_ACTIVITY_PARTICIPATION)
 	public void requestActivityParticipation(
-			List<ActivityParticipation.Request> requests)
-	{
-		for (ActivityParticipation.Request r : requests)
-		{
-			try
-			{
+			List<ActivityParticipation.Request> requests) {
+		for (ActivityParticipation.Request r : requests) {
+			try {
 				send(r);
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				LOG.error("Failed to send Activity Participantion Request", e);
 			}
 		}
@@ -845,93 +748,134 @@ public class ManageProcessActionImpl extends
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	private Map<AgentID, List<String>> getNextDistributionPerResource(
 			final ProcessCompletion.Request cause,
-			final String currentActivityTimeToken)
-	{
+			final String currentActivityTimeToken) {
 		final Map<String, AgentID> agentIds = new HashMap<String, AgentID>();
 		final Map<AgentID, List<String>> result = new HashMap<AgentID, List<String>>();
 
-		final CountDownLatch latch = new CountDownLatch(1);
-		getReasoner()
-				.queryToKBase(
-						getReasoner()
-								.toQuery(
-										LegacySLUtil
-												.getStaticBelongsToProcessFormula(Next.OPTION_PATTERN),
-										Next.FORMER_ACTIVITY_TIME_TOKEN,
-										currentActivityTimeToken)).subscribe(
-						new Observer<Map<String, Object>>()
-						{
-							@Override
-							public void onNext(final Map<String, Object> value)
-							{
-								if (value == null)
-								{
-									getDataStore(cause).put(sREACHED_EOP, true);
-									latch.countDown();
-									return; // Actor reached end of process!
-								}
-								String actor = value.get(Next.ACTOR_AGENT_AID)
-										.toString();
-								AgentID agentId;
-								// FIXME is always false ??
-								if (agentIds.containsKey(actor))
-								{
-									agentId = agentIds.get(actor);
-								} else
-								{
-									agentId = getBinder().inject(
-											ModelComponentIDFactory.class)
-											.createAgentID(actor);
-									agentIds.put(actor, agentId);
-								}
-								List<String> distribution = new ArrayList<String>();
-								if (result.containsKey(agentId))
-								{
-									distribution = result.get(agentId);
-								} else
-								{
-									result.put(agentId, distribution);
-								}
-
-								if (value != null)
-								{
-									long chance = Long.valueOf(value.get(
-											Next.CHANCE).toString());
-									for (int i = 0; i < chance; i++)
-										distribution
-												.add(value
-														.get(Next.LATTER_ACTIVITY_TIME_TOKEN)
-														.toString());
-								}
-							}
-
-							@Override
-							public void onCompleted()
-							{
-								latch.countDown();
-							}
-
-							@Override
-							public void onError(final Throwable e)
-							{
-								e.printStackTrace();
-							}
-						});
-
-		while (latch.getCount() > 0)
-		{
-			LOG.info("Waiting for reasonable :-) next activity time...");
-			try
-			{
-				latch.await(1, java.util.concurrent.TimeUnit.SECONDS);
-			} catch (final InterruptedException ignore)
-			{
-			}
+		if (availableTransitions.isEmpty()) {
+			getDataStore(cause).put(sREACHED_EOP, true);
+			return result; // Actor reached end of process!
 		}
+		for (final String transitionOption : availableTransitions.keySet()) {
+			Transition transition = availableTransitions.get(transitionOption);
 
+			long chance = (long) transition.getTraceIDs().size();
+			for (Task task : transition.getToTasks()) {
+				for (ResourceSubtype resourceSubType : task.getResources()
+						.keySet()) {
+					this.getAgentIDByResourceSubType(resourceSubType.getName());
+					String actor = this
+							.getAgentIDByResourceSubType(resourceSubType
+									.getName());
+					AgentID agentId;
+					// FIXME is always false ??
+					if (agentIds.containsKey(actor)) {
+						agentId = agentIds.get(actor);
+					} else {
+						agentId = getBinder().inject(
+								ModelComponentIDFactory.class).createAgentID(
+								actor);
+						agentIds.put(actor, agentId);
+					}
+					List<String> distribution = new ArrayList<String>();
+					if (result.containsKey(agentId)) {
+						distribution = result.get(agentId);
+					} else {
+						result.put(agentId, distribution);
+					}
+
+					for (int i = 0; i < chance; i++)
+						for (Task t : transition.getToTasks()) {
+							distribution.add(t.getName());
+						}
+				}
+			}
+
+		}
+		// final CountDownLatch latch = new CountDownLatch(1);
+		// getReasoner()
+		// .queryToKBase(
+		// getReasoner()
+		// .toQuery(
+		// LegacySLUtil
+		// .getStaticBelongsToProcessFormula(Next.OPTION_PATTERN),
+		// Next.FORMER_ACTIVITY_TIME_TOKEN,
+		// currentActivityTimeToken)).subscribe(
+		// new Observer<Map<String, Object>>()
+		// {
+		// @Override
+		// public void onNext(final Map<String, Object> value)
+		// {
+		// if (value == null)
+		// {
+		// getDataStore(cause).put(sREACHED_EOP, true);
+		// latch.countDown();
+		// return; // Actor reached end of process!
+		// }
+		// String actor = value.get(Next.ACTOR_AGENT_AID)
+		// .toString();
+		// AgentID agentId;
+		// // FIXME is always false ??
+		// if (agentIds.containsKey(actor))
+		// {
+		// agentId = agentIds.get(actor);
+		// } else
+		// {
+		// agentId = getBinder().inject(
+		// ModelComponentIDFactory.class)
+		// .createAgentID(actor);
+		// agentIds.put(actor, agentId);
+		// }
+		// List<String> distribution = new ArrayList<String>();
+		// if (result.containsKey(agentId))
+		// {
+		// distribution = result.get(agentId);
+		// } else
+		// {
+		// result.put(agentId, distribution);
+		// }
+		//
+		// if (value != null)
+		// {
+		// long chance = Long.valueOf(value.get(
+		// Next.CHANCE).toString());
+		// for (int i = 0; i < chance; i++)
+		// distribution
+		// .add(value
+		// .get(Next.LATTER_ACTIVITY_TIME_TOKEN)
+		// .toString());
+		// }
+		// }
+		//
+		// @Override
+		// public void onCompleted()
+		// {
+		// latch.countDown();
+		// }
+		//
+		// @Override
+		// public void onError(final Throwable e)
+		// {
+		// e.printStackTrace();
+		// }
+		// });
+		//
+		// while (latch.getCount() > 0)
+		// {
+		// LOG.info("Waiting for reasonable :-) next activity time...");
+		// try
+		// {
+		// latch.await(1, java.util.concurrent.TimeUnit.SECONDS);
+		// } catch (final InterruptedException ignore)
+		// {
+		// }
+		// }
+		if (result.values().isEmpty()) {
+			getDataStore(cause).put(sREACHED_EOP, true);
+			return result; // Actor reached end of process!
+		}
 		return result;
 	}
 
@@ -954,10 +898,8 @@ public class ManageProcessActionImpl extends
 
 	@Override
 	public void notifyActivityParticipationResult(
-			ActivityParticipation.Result result)
-	{
-		synchronized (participatingFactIds)
-		{
+			ActivityParticipation.Result result) {
+		synchronized (participatingFactIds) {
 			if (participatingFactIds.remove(result.getID().getCauseID()))
 				LOG.info(result.getResourceInfo().getResourceName()
 						+ " participated in activity "
@@ -970,13 +912,11 @@ public class ManageProcessActionImpl extends
 			// break;
 			// }
 			// }
-			if (participatingFactIds.isEmpty() && nextActivityjob != null)
-			{
+			if (participatingFactIds.isEmpty() && nextActivityjob != null) {
 				getSimulator().schedule(nextActivityjob,
 						Trigger.createAbsolute(getTime()));
 				nextActivityjob = null;
-			} else
-			{
+			} else {
 				LOG.info("Still waiting for participation of factID's: "
 						+ participatingFactIds);
 				// for (ActivityParticipation fact : participatingFacts) {

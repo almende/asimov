@@ -2,9 +2,9 @@ package io.asimov.model.process;
 
 import io.asimov.model.AbstractEntity;
 import io.asimov.model.XMLConvertible;
-import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.reasoning.sl.SLConvertible;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -120,7 +120,7 @@ public class ProcessType extends AbstractEntity<ProcessType> implements
 	/** @see SLConvertible#toSL() */
 	@Override
 	@SuppressWarnings("unchecked")
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");
@@ -144,7 +144,7 @@ public class ProcessType extends AbstractEntity<ProcessType> implements
 
 	/** @see SLConvertible#fromSL(Term) */
 	@Override
-	public ProcessType fromSL(Node term)
+	public <N extends ASIMOVNode<N>> ProcessType fromSL(N term)
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");

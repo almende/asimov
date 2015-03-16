@@ -2,14 +2,15 @@ package io.asimov.model.process;
 
 import io.asimov.model.AbstractNamed;
 import io.asimov.model.XMLConvertible;
-import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.ListOfTerm;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.grammar.TermSequenceNode;
-import jade.semantics.lang.sl.tools.SL;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.sl.ASIMOVTermSequenceNode;
+import io.asimov.model.sl.SL;
+import io.asimov.reasoning.sl.SLConvertible;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -147,36 +148,34 @@ public class Transition extends AbstractNamed<Transition> implements
 	public static final String CASE_IDS = "CASE_IDS";
 
 	/** */
-	public static final Term PATTERN = SL.term(String
-			.format("(%s :%s ??%s :%s ??%s :%s ??%s :%s ??%s)", TERM_NAME,
-					INPUT_TASK_NAMES, INPUT_TASK_NAMES, OUTPUT_TASK_NAMES,
-					OUTPUT_TASK_NAMES, TRANSITION_ID, TRANSITION_ID, CASE_IDS,
-					CASE_IDS));
+	public static final ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
+					.instantiate(INPUT_TASK_NAMES, null)
+					.instantiate(OUTPUT_TASK_NAMES,null)
+					.instantiate(TRANSITION_ID, null)
+					.instantiate(CASE_IDS,null);
 
 	/** @see SLConvertible#toSL() */
 	@Override
 	@SuppressWarnings("unchecked")
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
-		final ListOfTerm inputTaskTerms = new ListOfTerm();
-		final ListOfTerm outputTaskTerms = new ListOfTerm();
-		final ListOfTerm caseIdTerms = new ListOfTerm();
+		final List<ASIMOVTerm> inputTaskTerms = new ArrayList<ASIMOVTerm>();
+		final List<ASIMOVTerm> outputTaskTerms = new ArrayList<ASIMOVTerm>();
+		final List<ASIMOVTerm> caseIdTerms = new ArrayList<ASIMOVTerm>();
 
 		for (Task fromTask : getFromTasks())
-			inputTaskTerms.add(Task.PATTERN.match(fromTask.toSL()).term(
-					Task.TASK_NAME));
+			inputTaskTerms.add(fromTask.toSL());
 		for (Task toTask : getToTasks())
-			outputTaskTerms.add(Task.PATTERN.match(toTask.toSL()).term(
-					Task.TASK_NAME));
+			outputTaskTerms.add(toTask.toSL());
 		for (String traceID : getTraceIDs())
 			caseIdTerms.add(SL.string(traceID));
-		return ((Term) SL.instantiate(PATTERN))
+		return ((ASIMOVTerm) PATTERN)
 				.instantiate(TRANSITION_ID, SL.string(getName()))
 				.instantiate(INPUT_TASK_NAMES,
-						new TermSequenceNode(inputTaskTerms))
+						new ASIMOVTermSequenceNode(inputTaskTerms))
 				.instantiate(OUTPUT_TASK_NAMES,
-						new TermSequenceNode(outputTaskTerms))
-				.instantiate(CASE_IDS, new TermSequenceNode(caseIdTerms));
+						new ASIMOVTermSequenceNode(outputTaskTerms))
+				.instantiate(CASE_IDS, new ASIMOVTermSequenceNode(caseIdTerms));
 	}
 
 	/** @see XMLConvertible#toXML() */
@@ -197,7 +196,7 @@ public class Transition extends AbstractNamed<Transition> implements
 
 	/** @see SLConvertible#fromSL(Term) */
 	@Override
-	public Transition fromSL(final Node term)
+	public <N extends ASIMOVNode<N>> Transition fromSL(final N term)
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");

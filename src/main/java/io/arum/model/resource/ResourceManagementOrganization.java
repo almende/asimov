@@ -11,11 +11,11 @@ import io.asimov.microservice.negotiation.ResourceAllocationResponder;
 import io.asimov.microservice.negotiation.ResourceReadyListeningResource;
 import io.asimov.microservice.negotiation.ResourceReadyNotification.ResourceReadyListener;
 import io.asimov.model.ActivityParticipation.ActivityParticipant;
+import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.bind.Binder;
 import io.coala.capability.embody.Percept;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.know.ReasoningCapability;
-import io.coala.jsa.sl.SLParsableSerializable;
 import io.coala.log.InjectLogger;
 
 import java.awt.GraphicsEnvironment;

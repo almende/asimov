@@ -22,6 +22,8 @@ public interface MaterialResourceManagementWorld extends
 	{
 		// empty
 	}
+	
+	
 
 	/**
 	 * @param equipmentName

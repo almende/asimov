@@ -22,10 +22,10 @@ package io.asimov.model.process;
 
 import io.asimov.model.AbstractEntity;
 import io.asimov.model.XMLConvertible;
-import io.coala.jsa.sl.SLConvertible;
-import jade.semantics.lang.sl.grammar.Node;
-import jade.semantics.lang.sl.grammar.Term;
-import jade.semantics.lang.sl.tools.SL;
+import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.sl.SL;
+import io.asimov.reasoning.sl.SLConvertible;
 
 import org.eclipse.persistence.nosql.annotations.NoSql;
 
@@ -165,33 +165,32 @@ public class Next extends AbstractEntity<Next> implements SLConvertible<Next>,
 	public static final String CHANCE = "CHANCE";
 
 	/** */
-	public static final Term PATTERN = SL.term(String.format(
-			"(%s :%s ??%s :%s ??%s :%s ??%s :%s ??%s :%s ??%s :%s ??%s)", TERM_NAME,
-			FORMER_ACTIVITY_TIME_TOKEN, FORMER_ACTIVITY_TIME_TOKEN,
-			LATTER_ACTIVITY_TIME_TOKEN, LATTER_ACTIVITY_TIME_TOKEN,
-			FORMER_ACTIVITY_NAME, FORMER_ACTIVITY_NAME,
-			LATTER_ACTIVITY_NAME, LATTER_ACTIVITY_NAME,
-			PROCESS_AGENT_AID, PROCESS_AGENT_AID,
-			ACTOR_AGENT_AID, ACTOR_AGENT_AID));
+	public static final ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
+			.instantiate(FORMER_ACTIVITY_TIME_TOKEN, null)
+			.instantiate(LATTER_ACTIVITY_TIME_TOKEN, null)
+			.instantiate(FORMER_ACTIVITY_NAME, null)
+			.instantiate(LATTER_ACTIVITY_NAME, null)
+			.instantiate(PROCESS_AGENT_AID, null)
+			.instantiate(ACTOR_AGENT_AID, null);
 	
 	/** */
-	public static final Term OPTION_PATTERN = SL.term(String.format(
-			"(%s :%s ??%s :%s ??%s :%s ??%s :%s ??%s :%s ??%s :%s ??%s :%s ??%s)", OPTION_TERM_NAME,
-			FORMER_ACTIVITY_TIME_TOKEN, FORMER_ACTIVITY_TIME_TOKEN,
-			LATTER_ACTIVITY_TIME_TOKEN, LATTER_ACTIVITY_TIME_TOKEN,
-			FORMER_ACTIVITY_NAME, FORMER_ACTIVITY_NAME,
-			LATTER_ACTIVITY_NAME, LATTER_ACTIVITY_NAME,
-			PROCESS_AGENT_AID, PROCESS_AGENT_AID,
-			ACTOR_AGENT_AID, ACTOR_AGENT_AID,
-			CHANCE, CHANCE));
+	public static final ASIMOVTerm OPTION_PATTERN = new ASIMOVTerm().withName(OPTION_TERM_NAME)
+			.instantiate(FORMER_ACTIVITY_TIME_TOKEN, null)
+			.instantiate(LATTER_ACTIVITY_TIME_TOKEN, null)
+			.instantiate(FORMER_ACTIVITY_NAME, null)
+			.instantiate(LATTER_ACTIVITY_NAME, null)
+			.instantiate(PROCESS_AGENT_AID, null)
+			.instantiate(ACTOR_AGENT_AID, null)
+			.instantiate(CHANCE, null);
+	
 
 	/** @see SLConvertible#toSL() */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Term toSL()
+	public ASIMOVTerm toSL()
 	{
 		// FIXME add next's own id?
-		return ((Term) SL.instantiate(PATTERN))
+		return ((ASIMOVTerm) PATTERN)
 				.instantiate(PROCESS_AGENT_AID, SL.string(getProcessID()))
 				.instantiate(FORMER_ACTIVITY_TIME_TOKEN,
 						SL.string(getFormerTimeToken()))
@@ -217,7 +216,7 @@ public class Next extends AbstractEntity<Next> implements SLConvertible<Next>,
 
 	/** @see SLConvertible#fromSL(Term) */
 	@Override
-	public Next fromSL(final Node term)
+	public <N extends ASIMOVNode<N>> Next fromSL(final N term)
 	{
 		// FIXME implement
 		throw new IllegalStateException("Not Implemented!");
