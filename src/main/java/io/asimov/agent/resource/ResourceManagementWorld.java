@@ -54,7 +54,12 @@ public interface ResourceManagementWorld<E extends AbstractEmbodied<?>> extends
 	 */
 	List<Number> getCurrentCoordinates();
 
+	
+	boolean isAvailable();
 
+	void setAvailable();
+	
+	void setUnavailable();
 	
 	/**
 	 * Sets the current location for the service owner.

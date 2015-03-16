@@ -45,6 +45,9 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 	@Field(name = "directlyIns")
 	private Set<DirectlyIn> directlyIns = null;
 	
+	@Field(name = "unavailable")
+	private boolean unAvailable = false;
+	
 	
 	public static class InitialASIMOVPercept implements SLConvertible<InitialASIMOVPercept>, Percept {
 
@@ -249,6 +252,21 @@ public abstract class AbstractEmbodied<T extends AbstractEmbodied<T>> extends
 	{
 		this.body = body;
 		return (T)this;
+	}
+	
+
+	/**
+	 * @return the unAvailable
+	 */
+	public boolean isUnAvailable() {
+		return unAvailable;
+	}
+
+	/**
+	 * @param unAvailable the unAvailable to set
+	 */
+	public void setUnAvailable(boolean unAvailable) {
+		this.unAvailable = unAvailable;
 	}
 
 }

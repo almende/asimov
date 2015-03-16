@@ -31,6 +31,7 @@ public class Resource extends AbstractNamed<Resource> implements
 
 	/** */
 	private ResourceSubtype subTypeID;
+	
 
 	/** @return the typeID */
 	public Class<? extends ResourceType> getTypeID()
@@ -165,7 +166,7 @@ public class Resource extends AbstractNamed<Resource> implements
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

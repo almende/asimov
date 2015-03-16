@@ -158,6 +158,16 @@ public class ActivityParticipantImpl extends
 	@Schedulable(RETRY_REQUEST)
 	public void onRequested(final ActivityParticipation.Request request) {
 
+		if (request.getResourceInfo().getResourceType() == ARUMResourceType.PERSON && getWorld(PersonResourceManagementWorld.class).isAvailable()) {
+			getWorld(PersonResourceManagementWorld.class).setUnavailable();
+			LOG.info("Person becomes unavailable");
+		} else if (request.getResourceInfo().getResourceType() == ARUMResourceType.ASSEMBLY_LINE && getWorld(AssemblyLineResourceManagementWorld.class).isAvailable()) {
+			getWorld(AssemblyLineResourceManagementWorld.class).setUnavailable();
+			LOG.info("AssemblyLine becomes unavailable");
+		} else if (request.getResourceInfo().getResourceType() == ARUMResourceType.MATERIAL && getWorld(MaterialResourceManagementWorld.class).isAvailable()) {
+			getWorld(MaterialResourceManagementWorld.class).setUnavailable();
+			LOG.info("Material becomes unavailable");
+		}
 		if (!getWorld(PersonResourceManagementWorld.class).getCurrentLocation()
 				.getValue().equalsIgnoreCase("world")
 				&& getWorld(PersonResourceManagementWorld.class)
@@ -353,6 +363,10 @@ public class ActivityParticipantImpl extends
 		// personInfo.getResourceAgent(), EventType.STOP_ACTIVITY,
 		// getTime(), personInfo.getActivityName(),
 		// assemblyLineInfo.getResourceName());
+		if (!getWorld(PersonResourceManagementWorld.class).isAvailable()) {
+			getWorld(PersonResourceManagementWorld.class).setAvailable();
+			LOG.info("Resource becomes available");
+		}
 		send(ActivityParticipation.Result.Builder.forProducer(this, request)
 				.build());
 	}
@@ -458,32 +472,6 @@ public class ActivityParticipantImpl extends
 								personInfo.getResourceAgent().getValue(),
 								assemblyLineInfo.getResourceAgent().getValue(),
 								EventType.STOP_USE_MATERIAL);
-		getWorld(MaterialResourceManagementWorld.class).perceive().subscribe(
-				new Observer<Percept>() {
-
-					@Override
-					public void onCompleted() {
-						// TODO Auto-generated method stub
-						LOG.info("Material was used and will be removed from stock after process completion");
-					}
-
-					@Override
-					public void onError(Throwable e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onNext(Percept t) {
-						
-						getBinder().inject(ReasoningCapability.class)
-								.removeBeliefFromKBase(
-										getBinder().inject(
-												ReasoningCapability.class)
-												.toBelief(t));
-					}
-				});
-
 		send(ActivityParticipation.Result.Builder.forProducer(this,
 				(Request) request).build());
 	}
@@ -516,6 +504,10 @@ public class ActivityParticipantImpl extends
 				+ " for activity: "
 				+ request.getResourceInfo().getActivityName());
 		// Here we can check if everybody is ready...
+		if (!getWorld(AssemblyLineResourceManagementWorld.class).isAvailable()) {
+			getWorld(AssemblyLineResourceManagementWorld.class).setAvailable();
+			LOG.info("Resource becomes available");
+		}
 		send(ActivityParticipation.Result.Builder.forProducer(this,
 				(Request) request).build());
 	}

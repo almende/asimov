@@ -265,5 +265,43 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 		return CoordinationUtil.getCoordinatesForNonMovingElement(getBinder()
 				.inject(Datasource.class), getCurrentLocation());
 	}
+	
+	@Override
+	public boolean isAvailable() {
+		return !getEntity().isUnAvailable();
+	}
+	
+
+	@Override
+	public void setAvailable() {
+		getEntity().setUnAvailable(false);
+		if (getEntity() instanceof AssemblyLine)
+		{
+			getBinder().inject(Datasource.class).save((AssemblyLine)getEntity());
+		} else if (getEntity() instanceof Material)
+		{
+			getBinder().inject(Datasource.class).save((Material)getEntity());
+		} else if (getEntity() instanceof Person)
+		{
+			getBinder().inject(Datasource.class).save((Person)getEntity());
+		}
+		
+	}
+	
+	@Override
+	public void setUnavailable() {
+		getEntity().setUnAvailable(true);
+		if (getEntity() instanceof AssemblyLine)
+		{
+			getBinder().inject(Datasource.class).save((AssemblyLine)getEntity());
+		} else if (getEntity() instanceof Material)
+		{
+			getBinder().inject(Datasource.class).save((Material)getEntity());
+		} else if (getEntity() instanceof Person)
+		{
+			getBinder().inject(Datasource.class).save((Person)getEntity());
+		}
+		
+	}
 
 }
