@@ -8,16 +8,50 @@
 	<description>Agent-based SImulation, MOdeling, and Visualization of processes</description>
 
 	<repositories>
+		<!-- Coala public Maven repository -->
 		<repository>
 			<id>io.coala</id>
 			<name>COALA Repository</name>
 			<url>https://github.com/krevelen/coala/raw/mvn-repo</url>
 		</repository>
+		<!-- Time-control public Maven repository -->
+		<repository>
+			<name>Time-control Public Maven Repository</name>
+			<id>tc-public</id>
+			<url>https://github.com/almende/time-control/raw/mvn-repo/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+		<!-- TU Delft simulation repository -->
+		<repository>
+			<name>DSOL Public Repository</name>
+			<id>dsol</id>
+			<!-- <url>http://simulation.tudelft.nl/maven</url> -->
+			<url>http://sk-33.tbm.tudelft.nl/maven/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
 	</repositories>
 
 	<properties>
+		<encoding>UTF-8</encoding>
+		<project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
 		<xsd.basedir>${basedir}/src/main/xsd</xsd.basedir>
 		<jaxb.targetdir>${project.build.directory}/generated-sources/jaxb</jaxb.targetdir>
+		<jackson.version>2.5.1</jackson.version>
 		<jongo.version>1.0</jongo.version>
 		<mongo-java-driver.version>2.11.3</mongo-java-driver.version>
 		<embed-mongo.version>1.33</embed-mongo.version>
@@ -27,6 +61,7 @@
 		<jaxb-fluent-api.version>2.1.8</jaxb-fluent-api.version>
 		<lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
 		<dist.dir>${basedir}/dist</dist.dir>
+		<dist.mainClass>io.arum.run.RunUseCase</dist.mainClass>
 	</properties>
 
 
@@ -104,65 +139,68 @@
 
 
 		<plugins>
-	      <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-shade-plugin</artifactId>
-	        <version>2.3</version>
-	        <executions>
-	          <execution>
-	            <phase>package</phase>
-	            <goals>
-	              <goal>shade</goal>
-	            </goals>
-	            <configuration>
-	            <finalName>${project.artifactId}</finalName>
-				<outputDirectory>${dist.dir}</outputDirectory>
-	            <transformers>
-	                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-	                  <mainClass>io.arum.run.RunUseCase</mainClass>
-	                </transformer>
-	              </transformers>
-	              <filters>
-					<filter>
-							<artifact>*:*</artifact>
-							<excludes>
-								<exclude>META-INF/*.SF</exclude>
-								<exclude>META-INF/*.DSA</exclude>
-								<exclude>META-INF/*.RSA</exclude>
-							</excludes>
-					</filter>
-				  </filters>
-	              <artifactSet>
-	                <excludes>
-					  
-	                  <exclude>junit:junit</exclude>
-	                  <exclude>org.apache.maven:lib:tests</exclude>
-	                </excludes>
-	              </artifactSet>
-	            </configuration>
-	          </execution>
-	        </executions>
-	      </plugin>
-		<plugin>
-		    <groupId>org.apache.maven.plugins</groupId>
-		    <artifactId>maven-surefire-plugin</artifactId>
-		    <version>2.9</version>
-		    <configuration>
-		        <argLine>-Xmx2048M</argLine>
-		    </configuration>
-		</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.artifactId}</finalName>
+							<outputDirectory>${dist.dir}</outputDirectory>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>${dist.mainClass}</mainClass>
+								</transformer>
+							</transformers>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<artifactSet>
+								<excludes>
+
+									<exclude>junit:junit</exclude>
+									<exclude>org.apache.maven:lib:tests</exclude>
+								</excludes>
+							</artifactSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<argLine>-Xmx2048M</argLine>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
 				<!-- include generated XMLBean sources in class path -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
 				<executions>
 					<execution>
 						<id>add-source</id>
@@ -218,6 +256,49 @@
 
 		</plugins>
 	</build>
+	
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<!-- JSON <-> Java object mapping -->
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-joda</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>de.undercouch</groupId>
+				<artifactId>bson4jackson</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+
+			<dependency>
+				<!-- JSON <-> Java object mapping -->
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<artifactId>jackson-dataformat-yaml</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>	
 	<dependencies>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -231,7 +312,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jscience</groupId>
 			<artifactId>jscience</artifactId>
@@ -260,17 +341,16 @@
 					<groupId>com.oracle</groupId>
 					<artifactId>javafx</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>org.eclipse.persistence.nosql</artifactId>
 			<version>2.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.3.4</version>
 		</dependency>
 		<!-- provide XPath annotations on JAXB beans <dependency> <groupId>org.eclipse.persistence</groupId> 
 			<artifactId>org.eclipse.persistence.moxy</artifactId> </dependency> -->
@@ -291,37 +371,42 @@
 		</dependency>
 		<dependency>
 			<groupId>io.coala</groupId>
-			<artifactId>coala-eve2-adapter</artifactId>
+			<artifactId>coala-eve3-adapter</artifactId>
 			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.almende.time-control</groupId>
+			<artifactId>coala-tc-adapter</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>io.coala</groupId>
 			<artifactId>coala-enterprise-ontology</artifactId>
 			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.avro</groupId>
+					<artifactId>avro</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>${mongo-java-driver.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.jongo</groupId>
-		    <artifactId>jongo</artifactId>
-		    <version>${jongo.version}</version>
+			<groupId>org.jongo</groupId>
+			<artifactId>jongo</artifactId>
+			<version>${jongo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
 			<version>${embed-mongo.version}</version>
 		</dependency>
-		
-		
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-joda</artifactId>
-			<version>2.4.3</version>
-		</dependency>
+
 
 		<dependency>
 			<groupId>junit</groupId>
