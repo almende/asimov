@@ -1,6 +1,6 @@
 package io.asimov.model;
 
-import io.arum.model.events.PersonEvent;
+import io.asimov.model.events.Event;
 import io.coala.log.LogUtil;
 
 import java.rmi.RemoteException;
@@ -46,7 +46,7 @@ public abstract class AbstractPersonTraceEventProducer extends
 	 * @throws SimRuntimeException
 	 * @throws RemoteException
 	 */
-	protected void scheduleTraceEvent(final PersonEvent<?> event)
+	protected void scheduleTraceEvent(final Event<?> event)
 			throws RemoteException, SimRuntimeException
 	{
 		scheduleTraceEvent(event, event.getExecutionTime().doubleValue());
@@ -57,7 +57,7 @@ public abstract class AbstractPersonTraceEventProducer extends
 	 * @throws SimRuntimeException
 	 * @throws RemoteException
 	 */
-	protected void scheduleTraceEvent(final PersonEvent<?> event,
+	protected void scheduleTraceEvent(final Event<?> event,
 			final Number absExecTime) throws RemoteException,
 			SimRuntimeException
 	{

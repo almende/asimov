@@ -1,7 +1,7 @@
 package io.asimov.unavailability;
 
-import io.arum.model.ARUMOrganizationWorld;
+import io.asimov.model.ASIMOVOrganizationWorld;
 
-public interface MonkeyAgentWorld extends ARUMOrganizationWorld {
+public interface MonkeyAgentWorld extends ASIMOVOrganizationWorld {
 
 }

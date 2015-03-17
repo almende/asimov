@@ -62,7 +62,39 @@ public class EventType extends AbstractNamed<EventType> implements XMLConvertibl
 	 * This {@link EventType} indicates an {@link Person} is waiting to perform some activity
 	 * {@link AssemblyLine}
 	 */
-	public static final EventType WAITING = new EventType().withValue("waiting");
+	public static final EventType START_WAITING = new EventType().withValue("waiting");
+	
+	/**
+	 * This {@link EventType} indicates an {@link Person} was waiting to perform some activity
+	 * {@link AssemblyLine}
+	 */
+	public static final EventType STOP_WAITING = new EventType().withValue("waited");
+	
+	/**
+	 * This {@link EventType} indicates an {@link Person} has become unavailable for all resources
+	 * {@link AssemblyLine}
+	 */
+	public static final EventType START_GLOBAL_UNAVAILABILITY = new EventType().withValue("startUnavailableForAllResources");
+	
+	/**
+	 * This {@link EventType} indicates an {@link Person} has become available for all resources
+	 * {@link AssemblyLine}
+	 */
+	public static final EventType STOP_GLOBAL_UNAVAILABILITY = new EventType().withValue("stopUnavailableForAllResources");
+	
+	
+	/**
+	 * This {@link EventType} indicates a {@link Process} has started
+	 * {@link AssemblyLine}
+	 */
+	public static final EventType START_PROCESS = new EventType().withValue("startsProcess");
+	
+	/**
+	 * This {@link EventType} indicates an {@link Process} has stopped
+	 * {@link AssemblyLine}
+	 */
+	public static final EventType STOP_PROCESS = new EventType().withValue("stopsProcess");
+	
 	
 
 	/**

@@ -4,6 +4,7 @@ import io.arum.model.events.MaterialEvent;
 import io.arum.model.events.MovementEvent;
 import io.arum.model.events.PersonEvent;
 import io.asimov.model.events.ActivityEvent;
+import io.asimov.model.events.Event;
 import io.asimov.xml.TEventTrace.EventRecord;
 import nl.tudelft.simulation.event.EventType;
 import nl.tudelft.simulation.event.TimedEvent;
@@ -37,7 +38,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 * @param oldRate
 	 * @param newRate
 	 */
-	public PersonTraceEventWrapper(final PersonEvent<?> event)
+	public PersonTraceEventWrapper(final Event<?> event)
 	{
 		this(null, event.getExecutionTime().getValue().doubleValue(), event);
 	}
@@ -50,7 +51,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 * @param newRate
 	 */
 	public PersonTraceEventWrapper(final Number absSimTime,
-			final PersonEvent<?> event)
+			final Event<?> event)
 	{
 		this(null, absSimTime, event);
 	}
@@ -64,7 +65,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 * @param newRate
 	 */
 	public PersonTraceEventWrapper(final PersonTraceEventProducer source,
-			final Number absSimTime, final PersonEvent<?> event)
+			final Number absSimTime, final Event<?> event)
 	{
 		super(OCCUPANT_EVENT_TYPE, source, event, absSimTime.doubleValue());
 		if (event == null)

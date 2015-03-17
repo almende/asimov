@@ -1,6 +1,6 @@
 package io.asimov.model;
 
-import io.arum.model.resource.ARUMResourceType;
+import io.asimov.model.resource.ARUMResourceType;
 import io.coala.agent.AgentID;
 import io.coala.json.JsonUtil;
 import io.coala.time.SimDuration;

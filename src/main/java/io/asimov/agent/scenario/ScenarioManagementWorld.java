@@ -1,9 +1,7 @@
 package io.asimov.agent.scenario;
 
-import io.arum.model.ARUMOrganizationWorld;
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.supply.Material;
+import io.asimov.model.ASIMOVOrganizationWorld;
+import io.asimov.model.resource.ResourceDescriptor;
 import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
@@ -22,7 +20,7 @@ import rx.Observable;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  * 
  */
-public interface ScenarioManagementWorld extends ARUMOrganizationWorld
+public interface ScenarioManagementWorld extends ASIMOVOrganizationWorld
 {
 
 	/**
@@ -76,17 +74,16 @@ public interface ScenarioManagementWorld extends ARUMOrganizationWorld
 	/**
 	 * @return
 	 */
-	Iterable<AssemblyLine> getAssemblyLines();
-
-	/**
-	 * @return
-	 */
-	Iterable<Material> getMaterials();
+	Iterable<ResourceDescriptor> getResourceDescriptors();
 	
 	/**
-	 * @return
+	 * To determine the desired start and end of the mask for activities to start in
+	 * @patram now the time to calculate the desired enter time on
+	 * @return the relative duration from now resource should be available for activity participation.
 	 */
-	Iterable<Person> getPersons();
+	public SimDuration onSiteDelay(SimTime now);
+
+
 
 	/**
 	 * {@link ResourceEventType}

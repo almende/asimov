@@ -1,10 +1,10 @@
 package io.asimov.model;
 
-import io.arum.model.resource.RouteLookup;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessCompletion.ProcessCompleter;
 import io.asimov.microservice.negotiation.ResourceReadyNotification;
+import io.asimov.model.resource.RouteLookup;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.enterprise.fact.AbstractCoordinationFact;

@@ -11,6 +11,7 @@ import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
+import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.xml.TEventTrace;
 import io.coala.agent.AgentID;
 import io.coala.log.LogUtil;
@@ -138,7 +139,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	 * @param buildingElementName
 	 * @return
 	 */
-	public PersonEvent<?> saveEvent(final Datasource ds,
+	public Event<?> saveEvent(final Datasource ds,
 			final String processID, final String processInstanceID,
 			final String activityID, final String activityInstanceID,final AgentID agentID,
 			final EventType eventType, final SimTime timeStamp,
@@ -338,28 +339,15 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		return result;
 	}
 
-	public List<PersonEvent<?>> getEvents(final Datasource ds)
+	public List<Event<?>> getEvents(final Datasource ds)
 	{
 		LOG.info("Getting events for " + this.replicationID);
-		final List<PersonEvent<?>> events = new ArrayList<PersonEvent<?>>();
+		final List<Event<?>> events = new ArrayList<Event<?>>();
 //		for (Event<?> event : ds.findEvents(EventType.ENTER, EventType.LEAVE,
 //				EventType.START_ACTIVITY, EventType.STOP_ACTIVITY,
 //				EventType.START_USE_EQUIPMENT, EventType.STOP_USE_EQUIPMENT))
 //			events.add((PersonEvent<?>) event);
-		for (ActivityEvent event : getActivityEvents(ds))
-		{
-			events.add(event);
-		}
-		for (MaterialEvent event : getMaterialEvents(ds))
-		{
-			events.add(event);
-		}
-		for (MovementEvent event : getMovementEvents(ds))
-		{
-			events.add(event);
-		}
 		
-
 
 		EventComparatorByExecutionTime compare = new EventComparatorByExecutionTime();
 
@@ -368,116 +356,19 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		return events;
 	}
 
-	public List<PersonEvent<?>> getNonMovementEvents(final Datasource ds)
-	{
-		List<PersonEvent<?>> events = new ArrayList<PersonEvent<?>>();
-		for (ActivityEvent event : getActivityEvents(ds))
-		{
-			events.add(event);
-		}
-		for (MaterialEvent event : getMaterialEvents(ds))
-		{
-			events.add(event);
-		}
-
-		EventComparatorByExecutionTime compare = new EventComparatorByExecutionTime();
-
-		Collections.sort(events, compare);
-		return events;
-	}
+	
 
 	private class EventComparatorByExecutionTime implements
-			Comparator<PersonEvent<?>>
+			Comparator<Event<?>>
 	{
 
 		@Override
-		public int compare(PersonEvent<?> x, PersonEvent<?> y)
+		public int compare(Event<?> x, Event<?> y)
 		{
-			if (x.getExecutionTime().compareTo(y.getExecutionTime()) == 0) {
-				if (x instanceof ActivityEvent) {
-					if (y instanceof ActivityEvent) {
-						if (((ActivityEvent)x).getType().equals(EventType.START_ACTIVITY)) {
-							if (((ActivityEvent)y).getType().equals(EventType.STOP_ACTIVITY))
-								return 1;
-						} else if (((ActivityEvent)y).getType().equals(EventType.START_ACTIVITY)) {
-							if (((ActivityEvent)x).getType().equals(EventType.STOP_ACTIVITY))
-								return -1;
-						}
-						else return -1;
-					} else if (y instanceof MaterialEvent) {
-							if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL))
-								return -1;
-							else if (((MaterialEvent)y).getType().equals(EventType.STOP_USE_MATERIAL))
-								return 1;
-					} else if (y instanceof MovementEvent) {
-						if (((MovementEvent)y).getType().equals(EventType.ARIVE_AT_ASSEMBLY))
-							return 1;
-						else if (((MovementEvent)y).getType().equals(EventType.LEAVE_ASSEMBLY))
-							return -1;
-					}
-				}
-				else if (x instanceof MaterialEvent) {
-					if (y instanceof MaterialEvent) {
-						if (((MaterialEvent)x).getType().equals(EventType.START_USE_MATERIAL)) {
-							if (((MaterialEvent)y).getType().equals(EventType.STOP_USE_MATERIAL))
-								return 1;
-						} else if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL)) {
-							if (((MaterialEvent)x).getType().equals(EventType.STOP_USE_MATERIAL))
-								return -1;
-						}
-						else return -1;
-					} else if (y instanceof ActivityEvent) {
-						if (((ActivityEvent)y).getType().equals(EventType.START_ACTIVITY))
-							return 1;
-						else if (((ActivityEvent)y).getType().equals(EventType.STOP_ACTIVITY))
-							return -1;
-					}  else if (y instanceof MovementEvent) {
-						if (((MovementEvent)y).getType().equals(EventType.ARIVE_AT_ASSEMBLY))
-							return -1;
-						else if (((MovementEvent)y).getType().equals(EventType.LEAVE_ASSEMBLY))
-							return 1;
-					}
-				} else if (x instanceof MovementEvent) {
-//					if (y instanceof MovementEvent) {
-//						if (((MovementEvent)x).getType().equals(EventType.ARIVE_AT_ASSEMBLY)) {
-//							if (((MovementEvent)y).getType().equals(EventType.LEAVE_ASSEMBLY))
-//								return 1;
-//						} else if (((MovementEvent)y).getType().equals(EventType.ARIVE_AT_ASSEMBLY)) {
-//							if (((MovementEvent)x).getType().equals(EventType.LEAVE_ASSEMBLY))
-//								return -1;
-//						}
-//						else return -1;
-//					} 
-//					else 
-					if (y instanceof ActivityEvent) {
-						if (((ActivityEvent)y).getType().equals(EventType.START_ACTIVITY))
-							return -1;
-						else if (((ActivityEvent)y).getType().equals(EventType.STOP_ACTIVITY))
-							return 1;
-					} 
-					else if (y instanceof MaterialEvent) {
-						if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL))
-							return -1;
-						else if (((MaterialEvent)y).getType().equals(EventType.START_USE_MATERIAL))
-							return 1;
-					}
-				}
-			}
 			return x.getExecutionTime().compareTo(y.getExecutionTime());
 		}
 	}
 
-	/**
-	 * Retrieve the simulation movement events
-	 * 
-	 * @return {@link Iterable} of {@link MovementEvent}
-	 * @throws Exception
-	 */
-	public Iterable<MovementEvent> getMovementEvents(final Datasource ds)
-	{
-		return ds.findMovementEvents();
-	}
-	
 	/**
 	 * Retrieve the simulation activity events
 	 * 
@@ -489,16 +380,6 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		return ds.findActivityEvents();
 	}
 
-	/**
-	 * Retrieve the simulation material events
-	 * 
-	 * @return {@link Iterable} of {@link MaterialEvent}
-	 * @throws Exception
-	 */
-	public Iterable<MaterialEvent> getMaterialEvents(final Datasource ds)
-	{
-		return ds.findMaterialEvents(EventType.START_USE_MATERIAL,
-				EventType.STOP_USE_MATERIAL);
-	}
+	
 
 }

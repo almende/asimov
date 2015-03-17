@@ -61,7 +61,7 @@
 		<jaxb-fluent-api.version>2.1.8</jaxb-fluent-api.version>
 		<lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
 		<dist.dir>${basedir}/dist</dist.dir>
-		<dist.mainClass>io.arum.run.RunUseCase</dist.mainClass>
+		<dist.mainClass>io.asimov.run.RunUseCase</dist.mainClass>
 	</properties>
 
 
@@ -234,7 +234,7 @@
 				<artifactId>cxf-xjc-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>generate-adapt4ee-xml</id>
+						<id>generate-asimov-xml</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>xsdtojava</goal>

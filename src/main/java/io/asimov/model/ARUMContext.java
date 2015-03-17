@@ -1,10 +1,10 @@
 package io.asimov.model;
 
-import io.arum.model.resource.ARUMResourceType;
 import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.arum.model.resource.person.Person;
 import io.arum.model.resource.supply.Material;
 import io.asimov.agent.scenario.Context;
+import io.asimov.model.resource.ARUMResourceType;
 import io.asimov.xml.TContext;
 
 import java.util.ArrayList;

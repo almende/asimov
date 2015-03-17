@@ -8,7 +8,7 @@ package io.asimov.model;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  * 
  */
-public interface ResourceType
+public interface ResourceType extends Named
 {
 	// just a tag
 }

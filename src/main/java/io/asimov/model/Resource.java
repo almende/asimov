@@ -1,6 +1,6 @@
 package io.asimov.model;
 
-import io.arum.model.resource.ResourceSubtype;
+import io.asimov.model.resource.ResourceSubtype;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.SL;
@@ -27,26 +27,26 @@ public class Resource extends AbstractNamed<Resource> implements
 	// use name for resource role reference within process type
 
 	/** */
-	private Class<? extends ResourceType> typeID;
+	private ResourceType typeID;
 
 	/** */
 	private ResourceSubtype subTypeID;
 	
 
 	/** @return the typeID */
-	public Class<? extends ResourceType> getTypeID()
+	public ResourceType getTypeID()
 	{
 		return this.typeID;
 	}
 
 	/** @param typeID the typeID to set */
-	protected void setTypeID(final Class<? extends ResourceType> typeID)
+	protected void setTypeID(final ResourceType typeID)
 	{
 		this.typeID = typeID;
 	}
 
 	/** @param typeID the typeID to set */
-	public Resource withTypeID(final Class<? extends ResourceType> typeID)
+	public Resource withTypeID(final ResourceType typeID)
 	{
 		setTypeID(typeID);
 		return this;

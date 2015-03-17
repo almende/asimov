@@ -1,10 +1,10 @@
 package io.asimov.unavailability;
 
-import io.arum.model.ARUMOrganization;
 import io.asimov.messaging.ASIMOVMessage;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.ConversionCallback;
 import io.asimov.microservice.negotiation.ResourceAllocationRequestor.AllocationCallback;
+import io.asimov.model.ASIMOVOrganization;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.sl.LegacySLUtil;
 import io.asimov.reasoning.sl.SLParsableSerializable;
@@ -38,7 +38,7 @@ import com.google.inject.Inject;
  * @author suki
  *
  */
-public class MonkeyAgent extends ARUMOrganization<MonkeyAgentWorld> {
+public class MonkeyAgent extends ASIMOVOrganization<MonkeyAgentWorld> {
 
 	/**
 	 * 

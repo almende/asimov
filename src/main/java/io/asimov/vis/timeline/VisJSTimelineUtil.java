@@ -40,10 +40,10 @@ public class VisJSTimelineUtil {
 			.getLogger(VisJSTimelineUtil.class);
 
 	/** */
-	private static File outputFile;
+	protected static File outputFile;
 
 	/** */
-	private static File styleSheetFile;
+	protected static File styleSheetFile;
 
 	public static List<Color> pick(int num) {
 		List<Color> colors = new ArrayList<Color>();
@@ -157,136 +157,7 @@ public class VisJSTimelineUtil {
 				"src/test/resources"));
 	}
 	
-	/**
-	 * @param processTypes
-	 * @throws Exception
-	 */
-	public static void writeMidasData(final List<PersonEvent<?>> list,
-			final Datasource ds, boolean includeMaterials) throws Exception {
-		writeMidasData(list, ds, includeMaterials, new File("src/test/resources"));
-	}
-
-	/**
-	 * @param processTypes
-	 * @throws Exception
-	 */
-	public static void writeMidasData(final List<PersonEvent<?>> list,
-			final Datasource ds, boolean includeMaterials, File targetDirectory) throws Exception {
-		outputFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/asimov_events.json");
-		FileWriter fw = new FileWriter(outputFile);
-		writeMidasData(list, fw, ds, includeMaterials);
-	}
-
-	/**
-	 * @param processTypes
-	 * @throws Exception
-	 */
-	public static void writeMidasData(final List<PersonEvent<?>> list,
-			Writer outputWriter, Datasource ds, boolean includeMaterials)
-			throws Exception {
-
-		if (list == null || list.size() == 0)
-			throw new IllegalStateException("Got no events!!!!");
-
-		boolean day = false;
-		List<MIDASEvent> mEvents = new ArrayList<MIDASEvent>();
-		Map<String, List<String>> pausedJobs = new HashMap<String,List<String>>();
-		for (PersonEvent<?> personEvent : list) {
-			MIDASEvent global = MIDASEvent.getGlobalEvent(personEvent);
-			MIDASEvent event = new MIDASEvent().fromPersonEvent(personEvent,
-					ds, includeMaterials);
-			if (event != null) {
-
-				if (global != null && !day) {
-					LOG.info("Adding GLOBAL MIDASEvent:" + global.toJSON());
-					mEvents.add(global);
-
-				}
-				for (String pausedJobPrefix : pausedJobs.keySet())
-					if (event.getOperation().equals(OperationEnum.start.name())
-							&& event.getJobId().startsWith(pausedJobPrefix)
-							&& pausedJobs.get(pausedJobPrefix).contains(event.getPerformedBy())) {
-						if (event.getJobId().startsWith(pausedJobPrefix+"A5")
-							||
-							event.getJobId().startsWith(pausedJobPrefix+"A6"))
-							continue;
-						event.setOperation(OperationEnum.resume);
-						for (String t : pausedJobs.get(pausedJobPrefix))
-							if (t.equals(event.getPerformedBy())) {
-								 pausedJobs.get(pausedJobPrefix).remove(event.getPerformedBy());
-								 break;
-							}
-						if (pausedJobs.get(pausedJobPrefix).isEmpty()) {
-							pausedJobs.remove(pausedJobPrefix);
-							break;
-						}
-					}
-				String ncString = null;
-				if (event.getOperation().equals(OperationEnum.start.name())
-						&& event.getAssignment().startsWith("A5")) {
-					ncString = event.jobId.substring(0, event.jobId.indexOf("A5"));
-				} else if (event.getOperation().equals(OperationEnum.start.name())
-						&& event.getAssignment().startsWith("A6")) {
-					ncString = event.jobId.substring(0,event.jobId.indexOf("A6"));
-				}
-				if (ncString != null) {
-					for (int i = mEvents.size() - 1; i > 0; i--) {
-						MIDASEvent resumeCheckEvent = mEvents.get(i);
-						if ((resumeCheckEvent.getOperation().equals(
-								OperationEnum.finish.name())
-								|| resumeCheckEvent.getOperation().equals(
-										OperationEnum.start.name()))
-								&& resumeCheckEvent.jobId.startsWith(ncString)) {
-							if (resumeCheckEvent.getJobId().startsWith(ncString+"A5")
-									||
-									resumeCheckEvent.getJobId().startsWith(ncString+"A6"))
-									continue;
-							if (resumeCheckEvent.getOperation().equals(
-									OperationEnum.start.name()))
-									break;
-							resumeCheckEvent.setOperation(OperationEnum.pause);
-							if (pausedJobs.containsKey(ncString)){
-								pausedJobs.get(ncString).add(resumeCheckEvent.getPerformedBy());
-							} else {
-								List<String> roles = new ArrayList<String>();
-								roles.add(resumeCheckEvent.getPerformedBy());
-								pausedJobs.put(ncString,roles);
-							}
-						}
-					}
-				}
-
-				mEvents.add(event);
-			}
-			if (global != null && day) {
-				mEvents.add(global);
-			}
-			
-			if (global != null)
-				day = (day) ? false : true;
-		}
-		
-		Collections.sort(mEvents);
-
-		// Now make a huge string representation of it
-		final String startOfData = "var midas_data = [\n";
-		String data = startOfData;
-		for (MIDASEvent me : mEvents) {
-			if (!data.equals(startOfData))
-				data += ",\n";
-
-			String eventStr = me.toJSON();
-			LOG.info("Adding MIDASEvent:" + eventStr);
-			data += eventStr;
-		}
-		data += "\n];\n";
-		LOG.info("Writting data: " + data);
-		// And write it to a file.
-		outputWriter.write(data);
-		outputWriter.close();
-		LOG.info("wrote:" + data);
-	}
-
+	
 	/**
 	 * @param processTypes
 	 * @throws Exception
