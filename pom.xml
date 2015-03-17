@@ -51,7 +51,7 @@
 		<project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
 		<xsd.basedir>${basedir}/src/main/xsd</xsd.basedir>
 		<jaxb.targetdir>${project.build.directory}/generated-sources/jaxb</jaxb.targetdir>
-		<jackson.version>2.5.1</jackson.version>
+		<jackson.version>2.4.3</jackson.version>
 		<jongo.version>1.0</jongo.version>
 		<mongo-java-driver.version>2.11.3</mongo-java-driver.version>
 		<embed-mongo.version>1.33</embed-mongo.version>
