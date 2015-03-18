@@ -20,6 +20,8 @@ import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.xml.TResource;
 import io.asimov.xml.TUnavailablePeriodDistribution;
+import io.coala.agent.AgentID;
+import io.coala.model.ModelID;
 
 /**
  * @author suki
@@ -27,6 +29,11 @@ import io.asimov.xml.TUnavailablePeriodDistribution;
  */
 public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDescriptor> implements ResourceType,
 		ResourceDescriptor<ASIMOVResourceDescriptor> {
+	
+	/** */
+	@Embedded
+	@Field(name = "agentID")
+	private AgentID agentID;
 	
 	/** */
 	@Embedded
@@ -330,6 +337,14 @@ public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDes
 	
 	public void setDescriptions(List<ASIMOVNode<?>> descriptions) {
 		this.descriptions = descriptions;
+	}
+
+	@Override
+	public AgentID getAgentID() {
+		if (this.agentID == null) {
+			this.agentID = new AgentID(new ModelID(getReplicationID()),getName());
+		}
+		return this.agentID;
 	}
 
 

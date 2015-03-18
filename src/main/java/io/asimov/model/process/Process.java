@@ -1,11 +1,5 @@
 package io.asimov.model.process;
 
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.assemblyline.AssemblyLineType;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.person.PersonRole;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.SupplyType;
 import io.asimov.graph.GraphUtil;
 import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.AbstractEntity;
@@ -25,8 +19,6 @@ import io.asimov.xml.TProcessType;
 import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.NextActivityRef;
 import io.asimov.xml.TSkeletonActivityType.PreviousActivityRef;
-import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
-import io.asimov.xml.TSkeletonActivityType.UsedComponent;
 import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.coala.log.LogUtil;
 

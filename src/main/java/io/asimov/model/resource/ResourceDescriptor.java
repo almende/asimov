@@ -4,10 +4,13 @@ import io.asimov.model.Named;
 import io.asimov.model.XMLConvertible;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.xml.TResource;
+import io.coala.agent.AgentID;
 
 import java.util.List;
 
 public interface ResourceDescriptor<T extends ResourceDescriptor<T>> extends Named, XMLConvertible<TResource, ResourceDescriptor<T>> {
+	
+	AgentID getAgentID();
 	
 	T withReplicationID(String replicationID);
 	

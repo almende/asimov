@@ -1,22 +1,15 @@
 package io.asimov.model.process.impl;
 
-import io.arum.model.AbstractARUMOrganizationtWorld;
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.assemblyline.AssemblyLineType;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.SupplyType;
 import io.asimov.agent.process.ProcessManagementWorld;
 import io.asimov.db.Datasource;
+import io.asimov.model.AbstractASIMOVOrganizationtWorld;
 import io.asimov.model.process.Process;
 import io.asimov.model.sl.LegacySLUtil;
-import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.embody.Percept;
 import io.coala.log.InjectLogger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -35,7 +28,7 @@ import rx.subjects.ReplaySubject;
  * 
  */
 
-public class ProcessManagementWorldImpl extends AbstractARUMOrganizationtWorld
+public class ProcessManagementWorldImpl extends AbstractASIMOVOrganizationtWorld
 		implements ProcessManagementWorld
 {
 
@@ -92,36 +85,5 @@ public class ProcessManagementWorldImpl extends AbstractARUMOrganizationtWorld
 		return result.asObservable();
 	}
 
-	/** @see ProcessManagementWorld#getAssemblyLineTypeForAgentID(AgentID) */
-	@Override
-	public List<AssemblyLineType> getAssemblyLineTypesForAgentID(final AgentID agentID)
-	{
-		final AssemblyLine assemblyLine = getBinder().inject(Datasource.class).findAssemblyLineByID(
-				agentID.getValue());
-		if (assemblyLine == null)
-		{
-			throw new NullPointerException("No assemblyLine found for : "
-					+ agentID.getValue());
-		}
-		if (assemblyLine.getTypes().isEmpty())
-		{
-			new NullPointerException("No type for assemblyLine: " + assemblyLine)
-					.printStackTrace();
-			return null;
-		}
-		return assemblyLine.getTypes();
-	}
-
-	@Override
-	public List<Material> getMaterialsForSupplyType(AgentID resourceAgent,
-			SupplyType materialType) {
-		List<Material> result = new ArrayList<Material>();
-		for (Material r : getBinder().inject(Datasource.class).findMaterials()) {
-			for (SupplyType t : r.getTypes())
-				if (t.getName().equalsIgnoreCase(materialType.getName())) {
-					result.add(r);
-				}
-		}
-		return result;
-	}
+	
 }

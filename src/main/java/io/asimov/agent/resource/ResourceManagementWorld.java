@@ -2,7 +2,6 @@ package io.asimov.agent.resource;
 
 import io.asimov.model.ASIMOVOrganizationWorld;
 import io.asimov.model.AbstractEmbodied;
-import io.asimov.model.resource.ARUMResourceType;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.capability.embody.GroundingCapability;
@@ -40,7 +39,7 @@ public interface ResourceManagementWorld<E extends AbstractEmbodied<?>> extends
 	/**
 	 * @return
 	 */
-	ARUMResourceType getResourceType();
+	String getResourceType();
 
 	/**
 	 * Gets the current location for the service owner.

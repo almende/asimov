@@ -1,6 +1,5 @@
 package io.asimov.model;
 
-import io.asimov.model.resource.ARUMResourceType;
 import io.coala.agent.AgentID;
 import io.coala.json.JsonUtil;
 import io.coala.time.SimDuration;
@@ -64,7 +63,7 @@ public class ActivityParticipationResourceInformation implements Serializable
 	private String processInstanceId = null;
 
 	/** */
-	private ARUMResourceType resourceType = null;
+	private String resourceType = null;
 
 	/**
 	 * @return the resourceAgent
@@ -105,7 +104,7 @@ public class ActivityParticipationResourceInformation implements Serializable
 	 * @param resourceType the resourceType to set
 	 * @return {@link ActivityParticipationResourceInformation}
 	 */
-	public ActivityParticipationResourceInformation withResourceType(ARUMResourceType resourceType) {
+	public ActivityParticipationResourceInformation withResourceType(String resourceType) {
 		setResourceType(resourceType);
 		return this;
 	}
@@ -165,7 +164,7 @@ public class ActivityParticipationResourceInformation implements Serializable
 	/**
 	 * @return the resourceType
 	 */
-	public ARUMResourceType getResourceType()
+	public String getResourceType()
 	{
 		return this.resourceType;
 	}
@@ -173,7 +172,7 @@ public class ActivityParticipationResourceInformation implements Serializable
 	/**
 	 * @param resourceType the resourceType to set
 	 */
-	public void setResourceType(ARUMResourceType resourceType) {
+	public void setResourceType(String resourceType) {
 	this.resourceType = resourceType;}
 
 	/**

@@ -3,7 +3,6 @@ package io.asimov.agent.scenario;
 import io.asimov.model.ASIMOVContext;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.XMLConvertible;
-import io.asimov.model.resource.ARUMResourceType;
 import io.asimov.xml.TContext;
 
 import java.util.Set;

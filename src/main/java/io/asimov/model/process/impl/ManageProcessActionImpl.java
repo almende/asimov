@@ -1,6 +1,5 @@
 package io.asimov.model.process.impl;
 
-import io.arum.model.resource.assemblyline.AssemblyLineType;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessManagementWorld;
@@ -11,7 +10,6 @@ import io.asimov.model.ResourceAllocation;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
 import io.asimov.model.process.Transition;
-import io.asimov.model.resource.ARUMResourceType;
 import io.asimov.model.resource.ResourceSubtype;
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.LegacySLUtil;
@@ -19,8 +17,7 @@ import io.asimov.model.xml.XmlUtil;
 import io.asimov.reasoning.sl.KBase;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TSkeletonActivityType;
-import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
-import io.asimov.xml.TSkeletonActivityType.UsedComponent;
+import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.replicate.ReplicatingCapability;
@@ -380,7 +377,6 @@ public class ManageProcessActionImpl extends
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void manageProcessInstanceForType(
 			final ProcessCompletion.Request cause) {
@@ -500,7 +496,6 @@ public class ManageProcessActionImpl extends
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Schedulable(NEXT_ACTIVITY_METHOD_ID)
 	public void nextActivity(final ProcessCompletion.Request cause,
 			final String currentActivityTimeToken) {
@@ -578,90 +573,45 @@ public class ManageProcessActionImpl extends
 			List<ActivityParticipationResourceInformation> resourceParticipationInfo = new ArrayList<ActivityParticipationResourceInformation>();
 
 			participantLoop: for (AgentID agent : nextDistribution.keySet()) {
-				ARUMResourceType type = ARUMResourceType.ASSEMBLY_LINE;
 				String resourceName = agent.getValue();
 				// LOG.warn("CHECK ROLES ----------------:");
-				for (RoleInvolved roleInvolved : activityXML.getRoleInvolved()) {
-					String requiredAgentID = getAgentIDByResourceSubType(roleInvolved
-							.getRoleRef());
-					if (requiredAgentID.equals(agent.toString())) {
-						// LOG.warn("Required: "+requiredAgentID+" == "+agent);
-						if (activityXML.getExecutionTime() != null)
-							activityDuration = new SimDuration(
-									XmlUtil.gDurationToLong(activityXML
-											.getExecutionTime()),
-									TimeUnit.MILLIS);
-						type = ARUMResourceType.PERSON;
-						resourceName = roleInvolved.getRoleRef();
-						LOG.info(agent.getValue() + " is a "
-								+ roleInvolved.getRoleRef());
-					} else {
-						// LOG.warn("Required: "+requiredAgentID+" != "+agent);
-
-						LOG.info(agent.getValue() + " is not a "
-								+ roleInvolved.getRoleRef());
-					}
-				}
+				
 				// LOG.warn("DONE CHECK ----------------:");
-				if (type == ARUMResourceType.ASSEMBLY_LINE) {
-					for (UsedComponent componentUsed : activityXML
-							.getUsedComponent()) {
+					for (UsedResource componentUsed : activityXML
+							.getUsedResource()) {
+						String type = null;
 						String requiredAgentID = getAgentIDByResourceSubType(componentUsed
-								.getComponentRef());
+								.getResourceSubTypeRef());
 						if (requiredAgentID.equals(agent.toString())) {
 							// LOG.warn("Required: "+requiredAgentID+" == "+agent);
-							for (UsedComponent usedMaterial : activityXML
-									.getUsedComponent())
+							for (UsedResource usedMaterial : activityXML
+									.getUsedResource())
 								if (getAgentIDByResourceSubType(
-										usedMaterial.getComponentRef())
+										usedMaterial.getResourceSubTypeRef())
 										.equalsIgnoreCase(agent.toString())) {
-									activityDuration = new SimDuration(
+									if (usedMaterial.getTimeOfUse() == null)
+										activityDuration = new SimDuration(
+												XmlUtil.gDurationToLong(activityXML
+														.getExecutionTime()),
+												TimeUnit.MILLIS);
+									else
+										activityDuration = new SimDuration(
 											XmlUtil.gDurationToLong(usedMaterial
 													.getTimeOfUse()),
 											TimeUnit.MILLIS);
 									break;
 								}
-							type = ARUMResourceType.MATERIAL;
-							resourceName = componentUsed.getComponentRef();
+							type = componentUsed.getResourceTypeRef();
+							resourceName = componentUsed.getResourceSubTypeRef();
 							LOG.info(agent.getValue() + " is a "
-									+ componentUsed.getComponentRef());
+									+ componentUsed.getResourceSubTypeRef());
 						} else {
 							// LOG.warn("Required: "+requiredAgentID+" != "+agent);
 
 							LOG.info(agent.getValue() + " is not a "
-									+ componentUsed.getComponentRef());
+									+ componentUsed.getResourceSubTypeRef());
 						}
-					}
-					if (type == ARUMResourceType.ASSEMBLY_LINE) {
-						try {
-							List<AssemblyLineType> assemblyLineTypes = getWorld()
-									.getAssemblyLineTypesForAgentID(agent);
-							List<String> assemblyLines = new ArrayList<String>();
-							for (AssemblyLineType at : assemblyLineTypes)
-								assemblyLines.add(at.getName());
-							for (String usedAssemblyLineType : activityXML
-									.getUsedAssemlyLineType())
-								if (!assemblyLines
-										.contains(usedAssemblyLineType)) {
-									LOG.info("Ignoring assemblyLine of types: "
-											+ assemblyLines + " because "
-											+ usedAssemblyLineType
-											+ " was required!");
-									continue participantLoop;
-								}
-						} catch (NullPointerException ne) {
-							continue participantLoop;
-							// No assemblyLine and not the right
-							// type of
-							// person so continue
-						}
-
-					}
-					// FIXME Choose a assemblyLine if more are
-					// available
-					// accoring to a random distribution.
-
-				}
+					
 
 				// -----------------------------------------------------------------------------
 				ActivityParticipationResourceInformation p = new ActivityParticipationResourceInformation()
@@ -674,11 +624,11 @@ public class ManageProcessActionImpl extends
 						.withProcessID(cause.getProcessTypeID())
 						.withInstanceProcessID(
 								cause.getID().getValue().toString());
-				if (type == ARUMResourceType.MATERIAL)
-					p.withResourceInstanceName(agent.getValue());
+						p.withResourceInstanceName(agent.getValue());
 				resourceParticipationInfo.add(p);
-
+				
 				//
+				}
 			}
 
 			synchronized (participatingFactIds) {

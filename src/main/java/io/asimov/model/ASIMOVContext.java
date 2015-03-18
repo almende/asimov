@@ -1,8 +1,6 @@
 package io.asimov.model;
 
 import io.asimov.agent.scenario.Context;
-import io.asimov.model.resource.ARUMResourceType;
-import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.xml.TContext;
 import io.asimov.xml.TResource;
 

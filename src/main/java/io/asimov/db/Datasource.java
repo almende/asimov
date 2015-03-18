@@ -1,6 +1,7 @@
 package io.asimov.db;
 
 import io.asimov.agent.scenario.Replication;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
@@ -49,24 +50,24 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	void close();
 
 	/**
-	 * @param resourceDescriptor the {@link ResourceDescriptor} to save
+	 * @param resourceDescriptor the {@link ASIMOVResourceDescriptor} to save
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
 	 */
-	void save(ResourceDescriptor resourceDescriptor);
+	void save(ASIMOVResourceDescriptor resourceDescriptor);
 
 	/**
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 * @return the {@link ResourceDescriptor}s
+	 * @return the {@link ASIMOVResourceDescriptor}s
 	 */
-	Iterable<ResourceDescriptor> findResourceDescriptors();
+	Iterable<ASIMOVResourceDescriptor> findResourceDescriptors();
 	
 
 	/**
-	 * @param resourceDescriptorID the identifier of the {@link ResourceDescriptor} to load
+	 * @param resourceDescriptorID the identifier of the {@link ASIMOVResourceDescriptor} to load
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 * @return the {@link ResourceDescriptor} or {@code null} if none found
+	 * @return the {@link ASIMOVResourceDescriptor} or {@code null} if none found
 	 */
-	ResourceDescriptor findResourceDescriptorByID(String ResourceDescriptor);
+	ResourceDescriptor findResourceDescriptorByID(String resourceDescriptor);
 	
 	/**
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.

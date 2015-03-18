@@ -64,7 +64,7 @@ import rx.subjects.Subject;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  * 
  */
-public class ScenarioManagementWorldImpl extends AbstractARUMOrganizationtWorld
+public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorld
 		implements ScenarioManagementWorld {
 
 	/** */

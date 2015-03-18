@@ -2,12 +2,12 @@ package io.asimov.db.mongo;
 
 import io.asimov.agent.scenario.Replication;
 import io.asimov.db.Datasource;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
 import io.asimov.model.resource.ResourceDescriptor;
-import io.asimov.model.resource.ResourceSubtype;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.bind.BinderFactory;
@@ -297,10 +297,10 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	 * @param query
 	 * @return
 	 */
-	protected Iterable<ResourceDescriptor> queryResourceDescriptors(final String query)
+	protected Iterable<ASIMOVResourceDescriptor> queryResourceDescriptors(final String query)
 	{
 		LOG.trace("query resource descriptors: " + query);
-		return getResourceDescriptorCollection().find(query).as(ResourceDescriptor.class);
+		return getResourceDescriptorCollection().find(query).as(ASIMOVResourceDescriptor.class);
 	}
 
 	/**
@@ -399,7 +399,7 @@ public class MongoDatasource extends BasicCapability implements Datasource
 
 	/** @see Datasource#save(AssemblyLine) */
 	@Override
-	public void save(final ResourceDescriptor resourceDescriptor)
+	public void save(final ASIMOVResourceDescriptor resourceDescriptor)
 	{
 		// FIXME : Must be a REAL update instead of a remove/create
 		MongoCollection collection = getResourceDescriptorCollection();
@@ -412,7 +412,7 @@ public class MongoDatasource extends BasicCapability implements Datasource
 
 	/** @see Datasource#findAssemblyLines() */
 	@Override
-	public Iterable<ResourceDescriptor> findResourceDescriptors()
+	public Iterable<ASIMOVResourceDescriptor> findResourceDescriptors()
 	{
 		final String query = "{" + REPLICATION_FOREIGN_ID_FIELDNAME + ": '"
 				+ replicationID + "'}";

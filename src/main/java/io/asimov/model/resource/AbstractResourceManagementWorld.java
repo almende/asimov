@@ -52,7 +52,7 @@ import rx.subjects.Subject;
  * 
  */
 public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied<?>>
-		extends AbstractARUMOrganizationtWorld implements
+		extends AbstractASIMOVOrganizationtWorld implements
 		ResourceManagementWorld<E>
 
 {

@@ -1,33 +1,20 @@
 package io.asimov.model.process.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import io.arum.model.resource.person.PersonResourceManagementWorld;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
-import io.asimov.agent.scenario.impl.ScenarioReplicatorImpl;
-import io.asimov.messaging.ASIMOVMessage;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
-import io.coala.enterprise.fact.FactID;
 import io.coala.enterprise.role.AbstractInitiator;
-import io.coala.invoke.ProcedureCall;
-import io.coala.invoke.Schedulable;
 import io.coala.log.InjectLogger;
 import io.coala.random.RandomDistribution;
-import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
-import io.coala.time.Trigger;
 
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
-
-import rx.Observer;
 
 /**
  * {@link ProcessCompletionInitiator}

@@ -1,8 +1,5 @@
 package io.asimov.model.process.impl;
 
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.supply.Material;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessCompletion.ProcessCompleter;
@@ -12,23 +9,18 @@ import io.asimov.messaging.ASIMOVMessage;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.ConversionCallback;
 import io.asimov.microservice.negotiation.ResourceAllocationRequestor.AllocationCallback;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.AbstractNamed;
 import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipation.Result;
-import io.asimov.model.Resource;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.ResourceRequirement;
-import io.asimov.model.process.Task;
-import io.asimov.model.resource.ARUMResourceType;
-import io.asimov.model.sl.ASIMOVFormula;
-import io.asimov.model.sl.ASIMOVTerm;
+import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.model.sl.LegacySLUtil;
-import io.asimov.model.sl.SLConvertible;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
-import io.coala.capability.admin.DestroyingCapability;
 import io.coala.capability.embody.Percept;
 import io.coala.capability.know.ReasoningCapability.Belief;
 import io.coala.capability.replicate.ReplicatingCapability;
@@ -56,8 +48,6 @@ import java.util.concurrent.CountDownLatch;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
-
-import com.almende.util.uuid.UUID;
 
 import rx.Observer;
 
@@ -209,12 +199,8 @@ public class ProcessCompleterImpl extends
 	public SimTime getAvailableTime(Object subject) {
 		SimTime result = SimTime.ZERO;
 		Long delta = null;
-		if (subject instanceof Material)
-			delta = ((Material) subject).getAvailableFromTime();
-		else if (subject instanceof Person)
-			delta = ((Person) subject).getAvailableFromTime();
-		else if (subject instanceof AssemblyLine)
-			delta = ((AssemblyLine) subject).getAvailableFromTime();
+		if (subject instanceof ASIMOVResourceDescriptor)
+			delta = ((ASIMOVResourceDescriptor) subject).getAvailableFromTime();
 		return result.plus((delta == null) ? 0 : delta.longValue(),
 				TimeUnit.MILLIS);
 	}
@@ -257,55 +243,23 @@ public class ProcessCompleterImpl extends
 		LOG.trace("Allocating resources for process.");
 		LOG.warn("Resources are allocated per role (not per instance) and "
 				+ "per process (not per activity).");
-		Iterable<Person> persons = getBinder().inject(Datasource.class)
-				.findPersons();
-		Iterable<AssemblyLine> assemblyLines = getBinder().inject(
-				Datasource.class).findAssemblyLines();
-		Iterable<Material> materials = getBinder().inject(Datasource.class)
-				.findMaterials();
-		AgentID personAIDs[] = getListOfResourceAddress(getBinder().getID()
-				.getModelID(), persons);
-		AgentID assemblyLineAIDs[] = getListOfResourceAddress(getBinder()
-				.getID().getModelID(), assemblyLines);
-		AgentID materialAIDs[] = getListOfResourceAddress(getBinder().getID()
-				.getModelID(), materials);
-
+		Iterable<ASIMOVResourceDescriptor> resourcesDescriptors = getBinder().inject(
+				Datasource.class).findResourceDescriptors();
+		
 		Map<Serializable, Set<AgentID>> candidates = new HashMap<Serializable, Set<AgentID>>();
 
 		for (ResourceRequirement requirement : getWorld()
 				.getProcess(processTypeID).getRequiredResources().values()) {
-			if (personAIDs != null
-					&& requirement.getResource().getTypeID()
-							.equals(Person.class)) {
-				Set<AgentID> aidSet = new HashSet<AgentID>();
-				for (int i = 0; i < personAIDs.length; i++) {
-					aidSet.add(personAIDs[i]);
-				}
-				candidates.put(LegacySLUtil
-						.requestResourceAllocationForRequirement(requirement)
-						.toString(), aidSet);
-			} else if (materialAIDs != null
-					&& requirement.getResource().getTypeID()
-							.equals(Material.class)) {
-				Set<AgentID> aidSet = new HashSet<AgentID>();
-				for (int i = 0; i < materialAIDs.length; i++) {
-					aidSet.add(materialAIDs[i]);
-				}
-				candidates.put(LegacySLUtil
-						.requestResourceAllocationForRequirement(requirement)
-						.toString(), aidSet);
-			} else if (assemblyLineAIDs != null
-					&& requirement.getResource().getTypeID()
-							.equals(AssemblyLine.class)) {
-
-				Set<AgentID> aidSet = new HashSet<AgentID>();
-				for (int i = 0; i < assemblyLineAIDs.length; i++) {
-					aidSet.add(assemblyLineAIDs[i]);
-				}
-				candidates.put(LegacySLUtil
-						.requestResourceAllocationForRequirement(requirement)
-						.toString(), aidSet);
+			Set<AgentID> aidSet = new HashSet<AgentID>();
+			
+			for (ASIMOVResourceDescriptor resourceDescriptor : resourcesDescriptors) {
+				if (resourceDescriptor.getType().equals(requirement.getResource().getTypeID()
+								.getName())) 
+						aidSet.add(resourceDescriptor.getAgentID());
 			}
+				candidates.put(LegacySLUtil
+						.requestResourceAllocationForRequirement(requirement)
+						.toString(), aidSet);
 		}
 
 		// FIXME Add callback and converter
