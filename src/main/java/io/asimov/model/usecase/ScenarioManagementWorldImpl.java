@@ -351,7 +351,7 @@ public class ScenarioManagementWorldImpl extends AbstractARUMOrganizationtWorld
 			this.agents.add(dCreateAgentAction);
 		}
 
-		for (Person person : this.scenario.getPersons()) {
+		for (Person person : this.scenario.getInvolvedResources()) {
 			this.personIDs.add(agentIDFactory.createAgentID(person.getName()));
 
 			this.persons.add(person);

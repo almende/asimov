@@ -7,10 +7,6 @@
 	xmlns:asimovunit="http://io.asimov.almende.org/2015/schema/unit/"
 	>
 
-
-
-
-
 	
 	<import schemaLocation="asimovBPM.xsd" namespace="http://io.asimov.almende.org/2015/schema/bpm/">
 	</import>
@@ -129,12 +125,6 @@
 
 
 
-
-
-
-
-
-
 	<element name="BPMImport">
 		<annotation>
 			<documentation>BPM imorting.</documentation>
@@ -150,29 +140,6 @@
 			</sequence>
 		</complexType>
 	</element>
-
-	<element name="EventsImport">
-		<annotation>
-			<documentation>import new events into the adapt4ee</documentation>
-		</annotation>
-		<complexType>
-			<sequence>
-				<element name="event" type="asimovevent:tEvent" maxOccurs="unbounded"
-					minOccurs="1">
-				</element>
-			</sequence>
-		</complexType>
-	</element>
-	
-	<element name="ListOfEvents">
-		<complexType>
-			<sequence>
-				<element name="event" type="asimovevent:tEvent" maxOccurs="unbounded"
-					minOccurs="0">
-				</element>
-			</sequence>
-		</complexType>
-	</element>
 	
 
 	<element name="ListOfProcesses">
@@ -184,16 +151,6 @@
 		</complexType>
 	</element>
 
-	<element name="ListOfRoles">
-		<complexType>
-			<sequence>
-				<element name="role" type="asimovbpm:tRole" maxOccurs="unbounded"
-					minOccurs="0"></element>
-			</sequence>
-		</complexType>
-	</element>
-
-	
 	
 	<element name="EventTraceImport">
 		<complexType>
@@ -204,19 +161,6 @@
 		</complexType>
 	</element>
 
-	<element name="ListOfPersons">
-		<complexType>
-			<sequence>
-				<element name="person" maxOccurs="unbounded" minOccurs="0">
-					<complexType>
-						<sequence>
-							<element name="id" type="string" maxOccurs="1" minOccurs="1"></element>
-						</sequence>
-					</complexType>
-				</element>
-			</sequence>
-		</complexType>
-	</element>
 
 	<element name="EventTraceMinTime" type="dateTime"></element>
 

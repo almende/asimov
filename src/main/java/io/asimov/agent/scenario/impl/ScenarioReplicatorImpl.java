@@ -259,18 +259,17 @@ public class ScenarioReplicatorImpl extends
 	}
 
 	private Set<Map<String, String>> getTypesForAgent(AgentID agentId) {
-		LOG.error("");
 		Set<Map<String, String>> result = new HashSet<Map<String, String>>();
-		for (ResourceDescriptor r : getWorld().getResourceDescriptors()) {
+		for (ResourceDescriptor<?> r : getWorld().getResourceDescriptors()) {
 			if (!r.getName().equals(agentId.getValue()))
 				continue;
 			LOG.error("Monkey will attack:" + r);
-			for (String rt : r.getTypes()) {
-				for (String rst : r.getSubTypes()) {
-					result.add(Collections.singletonMap(
-						rt, rst));
-				}
+			
+			for (String rst : r.getSubTypes()) {
+				result.add(Collections.singletonMap(
+					r.getType(), rst));
 			}
+		
 			return result;
 		}
 

@@ -1,7 +1,5 @@
 package io.asimov.model;
 
-import io.arum.model.events.MaterialEvent;
-import io.arum.model.events.MovementEvent;
 import io.asimov.model.events.ActivityEvent;
 
 /**
@@ -13,12 +11,7 @@ import io.asimov.model.events.ActivityEvent;
  */
 public interface PersonTraceEventListener extends PersonTraceModelComponent
 {
-	/** @param event the newly triggered {@link MovementEvent} */
-	void onMovement(MovementEvent event);
-
-	/** @param event the newly triggered {@link EquipmentEvent} */
-	void onUsage(MaterialEvent event);
-
+	
 	/** @param event the newly triggered {@link ActivityEvent} */
 	void onActivity(ActivityEvent event);
 

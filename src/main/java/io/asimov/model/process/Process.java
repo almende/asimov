@@ -7,6 +7,7 @@ import io.arum.model.resource.person.PersonRole;
 import io.arum.model.resource.supply.Material;
 import io.arum.model.resource.supply.SupplyType;
 import io.asimov.graph.GraphUtil;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.AbstractEntity;
 import io.asimov.model.Resource;
 import io.asimov.model.ResourceAllocation;
@@ -26,6 +27,7 @@ import io.asimov.xml.TSkeletonActivityType.NextActivityRef;
 import io.asimov.xml.TSkeletonActivityType.PreviousActivityRef;
 import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
 import io.asimov.xml.TSkeletonActivityType.UsedComponent;
+import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.coala.log.LogUtil;
 
 import java.io.IOException;
@@ -307,19 +309,33 @@ public class Process extends AbstractEntity<Process> implements
 	}
 
 	public Process withResource(String resourceName,
-			Class<? extends ResourceType> resourceType,
+			final String resourceType,
 			ResourceSubtype resourceSubType, Time duration)
 	{
+		final ResourceType resource = new ResourceType() {
+			
+			@Override
+			public String getName() {
+				return resourceType;
+			}
+		};
 		return withResource(new ResourceRequirement().withResource(
-				new Resource().withName(resourceName).withTypeID(resourceType)
+				new Resource().withName(resourceName).withTypeID(resource)
 						.withSubTypeID(resourceSubType), 1, duration));
 	}
 
-	public Process withResource(Class<? extends ResourceType> resourceType,
+	public Process withResource(final String resourceType,
 			ResourceSubtype resourceSubType, Time duration)
 	{
+		final ResourceType resource = new ResourceType() {
+			
+			@Override
+			public String getName() {
+				return resourceType;
+			}
+		};
 		return withResource(new ResourceRequirement().withResource(
-				new Resource().withTypeID(resourceType).withSubTypeID(
+				new Resource().withTypeID(resource).withSubTypeID(
 						resourceSubType), 1, duration));
 	}
 
@@ -523,39 +539,15 @@ public class Process extends AbstractEntity<Process> implements
 			activity.setName(task.getDescription());
 			for (ResourceRequirement resource : task.getResources().values())
 			{
-				if (resource.getResource().getTypeID().equals(AssemblyLine.class))
-				{
 					activity.setExecutionTime(XmlUtil.durationFromLong(resource
 							.getDuration().getMillisecond()));
-					activity.getUsedAssemlyLineType()
-							.add(resource.getResource()
-													.getSubTypeID().getName());
-				}
-				if (resource.getResource().getTypeID().equals(Person.class))
-				{
-					activity.setExecutionTime(XmlUtil.durationFromLong(resource
+					
+					UsedResource ur = new UsedResource();
+					ur.setResourceTypeRef(resource.getResource().getTypeID().getName());
+					ur.setResourceTypeRef(resource.getResource().getSubTypeID().getName());
+					activity.getUsedResource().add(ur);
+					ur.setTimeOfUse(XmlUtil.durationFromLong(resource
 							.getDuration().getMillisecond()));
-					RoleInvolved person = new RoleInvolved();
-					activity.getRoleInvolved().add(person);
-					person.setRoleRef(resource.getResource().getSubTypeID()
-							.getName());
-				}
-				if (resource.getResource().getTypeID().equals(Material.class))
-				{
-					UsedComponent ue = new UsedComponent();
-					activity.getUsedComponent().add(ue);
-					try
-					{
-						ue.setComponentRef(resource.getResource().getSubTypeID()
-												.getName());
-					} catch (IllegalArgumentException ia)
-					{
-						ue.setComponentRef(resource.getResource()
-										.getSubTypeID().getName());
-					}
-					ue.setTimeOfUse(XmlUtil.durationFromLong(resource
-							.getDuration().getMillisecond()));
-				}
 			}
 			// de-normalize
 			// deNormalizeLikelihoods(resultProcess);
@@ -647,39 +639,23 @@ public class Process extends AbstractEntity<Process> implements
 		{
 			ArrayList<String> taskResources = new ArrayList<String>();
 			// Define resource requirements first:
-			for (RoleInvolved roleInvolved : skeletonActivityType
-					.getRoleInvolved())
+			
+			for (final UsedResource usedResource : skeletonActivityType
+					.getUsedResource())
 			{
-				Time t = new Time().withMillisecond(XmlUtil
-						.gDurationToLong(skeletonActivityType
-								.getExecutionTime()));
-				this.withResource(Person.class,
-						new PersonRole().withName(roleInvolved.getRoleRef()),
-						t);
-				taskResources.add(roleInvolved.getRoleRef());
-			}
-			for (String usedAssemblyLine : skeletonActivityType
-					.getUsedAssemlyLineType())
-			{
-				Time t = new Time().withMillisecond(XmlUtil
-						.gDurationToLong(skeletonActivityType
-								.getExecutionTime()));
-				this.withResource(AssemblyLine.class,
-						new AssemblyLineType().withName(usedAssemblyLine.toString()), t);
-				taskResources.add(usedAssemblyLine.toString());
-			}
-			for (UsedComponent usedMaterial : skeletonActivityType
-					.getUsedComponent())
-			{
-				Duration materialTimeOfUse = usedMaterial.getTimeOfUse();
+				Duration materialTimeOfUse = usedResource.getTimeOfUse();
 				if (materialTimeOfUse == null) // Default material usage time equal to activity execution time
 					materialTimeOfUse = skeletonActivityType.getExecutionTime();
 				Time t = new Time().withMillisecond(XmlUtil
 						.gDurationToLong(materialTimeOfUse));
-				this.withResource(Material.class, new SupplyType()
-						.withName(usedMaterial.getComponentRef()
-								.toString()), t);
-				taskResources.add(usedMaterial.getComponentRef()
+				this.withResource(usedResource.getResourceTypeRef(), new ResourceSubtype() {
+					
+					@Override
+					public String getName() {
+						return usedResource.getResourceSubTypeRef();
+					}
+				}, t);
+				taskResources.add(usedResource.getResourceSubTypeRef()
 						.toString());
 			}
 			// After all resource requirements have been added the tasks can be

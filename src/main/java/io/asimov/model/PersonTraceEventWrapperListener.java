@@ -38,12 +38,6 @@ public class PersonTraceEventWrapperListener implements
 		case ACTIVITY:
 			this.listener.onActivity(ote.getActivity());
 			break;
-		case MOVEMENT:
-			this.listener.onMovement(ote.getMovement());
-			break;
-		case USAGE:
-			this.listener.onUsage(ote.getUsage());
-			break;
 		default:
 			throw new IllegalStateException("Unsupported event type: "
 					+ ote.getPersonEventType());

@@ -3,9 +3,7 @@ package io.asimov.model.xml;
 import io.asimov.agent.scenario.Context;
 import io.asimov.model.xml.moxy.MOXyXmlContextID;
 import io.asimov.xml.BPMImport;
-import io.asimov.xml.ListOfEvents;
 import io.asimov.xml.ListOfProcesses;
-import io.asimov.xml.ListOfRoles;
 import io.asimov.xml.SimulationFile;
 import io.asimov.xml.TDistribution;
 import io.coala.log.LogUtil;
@@ -66,8 +64,7 @@ public class XmlUtil extends io.coala.xml.XmlUtil
 	 */
 	public static final XmlContextID<io.asimov.xml.ObjectFactory> CIM = MOXyXmlContextID
 			.of(io.asimov.xml.ObjectFactory.class,
-					SimulationFile.class, Context.class, BPMImport.class, ListOfEvents.class,
-					ListOfRoles.class,
+					SimulationFile.class, Context.class, BPMImport.class,
 					ListOfProcesses.class, TDistribution.class);
 
 	/**

@@ -6,63 +6,6 @@
 	
 
 
-	<complexType name="tPersonMovementEvent">
-		<sequence>
-			<element name="time" type="dateTime" maxOccurs="1"
-				minOccurs="0">
-			</element>
-			<element name="personRef" type="string" maxOccurs="1"
-				minOccurs="1">
-			</element>
-			<element name="fromAssemblyLineRef" type="string" maxOccurs="1"
-				minOccurs="0">
-			</element>
-			<element name="toAssemblyLineRef" type="string" maxOccurs="1"
-				minOccurs="0">
-			</element>
-		</sequence>
-	</complexType>
-
-
-
-	<complexType name="tMaterialUsedEvent">
-		<sequence>
-			<element name="time" type="dateTime" maxOccurs="1"
-				minOccurs="0">
-			</element>
-			<element name="assemblyLineRef" type="string" maxOccurs="1"
-				minOccurs="0">
-			</element>
-			<element name="materialRef" type="string" maxOccurs="1"
-				minOccurs="1">
-			</element>
-			<element name="occupantRef" type="string" maxOccurs="unbounded"
-				minOccurs="0">
-			</element>
-			<element name="durationOfUse" type="duration" maxOccurs="1"
-				minOccurs="0">
-			</element>
-		</sequence>
-	</complexType>
-
-
-	<complexType name="tEvent">
-		<sequence>
-			<element name="id" type="string" maxOccurs="1"
-				minOccurs="0">
-			</element>
-			<choice maxOccurs="1" minOccurs="1">
-				<element name="personMoved"
-					type="asimovevent:tPersonMovementEvent" maxOccurs="1" minOccurs="0">
-				</element>
-				<element name="materialUsed"
-					type="asimovevent:tMaterialUsedEvent" maxOccurs="1" minOccurs="0">
-				</element>
-
-			</choice>
-		</sequence>
-	</complexType>
-
 	<complexType name="tAgentBasedSimulationModuleOutput">
 		<sequence>
 			<element name="simulationID" type="string" minOccurs="1"
@@ -79,15 +22,8 @@
 					<sequence>
 						<element name="timeStamp" type="dateTime"
 							minOccurs="1" maxOccurs="1" />
-						<element name="personRef" type="string"
-							minOccurs="1" maxOccurs="1" />
-						<element name="personRoleRef" type="string"
-							minOccurs="1" maxOccurs="unbounded" />
-						<element name="assemblyLineRef" type="string"
-							minOccurs="1" maxOccurs="1" />
-						<element name="materialRef" type="string" minOccurs="0" maxOccurs="1" />
-						<element name="componentRef" type="string" minOccurs="0" maxOccurs="1" />
-						<element name="activityType" type="asimovevent:ActivityEnumerator" maxOccurs="1" minOccurs="0" />
+						<element name="resourceRef" type="string" minOccurs="0" maxOccurs="unbounded" />
+						<element name="activityType" type="string" maxOccurs="1" minOccurs="0" />
 						<element name="activityInstanceRef" type="string" maxOccurs="1" minOccurs="0" />
 						<element name="processRef" type="string" maxOccurs="1" minOccurs="0" />
 						<element name="processInstanceRef" type="string" maxOccurs="1" minOccurs="0" />
@@ -97,21 +33,6 @@
 			</element>
 		</sequence>
 	</complexType>
-	<simpleType name="ActivityEnumerator">
-		<restriction base="string">
-			<enumeration
-				value="Person arrives at AssemblyLine (AL corresponds to AL in Event Record)" />
-			<enumeration
-				value="Person leaves AssemblyLine (AL corresponds to AL in Event Record)" />
-			<enumeration
-				value="Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)" />
-			<enumeration
-				value="Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)" />
-			<enumeration
-				value="Person starts executing some Business Activity" />
-			<enumeration
-				value="Person stops executing some Business Activity" />
-		</restriction>
-	</simpleType>
+	
 	
 </schema>

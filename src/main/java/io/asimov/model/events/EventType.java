@@ -2,7 +2,6 @@ package io.asimov.model.events;
 
 import io.asimov.model.AbstractNamed;
 import io.asimov.model.XMLConvertible;
-import io.asimov.xml.ActivityEnumerator;
 import javax.persistence.Embeddable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,12 +15,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 
  */
 @Embeddable
-public class EventType extends AbstractNamed<EventType> implements XMLConvertible<ActivityEnumerator, EventType>
+public class EventType extends AbstractNamed<EventType>
 {
 
 	/** */
 	private static final long serialVersionUID = 1L;
 
+	/** Some example event types: */
+	
 	/**
 	 * This {@link EventType} indicates an {@link Person} entered some
 	 * {@link AssemblyLine}
@@ -115,40 +116,18 @@ public class EventType extends AbstractNamed<EventType> implements XMLConvertibl
 		return getName();
 	}
 	
-
-	/** @see eu.a4ee.model.AbstractEntity#toXML() */
-	@Override
-	public ActivityEnumerator toXML()
-	{
-		if (ARIVE_AT_ASSEMBLY.getValue().equalsIgnoreCase(getValue()))
-			return ActivityEnumerator.PERSON_ARRIVES_AT_ASSEMBLY_LINE_AL_CORRESPONDS_TO_AL_IN_EVENT_RECORD;
-
-		if (LEAVE_ASSEMBLY.getValue().equalsIgnoreCase(getValue()))
-			return ActivityEnumerator.PERSON_LEAVES_ASSEMBLY_LINE_AL_CORRESPONDS_TO_AL_IN_EVENT_RECORD;
-
-		if (START_ACTIVITY.getValue().equalsIgnoreCase(getValue()))
-			return ActivityEnumerator.PERSON_STARTS_EXECUTING_SOME_BUSINESS_ACTIVITY;
-
-		if (STOP_ACTIVITY.getValue().equalsIgnoreCase(getValue()))
-			return ActivityEnumerator.PERSON_STOPS_EXECUTING_SOME_BUSINESS_ACTIVITY;
-
-		if (START_USE_MATERIAL.getValue().equalsIgnoreCase(getValue()))
-			return ActivityEnumerator.PERSON_STARTS_ASSEMBLY_WITH_MATERIAL_ARTIFACT_MA_CORRESPONDS_TO_MA_IN_EVENT_RECORD;
-
-		if (STOP_USE_MATERIAL.getValue().equalsIgnoreCase(getValue()))
-			return ActivityEnumerator.PERSON_STOPS_ASSEMBLY_WITH_MATERIAL_ARTIFACT_MA_CORRESPONDS_TO_MA_IN_EVENT_RECORD;
-
-		
-		
-		throw new IllegalStateException("Not Implemented!");
+	public boolean equals(Object other) {
+		if ((other instanceof EventType) == false)
+			return false;
+		if (((EventType)other).getName() == null)
+			if (this.getName() == null)
+				return true;
+			else
+				return false;
+		return (((EventType)other).getName().equals(getName()));
+			
+			
 	}
-
-	/** @see XMLConvertible#fromXML(Object) */
-	@Override
-	public EventType fromXML(final ActivityEnumerator xmlBean)
-	{
-		throw new IllegalStateException("NOT IMPLEMENTED");
-	}
-
+	
 
 }

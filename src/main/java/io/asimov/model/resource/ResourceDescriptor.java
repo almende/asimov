@@ -7,28 +7,30 @@ import io.asimov.xml.TResource;
 
 import java.util.List;
 
-public interface ResourceDescriptor extends Named, XMLConvertible<TResource, ResourceDescriptor> {
+public interface ResourceDescriptor<T extends ResourceDescriptor<T>> extends Named, XMLConvertible<TResource, ResourceDescriptor<T>> {
+	
+	T withReplicationID(String replicationID);
 	
 	void setReplicationID(String replicationID);
 	
-	void getReplicationID(String replicationID);
+	String getReplicationID(String replicationID);
 	
 	void setDescriptions(ASIMOVNode<?>... description);
 	
 	List<ASIMOVNode<?>> getDescriptions();
 	
-	ResourceDescriptor withDescriptions(ASIMOVNode<?>... description);
+	T withDescriptions(ASIMOVNode<?>... description);
 	
 	void setType(String type);
 	
 	String getType();
 	
-	ResourceDescriptor withType(String type);
+	T withType(String type);
 	
-	void setSubTypes();
+	void setSubTypes(String... subtypes);
 	
 	List<String> getSubTypes();
 	
-	ResourceDescriptor withSubTypes(String... subtypes);
+	T withSubTypes(String... subtypes);
 	
 }

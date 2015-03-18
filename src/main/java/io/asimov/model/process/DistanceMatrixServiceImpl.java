@@ -1,9 +1,9 @@
 package io.asimov.model.process;
 
-import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.asimov.agent.process.NotYetInitializedException;
 import io.asimov.db.Datasource;
 import io.asimov.model.CoordinationUtil;
+import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.model.resource.RouteLookup;
 import io.asimov.model.resource.RouteLookup.Result;
 import io.coala.agent.AgentID;
@@ -97,11 +97,11 @@ public class DistanceMatrixServiceImpl extends AbstractInitiator<RouteLookup> im
 					}
 				});
 				if (distanceMatrix.isEmpty()) {
-					for (AssemblyLine r1 : getBinder().inject(Datasource.class).findAssemblyLines()) {
+					for (ResourceDescriptor<?> r1 : getBinder().inject(Datasource.class).findResourceDescriptors()) {
 						final AgentID sourceAgentID = getBinder()
 								.inject(ModelComponentIDFactory.class)
 								.createAgentID(r1.getName());
-						for (AssemblyLine r2 : getBinder().inject(Datasource.class).findAssemblyLines()) {
+						for (ResourceDescriptor<?> r2 : getBinder().inject(Datasource.class).findResourceDescriptors()) {
 							final AgentID targetAgentID = getBinder()
 									.inject(ModelComponentIDFactory.class)
 									.createAgentID(r2.getName());

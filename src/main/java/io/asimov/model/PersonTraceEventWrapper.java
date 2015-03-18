@@ -1,8 +1,5 @@
 package io.asimov.model;
 
-import io.arum.model.events.MaterialEvent;
-import io.arum.model.events.MovementEvent;
-import io.arum.model.events.PersonEvent;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.xml.TEventTrace.EventRecord;
@@ -72,12 +69,8 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 			this.type = PersonTraceEventType.DONE;
 		else if (event instanceof ActivityEvent)
 			this.type = PersonTraceEventType.ACTIVITY;
-		else if (event instanceof MovementEvent)
-			this.type = PersonTraceEventType.MOVEMENT;
-		else if (event instanceof MaterialEvent)
-			this.type = PersonTraceEventType.USAGE;
 		else
-			throw new IllegalStateException("Person event type unsupported: "
+			throw new IllegalStateException("Event type unsupported: "
 					+ event.getClass().getName());
 	}
 
@@ -120,15 +113,6 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 		return isActivityEvent() ? (ActivityEvent) getContent() : null;
 	}
 
-	public MaterialEvent getUsage()
-	{
-		return isUsageEvent() ? (MaterialEvent) getContent() : null;
-	}
-
-	public MovementEvent getMovement()
-	{
-		return isMovementEvent() ? (MovementEvent) getContent() : null;
-	}
 
 	/** @see XMLConvertible#fromXML(java.lang.Object) */
 	@Override
@@ -145,9 +129,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	@Override
 	public EventRecord toXML()
 	{
-		return isMovementEvent() ? getMovement().toXML()
-				: isActivityEvent() ? getActivity().toXML()
-						: isUsageEvent() ? getUsage().toXML() : null;
+		return  isActivityEvent() ? getActivity().toXML() : null;
 	}
 
 }

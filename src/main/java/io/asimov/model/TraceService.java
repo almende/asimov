@@ -1,19 +1,12 @@
 package io.asimov.model;
 
-import io.arum.model.events.MaterialEvent;
-import io.arum.model.events.MovementEvent;
-import io.arum.model.events.PersonEvent;
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.person.Person;
 import io.asimov.db.Datasource;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
-import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.xml.TEventTrace;
-import io.coala.agent.AgentID;
 import io.coala.log.LogUtil;
 import io.coala.model.ModelID;
 import io.coala.time.SimTime;
@@ -141,17 +134,12 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	 */
 	public Event<?> saveEvent(final Datasource ds,
 			final String processID, final String processInstanceID,
-			final String activityID, final String activityInstanceID,final AgentID agentID,
-			final EventType eventType, final SimTime timeStamp,
-			final String refID, final String buildingElementName)
+			final String activityID, final String activityInstanceID,final List<String> resourceRefs,
+			final EventType eventType, final SimTime timeStamp
+			)
 	{
 		LOG.info("Composing savable event");
-		String agentName = agentID.getValue();
-		Person theActingPerson = null;
-		synchronized (ds)
-		{
-			theActingPerson = ds.findPersonByID(agentName);
-		}
+		
 
 		String activityName = null;
 
@@ -174,122 +162,17 @@ public class TraceService extends AbstractPersonTraceEventProducer
 			}
 		}
 
-		final PersonEvent<?> event;
-		if (eventType.equals(EventType.START_ACTIVITY)
-				|| eventType.equals(EventType.STOP_ACTIVITY))
-		{
-
-			event = new ActivityEvent().withType(eventType)
-					.withExecutionTime(timeStamp)
-					.withReplicationID(replicationID)
-					.withAssemblyLineName(buildingElementName);
-			if (theActingPerson != null)
-			{
-				event.withPerson(theActingPerson);
-			} else
-			{
-				event.withPerson(new Person().withName(agentName));
-			}
-		} else if (eventType.equals(EventType.START_USE_MATERIAL)
-				|| eventType.equals(EventType.STOP_USE_MATERIAL))
-		{
-			AssemblyLine assemblyLine = null;
-			String assemblyLineName = null;
-
-			String ref = buildingElementName;
-			LOG.info("Checking wether " + ref
-					+ " is a assemblyLine in replication: " + replicationID);
-			try
-			{
-				synchronized (ds)
-				{
-					AssemblyLine r = ds.findAssemblyLineByID(ref);
-					if (r != null)
-					{
-						assemblyLineName = r.getName();
-						assemblyLine = r;
-						LOG.info("Material " + refID
-								+ " is being used for assemblyLine " + assemblyLineName
-								+ " in replication: " + replicationID);
-					} else
-					{
-						List<String> assemblyLineNames = new ArrayList<String>();
-						for (AssemblyLine aAssemblyLine : ds.findAssemblyLines())
-						{
-							assemblyLineNames.add(aAssemblyLine.getName());
-						}
-						LOG.error("Did not find assemblyLine with name " + ref + " in"
-								+ assemblyLineNames);
-					}
-				}
-			} catch (Exception e1)
-			{
-				LOG.error(
-						"Cannot find assemblyLines for material usage in persistence layer.",
-						e1);
-			}
-
-			event = new MaterialEvent().withType(eventType)
-					.withExecutionTime(timeStamp)
-					.withReplicationID(replicationID).withAssemblyLine(assemblyLine)
-					.withMaterial(refID);
-			if (theActingPerson != null)
-			{
-				event.withPerson(theActingPerson);
-			} else
-			{
-				event.withPerson(new Person().withName(agentName));
-			}
-		} else if (eventType.equals(EventType.ARIVE_AT_ASSEMBLY)
-				|| eventType.equals(EventType.LEAVE_ASSEMBLY))
-		{
-
-			String ref = buildingElementName;
-			LOG.info("Checking wether " + ref
-					+ " is a assemblyLine or a door in replication: " + replicationID);
-			String assemblyLineName = null;
-			AssemblyLine assemblyLine = null;
-			try
-			{
-				synchronized (ds)
-				{
-					AssemblyLine r = ds.findAssemblyLineByID(ref);
-					if (r != null)
-					{
-						assemblyLineName = r.getName();
-						assemblyLine = r;
-						LOG.info("Determined " + assemblyLineName
-								+ " is a assemblyLine in replication: " + replicationID);
-					}
-				}
-			} catch (Exception e1)
-			{
-				LOG.error("Cannot find assemblyLines in persistence layer.", e1);
-			}
-
-
-			final MovementEvent movementEvent = new MovementEvent()
-					.withType(eventType).withExecutionTime(timeStamp)
-					.withReplicationID(replicationID)
-
-					.withAssemblyLine(assemblyLine);
-			event = movementEvent;
-
-			if (theActingPerson != null)
-			{
-				movementEvent.withPerson(theActingPerson);
-			} else
-			{
-				movementEvent.withPerson(new Person().withName(agentName));
-			}
-		} else
-			throw new IllegalStateException("Event not set");
+		final ActivityEvent event = new ActivityEvent().withType(eventType)
+		.withExecutionTime(timeStamp)
+		.withReplicationID(replicationID)
+		.withInvolvedResources(resourceRefs);
+		
 
 		((Event<?>) event).setProcessID(processID);
 		((Event<?>) event).setProcessInstanceID(processInstanceID);
-		((PersonEvent<?>) event)
+		((ActivityEvent) event)
 				.setActivity((activityName == null) ? activityID : activityName);
-		((PersonEvent<?>) event).setActivityInstanceId(activityInstanceID);
+		((ActivityEvent) event).setActivityInstanceId(activityInstanceID);
 		this.eventLogger.submit(new Callable<Void>()
 		{
 			@Override
@@ -317,19 +200,9 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	public TEventTrace toXML(final Datasource ds)
 	{
 		long firstEventTime = Long.MAX_VALUE, lastEventTime = Long.MIN_VALUE;
-		final List<PersonEvent<?>> events = getEvents(ds);
 		TEventTrace result = new TEventTrace();
-		if (events.isEmpty())
-			return result;
-		for (PersonEvent<?> event : events)
+		for (ActivityEvent event : getActivityEvents(ds))
 		{
-			if (event instanceof MovementEvent
-					&& ((MovementEvent) event).getAssemblyLine() == null)
-				continue;
-			if (event instanceof MovementEvent
-					&& ((MovementEvent) event).getAssemblyLine().getName()
-							.equalsIgnoreCase("world"))
-				continue;
 			firstEventTime = Math.min(firstEventTime, event.getExecutionTime()
 					.getIsoTime().getTime());
 			lastEventTime = Math.max(lastEventTime, event.getExecutionTime()

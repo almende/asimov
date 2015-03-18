@@ -4,6 +4,7 @@ import io.asimov.agent.scenario.ScenarioManagementOrganization;
 import io.asimov.db.Datasource;
 import io.asimov.db.mongo.MongoDatasource;
 import io.asimov.model.TraceService;
+import io.asimov.model.events.Event;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.vis.timeline.VisJSTimelineUtil;
 import io.asimov.xml.SimulationFile;
@@ -273,7 +274,6 @@ public class RunUseCase
 				if (time.isAfter(endOfSimulation)) {
 					try {
 						RunUseCase.writeTimeLine(targetDirectory);
-						RunUseCase.writeToMidas(targetDirectory);
 						RunUseCase.writeSimulatorOutput(new File(targetDirectory.getCanonicalPath()+"/"+replicationID+"_output.xml"));
 					} catch (Exception e) {
 						LOG.error("Failed to write output of ASIMOV",e);
@@ -352,36 +352,6 @@ public class RunUseCase
 		System.exit(1);
 	}
 	
-	public static void writeToMidas(File targetDirectory) throws Exception
-	{
-		int mb = 1024 * 1024;
-
-		// Getting the runtime reference from system
-		Runtime runtime = Runtime.getRuntime();
-
-		System.out.println("##### Heap utilization statistics [MB] #####");
-
-		// Print used memory
-		System.out.println("Used Memory:"
-				+ (runtime.totalMemory() - runtime.freeMemory()) / mb);
-
-		// Print free memory
-		System.out.println("Free Memory:" + runtime.freeMemory() / mb);
-
-		// Print total available memory
-		System.out.println("Total Memory:" + runtime.totalMemory() / mb);
-
-		// Print Maximum available memory
-		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
-		Datasource ds = MongoDatasource.getInstance(replicationID);
-		List<PersonEvent<?>> events = TraceService.getInstance(replicationID)
-				.getEvents(ds);
-		LOG.info("Loaded events");
-		VisJSTimelineUtil.writeMidasData(events,ds,false,targetDirectory);
-		LOG.info("Wrote midas data");
-		LOG.info("done");
-	}
-	
 	public static void writeTimeLine(File targetDirectory) throws Exception
 	{
 		int mb = 1024 * 1024;
@@ -404,8 +374,8 @@ public class RunUseCase
 		// Print Maximum available memory
 		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
 
-		List<PersonEvent<?>> events = TraceService.getInstance(replicationID)
-				.getNonMovementEvents(MongoDatasource.getInstance(replicationID));
+		List<Event<?>> events = TraceService.getInstance(replicationID)
+				.getEvents(binder.inject(Datasource.class));
 		LOG.info("Loaded events");
 		VisJSTimelineUtil.writeTimelineData(events,targetDirectory);
 		LOG.info("Wrote timeline");
