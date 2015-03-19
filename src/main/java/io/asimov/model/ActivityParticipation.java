@@ -59,7 +59,7 @@ public abstract class ActivityParticipation extends AbstractCoordinationFact
 		 * A Schedulable method ID that must be provided for the arriveAtAssembly event
 		 * Denotes the method that causes the agent to arrive at an assemblyLine.
 		 */
-		public final static String ARRIVE_AT_ASSEMBLY = "ARRIVE_AT_ASSEMBLY";
+		public final static String TRANSIT_TO_RESOURCE = "ARRIVE_AT_ASSEMBLY";
 		
 		public static final String RETRY_REQUEST = "RETRY_REQUEST";
 		

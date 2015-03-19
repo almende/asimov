@@ -98,15 +98,15 @@ public class ResourceReadyListenerImpl extends
 	public void onRequested(final Request request)
 	{
 		this.pending.add(request);
-		// TODO Create event based callback mechanism to listen to these events
 		try {
-			getBinder().inject(GenericResourceManagementWorld.class)
+			if (!request.getResourceInfo().isMoveable())
+				getBinder().inject(GenericResourceManagementWorld.class)
 				.performActivityChange(
 						request.getResourceInfo().getProcessID(), 
 						request.getResourceInfo().getProcessInstanceId(), 
 						request.getResourceInfo().getActivityName(), 
 						request.getResourceInfo().getActivityInstanceId(), 
-						request.getResourceInfo().getResourceName(), 
+						Collections.singletonList(request.getResourceInfo().getResourceName()), 
 						EventType.RESOURCE_READY_FOR_ACTIVITY);
 		} catch (Exception e) {
 			LOG.warn("Failed to fire resource ready event, so calling method directly",e);

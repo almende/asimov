@@ -23,17 +23,18 @@ public class EventType extends AbstractNamed<EventType>
 
 	/** Some example event types: */
 	
-	/**
-	 * This {@link EventType} indicates an {@link Person} entered some
-	 * {@link AssemblyLine}
-	 */
-	public static final EventType ARIVE_AT_ASSEMBLY = new EventType().withValue("arrive");
 
 	/**
-	 * This {@link EventType} indicates an {@link Person} left some
-	 * {@link AssemblyLine}
+	 * This {@link EventType} indicates a {@link Resource} has "moved" to another resource
+	 * {@link Resource}
 	 */
-	public static final EventType LEAVE_ASSEMBLY = new EventType().withValue("leave");
+	public static final EventType TRANSIT_TO_RESOURCE = new EventType().withValue("transitsToResource");
+
+	/**
+	 * This {@link EventType} indicates a {@link Resource} has "moved" from another resource
+	 * {@link Resource}
+	 */
+	public static final EventType TRANSIT_FROM_RESOURCE = new EventType().withValue("transitsFromResource");
 	
 	/**
 	 * This {@link EventType} indicates an {@link Person}  has started performing some

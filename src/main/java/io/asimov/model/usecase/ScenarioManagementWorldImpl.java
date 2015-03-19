@@ -80,8 +80,7 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 	
 	public static final String DISABLE_NON_WORKING_HOURS_PROPERTY = "disableNonWorkingHours";
 
-	private boolean onSite = false;
-
+	
 	public RandomDistribution<SimDuration> onSiteTimeOfDay;
 
 	public RandomDistribution<SimDuration> offSiteTimeOfDay;
