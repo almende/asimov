@@ -37,6 +37,11 @@ public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDes
 	
 	/** */
 	@Embedded
+	@Field(name = "moveable")
+	private boolean moveable;
+	
+	/** */
+	@Embedded
 	@Field(name = "type")
 	private String type;
 	
@@ -223,7 +228,8 @@ public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDes
 			.withName(xmlBean.getResourceId())
 			.withSubTypes(subTypes)
 			.withType(xmlBean.getResourceType())
-			.withDescriptions(descriptions);
+			.withDescriptions(descriptions)
+			.withMoveability(xmlBean.isMoveable());
 	}
 
 	/* (non-Javadoc)
@@ -243,6 +249,7 @@ public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDes
 		}
 		resource.withResourceSubType(subTypes);
 		resource.withUnavailable(getUnavailabilityDistribution());
+		resource.setMoveable(isMoveable());
 		// TODO Export initial formula's of resource state from xml
 		// TODO Export embodiment and inheritance aspects from xml
 		return resource;
@@ -346,6 +353,31 @@ public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDes
 		}
 		return this.agentID;
 	}
+	
+
+	/**
+	 * @return the moveable
+	 */
+	@Override
+	public boolean isMoveable() {
+		return moveable;
+	}
+
+	/**
+	 * @param moveable the moveable to set
+	 */
+	@Override
+	public void setMoveable(boolean moveable) {
+		this.moveable = moveable;
+	}
+	
+	@Override
+	public ASIMOVResourceDescriptor withMoveability(
+			boolean moveable) {
+		setMoveable(moveable);
+		return this;
+	}
+
 
 
 }

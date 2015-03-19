@@ -64,6 +64,8 @@ public class ActivityParticipationResourceInformation implements Serializable
 
 	/** */
 	private String resourceType = null;
+	
+	private boolean moveable;
 
 	/**
 	 * @return the resourceAgent
@@ -106,6 +108,16 @@ public class ActivityParticipationResourceInformation implements Serializable
 	 */
 	public ActivityParticipationResourceInformation withResourceType(String resourceType) {
 		setResourceType(resourceType);
+		return this;
+	}
+	
+	
+	/**
+	 * @param moveable a boolean indicating if the resource is considered to be moveable or not
+	 * @return {@link ActivityParticipationResourceInformation}
+	 */
+	public ActivityParticipationResourceInformation withMoveability(boolean moveable) {
+		setMoveable(moveable);
 		return this;
 	}
 	
@@ -391,6 +403,14 @@ public class ActivityParticipationResourceInformation implements Serializable
 	{
 		setActivityInstanceId(activityInstanceId);
 		return this;
+	}
+
+	public boolean isMoveable() {
+		return moveable;
+	}
+
+	public void setMoveable(boolean moveable) {
+		this.moveable = moveable;
 	}
 
 }

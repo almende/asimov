@@ -1,8 +1,10 @@
 package io.asimov.model.resource;
 
-import io.arum.model.resource.person.PersonResourceManagementWorld;
 import io.asimov.agent.process.NonSkeletonActivityCapability;
+import io.asimov.agent.resource.GenericResourceManagementWorld;
+import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.resource.RouteLookup.RouteInitiator;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
@@ -86,9 +88,9 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 					onLeftSite(state);
 				} else {
 					// = Request
-					PersonResourceManagementWorld world = getBinder().inject(PersonResourceManagementWorld.class);
-					if (world.getEntity() == null) {
-						LOG.warn("Not an occupant so nothing to do, responding with echo.");
+					GenericResourceManagementWorld world = getBinder().inject(GenericResourceManagementWorld.class);
+					if (!world.isMoveable()) {
+						LOG.warn("Not a moveable resource so nothing to do, responding with echo.");
 						try
 						{
 							getBinder().inject(SendingCapability.class).send(new ASIMOVMessage(getBinder().inject(ReplicatingCapability.class).getTime(), t.getReceiverID(), t.getSenderID(), t.content));
@@ -100,7 +102,7 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 						}
 					}
 					LOG.info(getOwnerID()+" @ "+world.getCurrentLocation()+" with entity "+world.getEntity());
-					if (world.getCurrentLocation().getValue().equals(PersonResourceManagementWorld.WORLD_NAME)){
+					if (world.getCurrentLocation().getValue().equals(ScenarioManagementWorld.WORLD_NAME)){
 						try
 						{
 							getBinder().inject(SendingCapability.class).send(new ASIMOVMessage(getBinder().inject(ReplicatingCapability.class).getTime(), t.getReceiverID(), t.getSenderID(), t.content));

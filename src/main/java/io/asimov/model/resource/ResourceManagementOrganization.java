@@ -1,8 +1,5 @@
 package io.asimov.model.resource;
 
-import io.arum.model.resource.assemblyline.AssemblyLineResourceManagementOrganization;
-import io.arum.model.resource.person.PersonResourceManagementOrganization;
-import io.arum.model.resource.supply.MaterialResourceManagementOrganization;
 import io.asimov.agent.gui.SemanticAgentGui;
 import io.asimov.agent.resource.ResourceManagementWorld;
 import io.asimov.messaging.ASIMOVMessage;
@@ -144,10 +141,7 @@ public class ResourceManagementOrganization<T extends ResourceManagementWorld<?>
 					}
 				});
 
-		if (this instanceof AssemblyLineResourceManagementOrganization
-				|| this instanceof PersonResourceManagementOrganization
-				|| this instanceof MaterialResourceManagementOrganization)
-			responder = getBinder().inject(ResourceAllocationResponder.class);
+		responder = getBinder().inject(ResourceAllocationResponder.class);
 
 		getWorld().perceive().subscribe(beliefObserver);
 

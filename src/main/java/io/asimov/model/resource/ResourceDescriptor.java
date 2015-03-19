@@ -36,4 +36,11 @@ public interface ResourceDescriptor<T extends ResourceDescriptor<T>> extends Nam
 	
 	T withSubTypes(String... subtypes);
 	
+	boolean isMoveable();
+	
+	void setMoveable(boolean moveable);
+	
+	T withMoveability(
+			boolean moveable);
+	
 }

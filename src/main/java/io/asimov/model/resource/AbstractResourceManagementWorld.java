@@ -1,22 +1,18 @@
 package io.asimov.model.resource;
 
-import io.arum.model.AbstractARUMOrganizationtWorld;
-import io.arum.model.events.PersonEvent;
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.assemblyline.AssemblyLineType;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.person.PersonRole;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.SupplyType;
 import io.asimov.agent.resource.ResourceManagementWorld;
 import io.asimov.db.Datasource;
+import io.asimov.model.ASIMOVResourceDescriptor;
+import io.asimov.model.AbstractASIMOVOrganizationtWorld;
 import io.asimov.model.AbstractEmbodied;
 import io.asimov.model.AbstractEmbodied.InitialASIMOVPercept;
 import io.asimov.model.CoordinationUtil;
 import io.asimov.model.Resource;
 import io.asimov.model.ResourceRequirement;
+import io.asimov.model.ResourceType;
 import io.asimov.model.Time;
 import io.asimov.model.TraceService;
+import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.model.sl.SL;
 import io.asimov.model.sl.SLConvertible;
@@ -26,7 +22,6 @@ import io.coala.capability.embody.Percept;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.factory.ClassUtil;
 import io.coala.log.InjectLogger;
-import io.coala.model.ModelComponentIDFactory;
 import io.coala.time.SimTime;
 
 import java.util.HashSet;
@@ -79,7 +74,7 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	private Subject<Percept, Percept> subject = ReplaySubject.create();
 
 	/** */
-	protected ARUMResourceType entityType = null;
+	protected String entityType = null;
 
 	/** */
 	protected E entity = null;
@@ -101,28 +96,12 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 		final Class<E> clazz = (Class<E>) ClassUtil.getTypeArguments(
 				AbstractResourceManagementWorld.class, getClass()).get(0);
 		final String entityID = getBinder().getID().getValue();
-		if (Material.class.isAssignableFrom(clazz))
-		{
-			this.entityType = ARUMResourceType.MATERIAL;
-			this.entity = (E) getBinder().inject(Datasource.class)
-					.findMaterialByID(entityID);
-			setCurrentLocation(getOwnerID());
-		} else if (AssemblyLine.class.isAssignableFrom(clazz))
-		{
-			this.entityType = ARUMResourceType.ASSEMBLY_LINE;
-			this.entity = (E) getBinder().inject(Datasource.class)
-					.findAssemblyLineByID(entityID);
-			setCurrentLocation(getOwnerID());
-		} else if (Person.class.isAssignableFrom(clazz))
-		{
-			this.entityType = ARUMResourceType.PERSON;
-			this.entity = (E) getBinder().inject(Datasource.class)
-					.findPersonByID(entityID);
-			setCurrentLocation(getBinder()
-					.inject(ModelComponentIDFactory.class).createAgentID(
-							"world"));
-		} else
-			throw new Exception("Unsupported entity type " + clazz.getName());
+	
+		this.entityType = clazz.getCanonicalName();
+		this.entity = (E) getBinder().inject(Datasource.class)
+				.findResourceDescriptorByID(entityID);
+		setCurrentLocation(getOwnerID());
+	
 	}
 
 	/** @see ResourceManagementWorld#getEntity() */
@@ -147,7 +126,7 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 
 	/** @see ARUMOrganizationWorldView#getEntityType() */
 	@Override
-	public ARUMResourceType getResourceType()
+	public String getResourceType()
 	{
 		return this.entityType;
 	}
@@ -173,30 +152,23 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	{
 		Set<InitialASIMOVPercept> result = new LinkedHashSet<InitialASIMOVPercept>();
 		Set<ResourceRequirement> resourceMatchPatterns = new HashSet<ResourceRequirement>();
-		if (entity instanceof AssemblyLine)
+		if (entity instanceof ASIMOVResourceDescriptor)
 		{
-			for (AssemblyLineType type : ((AssemblyLine) entity).getTypes())
+			for (ResourceSubtype type : ((ASIMOVResourceDescriptor) entity).getTypes())
 				resourceMatchPatterns.add(new ResourceRequirement().withResource(
 					new Resource().withName(agentID.toString())
 							.withSubTypeID(type)
-							.withTypeID(AssemblyLine.class), 1,
+							.withTypeID(new ResourceType() {
+								
+								@Override
+								public String getName() {
+									// TODO Auto-generated method stub
+									return ((ASIMOVResourceDescriptor) entity).getType();
+								}
+							}), 1,
 					new Time().withMillisecond(0)));
-		} else if (entity instanceof Material)
-		{
-			for (SupplyType type : ((Material) entity).getTypes())
-				resourceMatchPatterns.add(new ResourceRequirement().withResource(
-					new Resource().withName(agentID.toString())
-							.withSubTypeID(type)
-							.withTypeID(Material.class), 1,
-					new Time().withMillisecond(0)));
-		} else if (entity instanceof Person)
-		{
-			for (PersonRole type : ((Person) entity).getTypes())
-				resourceMatchPatterns.add(new ResourceRequirement().withResource(
-					new Resource().withName(agentID.toString())
-							.withSubTypeID(type)
-							.withTypeID(Person.class), 1,
-					new Time().withMillisecond(0)));
+		} else {
+			LOG.error("Unsuported entity type: "+entity.getClass().getCanonicalName());
 		}
 		for (ResourceRequirement resourceMatchPattern : resourceMatchPatterns)
 			result.add(InitialASIMOVPercept.toBelief(SLConvertible.ASIMOV_PROPERTY_SET_FORMULA
@@ -238,22 +210,18 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends PersonEvent<?>> void fireAndForget(
+	protected <T extends Event<?>> void fireAndForget(
 			final String processID, final String processInstanceID,
 			final String activityName, final String activityInstanceId, final EventType eventType,
-			final AgentID personID, final String ref1, final String beName,
+			final List<String> involvedResources,
 			final Observer<T> publisher)
 	{
-		if (eventType.equals(EventType.ARIVE_AT_ASSEMBLY))
-			this.setCurrentLocation(getBinder().inject(
-					ModelComponentIDFactory.class).createAgentID(beName));
 		final SimTime now = getBinder().inject(ReplicatingCapability.class)
 				.getTime();
 		publisher.onNext((T) TraceService.getInstance(
-				personID.getModelID().getValue()).saveEvent(
+				getOwnerID().getModelID().getValue()).saveEvent(
 				getBinder().inject(Datasource.class), processID,
-				processInstanceID, activityName, activityInstanceId, personID, eventType, now,
-				ref1, beName));
+				processInstanceID, activityName, activityInstanceId, involvedResources, eventType, now));
 	}
 
 	/** @see eu.a4ee.model.resource.CurrentLocationStateService#getCurrentCoordinates() */
@@ -275,15 +243,11 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	@Override
 	public void setAvailable() {
 		getEntity().setUnAvailable(false);
-		if (getEntity() instanceof AssemblyLine)
+		if (getEntity() instanceof ASIMOVResourceDescriptor)
 		{
-			getBinder().inject(Datasource.class).save((AssemblyLine)getEntity());
-		} else if (getEntity() instanceof Material)
-		{
-			getBinder().inject(Datasource.class).save((Material)getEntity());
-		} else if (getEntity() instanceof Person)
-		{
-			getBinder().inject(Datasource.class).save((Person)getEntity());
+			getBinder().inject(Datasource.class).save((ASIMOVResourceDescriptor)getEntity());
+		} else {
+			LOG.error("Unknown entity type: "+getEntity().getClass().getCanonicalName());
 		}
 		
 	}
@@ -291,17 +255,12 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	@Override
 	public void setUnavailable() {
 		getEntity().setUnAvailable(true);
-		if (getEntity() instanceof AssemblyLine)
+		if (getEntity() instanceof ASIMOVResourceDescriptor)
 		{
-			getBinder().inject(Datasource.class).save((AssemblyLine)getEntity());
-		} else if (getEntity() instanceof Material)
-		{
-			getBinder().inject(Datasource.class).save((Material)getEntity());
-		} else if (getEntity() instanceof Person)
-		{
-			getBinder().inject(Datasource.class).save((Person)getEntity());
+			getBinder().inject(Datasource.class).save((ASIMOVResourceDescriptor)getEntity());
+		} else {
+			LOG.error("Unknown entity type: "+getEntity().getClass().getCanonicalName());
 		}
-		
 	}
 
 }

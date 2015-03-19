@@ -46,7 +46,7 @@ public interface RouteLookup extends CoordinationFact
 		public interface Factory extends CapabilityFactory<RouteInitiator> {
 			
 		}
-		RouteInitiator initiate(final ActivityParticipant producer, final ActivityParticipation.Request observer, final boolean tomorrow);
+		RouteInitiator initiate(final ActivityParticipant producer, final ActivityParticipation.Request observer, final String targetResourceName, final boolean tomorrow);
 		/**
 		 * @param nonSkeletonActivityCapabilityImpl
 		 */
@@ -132,14 +132,14 @@ public interface RouteLookup extends CoordinationFact
 			public static Builder forProducer(
 					final ActivityParticipant initiator,
 					final ActivityParticipation.Request cause,
+					final String target,
 					final boolean tomorrow)
 			{
 				AgentID targetSpace = null;
 				for (ActivityParticipationResourceInformation otherResource : cause
 						.getOtherResourceInfo())
 				{
-					if (otherResource.getResourceType().equals(
-							ARUMResourceType.ASSEMBLY_LINE))
+					if (otherResource.getResourceName().equals(target))
 					{
 						targetSpace = otherResource.getResourceAgent();
 					}

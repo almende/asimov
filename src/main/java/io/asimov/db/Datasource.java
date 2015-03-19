@@ -67,7 +67,7 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
 	 * @return the {@link ASIMOVResourceDescriptor} or {@code null} if none found
 	 */
-	ResourceDescriptor findResourceDescriptorByID(String resourceDescriptor);
+	ASIMOVResourceDescriptor findResourceDescriptorByID(String resourceDescriptor);
 	
 	/**
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.

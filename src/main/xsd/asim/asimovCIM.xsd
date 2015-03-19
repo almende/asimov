@@ -33,6 +33,7 @@
 			<element name="resourceSubType" type="string" maxOccurs="unbounded" minOccurs="1"></element>
 			<!-- TODO: Add ASIMOV NODE querying system here -->
 			<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="moveable" type="boolean" minOccurs="1" maxOccurs="1"></element>
 		</sequence>
 	</complexType>
 	

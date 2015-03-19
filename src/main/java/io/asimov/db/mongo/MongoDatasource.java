@@ -421,12 +421,12 @@ public class MongoDatasource extends BasicCapability implements Datasource
 
 	/** @see Datasource#findAssemblyLineByID(String) */
 	@Override
-	public ResourceDescriptor findResourceDescriptorByID(final String resourceDescriptorID)
+	public ASIMOVResourceDescriptor findResourceDescriptorByID(final String resourceDescriptorID)
 	{
 		final String query = "{name: '" + resourceDescriptorID + "', "
 				+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '" + replicationID
 				+ "'}";
-		return getResourceDescriptorCollection().findOne(query).as(ResourceDescriptor.class);
+		return getResourceDescriptorCollection().findOne(query).as(ASIMOVResourceDescriptor.class);
 	}
 
 	@Override

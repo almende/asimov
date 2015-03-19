@@ -96,7 +96,10 @@ public class EventType extends AbstractNamed<EventType>
 	 */
 	public static final EventType STOP_PROCESS = new EventType().withValue("stopsProcess");
 	
-	
+	/**
+	 * This {@link EventType} indicates an {@link ASIMOVResourceDescriptor} is ready to participate in the {@link Activity}
+	 */
+	public static final EventType RESOURCE_READY_FOR_ACTIVITY = new EventType().withValue("readyForParticipation");
 
 	/**
 	 * The reference of the subject that the person performs an action on.

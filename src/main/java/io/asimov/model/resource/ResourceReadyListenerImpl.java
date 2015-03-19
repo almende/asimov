@@ -1,15 +1,14 @@
 package io.asimov.model.resource;
 
-import io.arum.model.events.MovementEvent;
-import io.arum.model.resource.person.PersonResourceManagementWorld;
+import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.microservice.negotiation.ResourceReadyNotification;
 import io.asimov.microservice.negotiation.ResourceReadyNotification.Request;
 import io.asimov.microservice.negotiation.ResourceReadyNotification.ResourceReadyListener;
 import io.asimov.model.ActivityParticipation.ActivityParticipant;
+import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.EventType;
 import io.coala.bind.Binder;
 import io.coala.enterprise.role.AbstractExecutor;
-import io.coala.json.JsonUtil;
 import io.coala.log.InjectLogger;
 
 import java.util.Collections;
@@ -57,8 +56,8 @@ public class ResourceReadyListenerImpl extends
 	{
 		super.initialize();
 
-		getBinder().inject(PersonResourceManagementWorld.class).onMovement()
-				.subscribe(new Observer<MovementEvent>()
+		getBinder().inject(GenericResourceManagementWorld.class).onActivityEvent()
+				.subscribe(new Observer<ActivityEvent>()
 				{
 
 					@Override
@@ -74,9 +73,9 @@ public class ResourceReadyListenerImpl extends
 					}
 
 					@Override
-					public void onNext(final MovementEvent event)
+					public void onNext(final ActivityEvent event)
 					{
-						if (event.getType() == EventType.ARIVE_AT_ASSEMBLY)
+						if (event.getType() == EventType.RESOURCE_READY_FOR_ACTIVITY)
 							checkReadiness();
 					}
 				});
@@ -99,7 +98,20 @@ public class ResourceReadyListenerImpl extends
 	public void onRequested(final Request request)
 	{
 		this.pending.add(request);
-		checkReadiness();
+		// TODO Create event based callback mechanism to listen to these events
+		try {
+			getBinder().inject(GenericResourceManagementWorld.class)
+				.performActivityChange(
+						request.getResourceInfo().getProcessID(), 
+						request.getResourceInfo().getProcessInstanceId(), 
+						request.getResourceInfo().getActivityName(), 
+						request.getResourceInfo().getActivityInstanceId(), 
+						request.getResourceInfo().getResourceName(), 
+						EventType.RESOURCE_READY_FOR_ACTIVITY);
+		} catch (Exception e) {
+			LOG.warn("Failed to fire resource ready event, so calling method directly",e);
+			checkReadiness();
+		}
 	}
 
 	/**
@@ -111,9 +123,7 @@ public class ResourceReadyListenerImpl extends
 		synchronized (this.pending)
 		{
 			for (Request request : this.pending)
-				if (!request.getResourceInfo().getResourceType()
-						.equals(ARUMResourceType.PERSON)
-						|| getBinder().inject(ActivityParticipant.class)
+				if (getBinder().inject(ActivityParticipant.class)
 								.isReadyForActivity(request))
 					// if (not occupant or arrived at priority location) confirm
 					// ready

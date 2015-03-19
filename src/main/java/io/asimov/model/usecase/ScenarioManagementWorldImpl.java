@@ -1,10 +1,12 @@
 package io.asimov.model.usecase;
 
+import io.asimov.agent.resource.impl.GenericResourceManagementOrganizationImpl;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.agent.scenario.SimStatus;
 import io.asimov.db.Datasource;
-import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.model.ASIMOVResourceDescriptor;
+import io.asimov.model.AbstractASIMOVOrganizationtWorld;
 import io.asimov.run.RunUseCase;
 import io.asimov.util.extrapolator.EventExtrapolator;
 import io.asimov.xml.SimulationFile;
@@ -89,28 +91,14 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 	private Logger LOG;
 
 	/** */
-	private final Set<AgentID> assemblyLineIDs = Collections
+	private final Set<AgentID> resourceIDs = Collections
 			.synchronizedSet(new HashSet<AgentID>());
 
 	/** */
-	private final Set<AgentID> personIDs = Collections
-			.synchronizedSet(new HashSet<AgentID>());
+	private final Set<ASIMOVResourceDescriptor> resourceDescriptors = Collections
+			.synchronizedSet(new HashSet<ASIMOVResourceDescriptor>());
 
-	/** */
-	private final Set<Person> persons = Collections
-			.synchronizedSet(new HashSet<Person>());
-
-	/** */
-	private final Set<AssemblyLine> assemblyLines = Collections
-			.synchronizedSet(new HashSet<AssemblyLine>());
-
-	/** */
-	private final Set<Material> materials = Collections
-			.synchronizedSet(new HashSet<Material>());
-
-	/** */
-	private final Set<AgentID> materialIDs = Collections
-			.synchronizedSet(new HashSet<AgentID>());
+	
 
 	/** */
 	private final List<ResourceEvent> agents = new ArrayList<ResourceEvent>();
@@ -320,51 +308,18 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 		if (replication.getStartDate() == null)
 			replication.setStartDate(offsetMS);
 
-		for (AssemblyLine assemblyLine : this.scenario.getAssemblyLines()) {
-			this.assemblyLineIDs.add(agentIDFactory.createAgentID(assemblyLine
-					.getName()));
-			this.assemblyLines.add(assemblyLine);
-			ds.save(assemblyLine);
+	
+		for (ASIMOVResourceDescriptor resourceDescriptor : this.scenario.getResourceDescriptors()) {
+			this.resourceIDs.add(agentIDFactory.createAgentID(resourceDescriptor.getName()));
 
+			this.resourceDescriptors.add(resourceDescriptor);
+			ds.save(resourceDescriptor);
 			final ResourceEvent createAgentAction = getResourceEventForNewAgent(
-					agentIDFactory.createAgentID(assemblyLine.getName()),
-					AssemblyLineResourceManagementOrganization.class,
+					agentIDFactory.createAgentID(resourceDescriptor.getName()),
+					GenericResourceManagementOrganizationImpl.class,
 					getBinder().inject(SimTimeFactory.class).create(
-							(assemblyLine.getAvailableFromTime() == null) ? 0
-									: assemblyLine.getAvailableFromTime(),TimeUnit.MILLIS));
-			if (!this.agents.add(createAgentAction))
-				LOG.warn("Problem adding assemblyLine: "
-						+ assemblyLine.getName());
-		}
-
-		for (Material material : this.scenario.getMaterials()) {
-			this.materialIDs.add(agentIDFactory.createAgentID(material
-					.getName()));
-			this.materials.add(material);
-			ds.save(material);
-			final ResourceEvent dCreateAgentAction = getResourceEventForNewAgent(
-					agentIDFactory.createAgentID(material.getName()),
-					MaterialResourceManagementOrganization.class,
-					getBinder().inject(SimTimeFactory.class).create(
-							(material.getAvailableFromTime() == null) ? 0
-									: material.getAvailableFromTime(),TimeUnit.MILLIS));
-			this.agents.add(dCreateAgentAction);
-		}
-
-		for (Person person : this.scenario.getInvolvedResources()) {
-			this.personIDs.add(agentIDFactory.createAgentID(person.getName()));
-
-			this.persons.add(person);
-			ds.save(person);
-			// Also re-save the assemblyLine the person enters
-			if (person.getAtAssemblyLine() != null)
-				ds.save(person.getAtAssemblyLine());
-			final ResourceEvent createAgentAction = getResourceEventForNewAgent(
-					agentIDFactory.createAgentID(person.getName()),
-					PersonResourceManagementOrganization.class,
-					getBinder().inject(SimTimeFactory.class).create(
-							(person.getAvailableFromTime() == null) ? 0
-									: person.getAvailableFromTime(), TimeUnit.MILLIS));
+							(resourceDescriptor.getAvailableFromTime() == null) ? 0
+									: resourceDescriptor.getAvailableFromTime(), TimeUnit.MILLIS));
 			this.agents.add(createAgentAction);
 		}
 
@@ -459,20 +414,8 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 
 	/** @see ScenarioManagementWorld#getCurrentAssemblyLineIDs() */
 	@Override
-	public Set<AgentID> getCurrentAssemblyLineIDs() {
-		return Collections.unmodifiableSet(this.assemblyLineIDs);
-	}
-
-	/** @see ScenarioManagementWorld#getCurrentMaterialIDs() */
-	@Override
-	public Set<AgentID> getCurrentMaterialIDs() {
-		return Collections.unmodifiableSet(this.materialIDs);
-	}
-
-	/** @see ScenarioManagementWorld#getCurrentPersonIDs() */
-	@Override
-	public Set<AgentID> getCurrentPersonIDs() {
-		return Collections.unmodifiableSet(this.personIDs);
+	public Set<AgentID> getCurrentResourceIDs() {
+		return Collections.unmodifiableSet(this.resourceIDs);
 	}
 
 	ReplaySubject<ScenarioManagementWorld.ResourceEvent> resourceEvents;
@@ -505,13 +448,8 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 	}
 
 	@Override
-	public Iterable<AssemblyLine> getAssemblyLines() {
-		return this.assemblyLines;
-	}
-
-	@Override
-	public Iterable<Material> getMaterials() {
-		return this.materials;
+	public Iterable<ASIMOVResourceDescriptor> getResourceDescriptors() {
+		return this.resourceDescriptors;
 	}
 
 	private static long processInstanceCount = 0;
@@ -575,10 +513,6 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 		getBinder().inject(Datasource.class).update(this.replication);
 	}
 
-	@Override
-	public Iterable<Person> getPersons() {
-		return this.persons;
-	}
 
 	@Override
 	public Observable<Integer> resourceStatusHash() {

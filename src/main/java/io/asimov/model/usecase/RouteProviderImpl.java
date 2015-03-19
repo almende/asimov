@@ -1,10 +1,8 @@
 package io.asimov.model.usecase;
 
-import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.db.Datasource;
-import io.asimov.model.ConnectionFrom;
-import io.asimov.model.ConnectionTo;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.CoordinationUtil;
 import io.asimov.model.resource.RouteLookup;
 import io.asimov.model.resource.RouteLookup.Result;
@@ -106,11 +104,11 @@ public class RouteProviderImpl extends AbstractExecutor<RouteLookup.Request>
 		LOG.info("Updating RouteProvider directory name: "
 				+ temp.getAbsolutePath());
 
-		Iterable<AssemblyLine> assemblyLines = null;
+		Iterable<ASIMOVResourceDescriptor> resourceDescriptions = null;
 		
 		try
 		{
-			assemblyLines = getWorld().getAssemblyLines();
+			resourceDescriptions = getWorld().getResourceDescriptors();
 		} catch (Exception e)
 		{
 			LOG.error(
@@ -123,7 +121,7 @@ public class RouteProviderImpl extends AbstractExecutor<RouteLookup.Request>
 		Set<String> connectionTokens = new HashSet<String>();
 
 		List<AgentID> agentIds = new ArrayList<AgentID>();
-		for (AssemblyLine assemblyLine : assemblyLines)
+		for (ASIMOVResourceDescriptor assemblyLine : resourceDescriptions)
 		{
 			agentIds.add(getBinder().inject(ModelComponentIDFactory.class)
 					.createAgentID(assemblyLine.getName()));

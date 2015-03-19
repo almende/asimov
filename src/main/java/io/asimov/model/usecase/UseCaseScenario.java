@@ -3,22 +3,18 @@ package io.asimov.model.usecase;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.agent.scenario.SimStatus;
 import io.asimov.db.Datasource;
-import io.asimov.model.Body;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.process.Process;
-import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.unavailability.UnavailabilityDistribution;
 import io.asimov.xml.ProcessValueRefEnum;
-import io.asimov.xml.TAssemblyLineType;
-import io.asimov.xml.TComponent;
 import io.asimov.xml.TContext;
 import io.asimov.xml.TDistribution;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TProperty;
-import io.asimov.xml.TRole;
+import io.asimov.xml.TResource;
 import io.asimov.xml.TSkeletonActivityType;
-import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
-import io.asimov.xml.TSkeletonActivityType.UsedComponent;
+import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.asimov.xml.TUseCase;
 import io.coala.bind.Binder;
 import io.coala.exception.CoalaException;
@@ -63,7 +59,7 @@ public interface UseCaseScenario {
 	/**
 	 * @return
 	 */
-	Set<ResourceDescriptor> getResourceDescriptors();
+	Set<ASIMOVResourceDescriptor> getResourceDescriptors();
 
 	/**
 	 * @return
@@ -105,7 +101,7 @@ public interface UseCaseScenario {
 				.getLogger(UseCaseScenario.Builder.class);
 
 		/** */
-		private final Set<ResourceDescriptor> resourceDescriptors = new HashSet<ResourceDescriptor>();
+		private final Set<ASIMOVResourceDescriptor> resourceDescriptors = new HashSet<ASIMOVResourceDescriptor>();
 
 		/** */
 		private final Map<String, Process> processTypes = new HashMap<>();
@@ -137,8 +133,13 @@ public interface UseCaseScenario {
 
 			final List<TProcessType> processTypes = useCase.getProcess();
 
-			Util.parseMaterialsAndAssemblyLines(context, result.materials,
-					result.assemblyLines);
+			try {
+				result.resourceDescriptors.addAll(Util.parseResources(context));
+			} catch (JAXBException e) {
+				LOG.error("Failed to parse input xml resource descriptions to ASIMOV resources:",e);
+			} catch (IOException e) {
+				LOG.error("Failed to read input xml",e);
+			}
 			result.withResourceUnavailablilityDistribution(new UnavailabilityDistribution(
 					distFactory, rng).fromXML(context).getRandomDistributionOfUnavailabilityDists());
 			final Map<String, Set<TDistribution>> processDists = new HashMap<>();
@@ -199,16 +200,7 @@ public interface UseCaseScenario {
 					 */
 				}
 			Util.removeInfeasibleProcesses(processTypes, context);
-			final Set<Person> roleDistribution = Util
-					.createPersonRoleDistribution(processTypes, useCase);
-			// simCase.setRoles(new Roles());
-			// for (Entry<Person, RoleTemplate> entry :
-			// roleDistribution.entrySet())
-			// simCase.getRoles()
-			// .getRole()
-			// .add(new TRole().withRoleName(entry.getKey().getName())
-			// .withId(entry.getValue().getRoleRef()));
-			result.persons.addAll(roleDistribution);
+			
 			return result;
 		}
 
@@ -244,8 +236,7 @@ public interface UseCaseScenario {
 		}
 
 		public UseCaseScenario build() {
-			return new CIMScenarioImpl(this.materials, this.assemblyLines,
-					this.persons, this.processTypes,
+			return new CIMScenarioImpl(this.resourceDescriptors, this.processTypes,
 					this.processStartDelayDistributions,
 					this.resourceUnavailabilityDistributions);
 		}
@@ -261,7 +252,7 @@ public interface UseCaseScenario {
 	class CIMScenarioImpl implements UseCaseScenario {
 
 		/** */
-		private Set<ResourceDescriptor> resourceDescriptors;
+		private Set<ASIMOVResourceDescriptor> resourceDescriptors;
 
 		/** */
 		private Map<String, Process> processTypes;
@@ -290,7 +281,7 @@ public interface UseCaseScenario {
 		 * @param processStartDelayDistribution
 		 */
 		public CIMScenarioImpl(
-				final Set<ResourceDescriptor> ResourceDescriptors,
+				final Set<ASIMOVResourceDescriptor> ResourceDescriptors,
 				final Map<String, Process> processTypes,
 				final Map<String, RandomDistribution<SimDuration>> processStartDelayDistribution,
 				final Map<String, RandomDistribution<SimDuration>> resourceUnavailablilityDistribution) {
@@ -303,7 +294,7 @@ public interface UseCaseScenario {
 		}
 
 		@Override
-		public Set<ResourceDescriptor> getResourceDescriptors() {
+		public Set<ASIMOVResourceDescriptor> getResourceDescriptors() {
 			return this.resourceDescriptors;
 		}
 
@@ -358,61 +349,25 @@ public interface UseCaseScenario {
 
 			for (TProcessType process : processes) {
 				for (TSkeletonActivityType activity : process.getActivity()) {
-					boolean foundPersonRole = activity.getRoleInvolved().size() == 0;
-					if (!foundPersonRole)
-						for (RoleInvolved r : activity.getRoleInvolved()) {
-							for (io.asimov.xml.TContext.Person p : context
-									.getPerson()) {
-								for (TRole tr : p.getRole())
-									if (r.getRoleRef().equalsIgnoreCase(
-											tr.getId())) {
-										foundPersonRole = true;
-									}
+					
+					boolean foundResourceDescriptor = activity.getUsedResource().size() == 0;
+					if (!foundResourceDescriptor)
+						for (UsedResource t : activity.getUsedResource()) {
+							for (TResource p : context
+									.getResource()) {
+								if (p.getResourceType().equals(t.getResourceTypeRef()))
+									for (String tr : p.getResourceSubType())
+										if (t.getResourceSubTypeRef().equalsIgnoreCase(
+												tr)) {
+											foundResourceDescriptor = true;
+										}
 							}
 						}
-					boolean foundAssemblyLineType = activity
-							.getUsedAssemlyLineType().size() == 0;
-					if (!foundAssemblyLineType)
-						for (String t : activity.getUsedAssemlyLineType()) {
-							for (io.asimov.xml.TContext.AssemblyLine p : context
-									.getAssemblyLine()) {
-								for (TAssemblyLineType tr : p
-										.getAssemblyLineType())
-									if (t.equalsIgnoreCase(tr.getType())) {
-										foundAssemblyLineType = true;
-									}
-							}
-						}
-					boolean foundMaterial = activity.getUsedComponent().size() == 0;
-					if (!foundMaterial)
-						for (UsedComponent t : activity.getUsedComponent()) {
-							for (io.asimov.xml.TContext.Material p : context
-									.getMaterial()) {
-								for (TComponent tr : p.getComponent())
-									if (t.getComponentRef().equalsIgnoreCase(
-											tr.getType())) {
-										foundMaterial = true;
-									}
-							}
-						}
-					if (!foundPersonRole) {
+					
+					if (!foundResourceDescriptor) {
 						LOG.error("Activity "
 								+ activity.getName()
-								+ " can not be applied on the context because of missing person role.");
-						if (availableProcesses.remove(process))
-							unavailableProcesses.add(process);
-					}
-					if (!foundAssemblyLineType) {
-						LOG.error("Activity "
-								+ activity.getName()
-								+ " can not be applied on the context because of missing assemblyLine type.");
-						if (availableProcesses.remove(process))
-							unavailableProcesses.add(process);
-					}
-					if (!foundMaterial) {
-						LOG.error("Activity "
-								+ activity.getName()
-								+ " needs more materials that are not in the context.");
+								+ " needs more resources that are not in the context.");
 						if (availableProcesses.remove(process))
 							unavailableProcesses.add(process);
 					}
@@ -543,51 +498,15 @@ public interface UseCaseScenario {
 		
 
 		/** */
-		public static Collection<Material> parseMaterials(final TContext context)
+		public static Collection<ASIMOVResourceDescriptor> parseResources(final TContext context)
 				throws JAXBException, IOException {
 
-			final Collection<Material> result = new HashSet<>();
-			for (io.asimov.xml.TContext.Material m : context.getMaterial())
-				result.add(new Material().fromXML(m));
+			final Collection<ASIMOVResourceDescriptor> result = new HashSet<>();
+			for (TResource m : context.getResource())
+				result.add(new ASIMOVResourceDescriptor().fromXML(m));
 			return result;
 		}
 
-		/** */
-		public static Collection<AssemblyLine> parseAssemblyLines(
-				final TContext context) throws JAXBException, IOException {
-
-			final Collection<AssemblyLine> result = new HashSet<>();
-			for (io.asimov.xml.TContext.AssemblyLine m : context
-					.getAssemblyLine())
-				result.add(new AssemblyLine().fromXML(m));
-			return result;
-		}
-
-		/** */
-		public static Collection<Person> parsePersons(final TContext context)
-				throws JAXBException, IOException {
-
-			final Collection<Person> result = new HashSet<>();
-			for (io.asimov.xml.TContext.Person m : context.getPerson())
-				result.add(new Person().fromXML(m));
-			return result;
-		}
-
-		/**
-		 * @param gbXML
-		 * @param materials
-		 * @param assemblyLines
-		 */
-		public static void parseMaterialsAndAssemblyLines(
-				final TContext context, final Set<Material> materials,
-				final Set<AssemblyLine> assemblyLines) {
-			try {
-				materials.addAll(parseMaterials(context));
-				assemblyLines.addAll(parseAssemblyLines(context));
-			} catch (JAXBException | IOException e) {
-				LOG.error(e.getMessage(), e);
-			}
-		}
 
 		/**
 		 * @param xmlElement

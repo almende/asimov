@@ -1,32 +1,7 @@
-/* $Id: ActivityParticipantImpl.java 1083 2014-09-28 12:42:17Z krevelen $
- * $URL: https://redmine.almende.com/svn/a4eesim/trunk/adapt4ee-newsim/src/main/java/eu/a4ee/model/resource/impl/ActivityParticipantImpl.java $
- * 
- * Part of the EU project Adapt4EE, see http://www.adapt4ee.eu/
- * 
- * @license
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy
- * of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- * 
- * Copyright (c) 2010-2014 Almende B.V. 
- */
 package io.asimov.model.resource;
-
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.assemblyline.AssemblyLineResourceManagementWorld;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.person.PersonResourceManagementWorld;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.MaterialResourceManagementWorld;
+import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.agent.resource.ResourceManagementWorld;
+import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.db.Datasource;
 import io.asimov.microservice.negotiation.ResourceReadyNotification;
 import io.asimov.model.ActivityParticipation;
@@ -124,19 +99,18 @@ public class ActivityParticipantImpl extends
 					this.highestPriorityActivityLocationRepr.clear();
 				maxPriority = Math
 						.max(maxPriority, entry.getValue().intValue());
-				boolean assemblyLineFound = false;
+				boolean targetFound = false;
 				for (ActivityParticipationResourceInformation otherResource : entry
 						.getKey().getOtherResourceInfo())
-					if (otherResource.getResourceType().equals(
-							ARUMResourceType.ASSEMBLY_LINE)) {
-						assemblyLineFound = true;
+					if (!targetFound && otherResource.isMoveable()) {
+						targetFound = true;
 						if (maxPriority <= entry.getValue().intValue()) {
 							this.highestPriorityActivityLocationRepr
 									.add(otherResource.getResourceAgent());
 							continue activities;
 						}
 					}
-				if (!assemblyLineFound)
+				if (!targetFound)
 					LOG.error(
 							"No assemblyLine resource specified among other resources: "
 									+ JsonUtil.toPrettyJSON(entry.getKey()
@@ -158,23 +132,26 @@ public class ActivityParticipantImpl extends
 	@Schedulable(RETRY_REQUEST)
 	public void onRequested(final ActivityParticipation.Request request) {
 
-		if (request.getResourceInfo().getResourceType() == ARUMResourceType.PERSON && getWorld(PersonResourceManagementWorld.class).isAvailable()) {
-			getWorld(PersonResourceManagementWorld.class).setUnavailable();
-			LOG.info("Person becomes unavailable");
-		} else if (request.getResourceInfo().getResourceType() == ARUMResourceType.ASSEMBLY_LINE && getWorld(AssemblyLineResourceManagementWorld.class).isAvailable()) {
-			getWorld(AssemblyLineResourceManagementWorld.class).setUnavailable();
-			LOG.info("AssemblyLine becomes unavailable");
-		} else if (request.getResourceInfo().getResourceType() == ARUMResourceType.MATERIAL && getWorld(MaterialResourceManagementWorld.class).isAvailable()) {
-			getWorld(MaterialResourceManagementWorld.class).setUnavailable();
-			LOG.info("Material becomes unavailable");
-		}
-		if (!getWorld(PersonResourceManagementWorld.class).getCurrentLocation()
+		if (getWorld(GenericResourceManagementWorld.class).isAvailable()) {
+			getWorld(GenericResourceManagementWorld.class).setUnavailable();
+			LOG.info("Resource becomes unavailable");
+		} 
+		if (!getWorld(GenericResourceManagementWorld.class).getCurrentLocation()
 				.getValue().equalsIgnoreCase("world")
-				&& getWorld(PersonResourceManagementWorld.class)
+				&& getBinder().inject(ScenarioManagementWorld.class)
 						.onSiteDelay(getTime()).toMilliseconds().getMillis() != 0) {
 			// leave the building and come back tomorrow to continue
 			updateHighestPriorityActivityLocation();
-			getBinder().inject(RouteInitiator.class).initiate(this, request,
+			String target = null;
+			for (ActivityParticipationResourceInformation otherResource : request
+					.getOtherResourceInfo())
+			{
+				if (otherResource.isMoveable())
+				{
+					target = otherResource.getResourceName();
+				}
+			}
+			getBinder().inject(RouteInitiator.class).initiate(this, request,target,
 					true);
 			LOG.warn("Postponed activity participation request until tomorrow: "
 					+ request);
@@ -184,18 +161,17 @@ public class ActivityParticipantImpl extends
 		this.priorities.put(request, NORMAL_PRIORITY);
 		this.scenarioReplicatorID = request.getScenarioReplicatorID();
 		LOG.info("Handling activity participation request: " + request);
-		if (request.getResourceInfo().getResourceType() == ARUMResourceType.PERSON) {
-			ActivityParticipationResourceInformation assemblyLineInfo = null;
+		if (request.getResourceInfo().isMoveable()) {
+			ActivityParticipationResourceInformation targetInfo = null;
 			for (ActivityParticipationResourceInformation otherResource : request
 					.getOtherResourceInfo())
-				if (otherResource.getResourceType().equals(
-						ARUMResourceType.ASSEMBLY_LINE))
-					assemblyLineInfo = otherResource;
+				if (!otherResource.isMoveable())
+					targetInfo = otherResource;
 
-			if (!getWorld(PersonResourceManagementWorld.class)
+			if (!getWorld(GenericResourceManagementWorld.class)
 					.getCurrentLocation().equals(
-							assemblyLineInfo.getResourceAgent())) {
-				LOG.info("Person not yet at assemblyLine, walking will be required.");
+							targetInfo.getResourceAgent())) {
+				LOG.info("Person not yet at target, moving will be required.");
 			} else {
 				this.resourceReadyinitiator.forProducer(this, request);
 			}
@@ -203,24 +179,23 @@ public class ActivityParticipantImpl extends
 		} else
 			this.resourceReadyinitiator.forProducer(this, request);
 
-		if (request.getResourceInfo().getResourceType() == ARUMResourceType.PERSON) {
-			ActivityParticipationResourceInformation assemblyLineInfo = null;
+		if (request.getResourceInfo().isMoveable()) {
+			ActivityParticipationResourceInformation targetInfo = null;
 			for (ActivityParticipationResourceInformation otherResource : request
 					.getOtherResourceInfo())
-				if (otherResource.getResourceType().equals(
-						ARUMResourceType.ASSEMBLY_LINE))
-					assemblyLineInfo = otherResource;
+				if (!otherResource.isMoveable())
+					targetInfo = otherResource;
 
-			if (!getWorld(PersonResourceManagementWorld.class)
+			if (!getWorld(GenericResourceManagementWorld.class)
 					.getCurrentLocation().equals(
-							assemblyLineInfo.getResourceAgent())) {
+							targetInfo.getResourceAgent())) {
 				LOG.info(request.getResourceInfo().getResourceName()
-						+ " is not in assemblyLine "
-						+ assemblyLineInfo.getResourceName()
-						+ " starts walking now on " + getTime());
+						+ " is not yet at target "
+						+ targetInfo.getResourceName()
+						+ " starts moving now on " + getTime());
 				updateHighestPriorityActivityLocation();
 				getBinder().inject(RouteInitiator.class).initiate(this,
-						request, false);
+						request, targetInfo.getResourceName(), false);
 			}
 		}
 	}
@@ -634,7 +609,7 @@ public class ActivityParticipantImpl extends
 		}
 	}
 
-	/** @see eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant#getCurrentlyOccupiedResource() */
+	/** @see io.asimov.model.resource.ActivityParticipation.ActivityParticipant#getCurrentlyOccupiedResource() */
 	@Override
 	public AgentID getCurrentlyOccupiedResource(
 			final ActivityParticipation.Request cause) {
@@ -646,13 +621,13 @@ public class ActivityParticipantImpl extends
 				"Only moving elements such as persons can return this value");
 	}
 
-	/** @see eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant#getScenarioAgentID() */
+	/** @see io.asimov.model.resource.ActivityParticipation.ActivityParticipant#getScenarioAgentID() */
 	@Override
 	public AgentID getScenarioAgentID() {
 		return this.scenarioReplicatorID;
 	}
 
-	/** @see eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant#isReadyForActivity() */
+	/** @see io.asimov.model.resource.ActivityParticipation.ActivityParticipant#isReadyForActivity() */
 	@Override
 	public boolean isReadyForActivity(
 			final ResourceReadyNotification.Request request) {
@@ -677,7 +652,7 @@ public class ActivityParticipantImpl extends
 		return false;
 	}
 
-	/** @see eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant#walkRoute(eu.a4ee.model.resource.ActivityParticipation.Result) */
+	/** @see io.asimov.model.resource.ActivityParticipation.ActivityParticipant#walkRoute(io.asimov.model.resource.ActivityParticipation.Result) */
 	@Override
 	public void walkRoute(RouteLookup.Result state,
 			ActivityParticipation.Request cause, final boolean tommorow) {
@@ -702,8 +677,7 @@ public class ActivityParticipantImpl extends
 			getSimulator().schedule(enter, Trigger.createAbsolute(planning));
 		}
 		if (tommorow) {
-			planning = planning.plus(getWorld(
-					PersonResourceManagementWorld.class).onSiteDelay(planning));
+			planning = planning.plus(getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(planning));
 			ProcedureCall<?> continueProcessOfYesterday = ProcedureCall.create(
 					this, this, ActivityParticipant.RETRY_REQUEST, cause);
 			getSimulator().schedule(continueProcessOfYesterday,

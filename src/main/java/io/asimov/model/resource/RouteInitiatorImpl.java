@@ -56,18 +56,18 @@ public class RouteInitiatorImpl extends
 	
 
 	/**
-	 * @see eu.a4ee.model.scenario.RouteLookup.RouteInitiator#initiate(eu.a4ee.model.resource.ActivityParticipation.ActivityParticipant,
-	 *      eu.a4ee.model.resource.ActivityParticipation.Request)
+	 * @see io.asimov.model.scenario.RouteLookup.RouteInitiator#initiate(io.asimov.model.resource.ActivityParticipation.ActivityParticipant,
+	 *      io.asimov.model.resource.ActivityParticipation.Request)
 	 */
 	@Override
 	public RouteInitiatorImpl initiate(ActivityParticipant producer,
-			ActivityParticipation.Request cause, final boolean tomorrow)
+			ActivityParticipation.Request cause, final String targetResourceName, final boolean tomorrow)
 	{
 		this.walkTomorrow = tomorrow;
 		this.cause = cause;
 		try
 		{
-			send(RouteLookup.Request.Builder.forProducer(producer, cause, tomorrow)
+			send(RouteLookup.Request.Builder.forProducer(producer, cause, targetResourceName, tomorrow)
 					.build());
 		} catch (Exception e)
 		{
@@ -76,7 +76,7 @@ public class RouteInitiatorImpl extends
 		return this;
 	}
 
-	/** @see eu.a4ee.model.scenario.RouteLookup.RouteInitiator#initiate(eu.a4ee.model.process.NonSkeletonActivityCapability) */
+	/** @see io.asimov.model.scenario.RouteLookup.RouteInitiator#initiate(io.asimov.model.process.NonSkeletonActivityCapability) */
 	@Override
 	public RouteInitiatorImpl initiate(
 			NonSkeletonActivityCapability initiator, final AgentID currentLocation, final AgentID scenarioAgentID)

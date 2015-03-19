@@ -1,6 +1,7 @@
 package io.asimov.agent.scenario;
 
 import io.asimov.model.ASIMOVOrganizationWorld;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.resource.ResourceDescriptor;
 import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
@@ -44,11 +45,7 @@ public interface ScenarioManagementWorld extends ASIMOVOrganizationWorld
 
 	Observable<ResourceEvent> onResources();
 
-	Set<AgentID> getCurrentAssemblyLineIDs();
-
-	Set<AgentID> getCurrentPersonIDs();
-
-	Set<AgentID> getCurrentMaterialIDs();
+	Set<AgentID> getCurrentResourceIDs();
 	
 	int getCurrentResourceStatusHash();
 	
@@ -74,7 +71,7 @@ public interface ScenarioManagementWorld extends ASIMOVOrganizationWorld
 	/**
 	 * @return
 	 */
-	Iterable<ResourceDescriptor> getResourceDescriptors();
+	Iterable<ASIMOVResourceDescriptor> getResourceDescriptors();
 	
 	/**
 	 * To determine the desired start and end of the mask for activities to start in
