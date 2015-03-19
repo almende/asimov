@@ -71,7 +71,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	 * @return
 	 */
 	public synchronized static final TraceService getInstance(
-			final PersonTraceModel model, final ModelID replicationID)
+			final ResourceTraceModel model, final ModelID replicationID)
 	{
 		return getInstance(model, replicationID.getValue());
 	}
@@ -82,7 +82,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	 * @return
 	 */
 	public synchronized static final TraceService getInstance(
-			final PersonTraceModel model, final String replicationID)
+			final ResourceTraceModel model, final String replicationID)
 	{
 		if (theInstances == null)
 			theInstances = new HashMap<String, TraceService>();
@@ -115,7 +115,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	 * @param model
 	 * @param name
 	 */
-	protected TraceService(final PersonTraceModel model, final String name)
+	protected TraceService(final ResourceTraceModel model, final String name)
 	{
 		super(model, name);
 	}

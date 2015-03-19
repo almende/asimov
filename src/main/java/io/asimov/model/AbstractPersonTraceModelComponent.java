@@ -12,7 +12,7 @@ import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
  * 
  */
 public abstract class AbstractPersonTraceModelComponent extends
-		AbstractDsolModelComponent<DEVSSimulatorInterface, PersonTraceModel>
+		AbstractDsolModelComponent<DEVSSimulatorInterface, ResourceTraceModel>
 		implements PersonTraceModelComponent
 {
 
@@ -25,7 +25,7 @@ public abstract class AbstractPersonTraceModelComponent extends
 	 * @param model
 	 * @param name
 	 */
-	public AbstractPersonTraceModelComponent(final PersonTraceModel model,
+	public AbstractPersonTraceModelComponent(final ResourceTraceModel model,
 			final String name)
 	{
 		super(model, name);

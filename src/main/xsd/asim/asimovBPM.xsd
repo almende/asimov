@@ -7,7 +7,7 @@
 
 		<annotation>
 			<documentation>
-				Skeleton activity is a simplified activiti encapsulating
+				Skeleton activity is a simplified activity encapsulating
 				several tasks of the original business process.
 			</documentation>
 		</annotation>
@@ -72,7 +72,7 @@
 
 	<complexType name="tProcessType">
         <annotation>
-        	<documentation>Business process </documentation>
+        	<documentation>A Process or Workflow</documentation>
         </annotation>
         <sequence>
 
@@ -90,19 +90,7 @@
 
 
 
-	<complexType name="tRole">
-
-        <annotation>
-        	<documentation>User roles for the business processes
-</documentation>
-        </annotation>
-        <sequence>
-			<element name="id" type="string" maxOccurs="1" minOccurs="1">
-			</element>
-			<element name="roleName" type="string" maxOccurs="1" minOccurs="1">
-			</element>
-		</sequence>
-	</complexType>
+	
 
 
 

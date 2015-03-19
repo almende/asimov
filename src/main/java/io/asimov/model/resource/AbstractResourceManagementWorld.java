@@ -57,15 +57,14 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	private AgentID currentLocationRepr;
 
 	private List<Number> coordinates;
-	
+
 	public static final String ON_SITE_TIME_OF_DAY_PROPERTY = "onSiteTimeOfDay";
-	
+
 	public static final String OFF_SITE_TIME_OF_DAY_PROPERTY = "offSiteTimeOfDay";
-	
+
 	public static final String DISABLE_WEEKENDS_PROPERTY = "disableWeekends";
-	
+
 	public static final String DISABLE_NON_WORKING_HOURS_PROPERTY = "disableNonWorkingHours";
-	
 
 	@InjectLogger
 	private Logger LOG;
@@ -85,39 +84,33 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	 * @param binder
 	 */
 	@Inject
-	protected AbstractResourceManagementWorld(final Binder binder)
-	{
+	protected AbstractResourceManagementWorld(final Binder binder) {
 		super(binder);
 	}
 
 	@SuppressWarnings("unchecked")
-	public void initialize() throws Exception
-	{
+	public void initialize() throws Exception {
 		final Class<E> clazz = (Class<E>) ClassUtil.getTypeArguments(
 				AbstractResourceManagementWorld.class, getClass()).get(0);
 		final String entityID = getBinder().getID().getValue();
-	
+
 		this.entityType = clazz.getCanonicalName();
 		this.entity = (E) getBinder().inject(Datasource.class)
 				.findResourceDescriptorByID(entityID);
 		setCurrentLocation(getOwnerID());
-	
+
 	}
 
 	/** @see ResourceManagementWorld#getEntity() */
 	@Override
-	public E getEntity()
-	{
-		if (this.entity == null)
-		{
+	public E getEntity() {
+		if (this.entity == null) {
 			// throw new NullPointerException(getID() +
 			// " entity not initialized");
 			// FIXME!!! Should be ensured by lifecycle!
-			try
-			{
+			try {
 				initialize();
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				LOG.error("Entity was not properly initialized ", e);
 			}
 		}
@@ -126,15 +119,13 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 
 	/** @see ARUMOrganizationWorldView#getEntityType() */
 	@Override
-	public String getResourceType()
-	{
+	public String getResourceType() {
 		return this.entityType;
 	}
 
 	/** @see ResourceManagementWorld#perceive() */
 	@Override
-	public Observable<Percept> perceive()
-	{
+	public Observable<Percept> perceive() {
 		for (InitialASIMOVPercept b : getInitialAgentKBBeliefSet(getEntity(),
 				getBinder().getID()))
 			subject.onNext(b);
@@ -143,32 +134,34 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	}
 
 	/*
-	 * Obtains the initial KnowledgeBase entries as a formula set for the agents that have a physical body.
-	 * @param agentID The String that contains the agent ID and model ID information to generate the agentID references from.
+	 * Obtains the initial KnowledgeBase entries as a formula set for the agents
+	 * that have a physical body.
+	 * 
+	 * @param agentID The String that contains the agent ID and model ID
+	 * information to generate the agentID references from.
+	 * 
 	 * @return A set of Formula's to instantiate an agents believe base with.
 	 */
 	public Set<InitialASIMOVPercept> getInitialAgentKBBeliefSet(final E entity,
-			final AgentID agentID)
-	{
+			final AgentID agentID) {
 		Set<InitialASIMOVPercept> result = new LinkedHashSet<InitialASIMOVPercept>();
 		Set<ResourceRequirement> resourceMatchPatterns = new HashSet<ResourceRequirement>();
-		if (entity instanceof ASIMOVResourceDescriptor)
-		{
-			for (ResourceSubtype type : ((ASIMOVResourceDescriptor) entity).getTypes())
-				resourceMatchPatterns.add(new ResourceRequirement().withResource(
-					new Resource().withName(agentID.toString())
-							.withSubTypeID(type)
-							.withTypeID(new ResourceType() {
-								
-								@Override
-								public String getName() {
-									// TODO Auto-generated method stub
-									return ((ASIMOVResourceDescriptor) entity).getType();
-								}
-							}), 1,
-					new Time().withMillisecond(0)));
+		if (entity instanceof ASIMOVResourceDescriptor) {
+			for (ResourceSubtype subType : ((ASIMOVResourceDescriptor) entity)
+					.getTypes())
+				resourceMatchPatterns
+						.add(new ResourceRequirement().withResource(
+								new Resource()
+										.withName(agentID.toString())
+										.withSubTypeID(subType)
+										.withTypeID(
+												new ResourceType()
+														.withName(((ASIMOVResourceDescriptor) entity)
+																.getType())),
+								1, new Time().withMillisecond(0)));
 		} else {
-			LOG.error("Unsuported entity type: "+entity.getClass().getCanonicalName());
+			LOG.error("Unsuported entity type: "
+					+ entity.getClass().getCanonicalName());
 		}
 		for (ResourceRequirement resourceMatchPattern : resourceMatchPatterns)
 			result.add(InitialASIMOVPercept.toBelief(SLConvertible.ASIMOV_PROPERTY_SET_FORMULA
@@ -179,21 +172,19 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 							SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
 					.instantiate(SLConvertible.sASIMOV_VALUE,
 							resourceMatchPattern.toSL())));
-		
+
 		// LOG.trace("Init "+baseAID.getLocalName()+" with: "+result);
 		return result;
 	}
 
 	/** @see eu.a4ee.model.resource.CurrentLocationStateService#getCurrentLocation() */
 	@Override
-	public AgentID getCurrentLocation()
-	{
+	public AgentID getCurrentLocation() {
 		return this.currentLocationRepr;
 	}
 
 	/** @see eu.a4ee.model.resource.CurrentLocationStateService#setCurrentLocation(io.coala.agent.AgentID) */
-	protected void setCurrentLocation(AgentID locationAgentID)
-	{
+	protected void setCurrentLocation(AgentID locationAgentID) {
 		this.currentLocationRepr = locationAgentID;
 		this.coordinates = null;
 	}
@@ -203,63 +194,61 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 	 *      java.util.List)
 	 */
 	protected void setCurrentLocation(AgentID locationAgentID,
-			List<Number> coordinates)
-	{
+			List<Number> coordinates) {
 		this.currentLocationRepr = locationAgentID;
 		this.coordinates = coordinates;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends Event<?>> void fireAndForget(
-			final String processID, final String processInstanceID,
-			final String activityName, final String activityInstanceId, final EventType eventType,
-			final List<String> involvedResources,
-			final Observer<T> publisher)
-	{
+	protected <T extends Event<?>> void fireAndForget(final String processID,
+			final String processInstanceID, final String activityName,
+			final String activityInstanceId, final EventType eventType,
+			final List<String> involvedResources, final Observer<T> publisher) {
 		final SimTime now = getBinder().inject(ReplicatingCapability.class)
 				.getTime();
 		publisher.onNext((T) TraceService.getInstance(
 				getOwnerID().getModelID().getValue()).saveEvent(
 				getBinder().inject(Datasource.class), processID,
-				processInstanceID, activityName, activityInstanceId, involvedResources, eventType, now));
+				processInstanceID, activityName, activityInstanceId,
+				involvedResources, eventType, now));
 	}
 
 	/** @see eu.a4ee.model.resource.CurrentLocationStateService#getCurrentCoordinates() */
 	@Override
-	public List<Number> getCurrentCoordinates()
-	{
+	public List<Number> getCurrentCoordinates() {
 		if (this.coordinates == null)
 			return this.coordinates;
 		return CoordinationUtil.getCoordinatesForNonMovingElement(getBinder()
 				.inject(Datasource.class), getCurrentLocation());
 	}
-	
+
 	@Override
 	public boolean isAvailable() {
 		return !getEntity().isUnAvailable();
 	}
-	
 
 	@Override
 	public void setAvailable() {
 		getEntity().setUnAvailable(false);
-		if (getEntity() instanceof ASIMOVResourceDescriptor)
-		{
-			getBinder().inject(Datasource.class).save((ASIMOVResourceDescriptor)getEntity());
+		if (getEntity() instanceof ASIMOVResourceDescriptor) {
+			getBinder().inject(Datasource.class).save(
+					(ASIMOVResourceDescriptor) getEntity());
 		} else {
-			LOG.error("Unknown entity type: "+getEntity().getClass().getCanonicalName());
+			LOG.error("Unknown entity type: "
+					+ getEntity().getClass().getCanonicalName());
 		}
-		
+
 	}
-	
+
 	@Override
 	public void setUnavailable() {
 		getEntity().setUnAvailable(true);
-		if (getEntity() instanceof ASIMOVResourceDescriptor)
-		{
-			getBinder().inject(Datasource.class).save((ASIMOVResourceDescriptor)getEntity());
+		if (getEntity() instanceof ASIMOVResourceDescriptor) {
+			getBinder().inject(Datasource.class).save(
+					(ASIMOVResourceDescriptor) getEntity());
 		} else {
-			LOG.error("Unknown entity type: "+getEntity().getClass().getCanonicalName());
+			LOG.error("Unknown entity type: "
+					+ getEntity().getClass().getCanonicalName());
 		}
 	}
 

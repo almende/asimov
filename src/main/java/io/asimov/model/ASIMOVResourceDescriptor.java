@@ -27,7 +27,7 @@ import io.coala.model.ModelID;
  * @author suki
  *
  */
-public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDescriptor> implements ResourceType,
+public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDescriptor> implements 
 		ResourceDescriptor<ASIMOVResourceDescriptor> {
 	
 	/** */

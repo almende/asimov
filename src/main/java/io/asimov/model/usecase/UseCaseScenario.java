@@ -281,7 +281,7 @@ public interface UseCaseScenario {
 		 * @param processStartDelayDistribution
 		 */
 		public CIMScenarioImpl(
-				final Set<ASIMOVResourceDescriptor> ResourceDescriptors,
+				final Set<ASIMOVResourceDescriptor> resourceDescriptors,
 				final Map<String, Process> processTypes,
 				final Map<String, RandomDistribution<SimDuration>> processStartDelayDistribution,
 				final Map<String, RandomDistribution<SimDuration>> resourceUnavailablilityDistribution) {
@@ -374,8 +374,8 @@ public interface UseCaseScenario {
 				}
 			}
 			LOG.info(availableProcesses.size() + " of " + processes.size()
-					+ " processes are feasible in "
-					+ " this contexts assemblyLine and material types");
+					+ " processes are feasible with "
+					+ " this contexts resources");
 			if (unavailableProcesses.size() > 0) {
 				LOG.warn("Removing infeasible processes: "
 						+ unavailableProcesses);

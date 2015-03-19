@@ -7,15 +7,15 @@ import nl.tudelft.simulation.event.EventType;
 import nl.tudelft.simulation.event.TimedEvent;
 
 /**
- * {@link PersonTraceEventWrapper} wraps any {@link PersonEvent} bean inside
+ * {@link ResourceTraceEventWrapper} wraps any {@link PersonEvent} bean inside
  * a DSOL {@link TimedEvent}
  * 
  * @date $Date: 2014-09-11 15:17:30 +0200 (do, 11 sep 2014) $
  * @version $Revision: 1049 $
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  */
-public class PersonTraceEventWrapper extends TimedEvent implements
-		XMLConvertible<EventRecord, PersonTraceEventWrapper>
+public class ResourceTraceEventWrapper extends TimedEvent implements
+		XMLConvertible<EventRecord, ResourceTraceEventWrapper>
 {
 
 	/** */
@@ -26,7 +26,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 			"person");
 
 	/** */
-	private final PersonTraceEventType type;
+	private final ResourceTraceEventType type;
 
 	/**
 	 * {@link DsolMovementEvent} constructor
@@ -35,7 +35,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 * @param oldRate
 	 * @param newRate
 	 */
-	public PersonTraceEventWrapper(final Event<?> event)
+	public ResourceTraceEventWrapper(final Event<?> event)
 	{
 		this(null, event.getExecutionTime().getValue().doubleValue(), event);
 	}
@@ -47,7 +47,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 * @param oldRate
 	 * @param newRate
 	 */
-	public PersonTraceEventWrapper(final Number absSimTime,
+	public ResourceTraceEventWrapper(final Number absSimTime,
 			final Event<?> event)
 	{
 		this(null, absSimTime, event);
@@ -61,20 +61,20 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 * @param oldRate
 	 * @param newRate
 	 */
-	public PersonTraceEventWrapper(final PersonTraceEventProducer source,
+	public ResourceTraceEventWrapper(final ResourceTraceEventProducer source,
 			final Number absSimTime, final Event<?> event)
 	{
 		super(OCCUPANT_EVENT_TYPE, source, event, absSimTime.doubleValue());
 		if (event == null)
-			this.type = PersonTraceEventType.DONE;
+			this.type = ResourceTraceEventType.DONE;
 		else if (event instanceof ActivityEvent)
-			this.type = PersonTraceEventType.ACTIVITY;
+			this.type = ResourceTraceEventType.ACTIVITY;
 		else
 			throw new IllegalStateException("Event type unsupported: "
 					+ event.getClass().getName());
 	}
 
-	public PersonTraceEventType getPersonEventType()
+	public ResourceTraceEventType getPersonEventType()
 	{
 		return this.type;
 	}
@@ -86,7 +86,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 */
 	public boolean isActivityEvent()
 	{
-		return getPersonEventType() == PersonTraceEventType.ACTIVITY;
+		return getPersonEventType() == ResourceTraceEventType.ACTIVITY;
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 */
 	public boolean isUsageEvent()
 	{
-		return getPersonEventType() == PersonTraceEventType.USAGE;
+		return getPersonEventType() == ResourceTraceEventType.USAGE;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 	 */
 	public boolean isMovementEvent()
 	{
-		return getPersonEventType() == PersonTraceEventType.MOVEMENT;
+		return getPersonEventType() == ResourceTraceEventType.MOVEMENT;
 	}
 
 	
@@ -116,7 +116,7 @@ public class PersonTraceEventWrapper extends TimedEvent implements
 
 	/** @see XMLConvertible#fromXML(java.lang.Object) */
 	@Override
-	public PersonTraceEventWrapper fromXML(final EventRecord event)
+	public ResourceTraceEventWrapper fromXML(final EventRecord event)
 	{
 		return
 		// isMovementEvent() ? getMovement().fromXML(event, null, null)

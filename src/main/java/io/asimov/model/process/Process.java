@@ -1,7 +1,6 @@
 package io.asimov.model.process;
 
 import io.asimov.graph.GraphUtil;
-import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.AbstractEntity;
 import io.asimov.model.Resource;
 import io.asimov.model.ResourceAllocation;
@@ -20,6 +19,7 @@ import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.NextActivityRef;
 import io.asimov.xml.TSkeletonActivityType.PreviousActivityRef;
 import io.asimov.xml.TSkeletonActivityType.UsedResource;
+import io.coala.json.JsonUtil;
 import io.coala.log.LogUtil;
 
 import java.io.IOException;
@@ -112,78 +112,74 @@ public class Process extends AbstractEntity<Process> implements
 	/**
 	 * {@link Process} constructor
 	 */
-	public Process()
-	{
+	public Process() {
 		// withTask(new
 		// Task().withName(Task.START_OF_PROCESS.getName())).withTask(new
 		// Task().withName(Task.END_OF_PROCESS.getName()));
 		super.setName("process" + (++counter));
 	}
 
-	/**
-	 * {@link JsonDeserializer}
-	 * 
-	 * @version $Revision: 1123 $
-	 * @author <a href="mailto:Rick@almende.org">Rick</a>
-	 *
-	 */
-	public static class JsonDeserializer extends StdDeserializer<Process>
-	{
-		/** */
-		private static final long serialVersionUID = 3562344402828686313L;
-
-		/**
-		 * {@link JsonDeserializer} constructor
-		 */
-		public JsonDeserializer()
-		{
-			super(Process.class);
-		}
-
-		@Override
-		public Process deserialize(JsonParser jsonParser,
-				DeserializationContext deserializationContext)
-				throws IOException, JsonProcessingException
-		{
-			if (jsonParser.getCurrentToken() == JsonToken.VALUE_STRING)
-			{
-				if (!jsonParser.getText().contains("_classWithValue_"))
-					throw deserializationContext
-							.mappingException("Expected JSON String formated as %s_classWithValue_%s");
-				String[] splitResult = jsonParser.getText().split(
-						"_classWithValue_");
-				String className = splitResult[0];
-				String name = splitResult[1];
-				if (className.equals(Process.class.getCanonicalName()))
-				{
-					return new Process().withName(name);
-				} else
-				{
-					throw deserializationContext
-							.mappingException("Expected a Process in the JSON String");
-				}
-			}
-
-			throw deserializationContext
-					.mappingException("Expected JSON String");
-		}
-	}
+	// /**
+	// * {@link JsonDeserializer}
+	// *
+	// * @version $Revision: 1123 $
+	// * @author <a href="mailto:Rick@almende.org">Rick</a>
+	// *
+	// */
+	// public static class JsonDeserializer extends StdDeserializer<Process>
+	// {
+	// /** */
+	// private static final long serialVersionUID = 3562344402828686313L;
+	//
+	// /**
+	// * {@link JsonDeserializer} constructor
+	// */
+	// public JsonDeserializer()
+	// {
+	// super(Process.class);
+	// }
+	//
+	// @Override
+	// public Process deserialize(JsonParser jsonParser,
+	// DeserializationContext deserializationContext)
+	// throws IOException, JsonProcessingException
+	// {
+	// if (jsonParser.getCurrentToken() == JsonToken.VALUE_STRING)
+	// {
+	// if (!jsonParser.getText().contains("_classWithValue_"))
+	// throw deserializationContext
+	// .mappingException("Expected JSON String formated as %s_classWithValue_%s");
+	// String[] splitResult = jsonParser.getText().split(
+	// "_classWithValue_");
+	// String className = splitResult[0];
+	// String name = splitResult[1];
+	// if (className.equals(Process.class.getCanonicalName()))
+	// {
+	// return new Process().withName(name);
+	// } else
+	// {
+	// throw deserializationContext
+	// .mappingException("Expected a Process in the JSON String");
+	// }
+	// }
+	//
+	// throw deserializationContext
+	// .mappingException("Expected JSON String");
+	// }
+	// }
 
 	/** the {@link ResourceRequirement}s for this {@link Process} type */
-	public Map<String, ResourceRequirement> getRequiredResources()
-	{
+	public Map<String, ResourceRequirement> getRequiredResources() {
 		return this.pRequiredResources;
 	}
 
 	/** @return the {@link Task}s for this {@link Process} type */
-	public Set<Task> getTasks()
-	{
+	public Set<Task> getTasks() {
 		return this.pTasks;
 	}
 
 	/** @return the {@link Transition}s for this {@link Process} type */
-	public Set<Transition> getTransitions()
-	{
+	public Set<Transition> getTransitions() {
 		return this.pTransitions;
 	}
 
@@ -191,22 +187,18 @@ public class Process extends AbstractEntity<Process> implements
 	public void updateTasks()// Set<Task> tasks)
 	{
 		// List<Task> taskList = new ArrayList<Task>(tasks);
-		for (Transition transition : getTransitions())
-		{
+		for (Transition transition : getTransitions()) {
 			final Set<Task> allTransitionTasks = new HashSet<Task>(
 					transition.getFromTasks());
 			allTransitionTasks.addAll(transition.getToTasks());
 
 			// update the Tasks
-			for (Task task : getTasks())
-			{
-				Map<String,Object> taskMR = new KBase().matchNode(Task.PATTERN,task.toSL());
-				for (Task compareTask : allTransitionTasks)
-				{
+			for (Task task : getTasks()) {
+				Map<String, Object> taskMR = new KBase().matchNode(
+						Task.PATTERN, task.toSL());
+				for (Task compareTask : allTransitionTasks) {
 					final ASIMOVTerm compareTaskTerm = compareTask.toSL();
-					if (compareTaskTerm.equals(
-							taskMR.get(Task.TASK_NAME)))
-					{
+					if (compareTaskTerm.equals(taskMR.get(Task.TASK_NAME))) {
 						// Node caseIdsNode =
 						// transitionTaskMR.term(Task.CASE_IDS);
 						for (String traceID : transition.getTraceIDs())
@@ -218,28 +210,24 @@ public class Process extends AbstractEntity<Process> implements
 		// return new HashSet<Task>(taskList);
 	}
 
-	public Process withTask(final Task task)
-	{
+	public Process withTask(final Task task) {
 		getTasks().add(task);
 		return this;
 	}
 
 	public Process withTask(String taskName, String... resourceIDs)
-			throws Exception
-	{
+			throws Exception {
 		return withTaskWithDescription(taskName, null, resourceIDs);
 	}
 
 	public Process withTaskWithDescription(String taskName,
-			String taskDescription, String... resourceIDs) throws Exception
-	{
+			String taskDescription, String... resourceIDs) throws Exception {
 		Task newTask = new Task().withName(taskName);// .withResourceRequirements(new
 														// ResourceRequirement());
 		if (taskDescription != null)
 			newTask.withDescription(taskDescription);
 		if (resourceIDs != null)
-			for (String resourceID : resourceIDs)
-			{
+			for (String resourceID : resourceIDs) {
 				ResourceRequirement resourceObject = getRequiredResources()
 						.get(resourceID);
 				if (resourceObject == null)
@@ -253,8 +241,7 @@ public class Process extends AbstractEntity<Process> implements
 		return withTask(newTask);
 	}
 
-	private Task findTaskByName(String name)
-	{
+	private Task findTaskByName(String name) {
 		for (Task task : getTasks())
 			if (task.getName().equals(name))
 				return task;
@@ -262,19 +249,16 @@ public class Process extends AbstractEntity<Process> implements
 	}
 
 	private Transition findTransitionByTasks(String[] inputTaskNames,
-			String[] outputTaskNames)
-	{
+			String[] outputTaskNames) {
 		ASIMOVTerm[] iTaskTerms = new ASIMOVTerm[inputTaskNames.length];
-		for (int i = 0; i < inputTaskNames.length; i++)
-		{
+		for (int i = 0; i < inputTaskNames.length; i++) {
 			iTaskTerms[i] = SL.string(inputTaskNames[i]);
 		}
 		ASIMOVTermSequenceNode inputTaskNamesTermSequence = new ASIMOVTermSequenceNode(
 				Arrays.asList(iTaskTerms));
 
 		ASIMOVTerm[] oTaskTerms = new ASIMOVTerm[outputTaskNames.length];
-		for (int i = 0; i < outputTaskNames.length; i++)
-		{
+		for (int i = 0; i < outputTaskNames.length; i++) {
 			oTaskTerms[i] = SL.string(outputTaskNames[i]);
 		}
 		ASIMOVTermSequenceNode outputTaskNamesTermSequence = new ASIMOVTermSequenceNode(
@@ -284,13 +268,12 @@ public class Process extends AbstractEntity<Process> implements
 				outputTaskNamesTermSequence);
 	}
 
-	private Transition findTransitionByTasks(ASIMOVTermSequenceNode inputTaskNames,
-			ASIMOVTermSequenceNode outputTaskNames)
-	{
-		for (Transition transition : getTransitions())
-		{
-			Map<String,Object> transitionMR = new KBase().matchNode(Transition.PATTERN,transition
-					.toSL());
+	private Transition findTransitionByTasks(
+			ASIMOVTermSequenceNode inputTaskNames,
+			ASIMOVTermSequenceNode outputTaskNames) {
+		for (Transition transition : getTransitions()) {
+			Map<String, Object> transitionMR = new KBase().matchNode(
+					Transition.PATTERN, transition.toSL());
 			if (transitionMR.get(Transition.INPUT_TASK_NAMES).equals(
 					inputTaskNames))
 				if (transitionMR.get(Transition.OUTPUT_TASK_NAMES).equals(
@@ -300,12 +283,10 @@ public class Process extends AbstractEntity<Process> implements
 		return null;
 	}
 
-	public Process withResource(String resourceName,
-			final String resourceType,
-			ResourceSubtype resourceSubType, Time duration)
-	{
+	public Process withResource(String resourceName, final String resourceType,
+			ResourceSubtype resourceSubType, Time duration) {
 		final ResourceType resource = new ResourceType() {
-			
+
 			@Override
 			public String getName() {
 				return resourceType;
@@ -317,10 +298,9 @@ public class Process extends AbstractEntity<Process> implements
 	}
 
 	public Process withResource(final String resourceType,
-			ResourceSubtype resourceSubType, Time duration)
-	{
+			ResourceSubtype resourceSubType, Time duration) {
 		final ResourceType resource = new ResourceType() {
-			
+
 			@Override
 			public String getName() {
 				return resourceType;
@@ -331,27 +311,25 @@ public class Process extends AbstractEntity<Process> implements
 						resourceSubType), 1, duration));
 	}
 
-	public Process withResource(ResourceRequirement resource)
-	{
+	public Process withResource(ResourceRequirement resource) {
 		String key = resource.getResource().getName();
 		// if (getRequiredResources().containsKey(key))
 		// getRequiredResources().remove(key);
 		getRequiredResources().put(key, resource);
 		/*
-		Task startOfProcessTask = findTaskByName(START_OF_PROCESS);
-		pTasks.remove(startOfProcessTask);
-		pTasks.add(startOfProcessTask.withResourceRequirements(resource));
-		
-		Task endOfProcessTask = findTaskByName(END_OF_PROCESS);
-		pTasks.remove(endOfProcessTask);
-		pTasks.add(endOfProcessTask.withResourceRequirements(resource));
-		*/
+		 * Task startOfProcessTask = findTaskByName(START_OF_PROCESS);
+		 * pTasks.remove(startOfProcessTask);
+		 * pTasks.add(startOfProcessTask.withResourceRequirements(resource));
+		 * 
+		 * Task endOfProcessTask = findTaskByName(END_OF_PROCESS);
+		 * pTasks.remove(endOfProcessTask);
+		 * pTasks.add(endOfProcessTask.withResourceRequirements(resource));
+		 */
 		return this;
 	}
 
 	public Process withTransition(String[] sourceTasks, String[] targetTasks,
-			String... caseIds)
-	{
+			String... caseIds) {
 		Transition theTransition = getTransition(sourceTasks, targetTasks);
 		// if (pTransitions.contains(theTransition))
 		getTransitions().remove(theTransition); // FIXME keep old case/traceIDs?
@@ -359,22 +337,19 @@ public class Process extends AbstractEntity<Process> implements
 		return this;
 	}
 
-	public Transition getTransition(String[] sourceTasks, String[] targetTasks)
-	{
+	public Transition getTransition(String[] sourceTasks, String[] targetTasks) {
 		Transition newTransition = findTransitionByTasks(sourceTasks,
 				targetTasks);
 		if (newTransition != null)
 			return newTransition;
 		// Otherwise create new one
 		newTransition = new Transition();
-		for (int i = 0; i < sourceTasks.length; i++)
-		{
+		for (int i = 0; i < sourceTasks.length; i++) {
 			if (findTaskByName(sourceTasks[i]) == null)
 				getTasks().add(new Task().withName(sourceTasks[i]));
 			newTransition.withFromTasks(findTaskByName(sourceTasks[i]));
 		}
-		for (int i = 0; i < targetTasks.length; i++)
-		{
+		for (int i = 0; i < targetTasks.length; i++) {
 			if (findTaskByName(targetTasks[i]) == null)
 				getTasks().add(new Task().withName(targetTasks[i]));
 			newTransition.withToTasks(findTaskByName(targetTasks[i]));
@@ -383,106 +358,106 @@ public class Process extends AbstractEntity<Process> implements
 	}
 
 	public Process withTransition(String sourceTask, String targetTask,
-			String... caseIds)
-	{
+			String... caseIds) {
 		String[] sTasks = { sourceTask };
 		String[] tTasks = { targetTask };
 		return withTransition(sTasks, tTasks, caseIds);
 	}
 
-	public Process withTransition(String sourceTask, String targetTask)
-	{
+	public Process withTransition(String sourceTask, String targetTask) {
 		String[] sTasks = { sourceTask };
 		String[] tTasks = { targetTask };
 		return withTransition(sTasks, tTasks);
 	}
 
-	public Process withTransition(String[] sourceTasks, String[] targetTasks)
-	{
+	public Process withTransition(String[] sourceTasks, String[] targetTasks) {
 		getTransitions().add(getTransition(sourceTasks, targetTasks));
 		return this;
 	}
 
-	public Process withTransition(Transition transition)
-	{
+	public Process withTransition(Transition transition) {
 		getTransitions().add(transition);
 		return this;
 	}
 
 	// END CAP TEST
 
-	/** @param type the {@link ProcessType} to set */
-	protected void setType(final ProcessType type)
-	{
+	/**
+	 * @param type
+	 *            the {@link ProcessType} to set
+	 */
+	protected void setType(final ProcessType type) {
 		this.type = type;
 	}
 
 	/** @return the type */
-	public ProcessType getType()
-	{
+	public ProcessType getType() {
 		return this.type;
 	}
 
 	/**
-	 * @param name the (new) {@link ProcessType}
+	 * @param name
+	 *            the (new) {@link ProcessType}
 	 * @return this {@link Process} object
 	 */
-	public Process withType(final ProcessType type)
-	{
+	public Process withType(final ProcessType type) {
 		setType(type);
 		return this;
 	}
 
 	/** @return the activities */
-	public List<Activity> getActivities()
-	{
+	public List<Activity> getActivities() {
 		return this.activities;
 	}
 
-	/** @param type the {@link ProcessType} to set */
-	protected void setActivities(final List<Activity> activities)
-	{
+	/**
+	 * @param type
+	 *            the {@link ProcessType} to set
+	 */
+	protected void setActivities(final List<Activity> activities) {
 		this.activities = activities;
 	}
 
 	/**
-	 * @param name the (new) {@link List} of {@link Activity}
+	 * @param name
+	 *            the (new) {@link List} of {@link Activity}
 	 * @return this {@link Process} object
 	 */
-	public Process withActivities(final List<Activity> activities)
-	{
+	public Process withActivities(final List<Activity> activities) {
 		setActivities(activities);
 		return this;
 	}
 
 	/**
-	 * @param name the (new) {@link List} of {@link Activity}
+	 * @param name
+	 *            the (new) {@link List} of {@link Activity}
 	 * @return this {@link Process} object
 	 */
-	public Process withActivities(final Activity... activities)
-	{
+	public Process withActivities(final Activity... activities) {
 		setActivities(Arrays.asList(activities));
 		return this;
 	}
 
 	/** @return the allocations */
-	public Set<ResourceAllocation> getAllocations()
-	{
+	public Set<ResourceAllocation> getAllocations() {
 		return this.allocations;
 	}
 
-	/** @param allocations the allocations to set */
-	protected void setAllocations(final Set<ResourceAllocation> allocations)
-	{
+	/**
+	 * @param allocations
+	 *            the allocations to set
+	 */
+	protected void setAllocations(final Set<ResourceAllocation> allocations) {
 		this.allocations = allocations;
 	}
 
 	/**
-	 * @param agentID the allocatedAgentID to set
-	 * @param resourceID the activity's resourceRequirementID to set
+	 * @param agentID
+	 *            the allocatedAgentID to set
+	 * @param resourceID
+	 *            the activity's resourceRequirementID to set
 	 */
-	public Process withAllocations(final ResourceAllocation... allocations)
-	{
+	public Process withAllocations(final ResourceAllocation... allocations) {
 		if (allocations != null)
 			for (ResourceAllocation allocation : allocations)
 				getAllocations().add(allocation);
@@ -490,27 +465,23 @@ public class Process extends AbstractEntity<Process> implements
 	}
 
 	/**
-	 * @param agentID the allocatedAgentID to set
-	 * @param resourceID the activity's resourceRequirementID to set
+	 * @param agentID
+	 *            the allocatedAgentID to set
+	 * @param resourceID
+	 *            the activity's resourceRequirementID to set
 	 */
-	public Process withAllocation(final String resourceID, final String agentID)
-	{
+	public Process withAllocation(final String resourceID, final String agentID) {
 		return withAllocations(new ResourceAllocation()
 				.withResourceRequirementID(resourceID).withAllocatedAgentID(
 						agentID));
 	}
-	
 
 	@Override
-	public void setName(String name)
-	{
-		for (Task t : this.getTasks())
-		{
-			if (t.getName().startsWith(Task.START_OF_PROCESS.getName()))
-			{
+	public void setName(String name) {
+		for (Task t : this.getTasks()) {
+			if (t.getName().startsWith(Task.START_OF_PROCESS.getName())) {
 				t = t.withName(Task.START_OF_PROCESS.getName() + "_" + name);
-			} else if (t.getName().startsWith(Task.END_OF_PROCESS.getName()))
-			{
+			} else if (t.getName().startsWith(Task.END_OF_PROCESS.getName())) {
 				t = t.withName(Task.END_OF_PROCESS.getName() + "_" + name);
 			}
 		}
@@ -519,48 +490,42 @@ public class Process extends AbstractEntity<Process> implements
 
 	/** @see XMLConvertible#toXML() */
 	@Override
-	public TProcessType toXML()
-	{
+	public TProcessType toXML() {
 		TProcessType resultProcess = new TProcessType();
 		resultProcess.setName(getName());
-		for (Task task : this.getTasks())
-		{
+		for (Task task : this.getTasks()) {
 			TSkeletonActivityType activity = new TSkeletonActivityType();
 			resultProcess.getActivity().add(activity);
 			activity.setId(task.getName());
 			activity.setName(task.getDescription());
-			for (ResourceRequirement resource : task.getResources().values())
-			{
-					activity.setExecutionTime(XmlUtil.durationFromLong(resource
-							.getDuration().getMillisecond()));
-					
-					UsedResource ur = new UsedResource();
-					ur.setResourceTypeRef(resource.getResource().getTypeID().getName());
-					ur.setResourceTypeRef(resource.getResource().getSubTypeID().getName());
-					activity.getUsedResource().add(ur);
-					ur.setTimeOfUse(XmlUtil.durationFromLong(resource
-							.getDuration().getMillisecond()));
+			for (ResourceRequirement resource : task.getResources().values()) {
+				activity.setExecutionTime(XmlUtil.durationFromLong(resource
+						.getDuration().getMillisecond()));
+
+				UsedResource ur = new UsedResource();
+				ur.setResourceTypeRef(resource.getResource().getTypeID()
+						.getName());
+				ur.setResourceTypeRef(resource.getResource().getSubTypeID()
+						.getName());
+				activity.getUsedResource().add(ur);
+				ur.setTimeOfUse(XmlUtil.durationFromLong(resource.getDuration()
+						.getMillisecond()));
 			}
 			// de-normalize
 			// deNormalizeLikelihoods(resultProcess);
-			for (Transition transition : this.getTransitions())
-			{
-				if (transition.getToTasks().contains(task))
-				{
+			for (Transition transition : this.getTransitions()) {
+				if (transition.getToTasks().contains(task)) {
 					for (Task otherTask : transition.getFromTasks())
 						if (!otherTask.getName().equals(
 								Task.START_OF_PROCESS.getName() + "_"
-										+ this.getName()))
-						{
+										+ this.getName())) {
 							PreviousActivityRef prevRef = null;
 							for (PreviousActivityRef ref : activity
-									.getPreviousActivityRef())
-							{
+									.getPreviousActivityRef()) {
 								if (ref.getValue().equals(otherTask.getName()))
 									ref.setLikelihood(ref.getLikelihood() + 1);
 							}
-							if (prevRef == null)
-							{
+							if (prevRef == null) {
 								prevRef = new PreviousActivityRef();
 								prevRef.setLikelihood(1.0);
 								prevRef.setValue(otherTask.getName());
@@ -568,23 +533,19 @@ public class Process extends AbstractEntity<Process> implements
 							}
 						}
 				}
-				if (transition.getFromTasks().contains(task))
-				{
+				if (transition.getFromTasks().contains(task)) {
 
 					for (Task otherTask : transition.getToTasks())
 						if (!otherTask.getName().equals(
 								Task.END_OF_PROCESS.getName() + "_"
-										+ this.getName()))
-						{
+										+ this.getName())) {
 							NextActivityRef nextRef = null;
 							for (NextActivityRef ref : activity
-									.getNextActivityRef())
-							{
+									.getNextActivityRef()) {
 								if (ref.getValue().equals(otherTask.getName()))
 									ref.setLikelihood(ref.getLikelihood() + 1);
 							}
-							if (nextRef == null)
-							{
+							if (nextRef == null) {
 								nextRef = new NextActivityRef();
 								nextRef.setLikelihood(1.0);
 								nextRef.setValue(otherTask.getName());
@@ -607,8 +568,7 @@ public class Process extends AbstractEntity<Process> implements
 
 	/** @see XMLConvertible#fromXML(Object) */
 	@Override
-	public Process fromXML(final TProcessType xmlBean)
-	{
+	public Process fromXML(final TProcessType xmlBean) {
 		String CASE_ID_PREFIX = "importFromXML";
 		if (xmlBean == null || xmlBean.getActivity().size() == 0)
 			return null;
@@ -627,26 +587,23 @@ public class Process extends AbstractEntity<Process> implements
 				.getActivity();
 
 		this.withName(name);
-		for (TSkeletonActivityType skeletonActivityType : activities)
-		{
+		for (TSkeletonActivityType skeletonActivityType : activities) {
 			ArrayList<String> taskResources = new ArrayList<String>();
 			// Define resource requirements first:
-			
+			LOG.info("Activity ===== "
+					+ JsonUtil.toPrettyJSON(skeletonActivityType));
 			for (final UsedResource usedResource : skeletonActivityType
-					.getUsedResource())
-			{
-				Duration materialTimeOfUse = usedResource.getTimeOfUse();
-				if (materialTimeOfUse == null) // Default material usage time equal to activity execution time
-					materialTimeOfUse = skeletonActivityType.getExecutionTime();
+					.getUsedResource()) {
+				Duration resourceTimeOfUse = usedResource.getTimeOfUse();
+				if (resourceTimeOfUse == null) // Default resource usage time
+												// equal to activity execution
+												// time
+					resourceTimeOfUse = skeletonActivityType.getExecutionTime();
 				Time t = new Time().withMillisecond(XmlUtil
-						.gDurationToLong(materialTimeOfUse));
-				this.withResource(usedResource.getResourceTypeRef(), new ResourceSubtype() {
-					
-					@Override
-					public String getName() {
-						return usedResource.getResourceSubTypeRef();
-					}
-				}, t);
+						.gDurationToLong(resourceTimeOfUse));
+				this.withResource(usedResource.getResourceTypeRef(),
+						new ResourceSubtype().withName(usedResource
+								.getResourceSubTypeRef()), t);
 				taskResources.add(usedResource.getResourceSubTypeRef()
 						.toString());
 			}
@@ -654,13 +611,11 @@ public class Process extends AbstractEntity<Process> implements
 			// added
 			String[] taskResourcesStringArray = new String[taskResources.size()];
 			taskResources.toArray(taskResourcesStringArray);
-			try
-			{
+			try {
 				this.withTaskWithDescription(skeletonActivityType.getId(),
 						skeletonActivityType.getName(),
 						taskResourcesStringArray);
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				LOG.error(
 						"Failed to create task: "
 								+ skeletonActivityType.getName(), e);
@@ -668,24 +623,20 @@ public class Process extends AbstractEntity<Process> implements
 		}
 
 		for (TSkeletonActivityType skeletonActivityType : processType
-				.getActivity())
-		{
+				.getActivity()) {
 			if (skeletonActivityType.getNextActivityRef().size() == 0
 					|| skeletonActivityType.getNextActivityRef().get(0)
-							.equals(""))
-			{
+							.equals("")) {
 				if (skeletonActivityType.getNextActivityRef().size() > 0
 						&& skeletonActivityType.getNextActivityRef().get(0)
-								.equals(""))
-				{
+								.equals("")) {
 					PreviousActivityRef prevRef = new PreviousActivityRef();
 					prevRef.setValue(skeletonActivityType.getId());
 					endActivity.getPreviousActivityRef().add(prevRef);
 					NextActivityRef nextRef = new NextActivityRef();
 					nextRef.setValue(endActivity.getId());
 					skeletonActivityType.getNextActivityRef().add(nextRef);
-				} else
-				{
+				} else {
 					PreviousActivityRef prevRef = new PreviousActivityRef();
 					prevRef.setValue(skeletonActivityType.getId());
 					endActivity.getPreviousActivityRef().add(prevRef);
@@ -696,20 +647,17 @@ public class Process extends AbstractEntity<Process> implements
 			}
 			if (skeletonActivityType.getPreviousActivityRef().size() == 0
 					|| skeletonActivityType.getPreviousActivityRef().get(0)
-							.equals(""))
-			{
+							.equals("")) {
 				if (skeletonActivityType.getPreviousActivityRef().size() > 0
 						&& skeletonActivityType.getPreviousActivityRef().get(0)
-								.equals(""))
-				{
+								.equals("")) {
 					NextActivityRef nextRef = new NextActivityRef();
 					nextRef.setValue(skeletonActivityType.getId());
 					startActivity.getNextActivityRef().add(nextRef);
 					PreviousActivityRef prevRef = new PreviousActivityRef();
 					prevRef.setValue(startActivity.getId());
 					skeletonActivityType.getPreviousActivityRef().add(prevRef);
-				} else
-				{
+				} else {
 					NextActivityRef nextRef = new NextActivityRef();
 					nextRef.setValue(skeletonActivityType.getId());
 					startActivity.getNextActivityRef().add(nextRef);
@@ -725,8 +673,7 @@ public class Process extends AbstractEntity<Process> implements
 
 		// now all transitions can be added
 		for (TSkeletonActivityType skeletonActivityType : processType
-				.getActivity())
-		{
+				.getActivity()) {
 			if (skeletonActivityType.getNextActivityRef().size() > 0
 					&& !skeletonActivityType.getNextActivityRef().get(0)
 							.equals(""))
@@ -752,13 +699,11 @@ public class Process extends AbstractEntity<Process> implements
 		}
 
 		// now all transitions can be added
-		try
-		{
+		try {
 			int caseNr = 0;
 			Set<List<String>> cases = GraphUtil.getInstance()
 					.getPathOfActivities(getName(), startActivity, endActivity);
-			if (cases.isEmpty())
-			{
+			if (cases.isEmpty()) {
 				LOG.warn("Can not determine start of cyclic process, "
 						+ "assuming longest path.");
 				Node endNode = GraphUtil.getInstance().getNodeValueForActivity(
@@ -784,15 +729,12 @@ public class Process extends AbstractEntity<Process> implements
 						startActivity, endActivity);
 
 			}
-			for (List<String> path : cases)
-			{
+			for (List<String> path : cases) {
 				List<Task> tasks = new ArrayList<Task>();
 				caseNr++;
 				String previousSkeletonActivityType = null;
-				for (String nextSkeletonActivityType : path)
-				{
-					if (previousSkeletonActivityType != null)
-					{
+				for (String nextSkeletonActivityType : path) {
+					if (previousSkeletonActivityType != null) {
 						int numberOf = 1;
 						for (NextActivityRef aRef : getTSkeletonActivityTypeForId(
 								processType, previousSkeletonActivityType)
@@ -806,8 +748,7 @@ public class Process extends AbstractEntity<Process> implements
 									nextSkeletonActivityType, CASE_ID_PREFIX
 											+ caseNr);
 					}
-					for (Task task : this.getTasks())
-					{
+					for (Task task : this.getTasks()) {
 						if (task.getName().equals(nextSkeletonActivityType))
 							tasks.add(task);
 					}
@@ -817,8 +758,7 @@ public class Process extends AbstractEntity<Process> implements
 						CASE_ID_PREFIX + "_" + getName() + "_" + caseNr, tasks);
 			}
 			this.updateTasks();
-		} catch (final Exception e)
-		{
+		} catch (final Exception e) {
 			LOG.error("Problem parsing xml: " + xmlBean, e);
 			return null;
 		}
@@ -827,21 +767,17 @@ public class Process extends AbstractEntity<Process> implements
 	}
 
 	public static Double deNormalizeFactorForDistribution(
-			final ArrayList<Double> denormalizedValues)
-	{
+			final ArrayList<Double> denormalizedValues) {
 		return deNormalizeFactorForDistribution(denormalizedValues, 1);
 	}
 
 	private static Double deNormalizeFactorForDistribution(
-			final ArrayList<Double> denormalizedValues, int factor)
-	{
+			final ArrayList<Double> denormalizedValues, int factor) {
 		Iterator<Double> it = denormalizedValues.iterator();
 		Double min = Double.MAX_VALUE;
-		while (it.hasNext())
-		{
+		while (it.hasNext()) {
 			Double value = it.next() * factor;
-			if ( !Double.isInfinite(value) && value == Math.floor(value))
-			{
+			if (!Double.isInfinite(value) && value == Math.floor(value)) {
 				continue;
 			}
 			min = Math.min(min, value * factor);
@@ -854,75 +790,69 @@ public class Process extends AbstractEntity<Process> implements
 	}
 
 	public static synchronized void deNormalizeLikelihoods(
-			TProcessType processType)
-	{
+			TProcessType processType) {
 		// de-normalize
-//		for (TSkeletonActivityType a : processType.getActivity())
-//		{
-//			ArrayList<Double> denormalizedPrevValues = new ArrayList<Double>();
-//			for (PreviousActivityRef r : a.getPreviousActivityRef())
-//			{
-//				denormalizedPrevValues.add(r.getLikelihood());
-//			}
-//			Double prevFactor = deNormalizeFactorForDistribution(denormalizedPrevValues);
-//			ArrayList<Double> denormalizedNextValues = new ArrayList<Double>();
-//			for (NextActivityRef r : a.getNextActivityRef())
-//			{
-//				denormalizedNextValues.add(r.getLikelihood());
-//			}
-//			Double nextFactor = deNormalizeFactorForDistribution(denormalizedNextValues);
-//
-//			for (PreviousActivityRef r : a.getPreviousActivityRef())
-//			{
-//				if (r.getLikelihood() == null)
-//					r.setLikelihood(1.0);
-//				else
-//					r.setLikelihood(r.getLikelihood() * prevFactor);
-//			}
-//			for (NextActivityRef r : a.getNextActivityRef())
-//			{
-//				if (r.getLikelihood() == null)
-//					r.setLikelihood(1.0);
-//				else
-//					r.setLikelihood(r.getLikelihood() * nextFactor);
-//			}
-//		}
+		// for (TSkeletonActivityType a : processType.getActivity())
+		// {
+		// ArrayList<Double> denormalizedPrevValues = new ArrayList<Double>();
+		// for (PreviousActivityRef r : a.getPreviousActivityRef())
+		// {
+		// denormalizedPrevValues.add(r.getLikelihood());
+		// }
+		// Double prevFactor =
+		// deNormalizeFactorForDistribution(denormalizedPrevValues);
+		// ArrayList<Double> denormalizedNextValues = new ArrayList<Double>();
+		// for (NextActivityRef r : a.getNextActivityRef())
+		// {
+		// denormalizedNextValues.add(r.getLikelihood());
+		// }
+		// Double nextFactor =
+		// deNormalizeFactorForDistribution(denormalizedNextValues);
+		//
+		// for (PreviousActivityRef r : a.getPreviousActivityRef())
+		// {
+		// if (r.getLikelihood() == null)
+		// r.setLikelihood(1.0);
+		// else
+		// r.setLikelihood(r.getLikelihood() * prevFactor);
+		// }
+		// for (NextActivityRef r : a.getNextActivityRef())
+		// {
+		// if (r.getLikelihood() == null)
+		// r.setLikelihood(1.0);
+		// else
+		// r.setLikelihood(r.getLikelihood() * nextFactor);
+		// }
+		// }
 	}
 
 	public static synchronized void normalizeLikelihoods(
-			TProcessType processType)
-	{
+			TProcessType processType) {
 		// normalize
-		for (TSkeletonActivityType a : processType.getActivity())
-		{
+		for (TSkeletonActivityType a : processType.getActivity()) {
 			Double prevSum = 0.0;
-			for (PreviousActivityRef r : a.getPreviousActivityRef())
-			{
+			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
 				if (r.getLikelihood() == null)
 					r.setLikelihood(1.0);
 				prevSum += r.getLikelihood();
 			}
-			for (PreviousActivityRef r : a.getPreviousActivityRef())
-			{
+			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
 				r.setLikelihood(r.getLikelihood() / prevSum);
 			}
 			Double nextSum = 0.0;
-			for (NextActivityRef r : a.getNextActivityRef())
-			{
+			for (NextActivityRef r : a.getNextActivityRef()) {
 				if (r.getLikelihood() == null)
 					r.setLikelihood(1.0);
 				nextSum += r.getLikelihood();
 			}
-			for (NextActivityRef r : a.getNextActivityRef())
-			{
+			for (NextActivityRef r : a.getNextActivityRef()) {
 				r.setLikelihood(r.getLikelihood() / nextSum);
 			}
 		}
 	}
 
 	private TSkeletonActivityType getTSkeletonActivityTypeForId(TProcessType p,
-			String id)
-	{
+			String id) {
 		for (TSkeletonActivityType skeletonActivityType : p.getActivity())
 			if (skeletonActivityType.getId().equals(id))
 				return skeletonActivityType;
@@ -933,16 +863,15 @@ public class Process extends AbstractEntity<Process> implements
 	/**
 	 * @return the replicationID
 	 */
-	public String getReplicationID()
-	{
+	public String getReplicationID() {
 		return this.replicationID;
 	}
 
 	/**
-	 * @param replicationID the replication to set
+	 * @param replicationID
+	 *            the replication to set
 	 */
-	public void setReplicationID(final String replicationID)
-	{
+	public void setReplicationID(final String replicationID) {
 		this.replicationID = replicationID;
 	}
 

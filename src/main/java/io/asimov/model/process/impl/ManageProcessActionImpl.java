@@ -584,19 +584,19 @@ public class ManageProcessActionImpl extends
 								.getResourceSubTypeRef());
 						if (requiredAgentID.equals(agent.toString())) {
 							// LOG.warn("Required: "+requiredAgentID+" == "+agent);
-							for (UsedResource usedMaterial : activityXML
+							for (UsedResource usedResource : activityXML
 									.getUsedResource())
 								if (getAgentIDByResourceSubType(
-										usedMaterial.getResourceSubTypeRef())
+										usedResource.getResourceSubTypeRef())
 										.equalsIgnoreCase(agent.toString())) {
-									if (usedMaterial.getTimeOfUse() == null)
+									if (usedResource.getTimeOfUse() == null)
 										activityDuration = new SimDuration(
 												XmlUtil.gDurationToLong(activityXML
 														.getExecutionTime()),
 												TimeUnit.MILLIS);
 									else
 										activityDuration = new SimDuration(
-											XmlUtil.gDurationToLong(usedMaterial
+											XmlUtil.gDurationToLong(usedResource
 													.getTimeOfUse()),
 											TimeUnit.MILLIS);
 									break;
@@ -614,6 +614,7 @@ public class ManageProcessActionImpl extends
 					
 
 				// -----------------------------------------------------------------------------
+				// FIXME Send isMoveable per resource
 				ActivityParticipationResourceInformation p = new ActivityParticipationResourceInformation()
 						.withResourceType(type)
 						.withActivityName(activityID)

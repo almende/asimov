@@ -105,16 +105,7 @@
 											type="asimovevent:tAgentBasedSimulationModuleOutput" maxOccurs="1"
 											minOccurs="1">
 										</element>
-
-                    <element name="roles" maxOccurs="1" minOccurs="1">
-                      <complexType>
-                        <sequence>
-                          <element name="role" type="asimovbpm:tRole" maxOccurs="unbounded"
-                            minOccurs="0"></element>
-                        </sequence>
-                      </complexType>
-                    </element>
-                  </sequence>
+                  					</sequence>
 								</complexType>
 							</element>
 						</sequence>

@@ -4,7 +4,6 @@ import io.asimov.agent.scenario.Context;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.EventType;
 import io.asimov.xml.SimulationFile.Simulations.SimulationCase;
-import io.asimov.xml.SimulationFile.Simulations.SimulationCase.Roles;
 import io.asimov.xml.TUseCase;
 import io.coala.dsol.util.AbstractDsolModel;
 import io.coala.dsol.util.DsolModel;
@@ -24,22 +23,22 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTimeZone;
 
 /**
- * {@link PersonTraceModel}
+ * {@link ResourceTraceModel}
  * 
  * @date $Date: 2014-11-04 11:22:27 +0100 (di, 04 nov 2014) $
  * @version $Revision: 1107 $
  * @author <a href="mailto:rick@almende.org">Rick van Krevelen</a>
  */
-public class PersonTraceModel extends
-		AbstractDsolModel<DEVSSimulatorInterface, PersonTraceModel> implements
-		PersonTraceEventListener {
+public class ResourceTraceModel extends
+		AbstractDsolModel<DEVSSimulatorInterface, ResourceTraceModel> implements
+		ResourceTraceEventListener {
 
 	/** */
 	private static final long serialVersionUID = 1L;
 
 	/** */
 	private static final Logger LOG = LogUtil
-			.getLogger(PersonTraceModel.class);
+			.getLogger(ResourceTraceModel.class);
 
 	static {
 		DateTimeZone.setDefault(DateTimeZone.UTC);
@@ -62,17 +61,17 @@ public class PersonTraceModel extends
 	private boolean initialized = false;
 
 	/** */
-	private PersonTraceEventProducer eventSource = null;
+	private ResourceTraceEventProducer eventSource = null;
 
 	/** */
-	private final List<PersonTraceEventListener> occEventListeners = new ArrayList<PersonTraceEventListener>();
+	private final List<ResourceTraceEventListener> occEventListeners = new ArrayList<ResourceTraceEventListener>();
 
 
 	/**
 	 * @throws Exception
 	 */
-	public PersonTraceModel(final String simulatorName,
-			final Context context, final Roles roles,
+	public ResourceTraceModel(final String simulatorName,
+			final Context context,
 			final TUseCase simParams)
 			throws Exception {
 		super(simulatorName);
@@ -128,7 +127,7 @@ public class PersonTraceModel extends
 		LOG.trace("Model initialized!");
 	}
 
-	public void registerListener(final PersonTraceEventListener listener) {
+	public void registerListener(final ResourceTraceEventListener listener) {
 		synchronized (this.occEventListeners) {
 			this.occEventListeners.add(listener);
 			if (this.eventSource != null)
@@ -136,13 +135,13 @@ public class PersonTraceModel extends
 		}
 	}
 
-	public void setSource(final PersonTraceEventProducer source) {
+	public void setSource(final ResourceTraceEventProducer source) {
 		if (source == null)
 			throw new NullPointerException("Can't set an empty event source");
 		synchronized (this.occEventListeners) {
 			this.eventSource = source;
 			this.eventSource.addListener(this);
-			for (PersonTraceEventListener listener : this.occEventListeners)
+			for (ResourceTraceEventListener listener : this.occEventListeners)
 				this.eventSource.addListener(listener);
 		}
 	}
@@ -152,7 +151,7 @@ public class PersonTraceModel extends
 
 	
 	/** @return the event generator */
-	public PersonTraceEventProducer getEventSource() {
+	public ResourceTraceEventProducer getEventSource() {
 		return this.eventSource;
 	}
 
@@ -167,7 +166,7 @@ public class PersonTraceModel extends
 	 * @return
 	 * @throws JAXBException
 	 */
-	public static PersonTraceModel fromXML(final String replicationID,
+	public static ResourceTraceModel fromXML(final String replicationID,
 			final SimulationCase simCase, final TUseCase simParams)
 			throws Exception {
 		final Context context;
@@ -177,8 +176,7 @@ public class PersonTraceModel extends
 		} else
 			context = (Context) simCase.getUsecase().getContext();
 
-		return new PersonTraceModel(replicationID, context,
-				simCase.getRoles(), simParams);
+		return new ResourceTraceModel(replicationID, context, simParams);
 	}
 
 }

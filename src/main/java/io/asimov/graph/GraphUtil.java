@@ -2,7 +2,6 @@ package io.asimov.graph;
 
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
-import io.asimov.xml.TResource;
 import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.coala.log.LogUtil;

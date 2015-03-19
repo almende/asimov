@@ -8,6 +8,8 @@ import io.asimov.model.sl.SLConvertible;
 
 import javax.persistence.Embeddable;
 
+import org.eclipse.persistence.nosql.annotations.Field;
+
 /**
  * 
  * {@link Resource}
@@ -27,9 +29,11 @@ public class Resource extends AbstractNamed<Resource> implements
 	// use name for resource role reference within process type
 
 	/** */
+	@Field(name = "typeID")
 	private ResourceType typeID;
 
 	/** */
+	@Field(name = "subTypeID")
 	private ResourceSubtype subTypeID;
 	
 

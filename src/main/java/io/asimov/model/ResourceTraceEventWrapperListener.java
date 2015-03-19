@@ -4,23 +4,23 @@ import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
 
 /**
- * {@link PersonTraceEventWrapperListener} wraps a
- * {@link PersonTraceEventListener} on which it triggers respective methods
- * based on the content type of the {@link PersonTraceEventWrapper} events it
+ * {@link ResourceTraceEventWrapperListener} wraps a
+ * {@link ResourceTraceEventListener} on which it triggers respective methods
+ * based on the content type of the {@link ResourceTraceEventWrapper} events it
  * listens to
  * 
  * @date $Date: 2014-09-11 15:17:30 +0200 (do, 11 sep 2014) $
  * @version $Revision: 1049 $
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  */
-public class PersonTraceEventWrapperListener implements
+public class ResourceTraceEventWrapperListener implements
 		EventListenerInterface
 {
 	/** */
-	private final PersonTraceEventListener listener;
+	private final ResourceTraceEventListener listener;
 
-	public PersonTraceEventWrapperListener(
-			final PersonTraceEventListener listener)
+	public ResourceTraceEventWrapperListener(
+			final ResourceTraceEventListener listener)
 	{
 		this.listener = listener;
 	}
@@ -28,11 +28,11 @@ public class PersonTraceEventWrapperListener implements
 	@Override
 	public void notify(final EventInterface event)
 	{
-		if (event instanceof PersonTraceEventWrapper == false)
+		if (event instanceof ResourceTraceEventWrapper == false)
 			throw new IllegalStateException("Unexpected event type: "
 					+ event.getClass().getName());
 		
-		final PersonTraceEventWrapper ote = (PersonTraceEventWrapper) event;
+		final ResourceTraceEventWrapper ote = (ResourceTraceEventWrapper) event;
 		switch (ote.getPersonEventType())
 		{
 		case ACTIVITY:

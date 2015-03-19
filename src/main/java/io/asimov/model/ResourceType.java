@@ -1,14 +1,11 @@
 package io.asimov.model;
 
-/**
- * {@link ResourceType}
- * 
- * @date $Date: 2013-08-09 14:31:03 +0200 (vr, 09 aug 2013) $
- * @version $Revision: 347 $
- * @author <a href="mailto:Rick@almende.org">Rick</a>
- * 
- */
-public interface ResourceType extends Named
+public class ResourceType extends AbstractNamed<ResourceType>
 {
-	// just a tag
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2974456469547801645L;
+	
 }

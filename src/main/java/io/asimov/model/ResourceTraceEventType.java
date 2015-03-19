@@ -1,7 +1,7 @@
 package io.asimov.model;
 
 /** */
-enum PersonTraceEventType
+enum ResourceTraceEventType
 {
 	/** */
 	ACTIVITY,

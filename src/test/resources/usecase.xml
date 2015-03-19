@@ -14,221 +14,184 @@
                     <id>IHF</id>
                     <context>
 <!-- Here we make the correlation between the specific materials and the generic components -->
-                        <material>
-                            <materialId>Pump A</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Pump</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Pump B</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Pump</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Dispencer Box 1</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Dispencer</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Aluminium Framework</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Framework</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Steel Framework</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Framework</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>ECP 1242 Board set</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Electronical Circuit Pack</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>FP134 FrontPanel</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Coffee machine front panel</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>RP 2378 rear panel</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Coffee machine rear panel</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Yellow Cover B234</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Coffee machine cover</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Circuit Validator 1</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Circuit Validator</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Circuit Validator 2</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Circuit Validator</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Circuit Validator 3</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Circuit Validator</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Pressure Measurement Device A</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Pressure Measurement Device</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Pressure Measurement Device B</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Pressure Measurement Device</type>
-                            </component>
-                        </material>
+                        <resource>
+                            <resourceId>Pump A</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pump</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pump B</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pump</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Dispencer Box 1</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Dispencer</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Aluminium Framework</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Framework</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Steel Framework</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Framework</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>ECP 1242 Board set</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Electronical Circuit Pack</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>FP134 FrontPanel</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine front panel</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>RP 2378 rear panel</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine rear panel</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Yellow Cover B234</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine cover</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Circuit Validator 1</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Circuit Validator 2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource><resource>
+                            <resourceId>Circuit Validator 3</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pressure Measurement Device A</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pressure Measurement Device</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pressure Measurement Device B</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pressure Measurement Device</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Pump A.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pump</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pump B.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pump</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Dispencer Box 1.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Dispencer</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Aluminium Framework.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Framework</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Steel Framework.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Framework</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>ECP 1242 Board set.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Electronical Circuit Pack</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>FP134 FrontPanel.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine front panel</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>RP 2378 rear panel.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine rear panel</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Yellow Cover B234.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine cover</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Circuit Validator 1.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Circuit Validator 2.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource><resource>
+                            <resourceId>Circuit Validator 3.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pressure Measurement Device A.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pressure Measurement Device</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pressure Measurement Device B.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pressure Measurement Device</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
                         
                         
-                        <material>
-                            <materialId>Another Pump A</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Pump</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Another Pump B</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Pump</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Another Dispencer Box 1</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Dispencer</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Another Aluminium Framework</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Framework</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Another Steel Framework</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Framework</type>
-                            </component>    
-                        </material>
-                        <material>
-                            <materialId>Another ECP 1242 Board set</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Electronical Circuit Pack</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Another FP134 FrontPanel</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Coffee machine front panel</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Another RP 2378 rear panel</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Coffee machine rear panel</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Another Yellow Cover B234</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Coffee machine cover</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Another Circuit Validator 1</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Circuit Validator</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Another Circuit Validator 2</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Circuit Validator</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Another Circuit Validator 3</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Circuit Validator</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Another Pressure Measurement Device A</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Pressure Measurement Device</type>
-                            </component>
-                        </material>
-                        <material>
-                            <materialId>Another Pressure Measurement Device B</materialId>
-                            <component>
-                                <amount>1</amount>
-                                <type>Pressure Measurement Device</type>
-                            </component>
-                        </material>
                         
                         
                         <!-- Here we make the correlation between the specific persons and the generic roles -->
-                        <person>
-                            <personId>Giovanni</personId>
-                            <role>
-                                <id>Minor Manager</id>
-                                <roleName>Floor Manager</roleName>
-                            </role>
-                            <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
+                        <resource>
+                            <resourceId>Giovanni</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Minor Manager</resourceSubType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
                             <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
@@ -244,13 +207,13 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                        </person>
-                        <person>
-                            <personId>Victor</personId>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
+                            <moveable>true</moveable> 
+                        </resource>
+                       
+                        <resource>
+                            <resourceId>Victor</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Worker</resourceSubType>
                             <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
@@ -266,17 +229,14 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                        </person>
-                        <person>
-                            <personId>Edward</personId>
-                            <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
+                            <moveable>true</moveable> 
+                        </resource>
+                       
+                        <resource>
+                            <resourceId>Edward</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
                             <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
@@ -292,17 +252,14 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                        </person>
-                        <person>
-                            <personId>Suki</personId>
-                            <role>
-                                <id>RAO</id>
-                                <roleName>Tester (RAO)</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
+                            <moveable>true</moveable> 
+                        </resource>
+                       
+                        <resource>
+                            <resourceId>Suki</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>RAO</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
                             <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
                                 <property name="pmf" type="int">5</property>
                             </unavailable>
@@ -318,285 +275,192 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                        </person>
-                        <person>
-                            <personId>Mario</personId>
-                            <role>
-                                <id>Major Manager</id>
-                                <roleName>IHF Board Member</roleName>
-                            </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
-                                <property name="pmf" type="int">5</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
-                                <property name="pmf" type="int">340</property>
-                            </unavailable>
-                        </person>
-                        <person>
-                            <personId>Anthony</personId>
-                            <role>
-                                <id>Minor Manager</id>
-                                <roleName>Floor Manager</roleName>
-                            </role>
-                            <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
-                                <property name="pmf" type="int">5</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
-                                <property name="pmf" type="int">340</property>
-                            </unavailable>
-                        </person>
-                        <person>
-                            <personId>Vitek</personId>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
-                                <property name="pmf" type="int">5</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
-                                <property name="pmf" type="int">340</property>
-                            </unavailable>
-                        </person>
-                        <person>
-                            <personId>Eduardo</personId>
-                             <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
-                                <property name="pmf" type="int">5</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
-                                <property name="pmf" type="int">340</property>
-                            </unavailable>
-                        </person>
-                        <person>
-                            <personId>Rick</personId>
-                            <role>
-                                <id>RAO</id>
-                                <roleName>Tester (RAO)</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
-                                <property name="pmf" type="int">5</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
-                                <property name="pmf" type="int">340</property>
-                            </unavailable>
-                        </person>
-                        <person>
-                            <personId>Sven</personId>
-                            <role>
-                                <id>Major Manager</id>
-                                <roleName>IHF Board Member</roleName>
-                            </role>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
-                                <property name="pmf" type="int">5</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
-                                <property name="pmf" type="int">1</property>
-                            </unavailable>
-                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
-                                <property name="pmf" type="int">340</property>
-                            </unavailable>
-                        </person>
+                            <moveable>true</moveable> 
+                        </resource>
                         
+                        <resource>
+                            <resourceId>Mario</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Major Manager</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <moveable>true</moveable> 
+                        </resource>
                         
-                        <person>
-                            <personId>Elza</personId>
-                            <role>
-                                <id>Minor Manager</id>
-                                <roleName>Floor Manager</roleName>
-                            </role>
-                            <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Hannah</personId>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Judith</personId>
-                            <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Chloe</personId>
-                            <role>
-                                <id>RAO</id>
-                                <roleName>Tester (RAO)</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Mark</personId>
-                            <role>
-                                <id>Major Manager</id>
-                                <roleName>IHF Board Member</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Alex</personId>
-                            <role>
-                                <id>Minor Manager</id>
-                                <roleName>Floor Manager</roleName>
-                            </role>
-                            <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Jurek</personId>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Iwona</personId>
-                            <role>
-                                <id>Electrical Engineer</id>
-                                <roleName>Certified Electrical Engineer</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Yasmine</personId>
-                            <role>
-                                <id>RAO</id>
-                                <roleName>Tester (RAO)</roleName>
-                            </role>
-                            <role>
-                                <id>Worker</id>
-                                <roleName>IHF Worker</roleName>
-                            </role>
-                        </person>
-                        <person>
-                            <personId>Rosalie</personId>
-                            <role>
-                                <id>Major Manager</id>
-                                <roleName>IHF Board Member</roleName>
-                            </role>
-                        </person>
+                        <resource>
+                            <resourceId>Anthony</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Minor Manager</resourceSubType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <moveable>true</moveable> 
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Vitek</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <moveable>true</moveable> 
+                        </resource>
+  
+                        <resource>
+                            <resourceId>Eduardo</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <moveable>true</moveable> 
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Rick</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>RAO</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <moveable>true</moveable> 
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Sven</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Major Manager</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <moveable>true</moveable> 
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Elza</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Minor Manager</resourceSubType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <moveable>true</moveable> 
+                        </resource>
+                        
                         
 <!-- Here we make the correlation between the specific assemblyLines and the generic types -->
-                        <assemblyLine>
-                            <assemblyLineId>CoffeeMachineProductionTable_1</assemblyLineId>
+                        <resource>
+                            <resourceId>CoffeeMachineProductionTable_1</resourceId>
                             <availableAfter>P00Y000DT00H00M00S</availableAfter>
-                            <assemblyLineType>
-                                <amount>1</amount>
-                                <type>CoffeeMachineProductionTable</type>
-                            </assemblyLineType>
-                        </assemblyLine>
-                        <assemblyLine>
-                            <assemblyLineId>CoffeeMachineProductionTable_2</assemblyLineId>
-                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
-                            <assemblyLineType>
-                                <amount>1</amount>
-                                <type>CoffeeMachineProductionTable</type>
-                            </assemblyLineType>
-                        </assemblyLine>
-                        <assemblyLine>
-                            <assemblyLineId>CoffeeMachineProductionTable_3</assemblyLineId>
-                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
-                            <assemblyLineType>
-                                <amount>1</amount>
-                                <type>CoffeeMachineProductionTable</type>
-                            </assemblyLineType>
-                        </assemblyLine>
+                            <resourceType>AssemblyLine</resourceType>
+                            <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>CoffeeMachineProductionTable_1</resourceId>
+                            <availableAfter>P00Y001DT00H00M00S</availableAfter>
+                            <resourceType>AssemblyLine</resourceType>
+                            <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        <resource>
+                            <resourceId>CoffeeMachineProductionTable_1</resourceId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <resourceType>AssemblyLine</resourceType>
+                            <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
+                            <moveable>false</moveable> 
+                        </resource>
+                        
                     </context>
                     <process>
                         <id>Process_A.1</id>
@@ -604,28 +468,38 @@
                         <activity>
                             <id>A1.1</id>
                             <name>A1 - Manufactoring interior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Pump</componentRef>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Pump</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
                                 <timeOfUse>P0Y0M0DT1H</timeOfUse>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Dispencer</componentRef>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Dispencer</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
                                 <timeOfUse>P0Y0M0DT1H</timeOfUse>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Framework</componentRef>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Framework</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Electronical Circuit Pack</componentRef>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Electronical Circuit Pack</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>Worker</roleRef>
-                            </RoleInvolved>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Worker</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
                             <interruptable>true</interruptable>
                             <waitingTime>P00Y000DT00H00M00S</waitingTime>
                             <executionTime>P00Y000DT02H10M00S</executionTime>
@@ -636,21 +510,31 @@
                         <activity>
                             <id>A2.1</id>
                             <name>A2 - Test interior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Circuit Validator</componentRef>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Pressure Measurement Device</componentRef>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Circuit Validator</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>RAO</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Pressure Measurement Device</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>RAO</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Electrical Engineer</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
                             <interruptable>true</interruptable>
                             <waitingTime>P00Y000DT00H00M00S</waitingTime>
                             <executionTime>P00Y000DT00H20M00S</executionTime>
@@ -667,22 +551,31 @@
                         <activity>
                             <id>A3.1</id>
                             <name>A3 - Manufactoring exterior of the Coffee machine</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <usedComponent>
-                                <componentRef>Coffee machine front panel</componentRef>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Coffee machine rear panel</componentRef>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Coffee machine front panel</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                            </usedComponent>
-                            <usedComponent>
-                                <componentRef>Coffee machine cover</componentRef>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Coffee machine rear panel</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                            </usedComponent>
-                            <RoleInvolved>
-                                <roleRef>Worker</roleRef>
-                            </RoleInvolved>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Coffee machine cover</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Worker</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
                             <interruptable>true</interruptable>
                             <waitingTime>P00Y000DT00H00M00S</waitingTime>
                             <executionTime>P00Y000DT00H35M00S</executionTime>
@@ -695,11 +588,16 @@
                         <activity>
                             <id>A4.1</id>
                             <name>A4 - Wait for RAO to complete</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>RAO</roleRef>
-                            </RoleInvolved>
-                            
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>RAO</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
                             <interruptable>true</interruptable>
                             <waitingTime>P00Y000DT00H00M00S</waitingTime>
                             <executionTime>P00Y000DT00H30M00S</executionTime>
@@ -712,13 +610,21 @@
                         <activity>
                             <id>A5.1</id>
                             <name>A5 - Minor None Conformity Meeting</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>Minor Manager</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Minor Manager</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Electrical Engineer</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
                             <interruptable>true</interruptable>
                             <waitingTime>P00Y000DT00H00M00S</waitingTime>
                             <executionTime>P00Y000DT00H10M00S</executionTime>
@@ -731,13 +637,21 @@
                         <activity>
                             <id>A6.1</id>
                             <name>A6 - Major None Conformity Meeting</name>
-                            <usedAssemlyLineType>CoffeeMachineProductionTable</usedAssemlyLineType>
-                            <RoleInvolved>
-                                <roleRef>Major Manager</roleRef>
-                            </RoleInvolved>
-                            <RoleInvolved>
-                                <roleRef>Electrical Engineer</roleRef>
-                            </RoleInvolved>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Major Manager</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Electrical Engineer</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
                             <interruptable>true</interruptable>
                             <waitingTime>P00Y000DT00H00M00S</waitingTime>
                             <executionTime>P00Y000DT01H00M00S</executionTime>
@@ -757,7 +671,7 @@
                <simulationID>IHF</simulationID>
                <eventTrace>
                    <!-- Here is an example of the output of ASIMOV all event types -->
-                   <eventRecord>
+                   <!-- <eventRecord>
                        <timeStamp>2015-05-30T09:30:10Z</timeStamp>
                        <personRef>Edward</personRef>
                        <personRoleRef>Electrical Engineer</personRoleRef>
@@ -873,9 +787,9 @@
                        <processRef>Process_A.1</processRef>
                        <processInstanceRef>Process_A.1_instance1</processInstanceRef>
                        <activityRef>A1.1</activityRef>
-                   </eventRecord>
+                   </eventRecord> -->
                    <!-- Here will be other event events about the preceding activitities within Process_A_instance1 -->
-                   <eventRecord>
+                  <!-- <eventRecord>
                        <timeStamp>2015-05-30T17:30:10Z</timeStamp>
                        <personRef>Edward</personRef>
                        <personRoleRef>Electrical Engineer</personRoleRef>
@@ -885,31 +799,9 @@
                        <processRef>Process_A.1</processRef>
                        <processInstanceRef>Process_A.1_instance1</processInstanceRef>
                        <activityRef>A1.1</activityRef>
-                   </eventRecord>
+                   </eventRecord> -->
                </eventTrace>
            </simulationResult>
-           <roles>
-               <role>
-                   <id>Worker</id>
-                   <roleName>IHF Worker</roleName>
-               </role>
-               <role>
-                   <id>Electrical Engineer</id>
-                   <roleName>Certified Electrical Engineer</roleName>
-               </role>
-               <role>
-                   <id>Minor Manager</id>
-                   <roleName>Floor Manager</roleName>
-               </role>
-               <role>
-                   <id>Major Manager</id>
-                   <roleName>IHF Board Member</roleName>
-               </role>
-               <role>
-                   <id>RAO</id>
-                   <roleName>Tester (RAO)</roleName>
-               </role>
-           </roles>
        </simulationCase>
    </simulations>
 </p1:SimulationFile>
