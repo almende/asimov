@@ -48,7 +48,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	@InjectLogger
 	private Logger log;
 	
-	private static ASIMOVSLUtil JSA = ASIMOVSLUtil.getInstance();
+	private static ASIMOVSLUtil ASIMOVSL = ASIMOVSLUtil.getInstance();
 	
 	
 	public static enum Ontology {
@@ -213,7 +213,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 		if (javaObject == null)
 			throw new NullPointerException("Can not instantiate null object.");
 		T node;
-		node = (T) JSA.instantiateAsSL(javaObject);
+		node = (T) ASIMOVSL.instantiateAsSL(javaObject);
 		if (params.length % 2 != 0)
 			throw new Exception("Invalid amount of paramters, expected key value pairs");
 		String key = null;

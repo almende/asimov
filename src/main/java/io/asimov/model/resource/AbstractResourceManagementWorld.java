@@ -94,9 +94,10 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 				AbstractResourceManagementWorld.class, getClass()).get(0);
 		final String entityID = getBinder().getID().getValue();
 
-		this.entityType = clazz.getCanonicalName();
+		
 		this.entity = (E) getBinder().inject(Datasource.class)
 				.findResourceDescriptorByID(entityID);
+		this.entityType = ((ResourceDescriptor<?>)this.entity).getType();
 		setCurrentLocation(getOwnerID());
 
 	}

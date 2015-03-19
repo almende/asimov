@@ -22,7 +22,6 @@ import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.coala.json.JsonUtil;
 import io.coala.log.LogUtil;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,12 +42,6 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.kernel.Uniqueness;
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 /**
  * {@link Process}
@@ -119,54 +112,7 @@ public class Process extends AbstractEntity<Process> implements
 		super.setName("process" + (++counter));
 	}
 
-	// /**
-	// * {@link JsonDeserializer}
-	// *
-	// * @version $Revision: 1123 $
-	// * @author <a href="mailto:Rick@almende.org">Rick</a>
-	// *
-	// */
-	// public static class JsonDeserializer extends StdDeserializer<Process>
-	// {
-	// /** */
-	// private static final long serialVersionUID = 3562344402828686313L;
-	//
-	// /**
-	// * {@link JsonDeserializer} constructor
-	// */
-	// public JsonDeserializer()
-	// {
-	// super(Process.class);
-	// }
-	//
-	// @Override
-	// public Process deserialize(JsonParser jsonParser,
-	// DeserializationContext deserializationContext)
-	// throws IOException, JsonProcessingException
-	// {
-	// if (jsonParser.getCurrentToken() == JsonToken.VALUE_STRING)
-	// {
-	// if (!jsonParser.getText().contains("_classWithValue_"))
-	// throw deserializationContext
-	// .mappingException("Expected JSON String formated as %s_classWithValue_%s");
-	// String[] splitResult = jsonParser.getText().split(
-	// "_classWithValue_");
-	// String className = splitResult[0];
-	// String name = splitResult[1];
-	// if (className.equals(Process.class.getCanonicalName()))
-	// {
-	// return new Process().withName(name);
-	// } else
-	// {
-	// throw deserializationContext
-	// .mappingException("Expected a Process in the JSON String");
-	// }
-	// }
-	//
-	// throw deserializationContext
-	// .mappingException("Expected JSON String");
-	// }
-	// }
+
 
 	/** the {@link ResourceRequirement}s for this {@link Process} type */
 	public Map<String, ResourceRequirement> getRequiredResources() {
@@ -285,13 +231,7 @@ public class Process extends AbstractEntity<Process> implements
 
 	public Process withResource(String resourceName, final String resourceType,
 			ResourceSubtype resourceSubType, Time duration) {
-		final ResourceType resource = new ResourceType() {
-
-			@Override
-			public String getName() {
-				return resourceType;
-			}
-		};
+		final ResourceType resource = new ResourceType().withName(resourceType);
 		return withResource(new ResourceRequirement().withResource(
 				new Resource().withName(resourceName).withTypeID(resource)
 						.withSubTypeID(resourceSubType), 1, duration));
@@ -299,13 +239,7 @@ public class Process extends AbstractEntity<Process> implements
 
 	public Process withResource(final String resourceType,
 			ResourceSubtype resourceSubType, Time duration) {
-		final ResourceType resource = new ResourceType() {
-
-			@Override
-			public String getName() {
-				return resourceType;
-			}
-		};
+		final ResourceType resource = new ResourceType().withName(resourceType);
 		return withResource(new ResourceRequirement().withResource(
 				new Resource().withTypeID(resource).withSubTypeID(
 						resourceSubType), 1, duration));
@@ -590,8 +524,6 @@ public class Process extends AbstractEntity<Process> implements
 		for (TSkeletonActivityType skeletonActivityType : activities) {
 			ArrayList<String> taskResources = new ArrayList<String>();
 			// Define resource requirements first:
-			LOG.info("Activity ===== "
-					+ JsonUtil.toPrettyJSON(skeletonActivityType));
 			for (final UsedResource usedResource : skeletonActivityType
 					.getUsedResource()) {
 				Duration resourceTimeOfUse = usedResource.getTimeOfUse();
