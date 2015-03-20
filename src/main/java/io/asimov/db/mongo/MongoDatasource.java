@@ -700,8 +700,14 @@ public class MongoDatasource extends BasicCapability implements Datasource
 
 	@Override
 	public Iterable<ActivityEvent> findActivityEvents() {
-		// TODO Auto-generated method stub
-		return null;
+		final String query = String.format("{%s:'%s'}",
+				EVENT_REPLICATION_ID_FIELDNAME, replicationID);
+		return getEventsCollection()
+				.find(query)
+				.sort(String.format("{%s.%s:1}",
+						EVENT_EXECUTION_TIME_FIELDNAME,
+						EVENT_EXECUTION_TIME_VALUE_FIELDNAME))
+				.as(ActivityEvent.class);
 	}
 
 	

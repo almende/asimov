@@ -20,7 +20,7 @@
 				<complexType>
 					<sequence>
 						<element name="resourceTypeRef" type="string" maxOccurs="1" minOccurs="1"/>
-						<element name="resourceSubTypeRef" type="string" maxOccurs="1" minOccurs="0"/>
+						<element name="resourceSubTypeRef" type="string" maxOccurs="1" minOccurs="1"/>
 						<!-- TODO: Add ASIMOV NODE querying system here -->
 						<element name="numberOf" type="int"/>
 						<element name="numberOfUses" type="int" maxOccurs="1" minOccurs="0">

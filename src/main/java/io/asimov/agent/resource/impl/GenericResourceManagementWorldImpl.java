@@ -35,11 +35,10 @@ public class GenericResourceManagementWorldImpl extends
 
 	/** */
 	private static final long serialVersionUID = 1L;
-	
-	private boolean onSite = false;
-	
-	private static final Map<String, Integer> assemblyLineOccupancy = new HashMap<String, Integer>();
 
+	private boolean onSite = false;
+
+	private static final Map<String, Integer> assemblyLineOccupancy = new HashMap<String, Integer>();
 
 	/** */
 	private Subject<ActivityEvent, ActivityEvent> activity = PublishSubject
@@ -83,40 +82,40 @@ public class GenericResourceManagementWorldImpl extends
 			final String activityInstanceId, final List<String> resourceNames,
 			final EventType eventType) throws Exception {
 		LOG.info("fire ASIMOV activity participation event!");
-		if (eventType.equals(EventType.TRANSIT_FROM_RESOURCE) || eventType.equals(EventType.TRANSIT_TO_RESOURCE)){
+		if (eventType.equals(EventType.TRANSIT_FROM_RESOURCE)
+				|| eventType.equals(EventType.TRANSIT_TO_RESOURCE)) {
 			if (resourceNames.size() != 2)
-				throw new IllegalStateException("Expected 2 resources: actor and target, but received "+resourceNames.size()+" resources instead.");
+				throw new IllegalStateException(
+						"Expected 2 resources: actor and target, but received "
+								+ resourceNames.size() + " resources instead.");
 			final String targetName = resourceNames.get(1);
-			if (getBinder().inject(Datasource.class).findResourceDescriptorByID(targetName) != null)
-				synchronized (assemblyLineOccupancy)
-				{
-					int occupancy = assemblyLineOccupancy.containsKey(targetName) ? assemblyLineOccupancy
+			if (getBinder().inject(Datasource.class)
+					.findResourceDescriptorByID(targetName) != null)
+				synchronized (assemblyLineOccupancy) {
+					int occupancy = assemblyLineOccupancy
+							.containsKey(targetName) ? assemblyLineOccupancy
 							.get(targetName) : 0;
-					if (eventType.equals(EventType.TRANSIT_TO_RESOURCE))
-					{
+					if (eventType.equals(EventType.TRANSIT_TO_RESOURCE)) {
 						occupancy++;
 						assemblyLineOccupancy.put(targetName, occupancy);
-					} else if (eventType.equals(EventType.TRANSIT_FROM_RESOURCE))
-					{
+					} else if (eventType
+							.equals(EventType.TRANSIT_FROM_RESOURCE)) {
 						occupancy--;
 						assemblyLineOccupancy.put(targetName, occupancy);
 					}
 				}
 		}
 		fireAndForget(processID, processInstanceID, activityName,
-				activityInstanceId, eventType,
-				resourceNames, this.activity);
+				activityInstanceId, eventType, resourceNames, this.activity);
 	}
 
 	@Override
 	public boolean isMoveable() {
 		return this.entity.isMoveable();
 	}
-	
 
 	@Override
-	public void enteredSite(SimTime time)
-	{
+	public void enteredSite(SimTime time) {
 		if (onSite)
 			throw new IllegalStateException(
 					"entered time has been set while already on site!");
@@ -125,8 +124,7 @@ public class GenericResourceManagementWorldImpl extends
 	}
 
 	@Override
-	public void leftSite(SimTime time)
-	{
+	public void leftSite(SimTime time) {
 		if (!onSite)
 			throw new IllegalStateException(
 					"leave time has been set while not on site!");
@@ -134,6 +132,5 @@ public class GenericResourceManagementWorldImpl extends
 		getBinder().inject(NonSkeletonActivityCapability.class).onLeftSite();
 		LOG.info(getOwnerID() + " has left the site");
 	}
-
 
 }

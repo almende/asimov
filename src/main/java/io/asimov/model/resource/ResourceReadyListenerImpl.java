@@ -75,7 +75,7 @@ public class ResourceReadyListenerImpl extends
 					@Override
 					public void onNext(final ActivityEvent event)
 					{
-						if (event.getType() == EventType.RESOURCE_READY_FOR_ACTIVITY)
+						if (event.getType() == EventType.TRANSIT_TO_RESOURCE)
 							checkReadiness();
 					}
 				});
@@ -98,20 +98,7 @@ public class ResourceReadyListenerImpl extends
 	public void onRequested(final Request request)
 	{
 		this.pending.add(request);
-		try {
-			if (!request.getResourceInfo().isMoveable())
-				getBinder().inject(GenericResourceManagementWorld.class)
-				.performActivityChange(
-						request.getResourceInfo().getProcessID(), 
-						request.getResourceInfo().getProcessInstanceId(), 
-						request.getResourceInfo().getActivityName(), 
-						request.getResourceInfo().getActivityInstanceId(), 
-						Collections.singletonList(request.getResourceInfo().getResourceName()), 
-						EventType.RESOURCE_READY_FOR_ACTIVITY);
-		} catch (Exception e) {
-			LOG.warn("Failed to fire resource ready event, so calling method directly",e);
-			checkReadiness();
-		}
+		checkReadiness();
 	}
 
 	/**
@@ -123,7 +110,7 @@ public class ResourceReadyListenerImpl extends
 		synchronized (this.pending)
 		{
 			for (Request request : this.pending)
-				if (getBinder().inject(ActivityParticipant.class)
+				if (!request.getResourceInfo().isMoveable() || getBinder().inject(ActivityParticipant.class)
 								.isReadyForActivity(request))
 					// if (not occupant or arrived at priority location) confirm
 					// ready

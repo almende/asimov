@@ -304,13 +304,7 @@ public class ASIMOVResourceDescriptor extends AbstractEmbodied<ASIMOVResourceDes
 			return;
 		this.types = new ArrayList<ResourceSubtype>();
 		for (final String subType : subtypes) {
-			this.types.add(new ResourceSubtype() {
-				
-				@Override
-				public String getName() {
-					return subType;
-				}
-			});
+			this.types.add(new ResourceSubtype().withName(subType));
 		}
 	}
 

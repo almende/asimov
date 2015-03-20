@@ -90,10 +90,7 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 
 	@SuppressWarnings("unchecked")
 	public void initialize() throws Exception {
-		final Class<E> clazz = (Class<E>) ClassUtil.getTypeArguments(
-				AbstractResourceManagementWorld.class, getClass()).get(0);
 		final String entityID = getBinder().getID().getValue();
-
 		
 		this.entity = (E) getBinder().inject(Datasource.class)
 				.findResourceDescriptorByID(entityID);

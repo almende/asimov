@@ -16,7 +16,6 @@ import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipation.Result;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.ResourceRequirement;
-import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.model.sl.LegacySLUtil;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
@@ -243,19 +242,38 @@ public class ProcessCompleterImpl extends
 		LOG.trace("Allocating resources for process.");
 		LOG.warn("Resources are allocated per role (not per instance) and "
 				+ "per process (not per activity).");
-		Iterable<ASIMOVResourceDescriptor> resourcesDescriptors = getBinder().inject(
-				Datasource.class).findResourceDescriptors();
-		
+
 		Map<Serializable, Set<AgentID>> candidates = new HashMap<Serializable, Set<AgentID>>();
 
 		for (ResourceRequirement requirement : getWorld()
 				.getProcess(processTypeID).getRequiredResources().values()) {
 			Set<AgentID> aidSet = new HashSet<AgentID>();
-			
-			for (ASIMOVResourceDescriptor resourceDescriptor : resourcesDescriptors) {
-				if (resourceDescriptor.getType().equals(requirement.getResource().getTypeID()
-								.getName())) 
-						aidSet.add(resourceDescriptor.getAgentID());
+			for (ASIMOVResourceDescriptor resourceDescriptor : getBinder().inject(
+					Datasource.class).findResourceDescriptors()) {
+				if (resourceDescriptor.getType().equalsIgnoreCase(requirement.getResource().getTypeID()
+								.getName())) {
+						if (!resourceDescriptor.isUnAvailable()) {
+							aidSet.add(resourceDescriptor.getAgentID());
+						} 
+				} else {
+					LOG.info(resourceDescriptor.getType()+" != "+requirement.getResource().getTypeID()
+							.getName());
+				}
+			}
+			if (aidSet.isEmpty()) {
+				LOG.info("ABORTING process no agents available for type "+requirement.getResource().getTypeID().getName());
+				try {
+					send(ProcessCompletion.Result.Builder
+							.forProducer(this, cause)
+							.withSuccess(false).build());
+				} catch (Exception e1) {
+					LOG.info("Failed to send process completion response",e1);
+					
+				}
+				getScheduler().schedule(
+						ProcedureCall.create(this, this, DESTROY),
+						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
+				return;
 			}
 				candidates.put(LegacySLUtil
 						.requestResourceAllocationForRequirement(requirement)

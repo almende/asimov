@@ -170,9 +170,8 @@ public class ScenarioTest
 
 	protected void wrapUp() {
 		try {
-			new TimeLineWriter().writeTimeLine();
 			new EventTraceWriter().writeSimulatorOutput();
-			
+			new TimeLineWriter().writeTimeLine();
 		} catch (Exception e) {
 			LOG.error("Failed to write output of ASIMOV",e);
 			System.exit(1);

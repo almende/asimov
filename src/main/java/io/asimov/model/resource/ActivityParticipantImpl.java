@@ -117,7 +117,7 @@ public class ActivityParticipantImpl extends
 					}
 				if (!targetFound)
 					LOG.error(
-							"No assemblyLine resource specified among other resources: "
+							"No target resource specified among other resources: "
 									+ JsonUtil.toPrettyJSON(entry.getKey()
 											.getOtherResourceInfo()),
 							new NullPointerException());
@@ -230,9 +230,8 @@ public class ActivityParticipantImpl extends
 					targetInfo.getResourceAgent());
 			getSimulator().schedule(enter, Trigger.createAbsolute(getTime()));
 		}
-
-		if (resource.isMoveable() && getWorld(GenericResourceManagementWorld.class).getCurrentLocation()
-				.equals(targetInfo.getResourceAgent())) {
+		
+		
 			if (getBinder().inject(ScenarioManagementWorld.class)
 					.onSiteDelay(getTime()).longValue() != 0) {
 				LOG.warn("Resource is in after operating hours, will exit the site first.");
@@ -264,10 +263,7 @@ public class ActivityParticipantImpl extends
 					Trigger.createAbsolute(scheduledExecutiontime
 							.max(getTime())));
 
-		} else {
-			LOG.info("Person is not yet in the correct building element to perform activity "
-					+ request.getResourceInfo().getActivityName());
-		}
+		
 	}
 
 	public final static String START_EXECUTING_ACTIVITY = "startExecutionActivity";
@@ -449,7 +445,7 @@ public class ActivityParticipantImpl extends
 			final ResourceReadyNotification.Request request) {
 		if (!request.getResourceInfo().isMoveable() || getBinder().inject(ConfiguringCapability.class)
 				.getProperty("walkingDisabled").getBoolean(false))
-			return true;
+			return emitWhenTrue(true, request);
 		final AgentID here = getBinder().inject(
 				GenericResourceManagementWorld.class).getCurrentLocation();
 		LOG.info("Current location = " + here);
@@ -458,14 +454,31 @@ public class ActivityParticipantImpl extends
 			if (!resc.isMoveable()) {
 				Iterator<AgentID> hp = getHighestPriorityActivityLocations()
 						.iterator();
-				return resc.getResourceAgent().equals(here)
+				return emitWhenTrue(resc.getResourceAgent().equals(here)
 						&& hp.hasNext()
 						&& hp.next().equals(here)
 						&& (getBinder()
 								.inject(ScenarioManagementWorld.class)
-								.onSiteDelay(getTime()).longValue() == 0);
+								.onSiteDelay(getTime()).longValue() == 0),request);
 			}
 		return false;
+	}
+	
+	private boolean emitWhenTrue(final boolean bool, final ResourceReadyNotification.Request request) {
+		if (bool)
+			try {
+				getBinder().inject(GenericResourceManagementWorld.class)
+				.performActivityChange(
+				request.getResourceInfo().getProcessID(), 
+				request.getResourceInfo().getProcessInstanceId(), 
+				request.getResourceInfo().getActivityName(), 
+				request.getResourceInfo().getActivityInstanceId(), 
+				Collections.singletonList(request.getResourceInfo().getResourceName()), 
+				EventType.RESOURCE_READY_FOR_ACTIVITY);
+			} catch (Exception e) {
+				LOG.error("Failed to send resource ready notification event",e);
+			}
+		return bool;
 	}
 
 	/** @see io.asimov.model.resource.ActivityParticipation.ActivityParticipant#walkRoute(io.asimov.model.resource.ActivityParticipation.Result) */

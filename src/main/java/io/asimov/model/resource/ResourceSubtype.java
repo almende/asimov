@@ -2,7 +2,7 @@ package io.asimov.model.resource;
 
 import io.asimov.model.AbstractNamed;
 
-public class ResourceSubtype extends AbstractNamed<ResourceSubtype>
+public final class ResourceSubtype extends AbstractNamed<ResourceSubtype>
 {
 
 	/**

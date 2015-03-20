@@ -19,7 +19,6 @@ import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TSkeletonActivityType.NextActivityRef;
 import io.asimov.xml.TSkeletonActivityType.PreviousActivityRef;
 import io.asimov.xml.TSkeletonActivityType.UsedResource;
-import io.coala.json.JsonUtil;
 import io.coala.log.LogUtil;
 
 import java.util.ArrayList;
@@ -439,7 +438,7 @@ public class Process extends AbstractEntity<Process> implements
 				UsedResource ur = new UsedResource();
 				ur.setResourceTypeRef(resource.getResource().getTypeID()
 						.getName());
-				ur.setResourceTypeRef(resource.getResource().getSubTypeID()
+				ur.setResourceSubTypeRef(resource.getResource().getSubTypeID()
 						.getName());
 				activity.getUsedResource().add(ur);
 				ur.setTimeOfUse(XmlUtil.durationFromLong(resource.getDuration()
