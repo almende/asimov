@@ -67,6 +67,8 @@ public class ActivityParticipationResourceInformation implements Serializable
 	
 	private boolean moveable;
 
+	private boolean infrastructural;
+	
 	/**
 	 * @return the resourceAgent
 	 */
@@ -411,6 +413,29 @@ public class ActivityParticipationResourceInformation implements Serializable
 
 	public void setMoveable(boolean moveable) {
 		this.moveable = moveable;
+	}
+
+	/**
+	 * @return the infrastructural
+	 */
+	public boolean isInfrastructural() {
+		return infrastructural;
+	}
+
+	/**
+	 * @param infrastructural the infrastructural to set
+	 */
+	public void setInfrastructural(boolean infrastructural) {
+		this.infrastructural = infrastructural;
+	}
+	
+	/**
+	 * @param infrastructural the infrastructural to set
+	 * @return the {@link ActivityParticipationResourceInformation}
+	 */
+	public ActivityParticipationResourceInformation withInfrastructural(boolean infrastructural) {
+		setInfrastructural(infrastructural);
+		return this;
 	}
 
 }

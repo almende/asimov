@@ -6,6 +6,7 @@ import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.CoordinationUtil;
 import io.asimov.model.resource.RouteLookup;
 import io.asimov.model.resource.RouteLookup.Result;
+import io.asimov.xml.TConnectedResource;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.enterprise.fact.CoordinationFact;
@@ -120,30 +121,25 @@ public class RouteProviderImpl extends AbstractExecutor<RouteLookup.Request>
 		
 		Set<String> connectionTokens = new HashSet<String>();
 
-		List<AgentID> agentIds = new ArrayList<AgentID>();
-		for (ASIMOVResourceDescriptor assemblyLine : resourceDescriptions)
+		for (ASIMOVResourceDescriptor resource : resourceDescriptions)
 		{
-			agentIds.add(getBinder().inject(ModelComponentIDFactory.class)
-					.createAgentID(assemblyLine.getName()));
-		}
-		agentIds.add(getBinder().inject(ModelComponentIDFactory.class)
-					.createAgentID("world"));
-		for (AgentID subject : agentIds)
-		{
-			LOG.trace("Parsing assemblyLine:" + subject.getValue());
 			
-			
-			for (AgentID target : agentIds)
+			final AgentID target = resource.getAgentID();
+			for (TConnectedResource otherResource : resource.getConnectedResources())
 			{
-				if (subject == target)
-					continue;
-				String token = getConnectionToken(target, subject);
-				if (!connectionTokens.contains(token))
-				{
-					addLeadsToConnection(target, subject);
-					connectionTokens.add(token);
-
-				}
+				
+				final AgentID subject = getBinder().inject(ModelComponentIDFactory.class)
+				.createAgentID(otherResource.getConnectedResourceId());
+				LOG.trace("Parsing resource:" + subject.getValue());
+					if (subject == target)
+						continue;
+					String token = getConnectionToken(target, subject);
+					if (!connectionTokens.contains(token))
+					{
+						addLeadsToConnection(target, subject);
+						connectionTokens.add(token);
+					}
+				
 			}
 		}
 

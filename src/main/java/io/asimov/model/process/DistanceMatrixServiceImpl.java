@@ -15,7 +15,6 @@ import io.coala.model.ModelComponentIDFactory;
 import io.coala.model.ModelID;
 import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
-import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
 
 import java.util.ArrayList;

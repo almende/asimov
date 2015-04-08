@@ -3,6 +3,7 @@ package io.asimov.model.resource;
 import io.asimov.model.Named;
 import io.asimov.model.XMLConvertible;
 import io.asimov.model.sl.ASIMOVNode;
+import io.asimov.xml.TConnectedResource;
 import io.asimov.xml.TResource;
 import io.coala.agent.AgentID;
 
@@ -11,6 +12,18 @@ import java.util.List;
 public interface ResourceDescriptor<T extends ResourceDescriptor<T>> extends Named, XMLConvertible<TResource, ResourceDescriptor<T>> {
 	
 	AgentID getAgentID();
+	
+	TConnectedResource getContainerResource();
+	
+	void setContainerResource(TConnectedResource containerAgentId);
+	
+	T withContainerResource(TConnectedResource containerAgentId);
+	
+	List<TConnectedResource> getConnectedResources();
+	
+	void setConnectedResources(TConnectedResource... containerAgentId);
+	
+	T withConnectedResources(TConnectedResource... containerAgentId);
 	
 	T withReplicationID(String replicationID);
 	
@@ -42,5 +55,12 @@ public interface ResourceDescriptor<T extends ResourceDescriptor<T>> extends Nam
 	
 	T withMoveability(
 			boolean moveable);
+	
+	boolean isInfrastructural();
+	
+	void setInfrastructural(boolean infrastructural);
+	
+	T withInfrastructural(
+			boolean infrastructural);
 	
 }

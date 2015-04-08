@@ -3,7 +3,9 @@ package io.asimov.model.process.impl;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessManagementWorld;
+import io.asimov.db.Datasource;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipationResourceInformation;
 import io.asimov.model.ResourceAllocation;
@@ -573,13 +575,10 @@ public class ManageProcessActionImpl extends
 			List<ActivityParticipationResourceInformation> resourceParticipationInfo = new ArrayList<ActivityParticipationResourceInformation>();
 
 			participantLoop: for (AgentID agent : nextDistribution.keySet()) {
+				String type = null;
 				String resourceName = agent.getValue();
-				// LOG.warn("CHECK ROLES ----------------:");
-				
-				// LOG.warn("DONE CHECK ----------------:");
-					for (UsedResource componentUsed : activityXML
+						for (UsedResource componentUsed : activityXML
 							.getUsedResource()) {
-						String type = null;
 						String requiredAgentID = getAgentIDByResourceSubType(componentUsed
 								.getResourceSubTypeRef());
 						if (requiredAgentID.equals(agent.toString())) {
@@ -601,8 +600,7 @@ public class ManageProcessActionImpl extends
 											TimeUnit.MILLIS);
 									break;
 								}
-							type = componentUsed.getResourceTypeRef();
-							resourceName = componentUsed.getResourceSubTypeRef();
+							type = componentUsed.getResourceSubTypeRef();
 							LOG.info(agent.getValue() + " is a "
 									+ componentUsed.getResourceSubTypeRef());
 						} else {
@@ -612,9 +610,10 @@ public class ManageProcessActionImpl extends
 									+ componentUsed.getResourceSubTypeRef());
 						}
 					
-
+				}
 				// -----------------------------------------------------------------------------
-				// FIXME Send isMoveable per resource
+				final ASIMOVResourceDescriptor asimovResource = getBinder().inject(Datasource.class).findResourceDescriptorByID(resourceName);
+
 				ActivityParticipationResourceInformation p = new ActivityParticipationResourceInformation()
 						.withResourceType(type)
 						.withActivityName(activityID)
@@ -624,12 +623,14 @@ public class ManageProcessActionImpl extends
 						.withResourceName(resourceName)
 						.withProcessID(cause.getProcessTypeID())
 						.withInstanceProcessID(
-								cause.getID().getValue().toString());
-						p.withResourceInstanceName(agent.getValue());
+								cause.getID().getValue().toString())
+						.withResourceInstanceName(agent.getValue())
+						.withMoveability(asimovResource.isMoveable())
+						.withInfrastructural(asimovResource.isInfrastructural());
 				resourceParticipationInfo.add(p);
 				
 				//
-				}
+				
 			}
 
 			synchronized (participatingFactIds) {

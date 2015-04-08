@@ -100,6 +100,7 @@ public class ResourceReadyListenerImpl extends
 		this.pending.add(request);
 		checkReadiness();
 	}
+	
 
 	/**
 	 * 
@@ -110,7 +111,7 @@ public class ResourceReadyListenerImpl extends
 		synchronized (this.pending)
 		{
 			for (Request request : this.pending)
-				if (!request.getResourceInfo().isMoveable() || getBinder().inject(ActivityParticipant.class)
+				if (getBinder().inject(ActivityParticipant.class)
 								.isReadyForActivity(request))
 					// if (not occupant or arrived at priority location) confirm
 					// ready
@@ -121,7 +122,7 @@ public class ResourceReadyListenerImpl extends
 						sent.add(request);
 					} catch (Exception e)
 					{
-						LOG.error("Failed to claim availibility", e);
+						LOG.error("Failed to send resource ready notification", e);
 					}
 			this.pending.removeAll(sent);
 		}

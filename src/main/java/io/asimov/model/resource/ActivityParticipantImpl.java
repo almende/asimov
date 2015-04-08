@@ -1,4 +1,5 @@
 package io.asimov.model.resource;
+
 import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.agent.resource.ResourceManagementWorld;
 import io.asimov.agent.resource.impl.GenericResourceManagementWorldImpl;
@@ -82,6 +83,8 @@ public class ActivityParticipantImpl extends
 		new LookupInitiatorImpl(binder);
 		resourceReadyinitiator = new ResouceReadyInitiatorImpl(binder);
 	}
+	
+	private static Set<String> readyResources = Collections.synchronizedSet(new HashSet<String>());
 
 	private Map<ActivityParticipation.Request, Integer> priorities = new HashMap<ActivityParticipation.Request, Integer>();
 
@@ -107,7 +110,8 @@ public class ActivityParticipantImpl extends
 				boolean targetFound = false;
 				for (ActivityParticipationResourceInformation otherResource : entry
 						.getKey().getOtherResourceInfo())
-					if (!targetFound && otherResource.isMoveable()) {
+					if (!targetFound && !otherResource.isMoveable()
+							&& otherResource.isInfrastructural()) {
 						targetFound = true;
 						if (maxPriority <= entry.getValue().intValue()) {
 							this.highestPriorityActivityLocationRepr
@@ -140,24 +144,23 @@ public class ActivityParticipantImpl extends
 		if (getWorld(GenericResourceManagementWorld.class).isAvailable()) {
 			getWorld(GenericResourceManagementWorld.class).setUnavailable();
 			LOG.info("Resource becomes unavailable");
-		} 
-		if (!getWorld(GenericResourceManagementWorld.class).getCurrentLocation()
-				.getValue().equalsIgnoreCase("world")
+		}
+		if (!getWorld(GenericResourceManagementWorld.class)
+				.getCurrentLocation().getValue().equalsIgnoreCase("world")
 				&& getBinder().inject(ScenarioManagementWorld.class)
 						.onSiteDelay(getTime()).toMilliseconds().getMillis() != 0) {
 			// leave the building and come back tomorrow to continue
 			updateHighestPriorityActivityLocation();
 			String target = null;
 			for (ActivityParticipationResourceInformation otherResource : request
-					.getOtherResourceInfo())
-			{
-				if (otherResource.isMoveable())
-				{
+					.getOtherResourceInfo()) {
+				if (!otherResource.isMoveable()
+						&& otherResource.isInfrastructural()) {
 					target = otherResource.getResourceName();
 				}
 			}
-			getBinder().inject(RouteInitiator.class).initiate(this, request,target,
-					true);
+			getBinder().inject(RouteInitiator.class).initiate(this, request,
+					target, true);
 			LOG.warn("Postponed activity participation request until tomorrow: "
 					+ request);
 			return;
@@ -170,13 +173,14 @@ public class ActivityParticipantImpl extends
 			ActivityParticipationResourceInformation targetInfo = null;
 			for (ActivityParticipationResourceInformation otherResource : request
 					.getOtherResourceInfo())
-				if (!otherResource.isMoveable())
+				if (!otherResource.isMoveable()
+						&& otherResource.isInfrastructural())
 					targetInfo = otherResource;
 
 			if (!getWorld(GenericResourceManagementWorld.class)
-					.getCurrentLocation().equals(
-							targetInfo.getResourceAgent())) {
-				LOG.info("Person not yet at target, moving will be required.");
+					.getCurrentLocation().getValue()
+					.equals(targetInfo.getResourceAgent().getValue())) {
+				LOG.info("Resource not yet at target, moving will be required.");
 			} else {
 				this.resourceReadyinitiator.forProducer(this, request);
 			}
@@ -188,12 +192,13 @@ public class ActivityParticipantImpl extends
 			ActivityParticipationResourceInformation targetInfo = null;
 			for (ActivityParticipationResourceInformation otherResource : request
 					.getOtherResourceInfo())
-				if (!otherResource.isMoveable())
+				if (!otherResource.isMoveable()
+						&& otherResource.isInfrastructural())
 					targetInfo = otherResource;
 
 			if (!getWorld(GenericResourceManagementWorld.class)
-					.getCurrentLocation().equals(
-							targetInfo.getResourceAgent())) {
+					.getCurrentLocation().getValue()
+					.equals(targetInfo.getResourceAgent().getValue())) {
 				LOG.info(request.getResourceInfo().getResourceName()
 						+ " is not yet at target "
 						+ targetInfo.getResourceName()
@@ -211,18 +216,20 @@ public class ActivityParticipantImpl extends
 	 */
 	protected void doResourceParticipation(final ActivityParticipation request,
 			SimTime scheduledExecutiontime) throws Exception {
-		final ASIMOVResourceDescriptor resource = (ASIMOVResourceDescriptor)
-				getWorld(GenericResourceManagementWorld.class).getEntity();
+		final ASIMOVResourceDescriptor resource = (ASIMOVResourceDescriptor) getWorld(
+				GenericResourceManagementWorld.class).getEntity();
 		// Find corresponding assemblyLine for this activity
 		ActivityParticipationResourceInformation targetInfo = null;
 		for (ActivityParticipationResourceInformation otherResource : request
 				.getOtherResourceInfo())
-			if (!otherResource.isMoveable())
+			if (!otherResource.isMoveable()
+					&& otherResource.isInfrastructural())
 				targetInfo = otherResource;
 
 		if (getBinder().inject(ConfiguringCapability.class)
-				.getProperty("walkingDisabled").getBoolean().booleanValue() &&
-				resource.isMoveable() && !getWorld(GenericResourceManagementWorld.class)
+				.getProperty("walkingDisabled").getBoolean().booleanValue()
+				&& resource.isMoveable()
+				&& !getWorld(GenericResourceManagementWorld.class)
 						.getCurrentLocation().equals(
 								targetInfo.getResourceAgent())) {
 			ProcedureCall<?> enter = ProcedureCall.create(this, this,
@@ -230,40 +237,35 @@ public class ActivityParticipantImpl extends
 					targetInfo.getResourceAgent());
 			getSimulator().schedule(enter, Trigger.createAbsolute(getTime()));
 		}
-		
-		
-			if (getBinder().inject(ScenarioManagementWorld.class)
-					.onSiteDelay(getTime()).longValue() != 0) {
-				LOG.warn("Resource is in after operating hours, will exit the site first.");
-				ProcedureCall<?> j = ProcedureCall.create(this, this,
-						RETRY_REQUEST, request);
-				getSimulator().schedule(
-						j,
-						Trigger.createAbsolute(getTime().plus(
-								getBinder().inject(
-										ScenarioManagementWorld.class)
-										.onSiteDelay(getTime()))));
-				return;
-			}
-			LOG.info("Scheduling participation of person: " + resource.getName());
-			/*
-			 * pseudo-code
-			 * 
-			 * - lookup route - schedule walk: - schedule/perform assemblyLine
-			 * enter event - schedule/perform assemblyLine leave event - wait
-			 * for other resources - schedule/perform activity start event -
-			 * schedule/perform activity stop event
-			 */
 
-			final ProcedureCall<?> job = ProcedureCall.create(this, this,
-					START_EXECUTING_ACTIVITY, request);
-
+		if (getBinder().inject(ScenarioManagementWorld.class)
+				.onSiteDelay(getTime()).longValue() != 0) {
+			LOG.warn("Resource is in after operating hours, will exit the site first.");
+			ProcedureCall<?> j = ProcedureCall.create(this, this,
+					RETRY_REQUEST, request);
 			getSimulator().schedule(
-					job,
-					Trigger.createAbsolute(scheduledExecutiontime
-							.max(getTime())));
+					j,
+					Trigger.createAbsolute(getTime().plus(
+							getBinder().inject(ScenarioManagementWorld.class)
+									.onSiteDelay(getTime()))));
+			return;
+		}
+		LOG.info("Scheduling participation of resource: " + resource.getName());
+		/*
+		 * pseudo-code
+		 * 
+		 * - lookup route - schedule walk: - schedule/perform assemblyLine enter
+		 * event - schedule/perform assemblyLine leave event - wait for other
+		 * resources - schedule/perform activity start event - schedule/perform
+		 * activity stop event
+		 */
 
-		
+		final ProcedureCall<?> job = ProcedureCall.create(this, this,
+				START_EXECUTING_ACTIVITY, request);
+
+		getSimulator().schedule(job,
+				Trigger.createAbsolute(scheduledExecutiontime.max(getTime())));
+
 	}
 
 	public final static String START_EXECUTING_ACTIVITY = "startExecutionActivity";
@@ -282,20 +284,20 @@ public class ActivityParticipantImpl extends
 		for (ActivityParticipationResourceInformation otherResource : request
 				.getOtherResourceInfo())
 			involvedResources.add(otherResource.getResourceName());
-		
+
 		getWorld(GenericResourceManagementWorld.class).performActivityChange(
-				resourceInfo.getProcessID(), resourceInfo.getProcessInstanceId(),
+				resourceInfo.getProcessID(),
+				resourceInfo.getProcessInstanceId(),
 				resourceInfo.getActivityName(),
-				resourceInfo.getActivityInstanceId(),
-				involvedResources, EventType.START_ACTIVITY);
-		
+				resourceInfo.getActivityInstanceId(), involvedResources,
+				EventType.START_ACTIVITY);
+
 		ProcedureCall<?> job = ProcedureCall.create(this, this,
 				STOP_EXECUTING_ACTIVITY, request);
 		getSimulator().schedule(
-					job,
-					Trigger.createAbsolute(getTime().plus(
-							request.getResourceInfo()
-									.getResourceUsageDuration())));
+				job,
+				Trigger.createAbsolute(getTime().plus(
+						request.getResourceInfo().getResourceUsageDuration())));
 	}
 
 	public final static String STOP_EXECUTING_ACTIVITY = "stopExecutionActivity";
@@ -313,12 +315,13 @@ public class ActivityParticipantImpl extends
 		for (ActivityParticipationResourceInformation otherResource : request
 				.getOtherResourceInfo())
 			involvedResources.add(otherResource.getResourceName());
-		
+
 		getWorld(GenericResourceManagementWorld.class).performActivityChange(
-				resourceInfo.getProcessID(), resourceInfo.getProcessInstanceId(),
+				resourceInfo.getProcessID(),
+				resourceInfo.getProcessInstanceId(),
 				resourceInfo.getActivityName(),
-				resourceInfo.getActivityInstanceId(),
-				involvedResources, EventType.STOP_ACTIVITY);
+				resourceInfo.getActivityInstanceId(), involvedResources,
+				EventType.STOP_ACTIVITY);
 		if (!getWorld(GenericResourceManagementWorld.class).isAvailable()) {
 			getWorld(GenericResourceManagementWorld.class).setAvailable();
 			LOG.info("Resource becomes available");
@@ -334,18 +337,17 @@ public class ActivityParticipantImpl extends
 				.getResourceInfo();
 		if (getWorld(GenericResourceManagementWorld.class).getCurrentLocation()
 				.getValue().equals("world"))
-			getWorld(GenericResourceManagementWorld.class)
-					.enteredSite(getTime());
+			getWorld(GenericResourceManagementWorld.class).enteredSite(
+					getTime());
 		List<String> fromActorAndTargetResource = new ArrayList<String>();
 		fromActorAndTargetResource.add(getOwnerID().getValue());
-		fromActorAndTargetResource.add(getWorld(GenericResourceManagementWorld.class)
-				.getCurrentLocation().getValue());
+		fromActorAndTargetResource.add(getWorld(
+				GenericResourceManagementWorld.class).getCurrentLocation()
+				.getValue());
 		getWorld(GenericResourceManagementWorld.class).performActivityChange(
-				personInfo.getProcessID(),
-				personInfo.getProcessInstanceId(),
+				personInfo.getProcessID(), personInfo.getProcessInstanceId(),
 				personInfo.getActivityName(),
-				personInfo.getActivityInstanceId(),
-				fromActorAndTargetResource,
+				personInfo.getActivityInstanceId(), fromActorAndTargetResource,
 				EventType.TRANSIT_FROM_RESOURCE);
 		LOG.info(personInfo.getResourceName()
 				+ " transits from resource "
@@ -366,17 +368,7 @@ public class ActivityParticipantImpl extends
 		LOG.info(personInfo.getResourceName() + " transits to resource "
 				+ targetAgentID.getValue() + " for activity: "
 				+ personInfo.getActivityName());
-		getBinder().inject(GenericResourceManagementWorld.class)
-			.performActivityChange(
-				request.getResourceInfo().getProcessID(), 
-				request.getResourceInfo().getProcessInstanceId(), 
-				request.getResourceInfo().getActivityName(), 
-				request.getResourceInfo().getActivityInstanceId(), 
-				Collections.singletonList(request.getResourceInfo().getResourceName()), 
-				EventType.RESOURCE_READY_FOR_ACTIVITY);
-
 	}
-
 
 	/**
 	 * {@link LookupInitiator}
@@ -443,40 +435,54 @@ public class ActivityParticipantImpl extends
 	@Override
 	public boolean isReadyForActivity(
 			final ResourceReadyNotification.Request request) {
-		if (!request.getResourceInfo().isMoveable() || getBinder().inject(ConfiguringCapability.class)
-				.getProperty("walkingDisabled").getBoolean(false))
+		if (!request.getResourceInfo().isMoveable()
+				|| getBinder().inject(ConfiguringCapability.class)
+						.getProperty("walkingDisabled").getBoolean(false))
 			return emitWhenTrue(true, request);
 		final AgentID here = getBinder().inject(
 				GenericResourceManagementWorld.class).getCurrentLocation();
 		LOG.info("Current location = " + here);
 		for (final ActivityParticipationResourceInformation resc : request
 				.getOtherResourceInfo())
-			if (!resc.isMoveable()) {
+			if (!resc.isMoveable() && resc.isInfrastructural()) {
 				Iterator<AgentID> hp = getHighestPriorityActivityLocations()
 						.iterator();
-				return emitWhenTrue(resc.getResourceAgent().equals(here)
-						&& hp.hasNext()
-						&& hp.next().equals(here)
-						&& (getBinder()
-								.inject(ScenarioManagementWorld.class)
-								.onSiteDelay(getTime()).longValue() == 0),request);
+				return emitWhenTrue(
+						resc.getResourceAgent().equals(here)
+								&& hp.hasNext()
+								&& hp.next().equals(here)
+								&& (getBinder()
+										.inject(ScenarioManagementWorld.class)
+										.onSiteDelay(getTime()).longValue() == 0),
+						request);
 			}
 		return false;
 	}
+
 	
-	private boolean emitWhenTrue(final boolean bool, final ResourceReadyNotification.Request request) {
+	private boolean emitWhenTrue(final boolean bool,
+			final ResourceReadyNotification.Request request) {
 		if (bool)
 			try {
-				getBinder().inject(GenericResourceManagementWorld.class)
-				.performActivityChange(
-				request.getResourceInfo().getProcessID(), 
-				request.getResourceInfo().getProcessInstanceId(), 
-				request.getResourceInfo().getActivityName(), 
-				request.getResourceInfo().getActivityInstanceId(), 
-				Collections.singletonList(request.getResourceInfo().getResourceName()), 
-				EventType.RESOURCE_READY_FOR_ACTIVITY);
+				final String token = request.getResourceInfo().getResourceAgent().getValue()+request.getResourceInfo().getActivityInstanceId();
+				if (!readyResources.contains(token)) {
+					readyResources.add(token);
+					getBinder()
+							.inject(GenericResourceManagementWorld.class)
+							.performActivityChange(
+									request.getResourceInfo().getProcessID(),
+									request.getResourceInfo()
+											.getProcessInstanceId(),
+									request.getResourceInfo().getActivityName(),
+									request.getResourceInfo()
+											.getActivityInstanceId(),
+									Collections.singletonList(request
+											.getResourceInfo()
+											.getResourceName()),
+									EventType.RESOURCE_READY_FOR_ACTIVITY);
+				}
 			} catch (Exception e) {
-				LOG.error("Failed to send resource ready notification event",e);
+				LOG.error("Failed to send resource ready notification event", e);
 			}
 		return bool;
 	}
@@ -506,10 +512,16 @@ public class ActivityParticipantImpl extends
 			getSimulator().schedule(enter, Trigger.createAbsolute(planning));
 		}
 		if (tommorow) {
-			planning = planning.plus(getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(planning));
+			planning = planning.plus(getBinder().inject(
+					ScenarioManagementWorld.class).onSiteDelay(planning));
 			ProcedureCall<?> continueProcessOfYesterday = ProcedureCall.create(
 					this, this, ActivityParticipant.RETRY_REQUEST, cause);
 			getSimulator().schedule(continueProcessOfYesterday,
+					Trigger.createAbsolute(planning));
+		} else {
+			ProcedureCall<?> continueProcess = ProcedureCall.create(this, this,
+					ActivityParticipant.RETRY_REQUEST, cause);
+			getSimulator().schedule(continueProcess,
 					Trigger.createAbsolute(planning));
 		}
 	}

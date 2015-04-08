@@ -25,15 +25,30 @@
 		<attribute name="period" type="duration"/>
 	</complexType>
 	
+	<complexType name="tConnectedResource">
+		<sequence>
+			<element name="connectedResourceId" type="string" maxOccurs="1" minOccurs="1"/>
+			<element name="transportsResourceWithId" type="string" minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="transportsResourceWithType" type="string" minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="transportsResourceWithSubType" type="string" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="timeDistance" type="duration"/>
+	</complexType>
+	
 	<complexType name="tResource">
 		<sequence>
-			<element name="resourceId" type="string"></element>
+			<element name="resourceId" type="string" maxOccurs="1" minOccurs="1"></element>
 			<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
 			<element name="resourceType" type="string" maxOccurs="1" minOccurs="1"></element>
 			<element name="resourceSubType" type="string" maxOccurs="unbounded" minOccurs="1"></element>
 			<!-- TODO: Add ASIMOV NODE querying system here -->
 			<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
-			<element name="moveable" type="boolean" minOccurs="1" maxOccurs="1"></element>
+			<!-- Mobility -->
+			<element name="stationary" type="boolean" minOccurs="1" maxOccurs="1"></element>
+			<!-- Connectivity -->
+			<element name="infrastructural" type="boolean" minOccurs="1" maxOccurs="1"></element>
+			<element name="connectedResourceId" type="asimovcim:tConnectedResource" minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="containerResourceId" type="asimovcim:tConnectedResource" minOccurs="0" maxOccurs="1"></element>
 		</sequence>
 	</complexType>
 	
@@ -119,7 +134,7 @@
 
 	<element name="BPMImport">
 		<annotation>
-			<documentation>BPM imorting.</documentation>
+			<documentation>BPM importing.</documentation>
 		</annotation>
 		<complexType>
 			<sequence>

@@ -7,6 +7,8 @@ import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.EventType;
 import io.asimov.model.resource.AbstractResourceManagementWorld;
+import io.asimov.model.resource.ResourceDescriptor;
+import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.log.InjectLogger;
 import io.coala.time.SimTime;
@@ -38,7 +40,7 @@ public class GenericResourceManagementWorldImpl extends
 
 	private boolean onSite = false;
 
-	private static final Map<String, Integer> assemblyLineOccupancy = new HashMap<String, Integer>();
+	private static final Map<String, Integer> resourcesOnSite = new HashMap<String, Integer>();
 
 	/** */
 	private Subject<ActivityEvent, ActivityEvent> activity = PublishSubject
@@ -63,7 +65,16 @@ public class GenericResourceManagementWorldImpl extends
 		this.entity = getBinder().inject(Datasource.class)
 				.findResourceDescriptorByID(getOwnerID().getValue());
 		this.entityType = this.entity.getType();
-		setCurrentLocation(getOwnerID());
+		if (this.entity.isMoveable()
+				&& this.entity.getContainerResource() != null
+				&& this.entity.getContainerResource().getConnectedResourceId() != null)
+			setCurrentLocation(new AgentID(this.entity.getAgentID()
+					.getModelID(), this.entity.getContainerResource()
+					.getConnectedResourceId()));
+		else if (this.entity.isInfrastructural())
+			setCurrentLocation(this.entity.getAgentID());
+		else
+			setCurrentLocation(getOwnerID());
 	}
 
 	/** @see eu.a4ee.model.resource.PersonResourceManagementWorld#onActivity() */
@@ -89,19 +100,21 @@ public class GenericResourceManagementWorldImpl extends
 						"Expected 2 resources: actor and target, but received "
 								+ resourceNames.size() + " resources instead.");
 			final String targetName = resourceNames.get(1);
-			if (getBinder().inject(Datasource.class)
-					.findResourceDescriptorByID(targetName) != null)
-				synchronized (assemblyLineOccupancy) {
-					int occupancy = assemblyLineOccupancy
-							.containsKey(targetName) ? assemblyLineOccupancy
+			ASIMOVResourceDescriptor rd = getBinder().inject(Datasource.class)
+					.findResourceDescriptorByID(targetName);
+			if (rd != null)
+				synchronized (resourcesOnSite) {
+					int occupancy = resourcesOnSite
+							.containsKey(targetName) ? resourcesOnSite
 							.get(targetName) : 0;
 					if (eventType.equals(EventType.TRANSIT_TO_RESOURCE)) {
 						occupancy++;
-						assemblyLineOccupancy.put(targetName, occupancy);
+						resourcesOnSite.put(targetName, occupancy);
+						setCurrentLocation(rd.getAgentID());
 					} else if (eventType
 							.equals(EventType.TRANSIT_FROM_RESOURCE)) {
 						occupancy--;
-						assemblyLineOccupancy.put(targetName, occupancy);
+						resourcesOnSite.put(targetName, occupancy);
 					}
 				}
 		}

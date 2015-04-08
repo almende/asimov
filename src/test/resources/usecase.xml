@@ -18,168 +18,196 @@
                             <resourceId>Pump A</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pump</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Pump B</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pump</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Dispencer Box 1</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Dispencer</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Aluminium Framework</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Framework</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Steel Framework</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Framework</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>ECP 1242 Board set</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Electronical Circuit Pack</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>FP134 FrontPanel</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine front panel</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>RP 2378 rear panel</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine rear panel</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Yellow Cover B234</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine cover</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Circuit Validator 1</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Circuit Validator</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Circuit Validator 2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Circuit Validator</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource><resource>
                             <resourceId>Circuit Validator 3</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Circuit Validator</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Pressure Measurement Device A</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pressure Measurement Device</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Pressure Measurement Device B</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pressure Measurement Device</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         
                         <resource>
                             <resourceId>Pump A.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pump</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Pump B.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pump</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Dispencer Box 1.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Dispencer</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Aluminium Framework.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Framework</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Steel Framework.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Framework</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>ECP 1242 Board set.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Electronical Circuit Pack</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>FP134 FrontPanel.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine front panel</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>RP 2378 rear panel.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine rear panel</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Yellow Cover B234.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine cover</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Circuit Validator 1.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Circuit Validator</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Circuit Validator 2.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Circuit Validator</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource><resource>
                             <resourceId>Circuit Validator 3.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Circuit Validator</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Pressure Measurement Device A.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pressure Measurement Device</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         <resource>
                             <resourceId>Pressure Measurement Device B.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pressure Measurement Device</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
                         </resource>
                         
                         
@@ -207,7 +235,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                        
                         <resource>
@@ -229,7 +261,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                        
                         <resource>
@@ -252,7 +288,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                        
                         <resource>
@@ -275,7 +315,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                         
                         <resource>
@@ -297,7 +341,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                         
                         <resource>
@@ -321,7 +369,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                         
                         <resource>
@@ -343,7 +395,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
   
                         <resource>
@@ -365,7 +421,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                         
                         <resource>
@@ -388,7 +448,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                         
                         <resource>
@@ -410,7 +474,11 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural>
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                         
                         <resource>
@@ -434,31 +502,94 @@
                             <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
                                 <property name="pmf" type="int">340</property>
                             </unavailable>
-                            <moveable>true</moveable> 
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural>
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
                         </resource>
                         
                         
 <!-- Here we make the correlation between the specific assemblyLines and the generic types -->
                         <resource>
+                            <resourceId>world</resourceId>
+                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
+                            <resourceType>Factory</resourceType>
+                            <resourceSubType>Front door of the factory</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>true</infrastructural> 
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_1</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_2</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_3</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                        </resource>
+                        <resource>
                             <resourceId>CoffeeMachineProductionTable_1</resourceId>
                             <availableAfter>P00Y000DT00H00M00S</availableAfter>
                             <resourceType>AssemblyLine</resourceType>
                             <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>true</infrastructural> 
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_2</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_3</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>world</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
                         </resource>
                         <resource>
-                            <resourceId>CoffeeMachineProductionTable_1</resourceId>
-                            <availableAfter>P00Y001DT00H00M00S</availableAfter>
+                            <resourceId>CoffeeMachineProductionTable_2</resourceId>
+                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
                             <resourceType>AssemblyLine</resourceType>
                             <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>true</infrastructural> 
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_1</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_3</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>world</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
                         </resource>
                         <resource>
-                            <resourceId>CoffeeMachineProductionTable_1</resourceId>
-                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <resourceId>CoffeeMachineProductionTable_3</resourceId>
+                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
                             <resourceType>AssemblyLine</resourceType>
                             <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
-                            <moveable>false</moveable> 
+                            <stationary>true</stationary> 
+                            <infrastructural>true</infrastructural> 
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_1</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y001DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_2</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y002DT00H00M10S">
+                                <connectedResourceId>world</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
                         </resource>
                         
                     </context>
