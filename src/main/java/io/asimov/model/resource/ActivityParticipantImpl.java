@@ -69,6 +69,8 @@ public class ActivityParticipantImpl extends
 	private Logger LOG;
 
 	private ResouceReadyInitiatorImpl resourceReadyinitiator;
+	
+	private Set<String> activityBacklog = new HashSet<String>();
 
 	private AgentID scenarioReplicatorID = null;
 
@@ -140,34 +142,37 @@ public class ActivityParticipantImpl extends
 	@Override
 	@Schedulable(RETRY_REQUEST)
 	public void onRequested(final ActivityParticipation.Request request) {
-
+		if (activityBacklog.contains(request.getResourceInfo().getActivityInstanceId()))
+			return;
 		if (getWorld(GenericResourceManagementWorld.class).isAvailable()) {
 			getWorld(GenericResourceManagementWorld.class).setUnavailable();
 			LOG.info("Resource becomes unavailable");
 		}
-		if (!getWorld(GenericResourceManagementWorld.class)
-				.getCurrentLocation().getValue().equalsIgnoreCase("world")
-				&& getBinder().inject(ScenarioManagementWorld.class)
-						.onSiteDelay(getTime()).toMilliseconds().getMillis() != 0) {
-			// leave the building and come back tomorrow to continue
-			updateHighestPriorityActivityLocation();
-			String target = null;
-			for (ActivityParticipationResourceInformation otherResource : request
-					.getOtherResourceInfo()) {
-				if (!otherResource.isMoveable()
-						&& otherResource.isInfrastructural()) {
-					target = otherResource.getResourceName();
+		if (request.getResourceInfo().isMoveable()) {
+			if (!getWorld(GenericResourceManagementWorld.class)
+					.getCurrentLocation().getValue().equalsIgnoreCase("world")
+					&& getBinder().inject(ScenarioManagementWorld.class)
+							.onSiteDelay(getTime()).toMilliseconds().getMillis() != 0) {
+				// leave the site and come back tomorrow to continue
+				updateHighestPriorityActivityLocation();
+				String target = null;
+				for (ActivityParticipationResourceInformation otherResource : request
+						.getOtherResourceInfo()) {
+					if (!otherResource.isMoveable()
+							&& otherResource.isInfrastructural()) {
+						target = otherResource.getResourceName();
+					}
 				}
+				getBinder().inject(RouteInitiator.class).initiate(this, request,
+						target, true);
+				LOG.warn("Postponed activity participation request until tomorrow: "
+						+ request);
+				return;
 			}
-			getBinder().inject(RouteInitiator.class).initiate(this, request,
-					target, true);
-			LOG.warn("Postponed activity participation request until tomorrow: "
-					+ request);
-			return;
-		}
 		// assuming we promise to execute the request!
 		this.priorities.put(request, NORMAL_PRIORITY);
 		this.scenarioReplicatorID = request.getScenarioReplicatorID();
+		}
 		LOG.info("Handling activity participation request: " + request);
 		if (request.getResourceInfo().isMoveable()) {
 			ActivityParticipationResourceInformation targetInfo = null;
@@ -326,6 +331,7 @@ public class ActivityParticipantImpl extends
 			getWorld(GenericResourceManagementWorld.class).setAvailable();
 			LOG.info("Resource becomes available");
 		}
+		activityBacklog.add(request.getResourceInfo().getActivityInstanceId());
 		send(ActivityParticipation.Result.Builder.forProducer(this, request)
 				.build());
 	}

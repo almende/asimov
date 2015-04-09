@@ -582,11 +582,11 @@
                                 <connectedResourceId>CoffeeMachineProductionTable_1</connectedResourceId>
                                 <transportsResourceWithType>Person</transportsResourceWithType>
                             </connectedResourceId>
-                            <connectedResourceId timeDistance="P00Y001DT00H00M10S">
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
                                 <connectedResourceId>CoffeeMachineProductionTable_2</connectedResourceId>
                                 <transportsResourceWithType>Person</transportsResourceWithType>
                             </connectedResourceId>
-                            <connectedResourceId timeDistance="P00Y002DT00H00M10S">
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
                                 <connectedResourceId>world</connectedResourceId>
                                 <transportsResourceWithType>Person</transportsResourceWithType>
                             </connectedResourceId>

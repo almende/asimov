@@ -2,6 +2,7 @@ package io.asimov.agent.gui;
 
 import io.asimov.db.Datasource;
 import io.asimov.model.TraceService;
+import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.vis.timeline.VisJSTimelineUtil;
 import io.asimov.xml.TEventTrace;
@@ -13,6 +14,8 @@ import io.coala.log.LogUtil;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -79,7 +82,10 @@ public class ScenarioAgentGui extends JFrame
 				final TEventTrace xmlOutput = trace.toXML(ds);
 				try
 				{
-					VisJSTimelineUtil.writeTimelineData(trace.getEvents(ds));
+					List<ActivityEvent> events = new ArrayList<ActivityEvent>();
+					for (ActivityEvent e : trace.getActivityEvents(ds))
+						events.add(e);
+					VisJSTimelineUtil.writeTimelineData(events);
 				} catch (Exception e1)
 				{
 					LOG.error("Failed to write timeline data", e1);

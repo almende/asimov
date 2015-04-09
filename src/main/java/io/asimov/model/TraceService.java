@@ -216,10 +216,9 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	{
 		LOG.info("Getting events for " + this.replicationID);
 		final List<Event<?>> events = new ArrayList<Event<?>>();
-//		for (Event<?> event : ds.findEvents(EventType.ENTER, EventType.LEAVE,
-//				EventType.START_ACTIVITY, EventType.STOP_ACTIVITY,
-//				EventType.START_USE_EQUIPMENT, EventType.STOP_USE_EQUIPMENT))
-//			events.add((PersonEvent<?>) event);
+		for (Event<?> event : ds.findEvents(EventType.TRANSIT_TO_RESOURCE, EventType.TRANSIT_FROM_RESOURCE,
+				EventType.START_ACTIVITY, EventType.STOP_ACTIVITY))
+			events.add(event);
 		
 
 		EventComparatorByExecutionTime compare = new EventComparatorByExecutionTime();

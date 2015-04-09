@@ -2,10 +2,12 @@ package io.asimov.test.sim;
 
 import io.asimov.db.mongo.MongoDatasource;
 import io.asimov.model.TraceService;
+import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.vis.timeline.VisJSTimelineUtil;
 import io.coala.log.LogUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -49,8 +51,10 @@ public class TimeLineWriter
 		// Print Maximum available memory
 		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
 
-		List<Event<?>> events = TraceService.getInstance(replicationId)
-				.getEvents(MongoDatasource.getInstance(replicationId));
+		List<ActivityEvent> events = new ArrayList<ActivityEvent>();
+		for (ActivityEvent e : TraceService.getInstance(replicationId)
+				.getActivityEvents(MongoDatasource.getInstance(replicationId)))
+				events.add(e);
 		LOG.info("Loaded events");
 		VisJSTimelineUtil.writeTimelineData(events);
 		LOG.info("Wrote timeline");

@@ -1,6 +1,8 @@
 package io.asimov.vis.timeline;
 
-import io.asimov.model.events.Event;
+import io.asimov.model.events.ActivityEvent;
+import io.asimov.model.events.EventType;
+import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.log.LogUtil;
 
 import java.awt.Color;
@@ -126,7 +128,7 @@ public class VisJSTimelineUtil {
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeTimelineData(final List<Event<?>> list, File targetDirectory)
+	public static void writeTimelineData(final List<ActivityEvent> list, File targetDirectory)
 			throws Exception {
 		outputFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/usage.json");
 		styleSheetFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/style.css");
@@ -139,7 +141,7 @@ public class VisJSTimelineUtil {
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeTimelineData(final List<Event<?>> list)
+	public static void writeTimelineData(final List<ActivityEvent> list)
 			throws Exception {
 		writeTimelineData(list, new File(
 				"src/test/resources"));
@@ -150,7 +152,7 @@ public class VisJSTimelineUtil {
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeTimelineData(final List<Event<?>> list,
+	public static void writeTimelineData(final List<ActivityEvent> list,
 			Writer outputWriter, Writer styleWriter) throws Exception {
 		//TODO FIXME Create generic pivot timeline viewer for all resource types
 		final VisJSTimeline timeline = new VisJSTimeline();
@@ -159,80 +161,41 @@ public class VisJSTimelineUtil {
 			throw new IllegalStateException("Got no events!!!!");
 
 		HashSet<String> classNames = new HashSet<String>();
-//
-//		VisJSTimelineItem item;
-//		String processInstanceName = null;
-//		for (PersonEvent<?> personEvent : list) {
-//			Event<?> event = (Event<?>) personEvent;
-//			if (event.getProcessInstanceID() != null) {
-//				processInstanceName = event.getProcessInstanceID();
-//				classNames.add("c" + processInstanceName);
-//			} else {
-//				LOG.error("Could not find the process instance for this event");
-//			}
-//			item = new VisJSTimelineItem();
-//			item.setClassName("c" + processInstanceName);
-//			item.setStart(event.getExecutionTime().getIsoTime());
-//			if (event instanceof MovementEvent) {
-//				// if (event.hasType(EventType.ENTER)){
-//				// String resource = ((MovementEvent)
-//				// event).toXML().getAssemblyLineRef();
-//				// LOG.info("Visualizing assemblyLine entrance in timeline item.");
-//				// item.setGroup(getGroupWithName(resource));
-//				// item.setContent(((PersonEvent<?>)
-//				// event).getPerson().getName());
-//				// timeline.addItem(item);
-//				// } else {
-//				// LOG.info("Ignoring assemblyLine leave event for in timeline items.");
-//				// }
-//				continue;
-//			} else if (event instanceof MaterialEvent) {
-//				LOG.info("Visualizing material event in timeline item.");
-//				MaterialEvent e = (MaterialEvent) event;
-//				EventRecord er = e.toXML();
-//				String resource = er.getMaterialRef();
-//				item.setGroup(getGroupWithName(resource, timeline));
-//				item.setContent(e.getPerson().getName());
-//				String roles = "";
-//				for (PersonRole r : e.getPerson().getTypes()) {
-//					if (!roles.equals(""))
-//						roles += ", ";
-//					roles += r.getName();
-//				}
-//				item.setTitle(roles + " : " + e.getPerson().getName() + "\n:"
-//						+ er.getProcessRef() + "\ninstance: "
-//						+ processInstanceName + "\nactivity:"
-//						+ er.getActivityRef() + "\ninterval: {interval}");
-//
-//			} else if (event instanceof ActivityEvent) {
-//				LOG.info("Visualizing activity as assemblyLine usage event in timeline item.");
-//				ActivityEvent e = (ActivityEvent) event;
-//				EventRecord er = ((ActivityEvent) event).toXML();
-//				String resource = er.getAssemblyLineRef();
-//				item.setGroup(getGroupWithName(resource, timeline));
-//				item.setContent(e.getPerson().getName());
-//				String roles = "";
-//				for (PersonRole r : e.getPerson().getTypes()) {
-//					if (!roles.equals(""))
-//						roles += ", ";
-//					roles += r.getName();
-//				}
-//				item.setTitle(roles + " : " + e.getPerson().getName() + "\n"
-//						+ er.getProcessRef() + "\ninstance: "
-//						+ processInstanceName + "\nactivity: "
-//						+ er.getActivityRef() + "\ninterval: {interval}");
-//
-//			} else {
-//				LOG.warn("Unknown event type for event " + event);
-//				continue;
-//			}
-//			LOG.info("Processing: " + item);
-//			if (storePairedItem(item, timeline))
-//				LOG.info("event " + item + " got paired for timeline");
-//			else
-//				LOG.warn("new event " + item + " got created for timeline");
-//
-//		}
+
+		VisJSTimelineItem item;
+		String processInstanceName = null;
+		for (ActivityEvent event : list) {
+			if (event.hasType(EventType.START_ACTIVITY) || event.hasType(EventType.STOP_ACTIVITY)) {
+				if (event.getProcessInstanceID() != null) {
+					processInstanceName = event.getProcessInstanceID();
+					classNames.add("c" + processInstanceName);
+				} else {
+					LOG.error("Could not find the process instance for this event");
+				}
+				item = new VisJSTimelineItem();
+				item.setClassName("c" + processInstanceName);
+				item.setStart(event.getExecutionTime().getIsoTime());
+				LOG.info("Visualizing activity as resource usage event in timeline item.");
+				EventRecord er = ((ActivityEvent) event).toXML();
+				String resource = er.getResourceRef().get(0);
+				item.setGroup(getGroupWithName(resource, timeline));
+				item.setContent(er.getActivityRef());
+				item.setTitle(resource + "\n"
+						+ er.getProcessRef() + "\ninstance: "
+						+ processInstanceName + "\nactivity: "
+						+ er.getActivityRef() + "\ninterval: {interval}");
+
+			} else {
+				LOG.warn("Unknown event type for event " + event);
+				continue;
+			}
+			LOG.info("Processing: " + item);
+			if (storePairedItem(item, timeline))
+				LOG.info("event " + item + " got paired for timeline");
+			else
+				LOG.warn("new event " + item + " got created for timeline");
+
+		}
 
 		HashMap<String, String> classNameToStyle = new HashMap<String, String>();
 		List<Color> colors = pick(classNames.size()+1);

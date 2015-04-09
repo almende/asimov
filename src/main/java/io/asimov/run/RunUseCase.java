@@ -4,6 +4,7 @@ import io.asimov.agent.scenario.ScenarioManagementOrganization;
 import io.asimov.db.Datasource;
 import io.asimov.db.mongo.MongoDatasource;
 import io.asimov.model.TraceService;
+import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.vis.timeline.VisJSTimelineUtil;
@@ -32,6 +33,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.security.CodeSource;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -374,8 +376,10 @@ public class RunUseCase
 		// Print Maximum available memory
 		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
 
-		List<Event<?>> events = TraceService.getInstance(replicationID)
-				.getEvents(binder.inject(Datasource.class));
+		List<ActivityEvent> events = new ArrayList<ActivityEvent>();
+		for (ActivityEvent e : TraceService.getInstance(replicationID)
+				.getActivityEvents(binder.inject(Datasource.class)))
+				events.add(e);
 		LOG.info("Loaded events");
 		VisJSTimelineUtil.writeTimelineData(events,targetDirectory);
 		LOG.info("Wrote timeline");
