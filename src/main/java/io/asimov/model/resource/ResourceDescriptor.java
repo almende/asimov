@@ -1,5 +1,6 @@
 package io.asimov.model.resource;
 
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.Named;
 import io.asimov.model.XMLConvertible;
 import io.asimov.model.sl.ASIMOVNode;
@@ -62,5 +63,17 @@ public interface ResourceDescriptor<T extends ResourceDescriptor<T>> extends Nam
 	
 	T withInfrastructural(
 			boolean infrastructural);
+	
+	Long getMaxNofUsesInActivity();
+
+	void setMaxNofUsesInActivity(Long maxNofUsesInActivity);
+
+	T withMaxNofUsesInActivity(Long maxNofUsesInActivity);
+	
+	Long getMaxNofUsesInProcess();
+
+	void setMaxNofUsesInProcess(Long maxNofUsesInProcess);
+	
+	T withMaxNofUsesInProcess(Long maxNofUsesInProcess);
 	
 }

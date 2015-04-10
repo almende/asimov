@@ -18,6 +18,7 @@
                             <resourceId>Pump A</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pump</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -25,6 +26,7 @@
                             <resourceId>Pump B</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pump</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -32,6 +34,7 @@
                             <resourceId>Dispencer Box 1</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Dispencer</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -39,6 +42,7 @@
                             <resourceId>Aluminium Framework</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Framework</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -46,6 +50,7 @@
                             <resourceId>Steel Framework</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Framework</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -53,6 +58,7 @@
                             <resourceId>ECP 1242 Board set</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Electronical Circuit Pack</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -60,6 +66,7 @@
                             <resourceId>FP134 FrontPanel</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine front panel</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -67,6 +74,7 @@
                             <resourceId>RP 2378 rear panel</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine rear panel</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -74,6 +82,7 @@
                             <resourceId>Yellow Cover B234</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine cover</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -116,6 +125,7 @@
                             <resourceId>Pump A.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pump</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -123,6 +133,7 @@
                             <resourceId>Pump B.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Pump</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -130,6 +141,7 @@
                             <resourceId>Dispencer Box 1.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Dispencer</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -137,6 +149,7 @@
                             <resourceId>Aluminium Framework.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Framework</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -144,6 +157,7 @@
                             <resourceId>Steel Framework.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Framework</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -151,6 +165,7 @@
                             <resourceId>ECP 1242 Board set.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Electronical Circuit Pack</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -158,6 +173,7 @@
                             <resourceId>FP134 FrontPanel.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine front panel</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -165,6 +181,7 @@
                             <resourceId>RP 2378 rear panel.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine rear panel</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>
@@ -172,6 +189,7 @@
                             <resourceId>Yellow Cover B234.2</resourceId>
                             <resourceType>Material</resourceType>
                             <resourceSubType>Coffee machine cover</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                         </resource>

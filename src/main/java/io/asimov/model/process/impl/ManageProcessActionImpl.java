@@ -3,6 +3,7 @@ package io.asimov.model.process.impl;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessManagementWorld;
+import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.db.Datasource;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.model.ASIMOVResourceDescriptor;

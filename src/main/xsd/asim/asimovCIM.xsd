@@ -41,6 +41,8 @@
 			<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
 			<element name="resourceType" type="string" maxOccurs="1" minOccurs="1"></element>
 			<element name="resourceSubType" type="string" maxOccurs="unbounded" minOccurs="1"></element>
+			<element name="maxNofUseInActivity" type="integer" maxOccurs="1" minOccurs="0"></element>
+			<element name="maxNofUseInProcess" type="integer" maxOccurs="1" minOccurs="0"></element>
 			<!-- TODO: Add ASIMOV NODE querying system here -->
 			<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
 			<!-- Mobility -->

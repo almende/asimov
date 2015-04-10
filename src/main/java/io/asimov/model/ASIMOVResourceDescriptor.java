@@ -3,6 +3,7 @@
  */
 package io.asimov.model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -84,6 +85,16 @@ public class ASIMOVResourceDescriptor extends
 	 */
 	@Field(name = "availableFromTime")
 	private Long availableFromTime;
+
+	/**
+	 */
+	@Field(name = "maxNofUsesInActivity")
+	private Long maxNofUsesInActivity;
+
+	/**
+	 */
+	@Field(name = "maxNofUsesInProcess")
+	private Long maxNofUsesInProcess;
 
 	/**
 	 * 
@@ -241,7 +252,14 @@ public class ASIMOVResourceDescriptor extends
 			this.withAvailableFromTime(availableFromTime
 					.getTimeInMillis(new Date(0L)));
 		}
-
+		
+		if (xmlBean.getMaxNofUseInActivity() != null)
+			this.withMaxNofUsesInActivity(xmlBean.getMaxNofUseInActivity().longValue());
+		
+		if (xmlBean.getMaxNofUseInProcess() != null)
+			this.withMaxNofUsesInProcess(xmlBean.getMaxNofUseInProcess().longValue());
+		
+		
 		String[] subTypes = new String[xmlBean.getResourceSubType().size()];
 		xmlBean.getResourceSubType().toArray(subTypes);
 		// TODO Import initial formula's of resource state from xml
@@ -286,6 +304,13 @@ public class ASIMOVResourceDescriptor extends
 		resource.setContainerResourceId(getContainerResource());
 		if (getConnectedResources() != null)
 			resource.getConnectedResourceId().addAll(getConnectedResources());
+		if (getMaxNofUsesInActivity() != null)
+			resource.setMaxNofUseInActivity(new BigInteger(
+					getMaxNofUsesInActivity().toString()));
+		if (getMaxNofUsesInProcess() != null)
+			resource.setMaxNofUseInProcess(new BigInteger(
+					getMaxNofUsesInProcess().toString()));
+
 		return resource;
 	}
 
@@ -458,6 +483,62 @@ public class ASIMOVResourceDescriptor extends
 	public ASIMOVResourceDescriptor withConnectedResources(
 			TConnectedResource... containerAgentId) {
 		setConnectedResources(containerAgentId);
+		return this;
+	}
+
+	/**
+	 * @return the maxNofUsesInActivity
+	 */
+	@Override
+	public Long getMaxNofUsesInActivity() {
+		return maxNofUsesInActivity;
+	}
+
+	/**
+	 * @param maxNofUsesInActivity
+	 *            the maxNofUsesInActivity to set
+	 */
+	@Override
+	public void setMaxNofUsesInActivity(Long maxNofUsesInActivity) {
+		this.maxNofUsesInActivity = maxNofUsesInActivity;
+	}
+
+	/**
+	 * @param maxNofUsesInProcess
+	 *            the maxNofUsesInActivity to set
+	 */
+	@Override
+	public ASIMOVResourceDescriptor withMaxNofUsesInActivity(
+			Long maxNofUsesInActivity) {
+		setMaxNofUsesInActivity(maxNofUsesInActivity);
+		return this;
+	}
+
+	/**
+	 * @return the maxNofUsesInProcess
+	 */
+	@Override
+	public Long getMaxNofUsesInProcess() {
+		return maxNofUsesInProcess;
+	}
+
+	/**
+	 * @param maxNofUsesInProcess
+	 *            the maxNofUsesInProcess to set
+	 */
+	@Override
+	public void setMaxNofUsesInProcess(Long maxNofUsesInProcess) {
+		this.maxNofUsesInProcess = maxNofUsesInProcess;
+	}
+
+	/**
+	 * @param maxNofUsesInProcess
+	 *            the maxNofUsesInProcess to set
+	 */
+	@Override
+	public ASIMOVResourceDescriptor withMaxNofUsesInProcess(
+			Long maxNofUsesInProcess) {
+		setMaxNofUsesInProcess(maxNofUsesInProcess);
 		return this;
 	}
 

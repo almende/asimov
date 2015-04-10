@@ -69,8 +69,10 @@ public class ActivityParticipantImpl extends
 	private Logger LOG;
 
 	private ResouceReadyInitiatorImpl resourceReadyinitiator;
-	
+
 	private Set<String> activityBacklog = new HashSet<String>();
+	
+	private Set<String> processBacklog = new HashSet<String>();
 
 	private AgentID scenarioReplicatorID = null;
 
@@ -85,8 +87,9 @@ public class ActivityParticipantImpl extends
 		new LookupInitiatorImpl(binder);
 		resourceReadyinitiator = new ResouceReadyInitiatorImpl(binder);
 	}
-	
-	private static Set<String> readyResources = Collections.synchronizedSet(new HashSet<String>());
+
+	private static Set<String> readyResources = Collections
+			.synchronizedSet(new HashSet<String>());
 
 	private Map<ActivityParticipation.Request, Integer> priorities = new HashMap<ActivityParticipation.Request, Integer>();
 
@@ -142,7 +145,8 @@ public class ActivityParticipantImpl extends
 	@Override
 	@Schedulable(RETRY_REQUEST)
 	public void onRequested(final ActivityParticipation.Request request) {
-		if (activityBacklog.contains(request.getResourceInfo().getActivityInstanceId()))
+		if (activityBacklog.contains(request.getResourceInfo()
+				.getActivityInstanceId()))
 			return;
 		if (getWorld(GenericResourceManagementWorld.class).isAvailable()) {
 			getWorld(GenericResourceManagementWorld.class).setUnavailable();
@@ -152,7 +156,8 @@ public class ActivityParticipantImpl extends
 			if (!getWorld(GenericResourceManagementWorld.class)
 					.getCurrentLocation().getValue().equalsIgnoreCase("world")
 					&& getBinder().inject(ScenarioManagementWorld.class)
-							.onSiteDelay(getTime()).toMilliseconds().getMillis() != 0) {
+							.onSiteDelay(getTime()).toMilliseconds()
+							.getMillis() != 0) {
 				// leave the site and come back tomorrow to continue
 				updateHighestPriorityActivityLocation();
 				String target = null;
@@ -163,15 +168,15 @@ public class ActivityParticipantImpl extends
 						target = otherResource.getResourceName();
 					}
 				}
-				getBinder().inject(RouteInitiator.class).initiate(this, request,
-						target, true);
+				getBinder().inject(RouteInitiator.class).initiate(this,
+						request, target, true);
 				LOG.warn("Postponed activity participation request until tomorrow: "
 						+ request);
 				return;
 			}
-		// assuming we promise to execute the request!
-		this.priorities.put(request, NORMAL_PRIORITY);
-		this.scenarioReplicatorID = request.getScenarioReplicatorID();
+			// assuming we promise to execute the request!
+			this.priorities.put(request, NORMAL_PRIORITY);
+			this.scenarioReplicatorID = request.getScenarioReplicatorID();
 		}
 		LOG.info("Handling activity participation request: " + request);
 		if (request.getResourceInfo().isMoveable()) {
@@ -327,10 +332,29 @@ public class ActivityParticipantImpl extends
 				resourceInfo.getActivityName(),
 				resourceInfo.getActivityInstanceId(), involvedResources,
 				EventType.STOP_ACTIVITY);
-		if (!getWorld(GenericResourceManagementWorld.class).isAvailable()) {
-			getWorld(GenericResourceManagementWorld.class).setAvailable();
-			LOG.info("Resource becomes available");
+		if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() != null) {
+			if (!processBacklog.contains(resourceInfo.getProcessInstanceId())){
+				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInProcess(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess()-1);
+				getWorld(GenericResourceManagementWorld.class).setUnavailable();
+				LOG.info("Resource stays unavailable because it reached maximum participations in process");
+			}
+		} else if (!getWorld(GenericResourceManagementWorld.class).isAvailable()) {
+			if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity() != null) {
+				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInActivity(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity()-1);
+				getBinder().inject(Datasource.class).save((ASIMOVResourceDescriptor)getWorld(GenericResourceManagementWorld.class).getEntity());
+				if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity() < 1) {
+					getWorld(GenericResourceManagementWorld.class).setUnavailable();
+					LOG.info("Resource stays unavailable because it reached maximum participations in activity");
+				} else {
+					getWorld(GenericResourceManagementWorld.class).setAvailable();
+					LOG.info("Resource becomes available");
+				}
+			} else {
+				getWorld(GenericResourceManagementWorld.class).setAvailable();
+				LOG.info("Resource becomes available");
+			}
 		}
+		processBacklog.add(resourceInfo.getProcessInstanceId());
 		activityBacklog.add(request.getResourceInfo().getActivityInstanceId());
 		send(ActivityParticipation.Result.Builder.forProducer(this, request)
 				.build());
@@ -465,12 +489,13 @@ public class ActivityParticipantImpl extends
 		return false;
 	}
 
-	
 	private boolean emitWhenTrue(final boolean bool,
 			final ResourceReadyNotification.Request request) {
 		if (bool)
 			try {
-				final String token = request.getResourceInfo().getResourceAgent().getValue()+request.getResourceInfo().getActivityInstanceId();
+				final String token = request.getResourceInfo()
+						.getResourceAgent().getValue()
+						+ request.getResourceInfo().getActivityInstanceId();
 				if (!readyResources.contains(token)) {
 					readyResources.add(token);
 					getBinder()
