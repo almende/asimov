@@ -66,25 +66,23 @@ import rx.subjects.Subject;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  * 
  */
-public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorld
-		implements ScenarioManagementWorld {
+public class ScenarioManagementWorldImpl extends
+		AbstractASIMOVOrganizationtWorld implements ScenarioManagementWorld {
 
 	/** */
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final String ON_SITE_TIME_OF_DAY_PROPERTY = "onSiteTimeOfDay";
-	
+
 	public static final String OFF_SITE_TIME_OF_DAY_PROPERTY = "offSiteTimeOfDay";
-	
+
 	public static final String DISABLE_WEEKENDS_PROPERTY = "disableWeekends";
-	
+
 	public static final String DISABLE_NON_WORKING_HOURS_PROPERTY = "disableNonWorkingHours";
 
-	
 	public RandomDistribution<SimDuration> onSiteTimeOfDay;
 
 	public RandomDistribution<SimDuration> offSiteTimeOfDay;
-	
 
 	@InjectLogger
 	private Logger LOG;
@@ -97,8 +95,6 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 	private final Set<ASIMOVResourceDescriptor> resourceDescriptors = Collections
 			.synchronizedSet(new HashSet<ASIMOVResourceDescriptor>());
 
-	
-
 	/** */
 	private final List<ResourceEvent> agents = new ArrayList<ResourceEvent>();
 
@@ -107,8 +103,8 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 
 	/** */
 	private UseCaseScenario scenario = null;
-	
-	private Subject<Integer,Integer> resourceHash = BehaviorSubject.create(0);
+
+	private Subject<Integer, Integer> resourceHash = BehaviorSubject.create(0);
 
 	/**
 	 * {@link ScenarioManagementWorldImpl} constructor
@@ -122,15 +118,14 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 
 	/** @see eu.a4ee.model.resource.PersonResourceManagementWorld#desiredSiteLeaveTime() */
 	@Override
-	public SimDuration onSiteDelay(final SimTime now)
-	{
+	public SimDuration onSiteDelay(final SimTime now) {
 		return enterDuration(now);
 	}
-	
-	public SimDuration enterDuration(final SimTime now)
-	{
+
+	public SimDuration enterDuration(final SimTime now) {
 		if (getBinder().inject(ConfiguringCapability.class)
-				.getProperty(DISABLE_NON_WORKING_HOURS_PROPERTY).getBoolean(false))
+				.getProperty(DISABLE_NON_WORKING_HOURS_PROPERTY)
+				.getBoolean(false))
 			return SimDuration.ZERO;
 		final DateTime nowDT = new DateTime(now.getIsoTime());
 		final int day = nowDT.getDayOfWeek();
@@ -139,30 +134,34 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 		final SimTime startOfDay = now.minus(millisOfDay);
 		final SimDuration onSiteTimeOfDay = this.onSiteTimeOfDay.draw();
 		final SimTime onSiteTime = startOfDay.plus(onSiteTimeOfDay);
-		final SimTime offSiteTime = startOfDay.plus(this.offSiteTimeOfDay.draw());
+		final SimTime offSiteTime = startOfDay.plus(this.offSiteTimeOfDay
+				.draw());
 		SimDuration onSiteDelta = onSiteTimeOfDay.minus(millisOfDay);
-		
+
 		final DateTime offset = new DateTime(getBinder().inject(Date.class));
 		boolean weekends = !getBinder().inject(ConfiguringCapability.class)
 				.getProperty(DISABLE_WEEKENDS_PROPERTY).getBoolean(false);
 		final SimDuration result;
-		if (now.isBefore(onSiteTime))
-		{
+		if (now.isBefore(onSiteTime)) {
 			if (weekends && day == DateTimeConstants.SATURDAY)
 				result = onSiteDelta.plus(2, TimeUnit.DAYS);
 			else if (weekends && day == DateTimeConstants.SUNDAY)
 				result = onSiteDelta.plus(1, TimeUnit.DAYS);
-			else result = onSiteDelta;
-			LOG.info("delta [now: "+now.toDateTime(offset)+"] [BEFORE] [day: "+day+"] [startOfDay "+startOfDay.toDateTime(offset)+"] = "+result);
-		} else if (now.isBefore(offSiteTime))
-		{
+			else
+				result = onSiteDelta;
+			LOG.info("delta [now: " + now.toDateTime(offset)
+					+ "] [BEFORE] [day: " + day + "] [startOfDay "
+					+ startOfDay.toDateTime(offset) + "] = " + result);
+		} else if (now.isBefore(offSiteTime)) {
 			if (weekends && day == DateTimeConstants.SATURDAY)
 				result = onSiteDelta.plus(2, TimeUnit.DAYS);
 			else if (weekends && day == DateTimeConstants.SUNDAY)
 				result = onSiteDelta.plus(1, TimeUnit.DAYS);
 			else
 				result = SimDuration.ZERO;
-			LOG.info("delta [now: "+now.toDateTime(offset)+"] [DURING] [day: "+day+"] [startOfDay "+startOfDay.toDateTime(offset)+"] = "+result);
+			LOG.info("delta [now: " + now.toDateTime(offset)
+					+ "] [DURING] [day: " + day + "] [startOfDay "
+					+ startOfDay.toDateTime(offset) + "] = " + result);
 		} else
 		// if(now.isAfter( this.offSiteTimeOfDay.draw()))
 		{
@@ -171,12 +170,14 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 			else if (weekends && day == DateTimeConstants.SATURDAY)
 				result = onSiteDelta.plus(2, TimeUnit.DAYS);
 			else
-			result = onSiteDelta.plus(1, TimeUnit.DAYS);
-			LOG.info("delta [now: "+now.toDateTime(offset)+"] [AFTER] [day: "+day+"] [startOfDay "+startOfDay.toDateTime(offset)+"] = "+result);
+				result = onSiteDelta.plus(1, TimeUnit.DAYS);
+			LOG.info("delta [now: " + now.toDateTime(offset)
+					+ "] [AFTER] [day: " + day + "] [startOfDay "
+					+ startOfDay.toDateTime(offset) + "] = " + result);
 		}
 		return result;
 	}
-	
+
 	public <T extends Agent> ResourceEvent getResourceEventForNewAgent(
 			final AgentID agentID, final Class<T> agentType,
 			final SimTime eventTime) {
@@ -307,18 +308,24 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 		if (replication.getStartDate() == null)
 			replication.setStartDate(offsetMS);
 
-	
-		for (ASIMOVResourceDescriptor resourceDescriptor : this.scenario.getResourceDescriptors()) {
-			this.resourceIDs.add(agentIDFactory.createAgentID(resourceDescriptor.getName()));
+		for (ASIMOVResourceDescriptor resourceDescriptor : this.scenario
+				.getResourceDescriptors()) {
+			this.resourceIDs.add(agentIDFactory
+					.createAgentID(resourceDescriptor.getName()));
 
 			this.resourceDescriptors.add(resourceDescriptor);
+			if (resourceDescriptor.getAvailableFromTime() != null
+					&& resourceDescriptor.getAvailableFromTime() > 0)
+				resourceDescriptor.setUnAvailable(true);
 			ds.save(resourceDescriptor);
 			final ResourceEvent createAgentAction = getResourceEventForNewAgent(
 					agentIDFactory.createAgentID(resourceDescriptor.getName()),
 					GenericResourceManagementOrganizationImpl.class,
-					getBinder().inject(SimTimeFactory.class).create(
-							(resourceDescriptor.getAvailableFromTime() == null) ? 0
-									: resourceDescriptor.getAvailableFromTime(), TimeUnit.MILLIS));
+					getBinder()
+							.inject(SimTimeFactory.class)
+							.create((resourceDescriptor.getAvailableFromTime() == null) ? 0
+									: resourceDescriptor.getAvailableFromTime(),
+									TimeUnit.MILLIS));
 			this.agents.add(createAgentAction);
 		}
 
@@ -395,14 +402,14 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 				});
 		final RandomDistribution.Factory distFact = getBinder().inject(
 				RandomDistribution.Factory.class);
-		this.onSiteTimeOfDay = distFact.getConstant(new SimDuration(
-				getBinder().inject(ConfiguringCapability.class)
+		this.onSiteTimeOfDay = distFact.getConstant(new SimDuration(getBinder()
+				.inject(ConfiguringCapability.class)
 				.getProperty(ON_SITE_TIME_OF_DAY_PROPERTY).getNumber(9),
 				TimeUnit.HOURS));
 		this.offSiteTimeOfDay = distFact.getConstant(new SimDuration(
 				getBinder().inject(ConfiguringCapability.class)
-				.getProperty(OFF_SITE_TIME_OF_DAY_PROPERTY).getNumber(18),
-				TimeUnit.HOURS));
+						.getProperty(OFF_SITE_TIME_OF_DAY_PROPERTY)
+						.getNumber(18), TimeUnit.HOURS));
 	}
 
 	/** @see ScenarioManagementWorld#getReplication() */
@@ -420,7 +427,6 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 	ReplaySubject<ScenarioManagementWorld.ResourceEvent> resourceEvents;
 
 	private int currentResourceHash;
-
 
 	/** @see ScenarioManagementWorld#onResources() */
 	@Override
@@ -495,7 +501,7 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 			final String processTypeID) {
 		return this.scenario.getProcessStartDelayDistribution(processTypeID);
 	}
-	
+
 	/** @see ScenarioManagementWorld#getResourceUnavailabilityDist(String) */
 	@Override
 	public RandomDistribution<SimDuration> getResourceUnavailabilityDist(
@@ -512,7 +518,6 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 		getBinder().inject(Datasource.class).update(this.replication);
 	}
 
-
 	@Override
 	public Observable<Integer> resourceStatusHash() {
 		return this.resourceHash.asObservable();
@@ -520,7 +525,8 @@ public class ScenarioManagementWorldImpl extends AbstractASIMOVOrganizationtWorl
 
 	@Override
 	public void updateResourceStatusHash(String base) {
-		final int hash = (base.hashCode()+""+getTime().hashCode()).hashCode();
+		final int hash = (base.hashCode() + "" + getTime().hashCode())
+				.hashCode();
 		if (this.currentResourceHash != hash) {
 			this.resourceHash.onNext(hash);
 			this.currentResourceHash = hash;

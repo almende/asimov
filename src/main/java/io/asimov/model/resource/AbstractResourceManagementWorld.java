@@ -96,7 +96,8 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 				.findResourceDescriptorByID(entityID);
 		this.entityType = ((ResourceDescriptor<?>)this.entity).getType();
 		setCurrentLocation(getOwnerID());
-
+		this.entity.setUnAvailable(false);
+		getBinder().inject(Datasource.class).save((ASIMOVResourceDescriptor)this.entity);
 	}
 
 	/** @see ResourceManagementWorld#getEntity() */

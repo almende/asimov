@@ -553,7 +553,7 @@
                         </resource>
                         <resource>
                             <resourceId>CoffeeMachineProductionTable_2</resourceId>
-                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
+                            <availableAfter>P00Y001DT00H00M00S</availableAfter>
                             <resourceType>AssemblyLine</resourceType>
                             <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
                             <stationary>true</stationary> 
@@ -573,7 +573,7 @@
                         </resource>
                         <resource>
                             <resourceId>CoffeeMachineProductionTable_3</resourceId>
-                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
                             <resourceType>AssemblyLine</resourceType>
                             <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
                             <stationary>true</stationary> 
