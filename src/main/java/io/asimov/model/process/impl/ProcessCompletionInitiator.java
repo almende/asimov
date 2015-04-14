@@ -7,10 +7,13 @@ import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.enterprise.role.AbstractInitiator;
+import io.coala.invoke.ProcedureCall;
+import io.coala.invoke.Schedulable;
 import io.coala.log.InjectLogger;
 import io.coala.random.RandomDistribution;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
+import io.coala.time.Trigger;
 
 import javax.inject.Inject;
 
@@ -87,13 +90,18 @@ public class ProcessCompletionInitiator extends
 //			resourcesHash = ("" + getTime().hashCode() + result.hashCode())
 //					.hashCode(); // invalidate hash
 			LOG.warn("Process completed successfully!");
-//			ProcedureCall<?> pc = ProcedureCall.create(this, getBinder()
-//					.inject(ScenarioReplicator.class),
-//					ScenarioReplicatorImpl.SCHEDULE_NEXT_BP, this.cause, result
-//							.getProcessTypeID(), resourcesHash);
-//			getScheduler().schedule(pc, Trigger.createAbsolute(getTime()));
-			getBinder().inject(ScenarioManagementWorld.class)
-					.updateResourceStatusHash("");
+			ProcedureCall<?> pc = ProcedureCall.create(this, this,
+					UPDATE_HASH);
+			getScheduler().schedule(pc, Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
+			
 		}
+	}
+	
+	public static final String UPDATE_HASH = "UPDATE_HASH";
+	
+	@Schedulable(UPDATE_HASH)
+	public void updateHash() {
+		getBinder().inject(ScenarioManagementWorld.class)
+		.updateResourceStatusHash("");
 	}
 }

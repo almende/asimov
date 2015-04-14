@@ -1,5 +1,6 @@
 package io.asimov.microservice.negotiation.impl;
 
+import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.messaging.ASIMOVMessageID;
 import io.asimov.microservice.negotiation.AgentServiceProxy;
 import io.asimov.microservice.negotiation.ResourceAllocationResponder;
@@ -240,6 +241,8 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 	 */
 	private boolean isAvailable(final Serializable requirements)
 	{
+		if (!getBinder().inject(GenericResourceManagementWorld.class).isAvailable())
+			return false;
 		ReasoningCapability reasonerService = agentServiceProxy.getBinder()
 				.inject(ReasoningCapability.class);
 		Query query = reasonerService.toQuery(new SLParsableSerializable(requirements.toString()));

@@ -1,6 +1,5 @@
 package io.asimov.model.resource;
 
-import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.Named;
 import io.asimov.model.XMLConvertible;
 import io.asimov.model.sl.ASIMOVNode;

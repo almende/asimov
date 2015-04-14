@@ -335,13 +335,23 @@ public class ActivityParticipantImpl extends
 		if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() != null) {
 			if (!processBacklog.contains(resourceInfo.getProcessInstanceId())){
 				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInProcess(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess()-1);
+				if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() < 1) {
+					LOG.info("Resource stays unavailable because it reached maximum participations in process");
+					getWorld(GenericResourceManagementWorld.class).setUnavailable();
+				} else {
+					getWorld(GenericResourceManagementWorld.class).setAvailable();
+					LOG.info("Resource becomes available");
+				}
+			} else if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() > 0){
+				getWorld(GenericResourceManagementWorld.class).setAvailable();
+				LOG.info("Resource becomes available");
+			} else {
 				getWorld(GenericResourceManagementWorld.class).setUnavailable();
-				LOG.info("Resource stays unavailable because it reached maximum participations in process");
+				LOG.info("Resource becomes Resource stays unavailable because it reached maximum participations in process");
 			}
 		} else if (!getWorld(GenericResourceManagementWorld.class).isAvailable()) {
 			if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity() != null) {
 				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInActivity(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity()-1);
-				getBinder().inject(Datasource.class).save((ASIMOVResourceDescriptor)getWorld(GenericResourceManagementWorld.class).getEntity());
 				if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity() < 1) {
 					getWorld(GenericResourceManagementWorld.class).setUnavailable();
 					LOG.info("Resource stays unavailable because it reached maximum participations in activity");

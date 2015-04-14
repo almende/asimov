@@ -247,14 +247,17 @@ public class ProcessCompleterImpl extends
 
 		for (ResourceRequirement requirement : getWorld()
 				.getProcess(processTypeID).getRequiredResources().values()) {
-			Set<AgentID> aidSet = new HashSet<AgentID>();
+			final Set<AgentID> aidSet = new HashSet<AgentID>();
 			for (ASIMOVResourceDescriptor resourceDescriptor : getBinder().inject(
 					Datasource.class).findResourceDescriptors()) {
 				if (resourceDescriptor.getType().equalsIgnoreCase(requirement.getResource().getTypeID()
 								.getName())) {
 						if (!resourceDescriptor.isUnAvailable()) {
 							aidSet.add(resourceDescriptor.getAgentID());
+							LOG.info(resourceDescriptor.getAgentID()+" is available");
 						} 
+						else 
+							LOG.info(resourceDescriptor.getAgentID()+" is unavailable");
 				} else {
 					LOG.info(resourceDescriptor.getType()+" != "+requirement.getResource().getTypeID()
 							.getName());
@@ -305,9 +308,15 @@ public class ProcessCompleterImpl extends
 									+ allocationResult
 											.getUnavailabeResourceIDs());
 						} else {
+							
 							final Map<AgentID, Serializable> resources = allocationResult
 									.getAllocatedResources();
 							for (AgentID aid : resources.keySet()) {
+								ASIMOVResourceDescriptor desc = getBinder().inject(
+										Datasource.class).findResourceDescriptorByID(aid.getValue());
+								desc.setUnAvailable(true);
+								getBinder().inject(
+											Datasource.class).save(desc);
 								SLParsableSerializable f = new SLParsableSerializable(
 										resources.get(aid).toString());
 								Belief b = getReasoner()
