@@ -10,6 +10,7 @@ import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipationResourceInformation;
 import io.asimov.model.ResourceAllocation;
+import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
 import io.asimov.model.process.Transition;
@@ -479,6 +480,11 @@ public class ManageProcessActionImpl extends
 					this.getDataStore(cause).get(sSTART_ACTIVITY_TIME_TOKEN)
 							.toString());
 			final SimTime now = getTime();
+			try {
+				getWorld().performProcessChange(cause.getProcessTypeID(), cause.getID().getValue().toString(), EventType.START_PROCESS);
+			} catch (Exception e1) {
+				LOG.error("Failed to emit start of process event",e1);
+			}
 			getSimulator().schedule(nextActivityJob,
 					Trigger.createAbsolute(now));
 		}
@@ -513,6 +519,11 @@ public class ManageProcessActionImpl extends
 			// processGeneratorService.notifyProcessComplete(getOwnerID()
 			// .getValue());
 			LOG.info("Reached end of process instance " + getID());
+			try {
+				getWorld().performProcessChange(cause.getProcessTypeID(), cause.getID().getValue().toString(), EventType.STOP_PROCESS);
+			} catch (Exception e1) {
+				LOG.error("Failed to emit end of process event",e1);
+			}
 			try {
 				send(ProcessCompletion.Result.Builder.forProducer(this, cause)
 						.withSuccess(true).build());

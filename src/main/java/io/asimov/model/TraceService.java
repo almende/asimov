@@ -170,9 +170,11 @@ public class TraceService extends AbstractPersonTraceEventProducer
 
 		((Event<?>) event).setProcessID(processID);
 		((Event<?>) event).setProcessInstanceID(processInstanceID);
-		((ActivityEvent) event)
+		if (activityID != null)
+			((ActivityEvent) event)
 				.setActivity((activityName == null) ? activityID : activityName);
-		((ActivityEvent) event).setActivityInstanceId(activityInstanceID);
+		if (activityInstanceID != null)
+			((ActivityEvent) event).setActivityInstanceId(activityInstanceID);
 		this.eventLogger.submit(new Callable<Void>()
 		{
 			@Override

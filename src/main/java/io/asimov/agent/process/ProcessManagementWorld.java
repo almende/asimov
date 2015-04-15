@@ -36,6 +36,16 @@ public interface ProcessManagementWorld extends ASIMOVOrganizationWorld
 	Process getProcess(String processTypeID);
 
 	Observable<Percept> makeObservation(String processTypeID);
+	
+	/**
+	 * @param activityName
+	 * @param resourceName
+	 * @param eventType
+	 * @return activityInstanceID
+	 */
+	void performProcessChange(String processID, String processInstanceID, EventType eventType) throws Exception;
+
+	
 //
 //	/**
 //	 * @param agent
