@@ -2,6 +2,7 @@ package io.asimov.model.process.impl;
 
 import io.asimov.agent.process.ProcessManagementWorld;
 import io.asimov.db.Datasource;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.AbstractASIMOVOrganizationtWorld;
 import io.asimov.model.TraceService;
 import io.asimov.model.events.ActivityEvent;
@@ -53,6 +54,10 @@ public class ProcessManagementWorldImpl extends AbstractASIMOVOrganizationtWorld
 	
 	/** */
 	private Subject<ActivityEvent, ActivityEvent> process = PublishSubject
+			.create();
+	
+
+	private Subject<ActivityEvent, ActivityEvent> unavailability = PublishSubject
 			.create();
 
 
@@ -118,6 +123,29 @@ public class ProcessManagementWorldImpl extends AbstractASIMOVOrganizationtWorld
 		}
 		
 	}
+	
+	public void performAvailabilityChange(final String resourceName,
+			final EventType eventType) throws Exception {
+		LOG.info("fire ASIMOV resource unavailability event!");
+		if (eventType.equals(EventType.START_GLOBAL_UNAVAILABILITY) || eventType.equals(EventType.STOP_GLOBAL_UNAVAILABILITY))
+			fireAndForget(eventType, Collections.singletonList(resourceName),
+				this.unavailability);
+		else
+			LOG.error("Unsupported event type for availablility");
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T extends Event<?>> void fireAndForget(
+			final EventType eventType, final List<String> involvedResources,
+			final Observer<T> publisher) {
+		final SimTime now = getBinder().inject(ReplicatingCapability.class)
+				.getTime();
+		publisher.onNext((T) TraceService.getInstance(
+				getOwnerID().getModelID().getValue()).saveEvent(
+				getBinder().inject(Datasource.class), null, null, null, null,
+				involvedResources, eventType, now));
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	protected <T extends Event<?>> void fireAndForget(final String processID,

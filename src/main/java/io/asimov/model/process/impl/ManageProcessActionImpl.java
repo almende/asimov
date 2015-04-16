@@ -524,6 +524,17 @@ public class ManageProcessActionImpl extends
 			} catch (Exception e1) {
 				LOG.error("Failed to emit end of process event",e1);
 			}
+			for (String aidString : resourceSubTypeToAgentIdMap.values()) {
+				AgentID aid = getBinder().inject(ModelComponentIDFactory.class).createAgentID(aidString);
+				LOG.info("Checking availability of "+aid.getValue());
+				ASIMOVResourceDescriptor ard = getBinder().inject(Datasource.class).findResourceDescriptorByID(aid.getValue());
+				if (ard.isUnAvailable())
+					try {
+						getWorld().performAvailabilityChange(ard.getName(), EventType.START_GLOBAL_UNAVAILABILITY);
+					} catch (Exception e) {
+						LOG.error("Failed to emit global unavailability",e);
+					}
+			}
 			try {
 				send(ProcessCompletion.Result.Builder.forProducer(this, cause)
 						.withSuccess(true).build());

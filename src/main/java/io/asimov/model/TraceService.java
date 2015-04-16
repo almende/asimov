@@ -167,9 +167,10 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		.withReplicationID(replicationID)
 		.withInvolvedResources(resourceRefs);
 		
-
-		((Event<?>) event).setProcessID(processID);
-		((Event<?>) event).setProcessInstanceID(processInstanceID);
+		if (processID != null)
+			((Event<?>) event).setProcessID(processID);
+		if (processInstanceID != null)
+			((Event<?>) event).setProcessInstanceID(processInstanceID);
 		if (activityID != null)
 			((ActivityEvent) event)
 				.setActivity((activityName == null) ? activityID : activityName);

@@ -13,6 +13,7 @@ import io.coala.bind.Binder;
 import io.coala.log.InjectLogger;
 import io.coala.time.SimTime;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,10 @@ public class GenericResourceManagementWorldImpl extends
 			setCurrentLocation(this.entity.getAgentID());
 		else
 			setCurrentLocation(getOwnerID());
+		if (this.entity.isUnAvailable())
+			performActivityChange(null, null, null, null, Collections.singletonList(getOwnerID().getValue()), EventType.START_GLOBAL_UNAVAILABILITY);
+		else
+			performActivityChange(null, null, null, null, Collections.singletonList(getOwnerID().getValue()), EventType.STOP_GLOBAL_UNAVAILABILITY);
 	}
 
 	/** @see eu.a4ee.model.resource.PersonResourceManagementWorld#onActivity() */

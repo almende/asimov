@@ -1,6 +1,8 @@
 package io.asimov.agent.process;
 
+import io.asimov.db.Datasource;
 import io.asimov.model.ASIMOVOrganizationWorld;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
 import io.coala.agent.AgentID;
@@ -45,6 +47,13 @@ public interface ProcessManagementWorld extends ASIMOVOrganizationWorld
 	 */
 	void performProcessChange(String processID, String processInstanceID, EventType eventType) throws Exception;
 
+	
+	/**
+	 * @see PersonResourceManagementWorld#performActivityChange(String, String,
+	 *      EventType)
+	 */
+	public void performAvailabilityChange(final String resourceName,
+			final EventType eventType) throws Exception;
 	
 //
 //	/**
