@@ -12,6 +12,7 @@ import io.asimov.microservice.negotiation.messages.Claim;
 import io.asimov.microservice.negotiation.messages.Claimed;
 import io.asimov.microservice.negotiation.messages.Proposal;
 import io.asimov.model.ResourceAllocation;
+import io.asimov.model.events.EventType;
 import io.asimov.model.sl.LegacySLUtil;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
@@ -54,7 +55,7 @@ import rx.Observer;
  * 
  */
 
-public class ResourceAllocationRequestorImpl extends BasicCapability implements
+public class ResourceAllocationRequestorImpl extends NegotiatingCapability implements
 		ResourceAllocationRequestor
 {
 
@@ -92,7 +93,7 @@ public class ResourceAllocationRequestorImpl extends BasicCapability implements
 		resetFailedClaims();
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationRequestor#resetFailedClaims() */
+	/** @see io.asimov.negotiation.ResourceAllocationRequestor#resetFailedClaims() */
 	@Override
 	public void resetFailedClaims()
 	{
@@ -115,7 +116,7 @@ public class ResourceAllocationRequestorImpl extends BasicCapability implements
 		return candidateMap;
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationRequestor#setCandidateMap(java.util.Map) */
+	/** @see io.asimov.negotiation.ResourceAllocationRequestor#setCandidateMap(java.util.Map) */
 	@Override
 	public void setCandidateMap(Map<Serializable, Set<AgentID>> candidateMap)
 	{
@@ -145,7 +146,7 @@ public class ResourceAllocationRequestorImpl extends BasicCapability implements
 		return resourcesAllocationMap;
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationRequestor#handleIncommingClaimed(eu.a4ee.negotiation.messages.Claimed) */
+	/** @see io.asimov.negotiation.ResourceAllocationRequestor#handleIncommingClaimed(io.asimov.negotiation.messages.Claimed) */
 	@Override
 	public synchronized void handleIncommingClaimed(Claimed claimed)
 	{
@@ -294,11 +295,10 @@ public class ResourceAllocationRequestorImpl extends BasicCapability implements
 	}
 	
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationRequestor#doAllocation(eu.a4ee.negotiation.ResourceAllocationRequestorOld.AllocationCallback) */
+	/** @see io.asimov.negotiation.ResourceAllocationRequestor#doAllocation(io.asimov.negotiation.ResourceAllocationRequestorOld.AllocationCallback) */
 	@Override
 	public void doAllocation(final AllocationCallback callback)
 	{
-		this.scenarioAgentID = scenarioAgentID;
 		if (resourcesAllocationMap != null)
 			throw new IllegalStateException(
 					"Resource allocation already performed, please start a new instance of the ResourceAllocactionRequestor.");
@@ -384,7 +384,7 @@ public class ResourceAllocationRequestorImpl extends BasicCapability implements
 		agentServiceProxy.getBinder().inject(SendingCapability.class).send(m);
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationRequestor#deAllocate() */
+	/** @see io.asimov.negotiation.ResourceAllocationRequestor#deAllocate() */
 	@Override
 	public void deAllocate(final String scenarioAgentID) throws Exception
 	{
@@ -422,6 +422,11 @@ public class ResourceAllocationRequestorImpl extends BasicCapability implements
 					{
 						LOG.error("Failed to inform de-allocation.",e);
 					}
+					try {
+						performAllocationChange(aid.getValue(), EventType.DEALLOCATED);
+					} catch (Exception e) {
+						LOG.error("Failed to emit deallocation change event for "+aid,e);
+					}
 					LOG.info("De-allocated "+allocation.getValue().toString());
 					Claim claim = requestedClaims.get(allocation.getValue());
 					if (claim == null)
@@ -455,14 +460,14 @@ public class ResourceAllocationRequestorImpl extends BasicCapability implements
 		resetFailedClaims();
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationRequestor#getQueryToAssertionMap() */
+	/** @see io.asimov.negotiation.ResourceAllocationRequestor#getQueryToAssertionMap() */
 	@Override
 	public synchronized Map<Serializable, Serializable> getQueryToAssertionMap()
 	{
 		return queryToAssertionMap;
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationRequestor#setQueryToAssertionMap(java.util.Map) */
+	/** @see io.asimov.negotiation.ResourceAllocationRequestor#setQueryToAssertionMap(java.util.Map) */
 	@Override
 	public synchronized void setQueryToAssertionMap(
 			Map<Serializable, Serializable> queryToAssertionMap)

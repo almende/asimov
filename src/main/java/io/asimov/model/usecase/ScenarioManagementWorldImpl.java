@@ -7,6 +7,10 @@ import io.asimov.agent.scenario.SimStatus;
 import io.asimov.db.Datasource;
 import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.AbstractASIMOVOrganizationtWorld;
+import io.asimov.model.TraceService;
+import io.asimov.model.events.ActivityEvent;
+import io.asimov.model.events.Event;
+import io.asimov.model.events.EventType;
 import io.asimov.run.RunUseCase;
 import io.asimov.util.extrapolator.EventExtrapolator;
 import io.asimov.xml.SimulationFile;
@@ -56,6 +60,7 @@ import rx.Observable;
 import rx.Observer;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
 
@@ -83,6 +88,11 @@ public class ScenarioManagementWorldImpl extends
 	public RandomDistribution<SimDuration> onSiteTimeOfDay;
 
 	public RandomDistribution<SimDuration> offSiteTimeOfDay;
+	
+
+	private Subject<ActivityEvent, ActivityEvent> operational = PublishSubject
+			.create();
+
 
 	@InjectLogger
 	private Logger LOG;
@@ -494,6 +504,30 @@ public class ScenarioManagementWorldImpl extends
 					}
 				});
 	}
+	
+
+	public void performOperationChange(
+			final EventType eventType) throws Exception {
+		LOG.info("fire ASIMOV resource unavailability event!");
+		if (eventType.equals(EventType.START_GLOBAL_OPERATIONAL_PERIOD) || eventType.equals(EventType.STOP_GLOBAL_OPERATIONAL_PERIOD))
+			fireAndForget(eventType,
+				this.operational);
+		else
+			LOG.error("Unsupported event type for availablility");
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T extends Event<?>> void fireAndForget(
+			final EventType eventType,
+			final Observer<T> publisher) {
+		final SimTime now = getBinder().inject(ReplicatingCapability.class)
+				.getTime();
+		publisher.onNext((T) TraceService.getInstance(
+				getOwnerID().getModelID().getValue()).saveEvent(
+				getBinder().inject(Datasource.class), null, null, null, null,
+				Collections.EMPTY_LIST, eventType, now));
+	}
+
 
 	/** @see ScenarioManagementWorld#getProcessStartTimeOfDayDist(String) */
 	@Override

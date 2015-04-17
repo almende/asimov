@@ -5,7 +5,6 @@
 package io.asimov.model.sl;
 
 import io.asimov.model.ResourceAllocation;
-import io.asimov.reasoning.sl.SLConvertible;
 
 
 /**

@@ -6,7 +6,6 @@ import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.ConversionCallback;
 import io.asimov.microservice.negotiation.ResourceAllocationRequestor.AllocationCallback;
 import io.asimov.model.ASIMOVOrganization;
-import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.TraceService;
 import io.asimov.model.events.ActivityEvent;

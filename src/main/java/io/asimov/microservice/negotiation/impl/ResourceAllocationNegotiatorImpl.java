@@ -8,6 +8,7 @@ import io.asimov.microservice.negotiation.ResourceAllocationRequestor.Allocation
 import io.asimov.microservice.negotiation.messages.AvailabilityCheck;
 import io.asimov.microservice.negotiation.messages.AvailabilityReply;
 import io.asimov.microservice.negotiation.messages.Claimed;
+import io.asimov.model.events.EventType;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
@@ -35,7 +36,7 @@ import rx.Observer;
 import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
 
-public class ResourceAllocationNegotiatorImpl extends BasicCapability implements
+public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability implements
 		ResourceAllocationNegotiator
 {
 
@@ -45,7 +46,6 @@ public class ResourceAllocationNegotiatorImpl extends BasicCapability implements
 	private static final Logger LOG = LogUtil
 			.getLogger(ResourceAllocationNegotiatorImpl.class);
 
-	private final AgentServiceProxy agentServiceProxy;
 	private ResourceAllocationRequestor.AllocationCallback callback;
 	private ConversionCallback conversion;
 	private Map<Serializable, Set<AgentID>> candidateMap;
@@ -57,19 +57,9 @@ public class ResourceAllocationNegotiatorImpl extends BasicCapability implements
 	@Inject
 	public ResourceAllocationNegotiatorImpl(final Binder binder)
 	{
-		this(new AgentServiceProxy(binder));
+		super(binder);
 	}
 
-	public ResourceAllocationNegotiatorImpl(AgentServiceProxy agent)
-	{
-		super(agent.getBinder());
-		this.agentServiceProxy = agent;
-	}
-
-	private AgentServiceProxy getAgentServiceProxy()
-	{
-		return agentServiceProxy;
-	}
 
 	private void sendMessage(AbstractMessage<ASIMOVMessageID> m) throws Exception
 	{
@@ -233,6 +223,13 @@ public class ResourceAllocationNegotiatorImpl extends BasicCapability implements
 			{
 				this.resources = resources;
 				wasSuccesBoolean = true;
+				for (AgentID allocatedResourceAgentID : resources.keySet()) {
+					try {
+						performAllocationChange(allocatedResourceAgentID.getValue(), EventType.ALLOCATED);
+					} catch (Exception e) {
+						LOG.error("Failed to emit allocation event for "+allocatedResourceAgentID, e);
+					}
+				}
 				callbackSubject.onNext(this);
 				_depr_callback.done(resources);
 				callbackSubject.onCompleted();

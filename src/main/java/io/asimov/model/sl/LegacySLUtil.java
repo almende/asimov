@@ -1,40 +1,15 @@
-/* $Id: LegacySLUtil.java 1078 2014-09-25 13:25:37Z suki $
- * $URL: https://redmine.almende.com/svn/a4eesim/trunk/adapt4ee-model/src/main/java/eu/a4ee/model/jsa/util/LegacySLUtil.java $
- * 
- * Part of the EU project Adapt4EE, see http://www.adapt4ee.eu/
- * 
- * @license
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy
- * of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- * 
- * Copyright (c) 2010-2013 Almende B.V. 
- */
 package io.asimov.model.sl;
 
 import io.asimov.model.Resource;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.ResourceRequirement;
 import io.asimov.model.Time;
-import io.asimov.model.process.Activity;
-import io.asimov.model.process.Next;
 import io.asimov.model.process.Process;
-import io.asimov.model.process.Task;
-import io.asimov.model.process.Transition;
 import io.asimov.reasoning.sl.ASIMOVSLReasoningCapability;
 import io.asimov.reasoning.sl.KBase;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.capability.embody.Percept;
-import io.coala.config.CoalaPropertyGetter;
 import io.coala.log.LogUtil;
 
 import java.io.Serializable;
@@ -94,7 +69,6 @@ public class LegacySLUtil implements ASIMOVAgents {
 		result.onCompleted();
 	}
 
-	@SuppressWarnings("unchecked")
 	public static Serializable convertAgentID(final AgentID agentID,
 			final Serializable forumla) {
 		ASIMOVNode<?> f;
@@ -494,32 +468,5 @@ public class LegacySLUtil implements ASIMOVAgents {
 		return result;
 	}
 
-	/**
-	 * Check if a resource of a certain type or sub-type is exclusively
-	 * allocated or not
-	 * 
-	 * @param requirement
-	 *            the {@see ResourceRequirement}
-	 * @return false if instance can be claimed by multiple allocators,
-	 *         otherwise true.
-	 */
-	private static boolean isExclusive(ResourceRequirement requirement) {
-		CoalaPropertyGetter getter = new CoalaPropertyGetter(
-				EXCLUSIVE_RESOURCE_ID_PROPERTY);
-		if (getter != null) {
-			String[] result = getter.getJSON(String[].class);
-			if (result != null) {
-				for (int i = 0; i < result.length; i++) {
-					if (result[i].equals("*")
-							|| requirement.getResource().getTypeID().getName()
-									.equalsIgnoreCase(result[i])
-							|| requirement.getResource().getSubTypeID()
-									.getName().equalsIgnoreCase(result[i]))
-						return true;
-				}
-			}
-		}
-		return false;
-	}
 
 }

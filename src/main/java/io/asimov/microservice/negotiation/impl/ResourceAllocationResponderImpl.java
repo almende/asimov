@@ -45,7 +45,7 @@ import rx.Observer;
  * @author <a href="mailto:suki@almende.org">suki</a>
  * 
  */
-public class ResourceAllocationResponderImpl extends BasicCapability implements
+public class ResourceAllocationResponderImpl extends NegotiatingCapability implements
 		ResourceAllocationResponder
 {
 	/** */
@@ -161,7 +161,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		this.isClaimed = isClaimed;
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processMessage(io.coala.message.AbstractMessage) */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#processMessage(io.coala.message.AbstractMessage) */
 	@Override
 	public void processMessage(
 			final Message<?> m)
@@ -204,7 +204,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		}
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processClaim(eu.a4ee.negotiation.messages.Claim) */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#processClaim(io.asimov.negotiation.messages.Claim) */
 	@Override
 	public synchronized Claimed processClaim(Claim claim)
 	{
@@ -334,7 +334,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		return result.get(requirements);
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processAvailabilityCheck(eu.a4ee.negotiation.messages.UnAvailabilityRequest) */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#processAvailabilityCheck(io.asimov.negotiation.messages.UnAvailabilityRequest) */
 	@Override
 	public synchronized AvailabilityReply processAvailabilityCheck(
 			AvailabilityCheck availabilityCheck)
@@ -348,7 +348,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		return reply;
 	}
 	
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processAvailabilityCheck(eu.a4ee.negotiation.messages.UnAvailabilityRequest) */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#processAvailabilityCheck(io.asimov.negotiation.messages.UnAvailabilityRequest) */
 	@Override
 	public synchronized Proposal processProposalRequest(
 			ProposalRequest proposalRequest)
@@ -361,7 +361,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		return reply;
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#reset() */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#reset() */
 	@Override
 	public void reset()
 	{

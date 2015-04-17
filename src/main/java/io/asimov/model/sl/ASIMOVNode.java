@@ -1,15 +1,14 @@
 package io.asimov.model.sl;
 
+import io.asimov.model.XMLConvertible;
+import io.coala.json.JSONConvertible;
+
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-import io.asimov.model.XMLConvertible;
-import io.asimov.reasoning.sl.SLParsable;
-import io.coala.json.JSONConvertible;
 
 @JsonTypeInfo(  
 	    use = JsonTypeInfo.Id.NAME,  

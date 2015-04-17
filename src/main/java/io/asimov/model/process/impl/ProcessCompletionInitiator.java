@@ -10,8 +10,6 @@ import io.coala.enterprise.role.AbstractInitiator;
 import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
 import io.coala.log.InjectLogger;
-import io.coala.random.RandomDistribution;
-import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 import io.coala.time.Trigger;
 
@@ -37,12 +35,6 @@ public class ProcessCompletionInitiator extends
 	@InjectLogger
 	private Logger LOG;
 
-	private int resourcesHash = 0;
-
-	/** */
-	private RandomDistribution<SimTime> retryDelayDist;
-
-	private ScenarioReplication.Request cause;
 
 	/**
 	 * {@link ProcessCompletionInitiator} constructor
@@ -57,9 +49,6 @@ public class ProcessCompletionInitiator extends
 	@Override
 	public void initialize() throws Exception {
 		super.initialize();
-
-		// TODO read from config?
-		this.retryDelayDist = newDist().getConstant(newTime(1, TimeUnit.HOURS));
 	}
 
 	protected ScenarioReplicator getReplicator() {
@@ -71,7 +60,6 @@ public class ProcessCompletionInitiator extends
 			final ScenarioReplication.Request cause,
 			final String processTypeID, final AgentID procMgrID)
 			throws Exception {
-		this.cause = cause;
 		return send(ProcessCompletion.Request.Builder
 				.forProducer(getReplicator(), cause)
 				.withProcessTypeID(processTypeID).withReceiverID(procMgrID)

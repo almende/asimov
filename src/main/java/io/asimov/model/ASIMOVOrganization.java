@@ -2,7 +2,6 @@ package io.asimov.model;
 
 import io.asimov.messaging.ASIMOVMessage;
 import io.coala.agent.AgentID;
-import io.coala.agent.AgentStatusUpdate;
 import io.coala.agent.BasicAgent;
 import io.coala.agent.BasicAgentStatus;
 import io.coala.bind.Binder;
@@ -10,8 +9,6 @@ import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.factory.ClassUtil;
 import io.coala.json.JsonUtil;
-import io.coala.lifecycle.LifeCycleHooks;
-import io.coala.lifecycle.MachineUtil;
 import io.coala.log.InjectLogger;
 import io.coala.message.Message;
 import io.coala.model.ModelComponent;

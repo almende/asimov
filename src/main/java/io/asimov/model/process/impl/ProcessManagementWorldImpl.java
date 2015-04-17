@@ -2,7 +2,6 @@ package io.asimov.model.process.impl;
 
 import io.asimov.agent.process.ProcessManagementWorld;
 import io.asimov.db.Datasource;
-import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.AbstractASIMOVOrganizationtWorld;
 import io.asimov.model.TraceService;
 import io.asimov.model.events.ActivityEvent;

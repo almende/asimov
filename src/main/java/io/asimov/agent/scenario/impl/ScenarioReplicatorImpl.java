@@ -10,6 +10,7 @@ import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
 import io.asimov.db.Datasource;
 import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.model.events.EventType;
 import io.asimov.model.process.ProcessManagementOrganization;
 import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.model.resource.RouteLookup.RouteProvider;
@@ -71,6 +72,8 @@ public class ScenarioReplicatorImpl extends
 	private static final String UNAVAILABILITY = "UNAVAILABILITY";
 
 	private static final String SCHEDULE_ABSENCE_FOR_DURATION = "SCHEDULE_ABSENCE_FOR_DURATION";
+
+	private static final String OPERATION_PERIOD_EVENT_EMIT = "OPERATION_PERIOD_EVENT_EMIT";
 
 	/** */
 	@InjectLogger
@@ -214,6 +217,33 @@ public class ScenarioReplicatorImpl extends
 		getScheduler().schedule(
 				ProcedureCall.create(this, this, UNAVAILABILITY, resource),
 				Trigger.createAbsolute(getTime().plus(1, TimeUnit.DAYS)));
+	}
+	
+	//FIXME: Not working yet ...
+	@Schedulable(OPERATION_PERIOD_EVENT_EMIT)
+	public void emitOperationPeriodEvent() {
+		if (getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).toMilliseconds().longValue() == 0) {
+			// START OF OPERATION
+			try {
+				getWorld().performOperationChange(EventType.START_GLOBAL_OPERATIONAL_PERIOD);
+			} catch (Exception e) {
+				LOG.error("Failed to emit START_GLOBAL_OPERATIONAL_PERIOD event",e);
+			}
+			SimTime t = getTime();
+			for (long i = 0; getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(t).toMilliseconds().longValue() == 0; i++) {
+				t = getTime().plus(i, TimeUnit.MILLIS);
+			}
+			ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT, Trigger.createAbsolute(t));
+		} else {
+			try {
+				getWorld().performOperationChange(EventType.STOP_GLOBAL_OPERATIONAL_PERIOD);
+			} catch (Exception e) {
+				LOG.error("Failed to emit START_GLOBAL_OPERATIONAL_PERIOD event",e);
+
+			}
+			SimTime t = getTime().plus(getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).toMilliseconds().longValue(),TimeUnit.MILLIS);
+			ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT, Trigger.createAbsolute(t));
+		}
 	}
 
 	@Schedulable(UNAVAILABILITY)
@@ -391,6 +421,8 @@ public class ScenarioReplicatorImpl extends
 			});
 
 		}
+		ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT, Trigger.createAbsolute(getTime()));
+		
 	}
 
 	@Override

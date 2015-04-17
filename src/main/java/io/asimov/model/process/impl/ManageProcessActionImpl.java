@@ -3,7 +3,6 @@ package io.asimov.model.process.impl;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessManagementWorld;
-import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.db.Datasource;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.model.ASIMOVResourceDescriptor;
@@ -597,7 +596,7 @@ public class ManageProcessActionImpl extends
 				}
 			List<ActivityParticipationResourceInformation> resourceParticipationInfo = new ArrayList<ActivityParticipationResourceInformation>();
 
-			participantLoop: for (AgentID agent : nextDistribution.keySet()) {
+			for (AgentID agent : nextDistribution.keySet()) {
 				String type = null;
 				String resourceName = agent.getValue();
 						for (UsedResource componentUsed : activityXML
