@@ -2,7 +2,6 @@ package io.asimov.model.resource;
 
 import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.agent.resource.ResourceManagementWorld;
-import io.asimov.agent.resource.impl.GenericResourceManagementWorldImpl;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.db.Datasource;
 import io.asimov.microservice.negotiation.ResourceReadyNotification;
@@ -18,8 +17,6 @@ import io.asimov.model.resource.RouteLookup.RouteInitiator;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.configure.ConfiguringCapability;
-import io.coala.capability.embody.Percept;
-import io.coala.capability.know.ReasoningCapability;
 import io.coala.enterprise.fact.CoordinationFact;
 import io.coala.enterprise.role.AbstractExecutor;
 import io.coala.enterprise.role.AbstractInitiator;
@@ -46,8 +43,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
-
-import rx.Observer;
 
 /**
  * {@link ActivityParticipantImpl}

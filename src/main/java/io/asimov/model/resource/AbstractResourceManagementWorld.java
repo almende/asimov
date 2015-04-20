@@ -16,14 +16,10 @@ import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.model.sl.SL;
 import io.asimov.model.sl.SLConvertible;
-import io.asimov.reasoning.sl.KBase;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.embody.Percept;
-import io.coala.capability.know.ReasoningCapability;
-import io.coala.capability.know.ReasoningCapability.Belief;
 import io.coala.capability.replicate.ReplicatingCapability;
-import io.coala.factory.ClassUtil;
 import io.coala.log.InjectLogger;
 import io.coala.time.SimTime;
 
@@ -179,20 +175,20 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 		return result;
 	}
 
-	/** @see eu.a4ee.model.resource.CurrentLocationStateService#getCurrentLocation() */
+	/** @see io.asimov.model.resource.CurrentLocationStateService#getCurrentLocation() */
 	@Override
 	public AgentID getCurrentLocation() {
 		return this.currentLocationRepr;
 	}
 
-	/** @see eu.a4ee.model.resource.CurrentLocationStateService#setCurrentLocation(io.coala.agent.AgentID) */
+	/** @see io.asimov.model.resource.CurrentLocationStateService#setCurrentLocation(io.coala.agent.AgentID) */
 	protected void setCurrentLocation(AgentID locationAgentID) {
 		this.currentLocationRepr = locationAgentID;
 		this.coordinates = null;
 	}
 
 	/**
-	 * @see eu.a4ee.model.resource.CurrentLocationStateService#setCurrentLocation(io.coala.agent.AgentID,
+	 * @see io.asimov.model.resource.CurrentLocationStateService#setCurrentLocation(io.coala.agent.AgentID,
 	 *      java.util.List)
 	 */
 	protected void setCurrentLocation(AgentID locationAgentID,
@@ -215,7 +211,7 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 				involvedResources, eventType, now));
 	}
 
-	/** @see eu.a4ee.model.resource.CurrentLocationStateService#getCurrentCoordinates() */
+	/** @see io.asimov.model.resource.CurrentLocationStateService#getCurrentCoordinates() */
 	@Override
 	public List<Number> getCurrentCoordinates() {
 		if (this.coordinates == null)

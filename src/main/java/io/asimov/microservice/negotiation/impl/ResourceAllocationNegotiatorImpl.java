@@ -12,7 +12,6 @@ import io.asimov.model.events.EventType;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
-import io.coala.capability.BasicCapability;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.interact.SendingCapability;
 import io.coala.log.LogUtil;
@@ -118,7 +117,7 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 				});
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationNegotiator#processMessage(io.coala.message.AbstractMessage) */
+	/** @see io.asimov.negotiation.ResourceAllocationNegotiator#processMessage(io.coala.message.AbstractMessage) */
 	@Override
 	public void processMessage(
 			final Message<?> m)
@@ -199,7 +198,7 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 		requestor.doAllocation(callback);
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationNegotiator#negotiate() */
+	/** @see io.asimov.negotiation.ResourceAllocationNegotiator#negotiate() */
 	@Override
 	public synchronized Observable<AllocationCallback> negotiate(
 			final ResourceAllocationRequestor.AllocationCallback _depr_callback,
@@ -315,7 +314,7 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 		return callbackSubject.last().asObservable();
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationNegotiator#deAllocate() */
+	/** @see io.asimov.negotiation.ResourceAllocationNegotiator#deAllocate() */
 	@Override
 	public void deAllocate(final String scenarioAgentID)
 	{

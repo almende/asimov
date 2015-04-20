@@ -85,7 +85,7 @@ public class RunUseCase
     	 System.out.println("Copying output template from "+jarName+" folder "+folderName);
          try {
               ZipFile z = new ZipFile(jarName);
-              Enumeration entries = z.entries();
+              Enumeration<? extends ZipEntry> entries = z.entries();
               while (entries.hasMoreElements()) {
                    ZipEntry entry = (ZipEntry)entries.nextElement();
                    if (entry.getName().startsWith(folderName)) {
@@ -100,6 +100,7 @@ public class RunUseCase
                         }
                    }
               }
+              z.close();
          }
          catch (IOException e) {
               e.printStackTrace();
@@ -115,7 +116,8 @@ public class RunUseCase
          if (sResource == null || fDest == null) return false;
          InputStream sIn = null;
          OutputStream sOut = null;
-         File sFile = null;
+         @SuppressWarnings("unused")
+		File sFile = null;
          try {
               fDest.getParentFile().mkdirs();
               sFile = new File(sResource);
@@ -213,7 +215,7 @@ public class RunUseCase
 		
 	}
 	
-	public static String getJarFileName(Class aclass) throws Exception {
+	public static String getJarFileName(@SuppressWarnings("rawtypes") Class aclass) throws Exception {
 		  CodeSource codeSource = aclass.getProtectionDomain().getCodeSource();
 
 		  File jarFile;

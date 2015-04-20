@@ -38,11 +38,7 @@ public class LegacySLUtil implements ASIMOVAgents {
 	private static Logger LOG = LogUtil.getLogger(LegacySLUtil.class);
 
 	final static Set<AgentID> rulesAddedToAgentSet = new HashSet<AgentID>();
-
-	private static final String EXCLUSIVE_RESOURCE_ID_PROPERTY = "exclusiveResources";
-
-	
-	
+		
 
 	public static void makeObservation(final Observer<Percept> result,
 			final Process cProcess, final AgentID agentID) {

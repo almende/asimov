@@ -16,7 +16,6 @@ import io.coala.log.InjectLogger;
 import io.coala.model.ModelComponentIDFactory;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;

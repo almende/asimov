@@ -10,7 +10,6 @@ import io.coala.bind.BinderFactory;
 import io.coala.capability.replicate.ReplicationConfig;
 import io.coala.exception.CoalaException;
 import io.coala.log.LogUtil;
-import io.coala.model.ModelComponentIDFactory;
 import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
 

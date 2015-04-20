@@ -4,7 +4,6 @@ import io.asimov.agent.process.NonSkeletonActivityCapability;
 import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.messaging.ASIMOVMessage;
-import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.resource.RouteLookup.RouteInitiator;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
@@ -140,7 +139,7 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 			ofType(ASIMOVMessage.class).subscribe(messageObserver);
 	}
 	
-	/** @see eu.a4ee.model.process.NonSkeletonActivityCapability#call(java.lang.String) */
+	/** @see io.asimov.model.process.NonSkeletonActivityCapability#call(java.lang.String) */
 	@Override
 	public Observable<NonSkeletonActivityState> call(final String type, String... arguments)
 	{

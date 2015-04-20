@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
 import rx.Observer;
-//import eu.a4ee.agent.gui.SemanticAgentGui;
+//import io.asimov.agent.gui.SemanticAgentGui;
 
 /**
  * {@link NegotiationTestAgent}

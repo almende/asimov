@@ -7,7 +7,6 @@ import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.EventType;
 import io.asimov.model.resource.AbstractResourceManagementWorld;
-import io.asimov.model.resource.ResourceDescriptor;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.log.InjectLogger;
@@ -82,7 +81,7 @@ public class GenericResourceManagementWorldImpl extends
 			performActivityChange(null, null, null, null, Collections.singletonList(getOwnerID().getValue()), EventType.STOP_GLOBAL_UNAVAILABILITY);
 	}
 
-	/** @see eu.a4ee.model.resource.PersonResourceManagementWorld#onActivity() */
+	/** @see io.asimov.model.resource.GenericResourceManagementWorld#onActivity() */
 	@Override
 	public Observable<ActivityEvent> onActivityEvent() {
 		return this.activity.asObservable();

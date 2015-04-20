@@ -126,7 +126,7 @@ public class ScenarioManagementWorldImpl extends
 		super(binder);
 	}
 
-	/** @see eu.a4ee.model.resource.PersonResourceManagementWorld#desiredSiteLeaveTime() */
+	/** @see io.asimov.model.resource.PersonResourceManagementWorld#desiredSiteLeaveTime() */
 	@Override
 	public SimDuration onSiteDelay(final SimTime now) {
 		return enterDuration(now);

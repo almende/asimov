@@ -1,16 +1,10 @@
 package io.asimov.agent.process;
 
-import io.asimov.db.Datasource;
 import io.asimov.model.ASIMOVOrganizationWorld;
-import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
-import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.capability.embody.Percept;
-
-import java.util.List;
-
 import rx.Observable;
 
 /**

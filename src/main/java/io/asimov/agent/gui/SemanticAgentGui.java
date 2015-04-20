@@ -559,7 +559,7 @@ public class SemanticAgentGui extends JFrame
 	/**
 	 * Map that makes a link between a label and the effective message
 	 */
-	HashMap msgMap = new HashMap();
+	HashMap<String,String> msgMap = new HashMap<String,String>();
 
 	/**
 	 * The jade agent associated with this GUI

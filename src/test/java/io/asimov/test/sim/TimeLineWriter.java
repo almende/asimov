@@ -3,7 +3,6 @@ package io.asimov.test.sim;
 import io.asimov.db.mongo.MongoDatasource;
 import io.asimov.model.TraceService;
 import io.asimov.model.events.ActivityEvent;
-import io.asimov.model.events.Event;
 import io.asimov.vis.timeline.VisJSTimelineUtil;
 import io.coala.log.LogUtil;
 

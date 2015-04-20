@@ -1,7 +1,6 @@
 package io.asimov.model.sl;
 
 
-import java.util.Iterator;
 
 /**
  * {@link SLConvertible} tags POJOs that have a JSA representation, {@link #toSL()}

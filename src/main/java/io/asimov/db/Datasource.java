@@ -6,11 +6,11 @@ import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
-import io.asimov.model.resource.ResourceDescriptor;
 import io.coala.capability.BasicCapabilityStatus;
 import io.coala.capability.Capability;
 import io.coala.capability.CapabilityFactory;
 
+import javax.media.j3d.Material;
 import javax.persistence.EntityManagerFactory;
 
 /**

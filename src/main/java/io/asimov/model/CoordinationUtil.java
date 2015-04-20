@@ -32,7 +32,7 @@ public class CoordinationUtil
 	public static final int Y_COORDINATE_INDEX = 1;
 	public static final int Z_COORDINATE_INDEX = 2;
 		
-	/** @see eu.a4ee.model.resource.CurrentLocationStateService#getCurrentCoordinates() */
+	/** @see io.asimov.model.resource.CurrentLocationStateService#getCurrentCoordinates() */
 	public static List<Number> getCoordinatesForNonMovingElement(final Datasource ds, final AgentID elementRepresentative) {
 		ASIMOVResourceDescriptor r = (ASIMOVResourceDescriptor) ds.findResourceDescriptorByID(elementRepresentative.getValue());
 		ArrayList<Number> result = new ArrayList<Number>();

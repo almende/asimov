@@ -3,7 +3,6 @@ package io.asimov.agent.scenario;
 import io.asimov.model.ASIMOVOrganizationWorld;
 import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.EventType;
-import io.asimov.model.resource.ResourceDescriptor;
 import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;

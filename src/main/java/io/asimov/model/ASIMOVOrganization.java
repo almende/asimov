@@ -173,7 +173,7 @@ public class ASIMOVOrganization<W extends ASIMOVOrganizationWorld> extends
 					{
 						final ReasoningCapability reasoner = getBinder()
 								.inject(ReasoningCapability.class);
-						// LOG.trace("Got a4ee msg: " + msg);
+						// LOG.trace("Got ASIMOV msg: " + msg);
 						reasoner.addBeliefToKBase(reasoner
 								.toBelief(msg.content));
 					}

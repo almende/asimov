@@ -7,7 +7,6 @@ import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
-import io.asimov.model.resource.ResourceDescriptor;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.bind.BinderFactory;
@@ -690,7 +689,7 @@ public class MongoDatasource extends BasicCapability implements Datasource
 
 	
 
-	/** @see eu.a4ee.db.Datasource#hasReplication(java.lang.String) */
+	/** @see io.asimov.db.Datasource#hasReplication(java.lang.String) */
 	@Override
 	public boolean hasReplication(String replicationID)
 	{

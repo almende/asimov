@@ -14,7 +14,6 @@ import io.asimov.model.ResourceAllocation;
 import io.asimov.reasoning.sl.KBase;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.bind.Binder;
-import io.coala.capability.BasicCapability;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.interact.SendingCapability;
 import io.coala.capability.know.ReasoningCapability;
