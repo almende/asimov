@@ -84,6 +84,8 @@ public class ScenarioReplicatorImpl extends
 
 	/** */
 	private final Set<AgentID> readyResources = new HashSet<>();
+	
+	private boolean operational = false;
 
 	/** */
 	private final Map<String, Set<String>> processInstancesByType = new ConcurrentSkipListMap<String, Set<String>>();
@@ -218,31 +220,32 @@ public class ScenarioReplicatorImpl extends
 				ProcedureCall.create(this, this, UNAVAILABILITY, resource),
 				Trigger.createAbsolute(getTime().plus(1, TimeUnit.DAYS)));
 	}
-	
-	//FIXME: Not working yet ...
+
 	@Schedulable(OPERATION_PERIOD_EVENT_EMIT)
 	public void emitOperationPeriodEvent() {
-		if (getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).toMilliseconds().longValue() == 0) {
+		if (getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).longValue() == 0) {
 			// START OF OPERATION
-			try {
-				getWorld().performOperationChange(EventType.START_GLOBAL_OPERATIONAL_PERIOD);
-			} catch (Exception e) {
-				LOG.error("Failed to emit START_GLOBAL_OPERATIONAL_PERIOD event",e);
+			if (!operational) {
+				operational = true;
+				LOG.info("START of operational period at: "+getTime());
+				try {
+					getWorld().performOperationChange(EventType.START_GLOBAL_OPERATIONAL_PERIOD);
+				} catch (Exception e) {
+					LOG.error("Failed to emit START_GLOBAL_OPERATIONAL_PERIOD event",e);
+				}
 			}
-			SimTime t = getTime();
-			for (long i = 0; getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(t).toMilliseconds().longValue() == 0; i++) {
-				t = getTime().plus(i, TimeUnit.MILLIS);
-			}
-			ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT, Trigger.createAbsolute(t));
+			SimTime t = getTime().plus(1,TimeUnit.MINUTES);
+			getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(t));	
 		} else {
+			operational = false;
 			try {
 				getWorld().performOperationChange(EventType.STOP_GLOBAL_OPERATIONAL_PERIOD);
 			} catch (Exception e) {
-				LOG.error("Failed to emit START_GLOBAL_OPERATIONAL_PERIOD event",e);
-
+				LOG.error("Failed to emit STOP_GLOBAL_OPERATIONAL_PERIOD event",e);
 			}
-			SimTime t = getTime().plus(getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).toMilliseconds().longValue(),TimeUnit.MILLIS);
-			ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT, Trigger.createAbsolute(t));
+			SimTime t = getTime().plus(getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).getMillis(),TimeUnit.MILLIS);
+			LOG.info("END of operational period at: "+getTime());
+			getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(t));
 		}
 	}
 
@@ -421,7 +424,7 @@ public class ScenarioReplicatorImpl extends
 			});
 
 		}
-		ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT, Trigger.createAbsolute(getTime()));
+		getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(getTime()));
 		
 	}
 
