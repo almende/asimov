@@ -1,6 +1,8 @@
 package io.asimov.test.sim;
 
+import io.asimov.db.Datasource;
 import io.asimov.db.mongo.MongoDatasource;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.TraceService;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.xml.SimulationFile;
@@ -8,6 +10,7 @@ import io.asimov.xml.SimulationFile.Simulations;
 import io.asimov.xml.SimulationFile.Simulations.SimulationCase;
 import io.asimov.xml.TAgentBasedSimulationModuleOutput;
 import io.asimov.xml.TEventTrace;
+import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.log.LogUtil;
 
 import java.io.File;
@@ -23,17 +26,16 @@ import org.junit.Test;
  * @author <a href="mailto:suki@almende.org">suki</a>
  *
  */
-public class EventTraceWriter
-{
+public class EventTraceWriter {
 	private static final Logger LOG = LogUtil.getLogger(EventTraceWriter.class);
 
 	final static String replicationId = "replication_test_0";
-	
-	final static File output = new File(replicationId+"_output.xml");
+
+	final static File output = new File(replicationId + "_output.xml");
 
 	@Test
-	public void writeSimulatorOutput() throws Exception
-	{
+	public void writeSimulatorOutput()
+			throws Exception {
 		int mb = 1024 * 1024;
 
 		// Getting the runtime reference from system
@@ -55,16 +57,37 @@ public class EventTraceWriter
 		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
 
 		TraceService trace = TraceService.getInstance(replicationId);
-		final TEventTrace xmlOutput = trace.toXML(MongoDatasource.getInstance(replicationId));
+		
+		Datasource ds = MongoDatasource.getInstance(replicationId);
+		final TEventTrace xmlOutput = trace.toXML(ds);
+		
+		for (EventRecord er : xmlOutput.getEventRecord()) {
+			if (er.getResourceRef() != null && !er.getResourceRef().isEmpty()) {
+				int i = 0;
+				for (final String resourceRef : er.getResourceRef()) {
+					if (i == 0) {
+						final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
+						er.setActingResource(r.toXML());
+					} else {
+						final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
+						er.getInvolvedResource().add(r.toXML());
+					}
+					i++;
+				}
+
+			}
+		}
+		SimulationCase simCase = new SimulationCase();
 		SimulationFile simFile = new SimulationFile();
-		simFile.setId(replicationId);
-		simFile.setSimulations(new Simulations());
-		simFile.getSimulations().getSimulationCase().add(new SimulationCase());
-		simFile.getSimulations().getSimulationCase().get(0).setSimulationResult(new TAgentBasedSimulationModuleOutput());
-		simFile.getSimulations().getSimulationCase().get(0).getSimulationResult().setEventTrace(xmlOutput);
+		simFile.withId(replicationId).setSimulations(new Simulations());
+		simFile.getSimulations().withSimulationCase(simCase);
+		simFile.getSimulations().getSimulationCase().get(0)
+				.setSimulationResult(new TAgentBasedSimulationModuleOutput());
+		simFile.getSimulations().getSimulationCase().get(0)
+				.getSimulationResult().setEventTrace(xmlOutput);
 		XmlUtil.getCIMMarshaller().marshal(simFile, output);
-		LOG.info("Worte the following event trace to "+output.getAbsolutePath()+output.getName());
+		LOG.info("Worte the following event trace to "
+				+ output.getAbsolutePath() + output.getName());
 		XmlUtil.getCIMMarshaller().marshal(xmlOutput, System.out);
 	}
 }
-
