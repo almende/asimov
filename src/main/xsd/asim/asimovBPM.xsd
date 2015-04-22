@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://io.asimov.almende.org/2015/schema/bpm/" elementFormDefault="unqualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:asimovbpm="http://io.asimov.almende.org/2015/schema/bpm/">
+
+
+
+	<complexType name="tSkeletonActivityType">
+
+		<annotation>
+			<documentation>
+				Skeleton activity is a simplified activity encapsulating
+				several tasks of the original business process.
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="id" type="string" maxOccurs="1" minOccurs="1">
+			</element>
+			<element name="name" type="string" maxOccurs="1" minOccurs="0">
+			</element>
+			<element name="usedResource" maxOccurs="unbounded" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="resourceTypeRef" type="string" maxOccurs="1" minOccurs="1"/>
+						<element name="resourceSubTypeRef" type="string" maxOccurs="1" minOccurs="1"/>
+						<!-- TODO: Add ASIMOV NODE querying system here -->
+						<element name="numberOf" type="int"/>
+						<element name="numberOfUses" type="int" maxOccurs="1" minOccurs="0">
+						</element>
+						<element name="timeOfUse" type="duration" maxOccurs="1" minOccurs="0">
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+
+			<element name="interruptable" maxOccurs="1" minOccurs="0" type="boolean">
+			</element>
+			<element name="waitingTime" type="duration" maxOccurs="1" minOccurs="0">
+			</element>
+			<element name="executionTime" type="duration" maxOccurs="1" minOccurs="1">
+			</element>
+			<element name="transportTime" type="duration" maxOccurs="1" minOccurs="0">
+			</element>
+			<element name="isBusinessActivity" type="boolean" maxOccurs="1" minOccurs="1">
+			</element>
+			<element name="previousActivityRef" maxOccurs="unbounded" minOccurs="0">
+				<complexType>
+					<simpleContent>
+						<extension base="string">
+							<attribute name="likelihood" type="double" use="optional">
+							</attribute>
+						</extension>
+					</simpleContent>
+				</complexType>
+			</element>
+			<element name="nextActivityRef" maxOccurs="unbounded" minOccurs="0">
+				<complexType>
+					<simpleContent>
+                        <extension base="string">
+							<attribute name="likelihood" type="double" use="optional">
+							</attribute>
+						</extension>
+					</simpleContent>
+				</complexType>
+			</element>
+		</sequence>
+
+	</complexType>
+
+
+
+
+
+
+	<complexType name="tProcessType">
+        <annotation>
+        	<documentation>A Process or Workflow</documentation>
+        </annotation>
+        <sequence>
+
+        	<element name="id" type="string" maxOccurs="1" minOccurs="1">
+        	</element>
+        	<element name="name" type="string" maxOccurs="1" minOccurs="0">
+        	</element>
+        	<element name="activity" maxOccurs="unbounded" minOccurs="0" type="asimovbpm:tSkeletonActivityType">
+        	</element>
+
+        </sequence>
+
+	</complexType>
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</schema>

@@ -445,7 +445,7 @@ public class Process extends AbstractEntity<Process> implements
 						.getMillisecond()));
 			}
 			// de-normalize
-			// deNormalizeLikelihoods(resultProcess);
+			deNormalizeLikelihoods(resultProcess);
 			for (Transition transition : this.getTransitions()) {
 				if (transition.getToTasks().contains(task)) {
 					for (Task otherTask : transition.getFromTasks())
@@ -455,13 +455,15 @@ public class Process extends AbstractEntity<Process> implements
 							PreviousActivityRef prevRef = null;
 							for (PreviousActivityRef ref : activity
 									.getPreviousActivityRef()) {
-								if (ref.getValue().equals(otherTask.getName()))
+								if (ref.getValue().equals(otherTask.getValue())) {
 									ref.setLikelihood(ref.getLikelihood() + 1);
+								prevRef = ref;
+								}
 							}
 							if (prevRef == null) {
 								prevRef = new PreviousActivityRef();
 								prevRef.setLikelihood(1.0);
-								prevRef.setValue(otherTask.getName());
+								prevRef.setValue(otherTask.getValue());
 								activity.getPreviousActivityRef().add(prevRef);
 							}
 						}
@@ -475,13 +477,15 @@ public class Process extends AbstractEntity<Process> implements
 							NextActivityRef nextRef = null;
 							for (NextActivityRef ref : activity
 									.getNextActivityRef()) {
-								if (ref.getValue().equals(otherTask.getName()))
+								if (ref.getValue().equals(otherTask.getValue())) {
 									ref.setLikelihood(ref.getLikelihood() + 1);
+									nextRef = ref;
+								}
 							}
 							if (nextRef == null) {
 								nextRef = new NextActivityRef();
 								nextRef.setLikelihood(1.0);
-								nextRef.setValue(otherTask.getName());
+								nextRef.setValue(otherTask.getValue());
 								activity.getNextActivityRef().add(nextRef);
 							}
 
@@ -722,39 +726,39 @@ public class Process extends AbstractEntity<Process> implements
 
 	public static synchronized void deNormalizeLikelihoods(
 			TProcessType processType) {
-		// de-normalize
-		// for (TSkeletonActivityType a : processType.getActivity())
-		// {
-		// ArrayList<Double> denormalizedPrevValues = new ArrayList<Double>();
-		// for (PreviousActivityRef r : a.getPreviousActivityRef())
-		// {
-		// denormalizedPrevValues.add(r.getLikelihood());
-		// }
-		// Double prevFactor =
-		// deNormalizeFactorForDistribution(denormalizedPrevValues);
-		// ArrayList<Double> denormalizedNextValues = new ArrayList<Double>();
-		// for (NextActivityRef r : a.getNextActivityRef())
-		// {
-		// denormalizedNextValues.add(r.getLikelihood());
-		// }
-		// Double nextFactor =
-		// deNormalizeFactorForDistribution(denormalizedNextValues);
-		//
-		// for (PreviousActivityRef r : a.getPreviousActivityRef())
-		// {
-		// if (r.getLikelihood() == null)
-		// r.setLikelihood(1.0);
-		// else
-		// r.setLikelihood(r.getLikelihood() * prevFactor);
-		// }
-		// for (NextActivityRef r : a.getNextActivityRef())
-		// {
-		// if (r.getLikelihood() == null)
-		// r.setLikelihood(1.0);
-		// else
-		// r.setLikelihood(r.getLikelihood() * nextFactor);
-		// }
-		// }
+		 // de-normalize
+		 for (TSkeletonActivityType a : processType.getActivity())
+		 {
+		 ArrayList<Double> denormalizedPrevValues = new ArrayList<Double>();
+		 for (PreviousActivityRef r : a.getPreviousActivityRef())
+		 {
+		 denormalizedPrevValues.add(r.getLikelihood());
+		 }
+		 Double prevFactor =
+		 deNormalizeFactorForDistribution(denormalizedPrevValues);
+		 ArrayList<Double> denormalizedNextValues = new ArrayList<Double>();
+		 for (NextActivityRef r : a.getNextActivityRef())
+		 {
+		 denormalizedNextValues.add(r.getLikelihood());
+		 }
+		 Double nextFactor =
+		 deNormalizeFactorForDistribution(denormalizedNextValues);
+		
+		 for (PreviousActivityRef r : a.getPreviousActivityRef())
+		 {
+		 if (r.getLikelihood() == null)
+		 r.setLikelihood(1.0);
+		 else
+		 r.setLikelihood(r.getLikelihood() * prevFactor);
+		 }
+		 for (NextActivityRef r : a.getNextActivityRef())
+		 {
+		 if (r.getLikelihood() == null)
+		 r.setLikelihood(1.0);
+		 else
+		 r.setLikelihood(r.getLikelihood() * nextFactor);
+		 }
+		 }
 	}
 
 	public static synchronized void normalizeLikelihoods(

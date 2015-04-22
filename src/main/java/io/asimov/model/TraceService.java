@@ -229,7 +229,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 			if (includeActivityDescriptors && event.getActivity() != null) {
 				Process p = ds.findProcessByID(event.getProcessID());
 				for (TSkeletonActivityType activityType : p.toXML().getActivity()) {
-					if (activityType.getName().equals(activityType.getName())) {
+					if (activityType.getName().equals(xmlEvent.getActivityRef())) {
 						xmlEvent.setActivityDescription(activityType);
 						break;
 					}

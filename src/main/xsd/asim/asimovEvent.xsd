@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://io.asimov.almende.org/2015/schema/event/"
+	elementFormDefault="unqualified" attributeFormDefault="unqualified"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:asimovevent="http://io.asimov.almende.org/2015/schema/event/"
+	xmlns:asimovcim="http://io.asimov.almende.org/2015/schema/cim/"
+	xmlns:asimovbpm="http://io.asimov.almende.org/2015/schema/bpm/">
+	
+
+<import namespace="http://io.asimov.almende.org/2015/schema/cim/"
+		schemaLocation="asimovCIM.xsd" />
+		
+<import namespace="http://io.asimov.almende.org/2015/schema/bpm/"
+		schemaLocation="asimovBPM.xsd" />
+		
+	<complexType name="tAgentBasedSimulationModuleOutput">
+		<sequence>
+			<element name="simulationID" type="string" minOccurs="1"
+				maxOccurs="1" />
+			<element name="eventTrace" type="asimovevent:tEventTrace"
+				minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+	<complexType name="tEventTrace">
+		<sequence>
+			<element name="eventRecord" minOccurs="0"
+				maxOccurs="unbounded">
+				<complexType>
+					<sequence>
+						<element name="timeStamp" type="dateTime"
+							minOccurs="1" maxOccurs="1" />
+						<element name="resourceRef" type="string" minOccurs="0" maxOccurs="unbounded" />
+						<element name="actingResource" type="asimovcim:tResource" minOccurs="0" maxOccurs="1" />
+						<element name="involvedResource" type="asimovcim:tResource" minOccurs="0" maxOccurs="unbounded" />
+						<element name="activityType" type="string" maxOccurs="1" minOccurs="0" />
+						<element name="activityInstanceRef" type="string" maxOccurs="1" minOccurs="0" />
+						<element name="processRef" type="string" maxOccurs="1" minOccurs="0" />
+						<element name="processInstanceRef" type="string" maxOccurs="1" minOccurs="0" />
+						<element name="activityRef" type="string" maxOccurs="1" minOccurs="0" />
+						<element name="activityDescription" type="asimovbpm:tSkeletonActivityType" maxOccurs="1" minOccurs="0" />
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	
+	
+</schema>
