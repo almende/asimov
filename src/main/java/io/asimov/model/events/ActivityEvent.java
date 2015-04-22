@@ -151,7 +151,7 @@ public class ActivityEvent extends Event<ActivityEvent> implements XMLConvertibl
 		final long simTimeMS = XmlUtil.toDateTime(event.getTimeStamp())
 				.getMillis() - offset.getTime();
 
-		// TODO find assemblyLine/door type from ref
+		// TODO find resource-sub type from ref
 		Number time;
 		try
 		{

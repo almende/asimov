@@ -11,7 +11,12 @@ import io.asimov.xml.SimulationFile.Simulations.SimulationCase;
 import io.asimov.xml.TAgentBasedSimulationModuleOutput;
 import io.asimov.xml.TEventTrace;
 import io.asimov.xml.TEventTrace.EventRecord;
+import io.coala.agent.AgentID;
+import io.coala.bind.Binder;
+import io.coala.bind.BinderFactory;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.log.LogUtil;
+import io.coala.model.ModelID;
 
 import java.io.File;
 
@@ -32,6 +37,9 @@ public class EventTraceWriter {
 	final static String replicationId = "replication_test_0";
 
 	final static File output = new File(replicationId + "_output.xml");
+	
+	static Binder binder;
+	
 
 	@Test
 	public void writeSimulatorOutput()
@@ -55,28 +63,21 @@ public class EventTraceWriter {
 
 		// Print Maximum available memory
 		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
+		
+		binder = BinderFactory.Builder.fromFile("asimov.properties").build().create(new AgentID(new ModelID(replicationId), "eventTraceWriter"));
 
+
+		final boolean includeResouces = binder.inject(ConfiguringCapability.class).getProperty("includeResourcesInEventTrace").getBoolean().booleanValue();
+		final boolean includeActivities = binder.inject(ConfiguringCapability.class).getProperty("includeActivitiesInEventTrace").getBoolean().booleanValue();
+
+		
 		TraceService trace = TraceService.getInstance(replicationId);
 		
-		Datasource ds = MongoDatasource.getInstance(replicationId);
-		final TEventTrace xmlOutput = trace.toXML(ds);
+		Datasource ds = binder.inject(Datasource.class);
+			
+		final TEventTrace xmlOutput = trace.toXML(ds,includeResouces,includeActivities);
 		
-		for (EventRecord er : xmlOutput.getEventRecord()) {
-			if (er.getResourceRef() != null && !er.getResourceRef().isEmpty()) {
-				int i = 0;
-				for (final String resourceRef : er.getResourceRef()) {
-					if (i == 0) {
-						final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
-						er.setActingResource(r.toXML());
-					} else {
-						final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
-						er.getInvolvedResource().add(r.toXML());
-					}
-					i++;
-				}
-
-			}
-		}
+		
 		SimulationCase simCase = new SimulationCase();
 		SimulationFile simFile = new SimulationFile();
 		simFile.withId(replicationId).setSimulations(new Simulations());

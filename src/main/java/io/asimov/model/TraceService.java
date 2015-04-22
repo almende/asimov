@@ -7,6 +7,8 @@ import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
 import io.asimov.xml.TEventTrace;
+import io.asimov.xml.TSkeletonActivityType;
+import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.log.LogUtil;
 import io.coala.model.ModelID;
 import io.coala.time.SimTime;
@@ -200,7 +202,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		return event;
 	}
 
-	public TEventTrace toXML(final Datasource ds)
+	public TEventTrace toXML(final Datasource ds, boolean includeResourceDescriptors, boolean includeActivityDescriptors)
 	{
 		long firstEventTime = Long.MAX_VALUE, lastEventTime = Long.MIN_VALUE;
 		TEventTrace result = new TEventTrace();
@@ -210,7 +212,30 @@ public class TraceService extends AbstractPersonTraceEventProducer
 					.getIsoTime().getTime());
 			lastEventTime = Math.max(lastEventTime, event.getExecutionTime()
 					.getIsoTime().getTime());
-			result.getEventRecord().add(event.toXML());
+			final EventRecord xmlEvent = event.toXML();
+			if (includeResourceDescriptors && xmlEvent.getResourceRef() != null && !xmlEvent.getResourceRef().isEmpty()) {
+				int i = 0;
+				for (final String resourceRef : xmlEvent.getResourceRef()) {
+					if (i == 0) {
+						final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
+						xmlEvent.setActingResource(r.toXML());
+					} else {
+						final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
+						xmlEvent.getInvolvedResource().add(r.toXML());
+					}
+					i++;
+				}
+			}
+			if (includeActivityDescriptors && event.getActivity() != null) {
+				Process p = ds.findProcessByID(event.getProcessID());
+				for (TSkeletonActivityType activityType : p.toXML().getActivity()) {
+					if (activityType.getName().equals(activityType.getName())) {
+						xmlEvent.setActivityDescription(activityType);
+						break;
+					}
+				}
+			}
+			result.getEventRecord().add(xmlEvent);
 		}
 		return result;
 	}

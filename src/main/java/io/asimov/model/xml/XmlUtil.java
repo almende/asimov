@@ -6,6 +6,8 @@ import io.asimov.xml.BPMImport;
 import io.asimov.xml.ListOfProcesses;
 import io.asimov.xml.SimulationFile;
 import io.asimov.xml.TDistribution;
+import io.asimov.xml.TProcessType;
+import io.asimov.xml.TSkeletonActivityType;
 import io.coala.log.LogUtil;
 import io.coala.xml.XmlContextID;
 

@@ -8,7 +8,9 @@ import io.asimov.vis.timeline.VisJSTimelineUtil;
 import io.asimov.xml.TEventTrace;
 import io.coala.bind.Binder;
 import io.coala.capability.admin.DestroyingCapability;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
+import io.coala.exception.CoalaException;
 import io.coala.log.LogUtil;
 
 import java.awt.BorderLayout;
@@ -79,7 +81,20 @@ public class ScenarioAgentGui extends JFrame
 				final TraceService trace = TraceService.getInstance(binder
 						.getID().getModelID().getValue());
 				final Datasource ds = binder.inject(Datasource.class);
-				final TEventTrace xmlOutput = trace.toXML(ds);
+				boolean includeResouces = false;
+				try {
+					includeResouces = binder.inject(ConfiguringCapability.class).getProperty("includeResourcesInEventTrace").getBoolean().booleanValue();
+				} catch (CoalaException e3) {
+					LOG.error("Failed to read include resources property defaulting to false",e3);
+				}
+				boolean includeActivities = false;
+				try {
+					includeActivities = binder.inject(ConfiguringCapability.class).getProperty("includeActivitiesInEventTrace").getBoolean().booleanValue();
+				} catch (CoalaException e2) {
+					LOG.error("Failed to read include activities property defaulting to false",e2);
+				}
+
+				final TEventTrace xmlOutput = trace.toXML(ds,includeResouces,includeActivities);
 				try
 				{
 					List<ActivityEvent> events = new ArrayList<ActivityEvent>();

@@ -17,6 +17,7 @@ import io.coala.agent.AgentStatusUpdate;
 import io.coala.bind.Binder;
 import io.coala.bind.BinderFactory;
 import io.coala.capability.admin.CreatingCapability;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.capability.replicate.ReplicationConfig;
 import io.coala.exception.CoalaException;
@@ -410,7 +411,10 @@ public class RunUseCase
 		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
 
 		TraceService trace = TraceService.getInstance(replicationID);
-		final TEventTrace xmlOutput = trace.toXML(MongoDatasource.getInstance(replicationID));
+		final boolean includeResouces = binder.inject(ConfiguringCapability.class).getProperty("includeResourcesInEventTrace").getBoolean().booleanValue();
+		final boolean includeActivities = binder.inject(ConfiguringCapability.class).getProperty("includeActivitiesInEventTrace").getBoolean().booleanValue();
+				
+		final TEventTrace xmlOutput = trace.toXML(MongoDatasource.getInstance(replicationID),includeResouces,includeActivities);
 		SimulationFile simFile = new SimulationFile();
 		simFile.setId(replicationID);
 		simFile.setSimulations(new Simulations());
