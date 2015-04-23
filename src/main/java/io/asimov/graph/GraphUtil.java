@@ -3,8 +3,7 @@ package io.asimov.graph;
 import io.asimov.model.process.Process;
 import io.asimov.model.process.Task;
 import io.asimov.xml.TSkeletonActivityType;
-import io.asimov.xml.TSkeletonActivityType.RoleInvolved;
-import io.asimov.xml.TSkeletonActivityType.UsedComponent;
+import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.coala.log.LogUtil;
 import io.coala.util.Util;
 
@@ -303,10 +302,10 @@ public class GraphUtil implements Util
 		Transaction tx = null;
 		if (!containsKey)
 			tx = graphDb.beginTx();
-		for (RoleInvolved role : bodyActivity.getRoleInvolved())
+		for (UsedResource resource : bodyActivity.getUsedResource())
 		{
 			boolean alreadyConnected = false;
-			Node roleNode = retainNodeForResource(role.getRoleRef());
+			Node roleNode = retainNodeForResource(resource.getResourceSubTypeRef());
 			for (Relationship rel : roleNode
 					.getRelationships(ConnectionTypes.HAS_RESOURCE))
 			{
@@ -327,55 +326,6 @@ public class GraphUtil implements Util
 					roleNode);
 		}
 
-		for (UsedComponent material : bodyActivity.getUsedComponent())
-		{
-			boolean alreadyConnected = false;
-			Node materialNode = retainNodeForResource(material
-					.getComponentRef().toString());
-			for (Relationship rel : materialNode
-					.getRelationships(ConnectionTypes.HAS_RESOURCE))
-			{
-				if (alreadyConnected)
-					break;
-				for (Node evaluatedNode : rel.getNodes())
-				{
-					if (alreadyConnected)
-						break;
-					if (evaluatedNode.equals(result))
-						alreadyConnected = true;
-				}
-			}
-			if (!alreadyConnected)
-				result.createRelationshipTo(materialNode,
-						ConnectionTypes.HAS_RESOURCE);
-			releaseNodeForResource(
-					materialNode.getProperty("name").toString(), materialNode);
-		}
-
-		for (String assemblyLineType : bodyActivity
-				.getUsedAssemlyLineType())
-		{
-			boolean alreadyConnected = false;
-			Node assemblyLineNode = retainNodeForResource(assemblyLineType.toString());
-			for (Relationship rel : assemblyLineNode
-					.getRelationships(ConnectionTypes.HAS_RESOURCE))
-			{
-				if (alreadyConnected)
-					break;
-				for (Node evaluatedNode : rel.getNodes())
-				{
-					if (alreadyConnected)
-						break;
-					if (evaluatedNode.equals(result))
-						alreadyConnected = true;
-				}
-			}
-			if (!alreadyConnected)
-				result.createRelationshipTo(assemblyLineNode,
-						ConnectionTypes.HAS_RESOURCE);
-			releaseNodeForResource(assemblyLineNode.getProperty("name").toString(),
-					assemblyLineNode);
-		}
 		if (!containsKey)
 		{
 			tx.success();

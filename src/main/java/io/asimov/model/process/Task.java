@@ -1,11 +1,11 @@
 package io.asimov.model.process;
 
-import io.arum.model.resource.ResourceSubtype;
 import io.asimov.model.AbstractNamed;
 import io.asimov.model.Resource;
 import io.asimov.model.ResourceRequirement;
 import io.asimov.model.Time;
 import io.asimov.model.XMLConvertible;
+import io.asimov.model.resource.ResourceSubtype;
 import io.asimov.model.sl.ASIMOVNode;
 import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.ASIMOVTermSequenceNode;

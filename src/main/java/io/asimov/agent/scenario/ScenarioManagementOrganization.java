@@ -1,8 +1,8 @@
 package io.asimov.agent.scenario;
 
-import io.arum.model.ARUMOrganization;
 import io.asimov.agent.gui.ScenarioAgentGui;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
+import io.asimov.model.ASIMOVOrganization;
 import io.coala.bind.Binder;
 import io.coala.capability.admin.DestroyingCapability;
 import io.coala.capability.plan.ClockStatusUpdate;
@@ -25,7 +25,7 @@ import rx.Observer;
  * 
  */
 public class ScenarioManagementOrganization extends
-		ARUMOrganization<ScenarioManagementWorld>
+		ASIMOVOrganization<ScenarioManagementWorld>
 {
 
 	/** */

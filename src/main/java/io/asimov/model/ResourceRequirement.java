@@ -97,6 +97,7 @@ public class ResourceRequirement extends AbstractNamed<ResourceRequirement>
 		.instantiate(TASK_RESOURCE_DURATION, null);
 
 	/** @see SLConvertible#toSL() */
+	@SuppressWarnings("unchecked")
 	@Override
 	public ASIMOVTerm toSL()
 	{

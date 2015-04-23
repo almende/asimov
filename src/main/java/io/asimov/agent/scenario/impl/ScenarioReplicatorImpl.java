@@ -1,14 +1,5 @@
 package io.asimov.agent.scenario.impl;
 
-import io.arum.model.process.ProcessManagementOrganization;
-import io.arum.model.resource.RouteLookup.RouteProvider;
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.assemblyline.AssemblyLineType;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.person.PersonResourceManagementWorld;
-import io.arum.model.resource.person.PersonRole;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.SupplyType;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
@@ -17,14 +8,16 @@ import io.asimov.agent.scenario.ScenarioManagementWorld.ProcessEventType;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ResourceEvent;
 import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
-import io.asimov.db.Datasource;
 import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.model.events.EventType;
+import io.asimov.model.process.ProcessManagementOrganization;
+import io.asimov.model.resource.ResourceDescriptor;
+import io.asimov.model.resource.RouteLookup.RouteProvider;
 import io.asimov.unavailability.MonkeyAgent;
 import io.asimov.unavailability.UnAvailabilityRequest;
 import io.coala.agent.AgentID;
 import io.coala.agent.AgentStatusUpdate;
 import io.coala.bind.Binder;
-import io.coala.capability.admin.CreatingCapability;
 import io.coala.capability.admin.DestroyingCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.enterprise.fact.CoordinationFact;
@@ -78,6 +71,8 @@ public class ScenarioReplicatorImpl extends
 
 	private static final String SCHEDULE_ABSENCE_FOR_DURATION = "SCHEDULE_ABSENCE_FOR_DURATION";
 
+	private static final String OPERATION_PERIOD_EVENT_EMIT = "OPERATION_PERIOD_EVENT_EMIT";
+
 	/** */
 	@InjectLogger
 	private Logger LOG;
@@ -87,6 +82,8 @@ public class ScenarioReplicatorImpl extends
 
 	/** */
 	private final Set<AgentID> readyResources = new HashSet<>();
+	
+	private boolean operational = false;
 
 	/** */
 	private final Map<String, Set<String>> processInstancesByType = new ConcurrentSkipListMap<String, Set<String>>();
@@ -222,6 +219,34 @@ public class ScenarioReplicatorImpl extends
 				Trigger.createAbsolute(getTime().plus(1, TimeUnit.DAYS)));
 	}
 
+	@Schedulable(OPERATION_PERIOD_EVENT_EMIT)
+	public void emitOperationPeriodEvent() {
+		if (getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).longValue() == 0) {
+			// START OF OPERATION
+			if (!operational) {
+				operational = true;
+				LOG.info("START of operational period at: "+getTime());
+				try {
+					getWorld().performOperationChange(EventType.START_GLOBAL_OPERATIONAL_PERIOD);
+				} catch (Exception e) {
+					LOG.error("Failed to emit START_GLOBAL_OPERATIONAL_PERIOD event",e);
+				}
+			}
+			SimTime t = getTime().plus(1,TimeUnit.MINUTES);
+			getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(t));	
+		} else {
+			operational = false;
+			try {
+				getWorld().performOperationChange(EventType.STOP_GLOBAL_OPERATIONAL_PERIOD);
+			} catch (Exception e) {
+				LOG.error("Failed to emit STOP_GLOBAL_OPERATIONAL_PERIOD event",e);
+			}
+			SimTime t = getTime().plus(getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).getMillis(),TimeUnit.MILLIS);
+			LOG.info("END of operational period at: "+getTime());
+			getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(t));
+		}
+	}
+
 	@Schedulable(UNAVAILABILITY)
 	public void scheduledUnavailability(final AgentID resource) {
 		final SimDuration duration = getWorld().getResourceUnavailabilityDist(
@@ -265,37 +290,20 @@ public class ScenarioReplicatorImpl extends
 	}
 
 	private Set<Map<String, String>> getTypesForAgent(AgentID agentId) {
-		LOG.error("");
 		Set<Map<String, String>> result = new HashSet<Map<String, String>>();
-		for (Person r : getWorld().getPersons()) {
+		for (ResourceDescriptor<?> r : getWorld().getResourceDescriptors()) {
 			if (!r.getName().equals(agentId.getValue()))
 				continue;
 			LOG.error("Monkey will attack:" + r);
-			for (PersonRole rt : r.getTypes())
+			
+			for (String rst : r.getSubTypes()) {
 				result.add(Collections.singletonMap(
-						Person.class.getCanonicalName(), rt.getValue()));
+					r.getType(), rst));
+			}
+		
 			return result;
 		}
 
-		for (AssemblyLine r : getWorld().getAssemblyLines()) {
-			if (!r.getName().equals(agentId.getValue()))
-				continue;
-			LOG.error("Monkey will attack:" + r);
-			for (AssemblyLineType rt : r.getTypes())
-				result.add(Collections.singletonMap(
-						AssemblyLine.class.getCanonicalName(), rt.getValue()));
-			return result;
-
-		}
-		for (Material r : getWorld().getMaterials()) {
-			if (!r.getName().equals(agentId.getValue()))
-				continue;
-			LOG.error("Monkey will attack:" + r);
-			for (SupplyType rt : r.getTypes())
-				result.add(Collections.singletonMap(
-						Material.class.getCanonicalName(), rt.getValue()));
-			return result;
-		}
 		return result;
 	}
 
@@ -414,6 +422,8 @@ public class ScenarioReplicatorImpl extends
 			});
 
 		}
+		getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(getTime()));
+		
 	}
 
 	@Override
@@ -466,7 +476,7 @@ public class ScenarioReplicatorImpl extends
 
 	public SimTime getAbsProcessRepeatTime(final String processTypeID) {
 		final SimTime now = getTime();
-		if (getBinder().inject(PersonResourceManagementWorld.class)
+		if (getBinder().inject(ScenarioManagementWorld.class)
 				.onSiteDelay(now.plus(1, TimeUnit.MINUTES)).doubleValue() == 0)
 			return now.plus(1, TimeUnit.MINUTES);
 		final SimDuration millisOfDay = new SimDuration(new DateTime(
@@ -477,7 +487,7 @@ public class ScenarioReplicatorImpl extends
 			procStartTimeOfDay = procStartTimeOfDay.plus(1, TimeUnit.DAYS);
 		final SimTime absStart = startOfDay.plus(procStartTimeOfDay);
 		final SimTime result = absStart.plus(getBinder().inject(
-				PersonResourceManagementWorld.class).onSiteDelay(absStart));
+				ScenarioManagementWorld.class).onSiteDelay(absStart));
 		final DateTime offset = new DateTime(getBinder().inject(Date.class));
 		LOG.info("process repeat from now (" + now.toDateTime(offset)
 				+ ") = startofday " + startOfDay.toDateTime(offset)

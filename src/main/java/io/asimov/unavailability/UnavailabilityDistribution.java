@@ -2,10 +2,8 @@ package io.asimov.unavailability;
 
 import io.asimov.xml.DistributionTypeEnum;
 import io.asimov.xml.TContext;
-import io.asimov.xml.TContext.AssemblyLine;
-import io.asimov.xml.TContext.Material;
-import io.asimov.xml.TContext.Person;
 import io.asimov.xml.TPropertyTypeEnum;
+import io.asimov.xml.TResource;
 import io.asimov.xml.TUnavailablePeriodDistribution;
 import io.coala.log.LogUtil;
 import io.coala.random.ProbabilityMass;
@@ -52,28 +50,8 @@ public class UnavailabilityDistribution {
 	}
 	
 	public UnavailabilityDistribution fromXML(final TContext context) {
-		for (Person resource : context.getPerson()) {
-			final String resourceId = resource.getPersonId();
-			RandomDistribution<SimDuration> dist = distFactory.getConstant(SimDuration.ZERO);
-			try {
-				dist = getUnavailabilityDurationDist(resource.getUnavailable(), distFactory, rng);
-			} catch (Exception e) {
-				LOG.error("Failed to load unavailability distribution for "+resourceId,e);
-			}
-			resourceDistributions.put(resourceId,dist);
-		}
-		for (AssemblyLine resource : context.getAssemblyLine()) {
-			final String resourceId = resource.getAssemblyLineId();
-			RandomDistribution<SimDuration> dist = distFactory.getConstant(SimDuration.ZERO);
-			try {
-				dist = getUnavailabilityDurationDist(resource.getUnavailable(), distFactory, rng);
-			} catch (Exception e) {
-				LOG.error("Failed to load unavailability distribution for "+resourceId,e);
-			}
-			resourceDistributions.put(resourceId,dist);
-		}
-		for (Material resource : context.getMaterial()) {
-			final String resourceId = resource.getMaterialId();
+		for (TResource resource : context.getResource()) {
+			final String resourceId = resource.getResourceId();
 			RandomDistribution<SimDuration> dist = distFactory.getConstant(SimDuration.ZERO);
 			try {
 				dist = getUnavailabilityDurationDist(resource.getUnavailable(), distFactory, rng);

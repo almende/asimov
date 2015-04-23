@@ -1,26 +1,18 @@
 package io.asimov.model.xml;
 
-import io.arum.model.resource.person.Person;
 import io.asimov.agent.scenario.Context;
 import io.asimov.model.xml.moxy.MOXyXmlContextID;
 import io.asimov.xml.BPMImport;
-import io.asimov.xml.ListOfEvents;
 import io.asimov.xml.ListOfProcesses;
-import io.asimov.xml.ListOfRoles;
 import io.asimov.xml.SimulationFile;
-import io.asimov.xml.SimulationFile.Simulations.SimulationCase.Roles;
 import io.asimov.xml.TDistribution;
 import io.asimov.xml.TProcessType;
-import io.asimov.xml.TRole;
-import io.asimov.xml.TUseCase;
+import io.asimov.xml.TSkeletonActivityType;
 import io.coala.log.LogUtil;
 import io.coala.xml.XmlContextID;
 
 import java.io.StringWriter;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -74,8 +66,7 @@ public class XmlUtil extends io.coala.xml.XmlUtil
 	 */
 	public static final XmlContextID<io.asimov.xml.ObjectFactory> CIM = MOXyXmlContextID
 			.of(io.asimov.xml.ObjectFactory.class,
-					SimulationFile.class, Context.class, BPMImport.class, ListOfEvents.class,
-					ListOfRoles.class,
+					SimulationFile.class, Context.class, BPMImport.class,
 					ListOfProcesses.class, TDistribution.class);
 
 	/**
@@ -222,24 +213,6 @@ public class XmlUtil extends io.coala.xml.XmlUtil
 		return duration.getTimeInMillis(new Date(0));
 	}
 
-	/**
-	 * @param processes
-	 * @param roleDistribution
-	 * @param template
-	 * @param roles
-	 */
-	public static void exportRoleDistribution(
-			final Collection<TProcessType> processes,
-			final TUseCase template, final Roles roles)
-	{
-		template.getProcess().addAll(processes);
-		for (io.asimov.xml.TContext.Person entry : template.getContext().getPerson())
-		{
-			for (TRole r : entry.getRole()) {
-				roles.getRole().add(r);
-			}
-		}
-	}
 
 	/**
 	 * @param xml

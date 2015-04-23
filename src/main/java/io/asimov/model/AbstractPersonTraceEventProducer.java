@@ -1,6 +1,6 @@
 package io.asimov.model;
 
-import io.arum.model.events.PersonEvent;
+import io.asimov.model.events.Event;
 import io.coala.log.LogUtil;
 
 import java.rmi.RemoteException;
@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class AbstractPersonTraceEventProducer extends
 		AbstractPersonTraceModelComponent implements
-		PersonTraceEventProducer
+		ResourceTraceEventProducer
 {
 
 	/** */
@@ -36,7 +36,7 @@ public abstract class AbstractPersonTraceEventProducer extends
 	 * @param name
 	 */
 	protected AbstractPersonTraceEventProducer(
-			final PersonTraceModel model, final String name)
+			final ResourceTraceModel model, final String name)
 	{
 		super(model, name);
 	}
@@ -46,7 +46,7 @@ public abstract class AbstractPersonTraceEventProducer extends
 	 * @throws SimRuntimeException
 	 * @throws RemoteException
 	 */
-	protected void scheduleTraceEvent(final PersonEvent<?> event)
+	protected void scheduleTraceEvent(final Event<?> event)
 			throws RemoteException, SimRuntimeException
 	{
 		scheduleTraceEvent(event, event.getExecutionTime().doubleValue());
@@ -57,7 +57,7 @@ public abstract class AbstractPersonTraceEventProducer extends
 	 * @throws SimRuntimeException
 	 * @throws RemoteException
 	 */
-	protected void scheduleTraceEvent(final PersonEvent<?> event,
+	protected void scheduleTraceEvent(final Event<?> event,
 			final Number absExecTime) throws RemoteException,
 			SimRuntimeException
 	{
@@ -73,7 +73,7 @@ public abstract class AbstractPersonTraceEventProducer extends
 		for (int i = 0; i < n; i++)
 		{
 			final double t = i * interval + absExecTime.doubleValue();
-			final PersonTraceEventWrapper wrappedEvent = new PersonTraceEventWrapper(
+			final ResourceTraceEventWrapper wrappedEvent = new ResourceTraceEventWrapper(
 					this, t, event);
 			getSimulator().scheduleEvent(
 					new SimEvent(t, this, this, FIRE_TRACE_EVENT_METHOD_ID,
@@ -85,7 +85,7 @@ public abstract class AbstractPersonTraceEventProducer extends
 	private static final String FIRE_TRACE_EVENT_METHOD_ID = "fireTraceEvent";
 
 	/** */
-	protected void fireTraceEvent(final PersonTraceEventWrapper event)
+	protected void fireTraceEvent(final ResourceTraceEventWrapper event)
 	{
 		try
 		{
@@ -96,11 +96,11 @@ public abstract class AbstractPersonTraceEventProducer extends
 		}
 	}
 
-	/** @see PersonTraceEventProducer#addListener(PersonTraceEventListener) */
+	/** @see ResourceTraceEventProducer#addListener(ResourceTraceEventListener) */
 	@Override
-	public void addListener(final PersonTraceEventListener listener)
+	public void addListener(final ResourceTraceEventListener listener)
 	{
-		addListener(new PersonTraceEventWrapperListener(listener),
-				PersonTraceEventWrapper.OCCUPANT_EVENT_TYPE);
+		addListener(new ResourceTraceEventWrapperListener(listener),
+				ResourceTraceEventWrapper.OCCUPANT_EVENT_TYPE);
 	}
 }

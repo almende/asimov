@@ -1,9 +1,9 @@
 package io.asimov.microservice.negotiation;
 
-import io.arum.model.resource.DirectoryLookup.LookupInitiator;
-import io.arum.model.resource.RouteLookup.RouteInitiator;
 import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipation.ActivityParticipant;
+import io.asimov.model.resource.DirectoryLookup.LookupInitiator;
+import io.asimov.model.resource.RouteLookup.RouteInitiator;
 import io.asimov.model.ActivityParticipationResourceInformation;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;

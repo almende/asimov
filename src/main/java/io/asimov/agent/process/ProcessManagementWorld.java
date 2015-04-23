@@ -1,17 +1,10 @@
 package io.asimov.agent.process;
 
-import io.arum.model.ARUMOrganizationWorld;
-import io.arum.model.resource.assemblyline.AssemblyLineType;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.SupplyType;
+import io.asimov.model.ASIMOVOrganizationWorld;
+import io.asimov.model.events.EventType;
 import io.asimov.model.process.Process;
-import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.capability.embody.Percept;
-
-import java.util.List;
-import java.util.Set;
-
 import rx.Observable;
 
 /**
@@ -21,7 +14,7 @@ import rx.Observable;
  * @author <a href="mailto:Rick@almende.org">Rick</a>
  * 
  */
-public interface ProcessManagementWorld extends ARUMOrganizationWorld
+public interface ProcessManagementWorld extends ASIMOVOrganizationWorld
 {
 
 	/**
@@ -39,19 +32,37 @@ public interface ProcessManagementWorld extends ARUMOrganizationWorld
 	Process getProcess(String processTypeID);
 
 	Observable<Percept> makeObservation(String processTypeID);
-
+	
 	/**
-	 * @param agent
-	 * @return
-	 */
-	List<AssemblyLineType> getAssemblyLineTypesForAgentID(AgentID agent);
-
-	/**
-	 * @param resourceAgent
+	 * @param activityName
 	 * @param resourceName
-	 * @return
+	 * @param eventType
+	 * @return activityInstanceID
 	 */
-	List<Material> getMaterialsForSupplyType(AgentID resourceAgent,
-			SupplyType resourceName);
+	void performProcessChange(String processID, String processInstanceID, EventType eventType) throws Exception;
 
+	
+	/**
+	 * @see PersonResourceManagementWorld#performActivityChange(String, String,
+	 *      EventType)
+	 */
+	public void performAvailabilityChange(final String resourceName,
+			final EventType eventType) throws Exception;
+	
+//
+//	/**
+//	 * @param agent
+//	 * @return
+//	 */
+//	List<AssemblyLineType> getAssemblyLineTypesForAgentID(AgentID agent);
+//
+//	/**
+//	 * @param resourceAgent
+//	 * @param resourceName
+//	 * @return
+//	 */
+//	List<Material> getMaterialsForSupplyType(AgentID resourceAgent,
+//			SupplyType resourceName);
+//	
+	
 }

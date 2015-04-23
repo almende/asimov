@@ -141,7 +141,7 @@ public class ClaimSortByProposalImpl extends BasicCapability implements
 		}
 	}
 
-	/** @see eu.a4ee.negotiation.ClaimSortByProposal#handle(eu.a4ee.negotiation.messages.Proposal) */
+	/** @see io.asimov.negotiation.ClaimSortByProposal#handle(io.asimov.negotiation.messages.Proposal) */
 	@Override
 	public void handle(Proposal p)
 	{
@@ -199,8 +199,8 @@ public class ClaimSortByProposalImpl extends BasicCapability implements
 	
 	/**
 	 * @throws Exception
-	 * @see eu.a4ee.negotiation.ClaimSortByProposal#sort(java.lang.Iterable,
-	 *      eu.a4ee.negotiation.ConversionCallback, java.util.Comparator)
+	 * @see io.asimov.negotiation.ClaimSortByProposal#sort(java.lang.Iterable,
+	 *      io.asimov.negotiation.ConversionCallback, java.util.Comparator)
 	 */
 	@Override
 	public synchronized Observable<Claim> sort(Iterable<Claim> claims,

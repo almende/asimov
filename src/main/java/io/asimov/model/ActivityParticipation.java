@@ -1,10 +1,10 @@
 package io.asimov.model;
 
-import io.arum.model.resource.RouteLookup;
 import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessCompletion.ProcessCompleter;
 import io.asimov.microservice.negotiation.ResourceReadyNotification;
+import io.asimov.model.resource.RouteLookup;
 import io.coala.agent.AgentID;
 import io.coala.capability.CapabilityFactory;
 import io.coala.enterprise.fact.AbstractCoordinationFact;
@@ -59,7 +59,7 @@ public abstract class ActivityParticipation extends AbstractCoordinationFact
 		 * A Schedulable method ID that must be provided for the arriveAtAssembly event
 		 * Denotes the method that causes the agent to arrive at an assemblyLine.
 		 */
-		public final static String ARRIVE_AT_ASSEMBLY = "ARRIVE_AT_ASSEMBLY";
+		public final static String TRANSIT_TO_RESOURCE = "ARRIVE_AT_ASSEMBLY";
 		
 		public static final String RETRY_REQUEST = "RETRY_REQUEST";
 		

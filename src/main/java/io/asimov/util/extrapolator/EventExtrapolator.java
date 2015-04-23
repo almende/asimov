@@ -1,7 +1,5 @@
 package io.asimov.util.extrapolator;
 
-import io.arum.model.events.MaterialEvent;
-import io.arum.model.events.MovementEvent;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.db.Datasource;
 import io.asimov.model.TraceService;
@@ -12,7 +10,6 @@ import io.coala.bind.BinderFactory;
 import io.coala.capability.replicate.ReplicationConfig;
 import io.coala.exception.CoalaException;
 import io.coala.log.LogUtil;
-import io.coala.model.ModelComponentIDFactory;
 import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
 
@@ -51,24 +48,7 @@ public class EventExtrapolator
 			return;
 		}
 		LOG.info("Querying for events");
-		for (MovementEvent e : extrapolator.inject(Datasource.class).findMovementEvents()) {
-			LOG.info("Got event: "+e);
-			if (e.getExecutionTime().isOnOrAfter(offset) && e.getExecutionTime().isBefore(offset.plus(baseDuration))) {
-				LOG.info("Matched event: "+e);
-				for (int f = 1; (e.getExecutionTime().plus(baseDuration)).minus(offset).isBefore(offset.plus(targetDuration)); f++) {
-					SimTime newTime = e.getExecutionTime().plus(baseDuration);
-					if (newTime.getMillis() < 0)
-						throw new Exception("Something went wrong");
-					if (e.getType().equals(EventType.ARIVE_AT_ASSEMBLY) || e.getType().equals(EventType.LEAVE_ASSEMBLY)) {
-						e = (MovementEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), e.getActivityInstanceId(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, null, e.getAssemblyLine().getName());
-						LOG.info("Extrapolated movement event: "+e);
-					} else {
-						LOG.warn("Unknown event type "+e.getClass().getName());
-					}
-					
-				}
-			}
-		}
+		
 		for (ActivityEvent e : extrapolator.inject(Datasource.class).findActivityEvents()) {
 			LOG.info("Got event: "+e);
 			if (e.getExecutionTime().isOnOrAfter(offset) && e.getExecutionTime().isBefore(offset.plus(baseDuration))) {
@@ -80,7 +60,7 @@ public class EventExtrapolator
 					if (e.getType().equals(EventType.START_ACTIVITY) || e.getType().equals(EventType.STOP_ACTIVITY)) {
 						//e.withExecutionTime(newTime).withProcessInstanceID(mapProcessInstanceId(e.getProcessInstanceID(),f));
 						//extrapolator.inject(Datasource.class).save(new ActivityEvent().fromXML(((ActivityEvent) e).toXML(),TimeUnit.MILLIS,SimTime.ZERO.calcOffset()));
-						e = (ActivityEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), e.getActivityInstanceId(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, null, e.getAssemblyLineName());
+						e = (ActivityEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), e.getActivityInstanceId(), e.getInvolvedResources(), e.getType(), newTime);
 						LOG.info("Extrapolated activity event: "+e);
 					} else {
 						LOG.warn("Unknown event type "+e.getClass().getName());
@@ -89,26 +69,7 @@ public class EventExtrapolator
 				}
 			}
 		}
-		for (MaterialEvent e : extrapolator.inject(Datasource.class).findMaterialEvents()) {
-			LOG.info("Got event: "+e);
-			if (e.getExecutionTime().isOnOrAfter(offset) && e.getExecutionTime().isBefore(offset.plus(baseDuration))) {
-				LOG.info("Matched event: "+e);
-				for (int f = 1; (e.getExecutionTime().plus(baseDuration)).minus(offset).isBefore(offset.plus(targetDuration)); f++) {
-					SimTime newTime = e.getExecutionTime().plus(baseDuration);
-					if (newTime.getMillis() < 0)
-						throw new Exception("Something went wrong");
-					if (e.getType().equals(EventType.START_USE_MATERIAL) || e.getType().equals(EventType.STOP_USE_MATERIAL)) {
-//						e.withExecutionTime(newTime).withProcessInstanceID(mapProcessInstanceId(e.getProcessInstanceID(),f));
-//						extrapolator.inject(Datasource.class).save(new EquipmentEvent().fromXML(((EquipmentEvent) e).toXML(),TimeUnit.MILLIS,SimTime.ZERO.calcOffset()));
-						e = (MaterialEvent) TraceService.getInstance(replicationID).saveEvent(extrapolator.inject(Datasource.class), e.getProcessID(), mapProcessInstanceId(e.getProcessInstanceID(),f), e.getActivity(), e.getActivityInstanceId(), extrapolator.inject(ModelComponentIDFactory.class).createAgentID(e.getPerson().getName()), e.getType(), newTime, e.getMaterial(), e.getAssemblyLine().getName());
-						LOG.info("Extrapolated equipment event: "+e);
-					} else {
-						LOG.warn("Unknown event type "+e.getClass().getName());
-					}
-					
-				}
-			}
-		}
+		
 		
 		Replication r = extrapolator.inject(Datasource.class).findReplication();
 		r.setDurationMS(targetDuration.getMillis());

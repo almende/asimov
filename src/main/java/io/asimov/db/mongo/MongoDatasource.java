@@ -1,16 +1,8 @@
 package io.asimov.db.mongo;
 
-import io.arum.model.events.MaterialEvent;
-import io.arum.model.events.MovementEvent;
-import io.arum.model.resource.ResourceSubtype;
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.assemblyline.AssemblyLineType;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.person.PersonRole;
-import io.arum.model.resource.supply.Material;
-import io.arum.model.resource.supply.SupplyType;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.db.Datasource;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
@@ -70,22 +62,18 @@ public class MongoDatasource extends BasicCapability implements Datasource
 
 	// TODO get from @Entity(name=...) JPA annotations
 	protected static String MONGO_SIMFILE_COLLECTION = "cim";
-	protected static String MONGO_ASSEMBLY_LINES_COLLECTION = "assemblyLines";
-	protected static String MONGO_MATERIALS_COLLECTION = "materials";
+	protected static String MONGO_RESOURCE_DESCRIPTOR_COLLECTION = "resourceDescriptors";
 	protected static String MONGO_PROCESS_COLLECTION = "processes";
 	protected static String MONGO_EVENTS_COLLECTION = "events";
 	protected static String MONGO_KPI_COLLECTION = "kpi";
-	protected static String MONGO_PERSONS_COLLECTION = "persons";
 	protected static String MONGO_SIMULATOR_COLLECTION = "simulator";
 	protected static String MONGO_REPLICATIONS_COLLECTION = "replications";
-	protected static String MONGO_PERSON_EVENTS_COLLECTION = "measuredEvents";
 
 
 	// TODO: remove hard-coded id field name, get from JPA annotations?
 	protected static String REPLICATION_FOREIGN_ID_FIELDNAME = "replicationID";
 	protected static String REPLICATION_ID_FIELDNAME = "id";
 	protected static String CALIBRATION_ID_FIELDNAME = "id";
-	protected static String CALIBRATION_FOREIGN_ID_FIELDNAME = "calibrationID";
 	protected static String PROJECT_ID_FIELDNAME = "id";
 	protected static String EVENT_REPLICATION_ID_FIELDNAME = "replicationID";
 	protected static String EVENT_EXECUTION_TIME_FIELDNAME = "executionTime";
@@ -231,20 +219,8 @@ public class MongoDatasource extends BasicCapability implements Datasource
 					.registerModule(new SimpleModule()
 					{
 						{
-							addSerializer(ResourceSubtype.class,
-									new ResourceSubtype.JsonSerializer());
 							addSerializer(Interval.class,
 									new com.fasterxml.jackson.datatype.joda.ser.IntervalSerializer());
-							addKeyDeserializer(ResourceSubtype.class,
-									new ResourceSubtype.JsonKeyDeserializer());
-							addDeserializer(ResourceSubtype.class,
-									new ResourceSubtype.JsonDeserializer());
-							addDeserializer(SupplyType.class,
-									new SupplyType.JsonDeserializer());
-							addDeserializer(PersonRole.class,
-									new PersonRole.JsonDeserializer());
-							addDeserializer(AssemblyLineType.class,
-									new AssemblyLineType.JsonDeserializer());
 							addDeserializer(Interval.class,
 									new com.fasterxml.jackson.datatype.joda.deser.IntervalDeserializer());
 							
@@ -320,10 +296,10 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	 * @param query
 	 * @return
 	 */
-	protected Iterable<AssemblyLine> queryAssemblyLines(final String query)
+	protected Iterable<ASIMOVResourceDescriptor> queryResourceDescriptors(final String query)
 	{
-		LOG.trace("query assemblyLines: " + query);
-		return getAssemblyLinesCollection().find(query).as(AssemblyLine.class);
+		LOG.trace("query resource descriptors: " + query);
+		return getResourceDescriptorCollection().find(query).as(ASIMOVResourceDescriptor.class);
 	}
 
 	/**
@@ -336,18 +312,6 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	{
 		LOG.trace("query processes: " + query);
 		return getProcesCollection().find(query).as(Process.class);
-	}
-
-	/**
-	 * Helper method
-	 * 
-	 * @param query
-	 * @return
-	 */
-	protected Iterable<Material> queryMaterials(final String query)
-	{
-		LOG.trace("query materials: " + query);
-		return getMaterialsCollection().find(query).as(Material.class);
 	}
 
 	/**
@@ -377,35 +341,9 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	 * 
 	 * @return collection
 	 */
-	protected MongoCollection getAssemblyLinesCollection()
+	protected MongoCollection getResourceDescriptorCollection()
 	{
-		return getCollection(MONGO_ASSEMBLY_LINES_COLLECTION);
-	}
-	
-	/**
-	 * Get the person events collection
-	 * 
-	 * @return collection
-	 */
-	protected MongoCollection getPersonUsageEventsCollection()
-	{
-		return getCollection(MONGO_PERSON_EVENTS_COLLECTION);
-	}
-	
-
-	protected MongoCollection getPersonsCollection()
-	{
-		return getCollection(MONGO_PERSONS_COLLECTION);
-	}
-
-	/**
-	 * Get the assemblyLines collection
-	 * 
-	 * @return collection
-	 */
-	protected MongoCollection getMaterialsCollection()
-	{
-		return getCollection(MONGO_MATERIALS_COLLECTION);
+		return getCollection(MONGO_RESOURCE_DESCRIPTOR_COLLECTION);
 	}
 	
 	
@@ -460,75 +398,40 @@ public class MongoDatasource extends BasicCapability implements Datasource
 
 	/** @see Datasource#save(AssemblyLine) */
 	@Override
-	public void save(final AssemblyLine assemblyLine)
+	public void save(final ASIMOVResourceDescriptor resourceDescriptor)
 	{
 		// FIXME : Must be a REAL update instead of a remove/create
-		MongoCollection collection = getAssemblyLinesCollection();
-		collection.remove("{name: '" + assemblyLine.getName() + "', "
+		MongoCollection collection = getResourceDescriptorCollection();
+		collection.remove("{name: '" + resourceDescriptor.getName() + "', "
 				+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '" + replicationID
 				+ "'}");
-		assemblyLine.setReplicationID(replicationID);
-		save(getAssemblyLinesCollection(), assemblyLine);
+		resourceDescriptor.setReplicationID(replicationID);
+		save(getResourceDescriptorCollection(), resourceDescriptor);
 	}
 
 	/** @see Datasource#findAssemblyLines() */
 	@Override
-	public Iterable<AssemblyLine> findAssemblyLines()
+	public Iterable<ASIMOVResourceDescriptor> findResourceDescriptors()
 	{
 		final String query = "{" + REPLICATION_FOREIGN_ID_FIELDNAME + ": '"
 				+ replicationID + "'}";
-		return queryAssemblyLines(query);
+		return queryResourceDescriptors(query);
 	}
 
 	/** @see Datasource#findAssemblyLineByID(String) */
 	@Override
-	public AssemblyLine findAssemblyLineByID(final String assemblyLineID)
+	public ASIMOVResourceDescriptor findResourceDescriptorByID(final String resourceDescriptorID)
 	{
-		final String query = "{name: '" + assemblyLineID + "', "
+		final String query = "{name: '" + resourceDescriptorID + "', "
 				+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '" + replicationID
 				+ "'}";
-		return getAssemblyLinesCollection().findOne(query).as(AssemblyLine.class);
+		return getResourceDescriptorCollection().findOne(query).as(ASIMOVResourceDescriptor.class);
 	}
 
 	@Override
-	public Iterable<Person> findPersons()
+	public void removeResourceDescriptors()
 	{
-		final String query = "{" + REPLICATION_FOREIGN_ID_FIELDNAME + ": '"
-				+ replicationID + "'}";
-		return queryPersons(query);
-	}
-
-	private Iterable<Person> queryPersons(String query)
-	{
-		LOG.trace("query persons: " + query);
-		return getPersonsCollection().find(query).as(Person.class);
-	}
-
-	@Override
-	public Person findPersonByID(String personID)
-	{
-		final String query = "{name: '" + personID + "', "
-				+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '" + replicationID
-				+ "'}";
-		return getPersonsCollection().findOne(query).as(Person.class);
-	}
-
-	// @Override
-	public void removePersons()
-	{
-		removeReplicationFromCollection(replicationID, getPersonsCollection());
-	}
-
-	// @Override
-	public void removeAssemblyLines()
-	{
-		removeReplicationFromCollection(replicationID, getAssemblyLinesCollection());
-	}
-
-	// @Override
-	public void removeMaterials()
-	{
-		removeReplicationFromCollection(replicationID, getMaterialsCollection());
+		removeReplicationFromCollection(replicationID, getResourceDescriptorCollection());
 	}
 
 	// @Override
@@ -573,36 +476,6 @@ public class MongoDatasource extends BasicCapability implements Datasource
 			LOG.warn("NOT removed, error: " + result.getError());
 	}
 
-	/** @see Datasource#save(Material) */
-	@Override
-	public void save(final Material material)
-	{
-		// FIXME : Must be a REAL update instead of a remove/create
-		MongoCollection collection = getMaterialsCollection();
-		collection.remove("{name: '" + material.getName() + "', "
-				+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '" + replicationID
-				+ "'}");
-		material.setReplicationID(replicationID);
-		save(collection, material);
-	}
-
-	/** @see Datasource#findMaterials() */
-	@Override
-	public Iterable<Material> findMaterials()
-	{
-		final String query = String.format("{%s:'%s'}",
-				REPLICATION_FOREIGN_ID_FIELDNAME, replicationID);
-		return queryMaterials(query);
-	}
-
-	/** @see Datasource#findMaterialByID(String) */
-	@Override
-	public Material findMaterialByID(final String materialID)
-	{
-		final String query = String.format("{name:'%s', %s:'%s'}", materialID,
-				REPLICATION_FOREIGN_ID_FIELDNAME, replicationID);
-		return getMaterialsCollection().findOne(query).as(Material.class);
-	}
 
 	/** @see Datasource#save(Event) */
 	@Override
@@ -611,65 +484,6 @@ public class MongoDatasource extends BasicCapability implements Datasource
 		save(getEventsCollection(), event);
 	}
 
-	@Override
-	public Iterable<MovementEvent> findMovementEvents()
-	{
-		final StringBuilder or = new StringBuilder();
-		or.append(String.format("{%s:{%s:'%s'}}", EVENT_TYPE_FIELDNAME,
-				EVENT_TYPE_NAME_FIELDNAME, EventType.ARIVE_AT_ASSEMBLY.getName()));
-		or.append(',');
-		or.append(String.format("{%s:{%s:'%s'}}", EVENT_TYPE_FIELDNAME,
-				EVENT_TYPE_NAME_FIELDNAME, EventType.LEAVE_ASSEMBLY.getName()));
-		final String query = String.format("{%s:'%s', $or:[%s]}",
-				EVENT_REPLICATION_ID_FIELDNAME, replicationID, or.toString());
-		LOG.info("Query: " + query);
-		return getEventsCollection()
-				.find(query)
-				.sort(String.format("{%s.%s:1}",
-						EVENT_EXECUTION_TIME_FIELDNAME,
-						EVENT_EXECUTION_TIME_VALUE_FIELDNAME))
-				.as(MovementEvent.class);
-	}
-
-	@Override
-	public Iterable<MaterialEvent> findMaterialEvents()
-	{
-		final StringBuilder or = new StringBuilder();
-		or.append(String.format("{%s:{%s:'%s'}}", EVENT_TYPE_FIELDNAME,
-				EVENT_TYPE_NAME_FIELDNAME,
-				EventType.START_USE_MATERIAL.getName()));
-		or.append(',');
-		or.append(String.format("{%s:{%s:'%s'}}", EVENT_TYPE_FIELDNAME,
-				EVENT_TYPE_NAME_FIELDNAME,
-				EventType.STOP_USE_MATERIAL.getName()));
-		final String query = String.format("{%s:'%s', $or:[%s]}",
-				EVENT_REPLICATION_ID_FIELDNAME, replicationID, or.toString());
-		return getEventsCollection()
-				.find(query)
-				.sort(String.format("{%s.%s:1}",
-						EVENT_EXECUTION_TIME_FIELDNAME,
-						EVENT_EXECUTION_TIME_VALUE_FIELDNAME))
-				.as(MaterialEvent.class);
-	}
-
-	@Override
-	public Iterable<ActivityEvent> findActivityEvents()
-	{
-		final StringBuilder or = new StringBuilder();
-		or.append(String.format("{%s:{%s:'%s'}}", EVENT_TYPE_FIELDNAME,
-				EVENT_TYPE_NAME_FIELDNAME, EventType.START_ACTIVITY.getName()));
-		or.append(',');
-		or.append(String.format("{%s:{%s:'%s'}}", EVENT_TYPE_FIELDNAME,
-				EVENT_TYPE_NAME_FIELDNAME, EventType.STOP_ACTIVITY.getName()));
-		final String query = String.format("{%s:'%s', $or:[%s]}",
-				EVENT_REPLICATION_ID_FIELDNAME, replicationID, or.toString());
-		return getEventsCollection()
-				.find(query)
-				.sort(String.format("{%s.%s:1}",
-						EVENT_EXECUTION_TIME_FIELDNAME,
-						EVENT_EXECUTION_TIME_VALUE_FIELDNAME))
-				.as(ActivityEvent.class);
-	}
 
 	/*-
 	 * @see Datasource#findEvents(EventType)
@@ -710,51 +524,6 @@ public class MongoDatasource extends BasicCapability implements Datasource
 				.sort(String.format("{%s:{%s:1}}",
 						EVENT_EXECUTION_TIME_FIELDNAME,
 						EVENT_EXECUTION_TIME_VALUE_FIELDNAME)).as(Event.class);
-	}
-
-	/** @see Datasource#findEvents(EventType[]) */
-	@Override
-	public Iterable<MovementEvent> findMovementEvents(final EventType... types)
-	{
-		final StringBuilder or = new StringBuilder();
-		for (EventType _type : types)
-		{
-			if (or.length() != 0)
-				or.append(',');
-			or.append(String.format("{%s:{%s:'%s'}}", EVENT_TYPE_FIELDNAME,
-					EVENT_TYPE_NAME_FIELDNAME, _type.getName()));
-		}
-		final String query = String.format("{%s:'%s', $or:[%s]}",
-				EVENT_REPLICATION_ID_FIELDNAME, replicationID, or.toString());
-		return getEventsCollection()
-				.find(query)
-				.sort(String.format("{%s.%s:1}",
-						EVENT_EXECUTION_TIME_FIELDNAME,
-						EVENT_EXECUTION_TIME_VALUE_FIELDNAME))
-				.as(MovementEvent.class);
-	}
-
-	/** @see Datasource#findEvents(EventType[]) */
-	@Override
-	public Iterable<MaterialEvent> findMaterialEvents(
-			final EventType... types)
-	{
-		final StringBuilder or = new StringBuilder();
-		for (EventType _type : types)
-		{
-			if (or.length() != 0)
-				or.append(',');
-			or.append(String.format("{%s:{%s:'%s'}}", EVENT_TYPE_FIELDNAME,
-					EVENT_TYPE_NAME_FIELDNAME, _type.getName()));
-		}
-		final String query = String.format("{%s:'%s', $or:[%s]}",
-				EVENT_REPLICATION_ID_FIELDNAME, replicationID, or.toString());
-		return getEventsCollection()
-				.find(query)
-				.sort(String.format("{%s.%s:1}",
-						EVENT_EXECUTION_TIME_FIELDNAME,
-						EVENT_EXECUTION_TIME_VALUE_FIELDNAME))
-				.as(MaterialEvent.class);
 	}
 
 	
@@ -833,20 +602,6 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	// save(getSimulationFileCollection(), simulationFileDocument);
 	// }
 
-	@Override
-	public void save(Person person)
-	{
-
-		// FIXME : Must be a REAL update instead of a remove/create
-		MongoCollection collection = getPersonsCollection();
-		collection.remove("{name: '" + person.getName() + "', "
-				+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '" + replicationID
-				+ "'}");
-		person.setReplicationID(replicationID);
-		save(collection, person);
-
-	}
-
 	/** @see Datasource#update(Replication) */
 	@Override
 	public synchronized void update(Replication replication)
@@ -877,9 +632,7 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	{
 		removeReplication(this.replicationID);
 		removeEvents();
-		removeAssemblyLines();
-		removeMaterials();
-		removePersons();
+		removeResourceDescriptors();
 		removeProcesses();
 	}
 
@@ -936,104 +689,27 @@ public class MongoDatasource extends BasicCapability implements Datasource
 
 	
 
-	/** @see eu.a4ee.db.Datasource#hasReplication(java.lang.String) */
+	/** @see io.asimov.db.Datasource#hasReplication(java.lang.String) */
 	@Override
 	public boolean hasReplication(String replicationID)
 	{
 		return this.replicationID != null
 				&& this.replicationID.equals(replicationID);
 	}
-	
-//
-//	/** @see eu.a4ee.db.Datasource#save(eu.a4ee.model.bean.events.PersonUsageEvent) */
-//	@Override
-//	public void save(AssemblyLineUsageInterval<?,?> personUsageEvent)
-//	{
-//		save(getPersonUsageEventsCollection(), personUsageEvent);
-//	}
-//
-//	/** @see eu.a4ee.db.Datasource#findPopulationGenerationResults() */
-//	@Override
-//	public Iterable<AssemblyLineUsageInterval> findPersonUsageEvents()
-//	{
-//		LOG.trace("query generations: {}");
-//		return getPersonUsageEventsCollection().find().as(AssemblyLineUsageInterval.class);
-//	}
-//
-//	/** @see eu.a4ee.db.Datasource#findPopulationGenerationResultsByCalibrationId(java.lang.String) */
-//	@Override
-//	public Iterable<AssemblyLineUsageInterval> findPersonUsageEventsByEventCollectionId(
-//			String eventCollectionId)
-//	{
-//		String query = "{\""+EVENTS_COLLECTION_FOREIGN_ID+"\":\""+eventCollectionId+"\"}";
-//		LOG.trace("query person usage events: "+query);
-//		return getPersonUsageEventsCollection().find(query).as(AssemblyLineUsageInterval.class);
-//	}
-//	
-//	/** @see eu.a4ee.db.Datasource#findTimelineTrainerEventsByEventCollectionId(java.lang.String) */
-//	@Override
-//	public Iterable<TimeLineTrainerEvent> findTimelineTrainerEventsByEventCollectionId(
-//			String eventCollectionId)
-//	{
-////		String query = "{\""+EVENTS_COLLECTION_FOREIGN_ID+"\":\""+eventCollectionId+"\"}";
-//		BasicDBObject query = 
-//				new BasicDBObject(EVENTS_COLLECTION_FOREIGN_ID, eventCollectionId);
-//		BasicDBObject limit = new BasicDBObject("notTrained", true)
-//		.append("calibrations", true)
-//		.append("eventPairId", true)
-//		.append("eventCollectionId", true)
-//		.append("interval",true)
-//		.append("startEvent.executionTime.isoTime", true)
-//		.append("@class", true);
-//		LOG.trace("query usage events: "+query+" with projection: "+limit);
-//		return getPersonUsageEventsCollection().find(query.toString())
-//				.projection(limit.toString()).as(TimeLineTrainerEvent.class);
-//	}
-//	
-//	/** @see Datasource#update(Replication) */
-//	@Override
-//	public synchronized void update(AssemblyLineUsageInterval personUsageEvent)
-//	{
-//		MongoCollection collection = getPersonUsageEventsCollection();
-//
-//		WriteResult result = collection.update(
-//				"{" + EVENT_PAIR_ID_FIELDNAME + ": '" + personUsageEvent.getEventPairId()
-//						+ "'}").with("{$set: #}", personUsageEvent);
-//
-//		if (result == null)
-//			LOG.warn("Unexpected NULL WriteResult while saving " + personUsageEvent
-//					+ " to collection " + collection.getName());
-//		else if (result.getError() != null)
-//			LOG.warn("NOT updated, error: " + result.getError());
-//	}
-//
-//
-//
-//	/** @see eu.a4ee.db.Datasource#save(eu.a4ee.model.bean.PopulationGenerationResult) */
-//	@Override
-//	public void save(PopulationGenerationResult populationGenerationResult)
-//	{
-//		save(getGenerationsCollection(), populationGenerationResult);
-//		
-//	}
-//
-//	/** @see eu.a4ee.db.Datasource#findPopulationGenerationResults() */
-//	@Override
-//	public Iterable<PopulationGenerationResult> findPopulationGenerationResults()
-//	{
-//		LOG.trace("query generations: {}");
-//		return getGenerationsCollection().find().as(PopulationGenerationResult.class);
-//	}
-//
-//	/** @see eu.a4ee.db.Datasource#findPopulationGenerationResultsByCalibrationId(java.lang.String) */
-//	@Override
-//	public Iterable<PopulationGenerationResult> findPopulationGenerationResultsByCalibrationId(
-//			String calibrationId)
-//	{
-//		String query = "{\""+CALIBRATION_FOREIGN_ID_FIELDNAME+"\":\""+calibrationId+"\"}";
-//		LOG.trace("query generations: "+query);
-//		return getGenerationsCollection().find(query).as(PopulationGenerationResult.class);
-//	}
 
+	@Override
+	public Iterable<ActivityEvent> findActivityEvents() {
+		final String query = String.format("{%s:'%s'}",
+				EVENT_REPLICATION_ID_FIELDNAME, replicationID);
+		return getEventsCollection()
+				.find(query)
+				.sort(String.format("{%s.%s:1}",
+						EVENT_EXECUTION_TIME_FIELDNAME,
+						EVENT_EXECUTION_TIME_VALUE_FIELDNAME))
+				.as(ActivityEvent.class);
+	}
+
+	
+	
 
 }

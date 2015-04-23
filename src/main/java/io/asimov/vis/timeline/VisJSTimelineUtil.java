@@ -1,14 +1,7 @@
 package io.asimov.vis.timeline;
 
-import io.arum.model.MIDASEvent;
-import io.arum.model.MIDASEvent.OperationEnum;
-import io.arum.model.events.MaterialEvent;
-import io.arum.model.events.MovementEvent;
-import io.arum.model.events.PersonEvent;
-import io.arum.model.resource.person.PersonRole;
-import io.asimov.db.Datasource;
 import io.asimov.model.events.ActivityEvent;
-import io.asimov.model.events.Event;
+import io.asimov.model.events.EventType;
 import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.log.LogUtil;
 
@@ -17,12 +10,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -40,10 +30,10 @@ public class VisJSTimelineUtil {
 			.getLogger(VisJSTimelineUtil.class);
 
 	/** */
-	private static File outputFile;
+	protected static File outputFile;
 
 	/** */
-	private static File styleSheetFile;
+	protected static File styleSheetFile;
 
 	public static List<Color> pick(int num) {
 		List<Color> colors = new ArrayList<Color>();
@@ -138,7 +128,7 @@ public class VisJSTimelineUtil {
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeTimelineData(final List<PersonEvent<?>> list, File targetDirectory)
+	public static void writeTimelineData(final List<ActivityEvent> list, File targetDirectory)
 			throws Exception {
 		outputFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/usage.json");
 		styleSheetFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/style.css");
@@ -151,149 +141,20 @@ public class VisJSTimelineUtil {
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeTimelineData(final List<PersonEvent<?>> list)
+	public static void writeTimelineData(final List<ActivityEvent> list)
 			throws Exception {
 		writeTimelineData(list, new File(
 				"src/test/resources"));
 	}
 	
+	
 	/**
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeMidasData(final List<PersonEvent<?>> list,
-			final Datasource ds, boolean includeMaterials) throws Exception {
-		writeMidasData(list, ds, includeMaterials, new File("src/test/resources"));
-	}
-
-	/**
-	 * @param processTypes
-	 * @throws Exception
-	 */
-	public static void writeMidasData(final List<PersonEvent<?>> list,
-			final Datasource ds, boolean includeMaterials, File targetDirectory) throws Exception {
-		outputFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/asimov_events.json");
-		FileWriter fw = new FileWriter(outputFile);
-		writeMidasData(list, fw, ds, includeMaterials);
-	}
-
-	/**
-	 * @param processTypes
-	 * @throws Exception
-	 */
-	public static void writeMidasData(final List<PersonEvent<?>> list,
-			Writer outputWriter, Datasource ds, boolean includeMaterials)
-			throws Exception {
-
-		if (list == null || list.size() == 0)
-			throw new IllegalStateException("Got no events!!!!");
-
-		boolean day = false;
-		List<MIDASEvent> mEvents = new ArrayList<MIDASEvent>();
-		Map<String, List<String>> pausedJobs = new HashMap<String,List<String>>();
-		for (PersonEvent<?> personEvent : list) {
-			MIDASEvent global = MIDASEvent.getGlobalEvent(personEvent);
-			MIDASEvent event = new MIDASEvent().fromPersonEvent(personEvent,
-					ds, includeMaterials);
-			if (event != null) {
-
-				if (global != null && !day) {
-					LOG.info("Adding GLOBAL MIDASEvent:" + global.toJSON());
-					mEvents.add(global);
-
-				}
-				for (String pausedJobPrefix : pausedJobs.keySet())
-					if (event.getOperation().equals(OperationEnum.start.name())
-							&& event.getJobId().startsWith(pausedJobPrefix)
-							&& pausedJobs.get(pausedJobPrefix).contains(event.getPerformedBy())) {
-						if (event.getJobId().startsWith(pausedJobPrefix+"A5")
-							||
-							event.getJobId().startsWith(pausedJobPrefix+"A6"))
-							continue;
-						event.setOperation(OperationEnum.resume);
-						for (String t : pausedJobs.get(pausedJobPrefix))
-							if (t.equals(event.getPerformedBy())) {
-								 pausedJobs.get(pausedJobPrefix).remove(event.getPerformedBy());
-								 break;
-							}
-						if (pausedJobs.get(pausedJobPrefix).isEmpty()) {
-							pausedJobs.remove(pausedJobPrefix);
-							break;
-						}
-					}
-				String ncString = null;
-				if (event.getOperation().equals(OperationEnum.start.name())
-						&& event.getAssignment().startsWith("A5")) {
-					ncString = event.jobId.substring(0, event.jobId.indexOf("A5"));
-				} else if (event.getOperation().equals(OperationEnum.start.name())
-						&& event.getAssignment().startsWith("A6")) {
-					ncString = event.jobId.substring(0,event.jobId.indexOf("A6"));
-				}
-				if (ncString != null) {
-					for (int i = mEvents.size() - 1; i > 0; i--) {
-						MIDASEvent resumeCheckEvent = mEvents.get(i);
-						if ((resumeCheckEvent.getOperation().equals(
-								OperationEnum.finish.name())
-								|| resumeCheckEvent.getOperation().equals(
-										OperationEnum.start.name()))
-								&& resumeCheckEvent.jobId.startsWith(ncString)) {
-							if (resumeCheckEvent.getJobId().startsWith(ncString+"A5")
-									||
-									resumeCheckEvent.getJobId().startsWith(ncString+"A6"))
-									continue;
-							if (resumeCheckEvent.getOperation().equals(
-									OperationEnum.start.name()))
-									break;
-							resumeCheckEvent.setOperation(OperationEnum.pause);
-							if (pausedJobs.containsKey(ncString)){
-								pausedJobs.get(ncString).add(resumeCheckEvent.getPerformedBy());
-							} else {
-								List<String> roles = new ArrayList<String>();
-								roles.add(resumeCheckEvent.getPerformedBy());
-								pausedJobs.put(ncString,roles);
-							}
-						}
-					}
-				}
-
-				mEvents.add(event);
-			}
-			if (global != null && day) {
-				mEvents.add(global);
-			}
-			
-			if (global != null)
-				day = (day) ? false : true;
-		}
-		
-		Collections.sort(mEvents);
-
-		// Now make a huge string representation of it
-		final String startOfData = "var midas_data = [\n";
-		String data = startOfData;
-		for (MIDASEvent me : mEvents) {
-			if (!data.equals(startOfData))
-				data += ",\n";
-
-			String eventStr = me.toJSON();
-			LOG.info("Adding MIDASEvent:" + eventStr);
-			data += eventStr;
-		}
-		data += "\n];\n";
-		LOG.info("Writting data: " + data);
-		// And write it to a file.
-		outputWriter.write(data);
-		outputWriter.close();
-		LOG.info("wrote:" + data);
-	}
-
-	/**
-	 * @param processTypes
-	 * @throws Exception
-	 */
-	public static void writeTimelineData(final List<PersonEvent<?>> list,
+	public static void writeTimelineData(final List<ActivityEvent> list,
 			Writer outputWriter, Writer styleWriter) throws Exception {
-
+		//TODO FIXME Create generic pivot timeline viewer for all resource types
 		final VisJSTimeline timeline = new VisJSTimeline();
 
 		if (list == null || list.size() == 0)
@@ -303,62 +164,23 @@ public class VisJSTimelineUtil {
 
 		VisJSTimelineItem item;
 		String processInstanceName = null;
-		for (PersonEvent<?> personEvent : list) {
-			Event<?> event = (Event<?>) personEvent;
-			if (event.getProcessInstanceID() != null) {
-				processInstanceName = event.getProcessInstanceID();
-				classNames.add("c" + processInstanceName);
-			} else {
-				LOG.error("Could not find the process instance for this event");
-			}
-			item = new VisJSTimelineItem();
-			item.setClassName("c" + processInstanceName);
-			item.setStart(event.getExecutionTime().getIsoTime());
-			if (event instanceof MovementEvent) {
-				// if (event.hasType(EventType.ENTER)){
-				// String resource = ((MovementEvent)
-				// event).toXML().getAssemblyLineRef();
-				// LOG.info("Visualizing assemblyLine entrance in timeline item.");
-				// item.setGroup(getGroupWithName(resource));
-				// item.setContent(((PersonEvent<?>)
-				// event).getPerson().getName());
-				// timeline.addItem(item);
-				// } else {
-				// LOG.info("Ignoring assemblyLine leave event for in timeline items.");
-				// }
-				continue;
-			} else if (event instanceof MaterialEvent) {
-				LOG.info("Visualizing material event in timeline item.");
-				MaterialEvent e = (MaterialEvent) event;
-				EventRecord er = e.toXML();
-				String resource = er.getMaterialRef();
-				item.setGroup(getGroupWithName(resource, timeline));
-				item.setContent(e.getPerson().getName());
-				String roles = "";
-				for (PersonRole r : e.getPerson().getTypes()) {
-					if (!roles.equals(""))
-						roles += ", ";
-					roles += r.getName();
+		for (ActivityEvent event : list) {
+			if (event.hasType(EventType.START_ACTIVITY) || event.hasType(EventType.STOP_ACTIVITY)) {
+				if (event.getProcessInstanceID() != null) {
+					processInstanceName = event.getProcessInstanceID();
+					classNames.add("c" + processInstanceName);
+				} else {
+					LOG.error("Could not find the process instance for this event");
 				}
-				item.setTitle(roles + " : " + e.getPerson().getName() + "\n:"
-						+ er.getProcessRef() + "\ninstance: "
-						+ processInstanceName + "\nactivity:"
-						+ er.getActivityRef() + "\ninterval: {interval}");
-
-			} else if (event instanceof ActivityEvent) {
-				LOG.info("Visualizing activity as assemblyLine usage event in timeline item.");
-				ActivityEvent e = (ActivityEvent) event;
+				item = new VisJSTimelineItem();
+				item.setClassName("c" + processInstanceName);
+				item.setStart(event.getExecutionTime().getIsoTime());
+				LOG.info("Visualizing activity as resource usage event in timeline item.");
 				EventRecord er = ((ActivityEvent) event).toXML();
-				String resource = er.getAssemblyLineRef();
+				String resource = er.getResourceRef().get(0);
 				item.setGroup(getGroupWithName(resource, timeline));
-				item.setContent(e.getPerson().getName());
-				String roles = "";
-				for (PersonRole r : e.getPerson().getTypes()) {
-					if (!roles.equals(""))
-						roles += ", ";
-					roles += r.getName();
-				}
-				item.setTitle(roles + " : " + e.getPerson().getName() + "\n"
+				item.setContent(er.getActivityRef());
+				item.setTitle(resource + "\n"
 						+ er.getProcessRef() + "\ninstance: "
 						+ processInstanceName + "\nactivity: "
 						+ er.getActivityRef() + "\ninterval: {interval}");

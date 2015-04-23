@@ -6,93 +6,25 @@
     <link href="./css/vis.css" rel="stylesheet" type="text/css" />
     <link href="./data/style.css" rel="stylesheet" type="text/css" />
 
-    <script language="javascript">
-        var EVENT_DELAY = 0;
-        var EVENTS_AGENT_ADDRESS = 'ws://localhost:8082/ws/events';
-        var AMOUNT_OF_INITIAL_EVENTS = 1;
-        var TIMELINE_START = '2015-02-09 10:00:00';
-        var TIMELINE_END = '2015-02-10 18:00:00';
-        var INCREASE_SPEED = false;
-        var ONLINE_ONLY = true;
-    </script>
 	<script type="text/javascript" src="./data/usage.json"></script>
-	<script type="text/javascript" src="./data/asimov_events.json" ></script>
     <script type="text/javascript" src="./js/vis.js"></script>
-    <script type="text/javascript" src="./js/evejs.js"></script>
-    <script type="text/javascript" src="./arumAgents/job.js"></script>
-    <script type="text/javascript" src="./arumAgents/durationStats.js"></script>
-    <script type="text/javascript" src="./arumAgents/durationData.js"></script>
-    <script type="text/javascript" src="./arumAgents/jobManager.js"></script>
-    <script type="text/javascript" src="./arumAgents/jobAgent.js"></script>
-
-    <script type="text/javascript" src="./js/vis_eve_init.js"></script>
-
-    <script type="text/javascript" src="./arumAgents/genericAgent.js"></script>
-    <script type="text/javascript" src="./arumAgents/agentGenerator.js"></script>
-    <script type="text/javascript" src="./arumAgents/jobAgentGenerator.js"></script>
-    <script type="text/javascript" src="./arumAgents/eventGenerator.js"></script>
     <script type="text/javascript" src="./js/init.js"></script>
     <style>
 		.fullHeight{ height:100%; margin:0px; }
 		
 	</style> 
 </head>
-<body onload="draw(); if (typeof data != 'undefined') onData(data);">
-<img src="./images/arum_small.png" style="position:relative; top:-6px;"><img height="120" src="./images/asimov_logo_large.png" style="float:right;"><br>
-<div class="typeButton selected" onclick="showTimelineBtn()" id="showTimeline">Show by Role</div>
-<div class="typeButton" onclick="showMaterialBtn()" id="showMaterial">Show by Material</div>
-<div class="typeButton" onclick="showGraphBtn()" id="showGraph">Show by Job</div>
-<div id="timelineWrapper">
-    <input type="button" value="Next Event" onclick="getNewEvent()">
-    eventNo:<div id="eventCounter" style="display:inline;">-1</div>
-    <input type="button" value="Next 10 Events" onclick="getTenNewEvents()">
-    <input type="button" value="Get All Events" onclick="getAllEvents()">
-    <input type="button" value="Get All Events Quickly" onclick="getAllEventsQuickly()"> <br>
-    <div id="timeline"></div>
-</div>
+<body onload="if (typeof data != 'undefined') onData(data);">
+<img height="120" src="./images/asimov_logo_large.png" style="float:right;"><br>
+<div class="typeButton selected" onclick="showResourceBtn()" id="showResource">Show by Resource</div>
 
-<div id="materialWrapper">
+<div id="resourceWrapper">
     <table class="mWrapper" class="fullHeight">
         <tr>
             <td width="100%" height="100%">
-    			<div id="materialTimeline" class="fullHeight"></div>	
+    			<div id="resourceTimeline" class="fullHeight"></div>	
     		</td>
     	</tr>
-    </table>
-</div>
-
-<div id="graphWrapper">
-    <table class="wrapper">
-        <tr>
-            <td>
-                <div class="toggleButton" onclick="togglePrediction()" id="togglePrediction">Prediction</div>
-            </td>
-            <td width="6px">&nbsp;</td>
-            <td>
-                <div class="typeButton selected" onclick="turnOn('duration')" id="duration">Ideal</div>
-                <div class="typeButton" onclick="turnOn('durationWithPause')" id="durationWithPause">Ideal + Pause</div>
-                <div class="typeButton" onclick="turnOn('durationWithStartup')" id="durationWithStartup">Ideal + Prerequisites</div>
-                <div class="typeButton" onclick="turnOn('durationWithBoth')" id="durationWithBoth">Total Time</div>
-            </td>
-        </tr>
-        <tr>
-            <td id="selectTD">
-                <select name="jobs" id="multiselect" multiple onclick="updateGraph()"></select>
-            </td>
-            <td colspan="2">
-                <div class="graph2dContent">
-                    <div id="graph2d"></div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="toggleButton square" onclick="toggleDifference()" id="difference">Switch View</div>
-            </td>
-            <td colspan="2">
-                <div id="Legend" class="externalLegend"></div>
-            </td>
-        </tr>
     </table>
 </div>
 

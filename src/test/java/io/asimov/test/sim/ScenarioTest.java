@@ -1,6 +1,5 @@
 package io.asimov.test.sim;
 
-import io.arum.run.RunUseCase;
 import io.asimov.agent.scenario.ScenarioManagementOrganization;
 import io.asimov.db.Datasource;
 import io.coala.agent.AgentStatusObserver;
@@ -15,7 +14,6 @@ import io.coala.log.LogUtil;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 
-import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
 import javax.xml.bind.JAXBException;
@@ -48,7 +46,7 @@ public class ScenarioTest
 	public static final long nofOccupants = 9;
 
 	/** */
-	public static final String scenario = "src/test/resources/usecase_double_materials.xml";
+	public static final String scenario = "src/test/resources/usecase.xml";
 
 
 	/** */
@@ -70,9 +68,7 @@ public class ScenarioTest
 						ReplicationConfig.MODEL_NAME_KEY, replicationID)
 				.build().create("_unittest_");
 		binder.inject(Datasource.class).removeEvents();
-		binder.inject(Datasource.class).removeMaterials();
-		binder.inject(Datasource.class).removeAssemblyLines();
-		binder.inject(Datasource.class).removePersons();
+		binder.inject(Datasource.class).removeResourceDescriptors();
 		binder.inject(Datasource.class).removeReplication();
 		binder.inject(Datasource.class).removeProcesses();
 //		UseCase.Util.saveDefaultReplication(binder, new File(scenario),
@@ -174,10 +170,8 @@ public class ScenarioTest
 
 	protected void wrapUp() {
 		try {
-			new TimeLineWriter().writeTimeLine();
-			new MidasWriter().writeToMidas();
 			new EventTraceWriter().writeSimulatorOutput();
-			
+			new TimeLineWriter().writeTimeLine();
 		} catch (Exception e) {
 			LOG.error("Failed to write output of ASIMOV",e);
 			System.exit(1);

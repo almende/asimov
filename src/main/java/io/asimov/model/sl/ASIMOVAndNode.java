@@ -70,6 +70,7 @@ public class ASIMOVAndNode implements ASIMOVNode<ASIMOVAndNode> {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <N extends ASIMOVNode<N>> N toSL() {
 		return (N) this;

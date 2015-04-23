@@ -1,5 +1,6 @@
 package io.asimov.microservice.negotiation.impl;
 
+import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.messaging.ASIMOVMessageID;
 import io.asimov.microservice.negotiation.AgentServiceProxy;
 import io.asimov.microservice.negotiation.ResourceAllocationResponder;
@@ -13,7 +14,6 @@ import io.asimov.model.ResourceAllocation;
 import io.asimov.reasoning.sl.KBase;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.bind.Binder;
-import io.coala.capability.BasicCapability;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.interact.SendingCapability;
 import io.coala.capability.know.ReasoningCapability;
@@ -44,7 +44,7 @@ import rx.Observer;
  * @author <a href="mailto:suki@almende.org">suki</a>
  * 
  */
-public class ResourceAllocationResponderImpl extends BasicCapability implements
+public class ResourceAllocationResponderImpl extends NegotiatingCapability implements
 		ResourceAllocationResponder
 {
 	/** */
@@ -160,7 +160,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		this.isClaimed = isClaimed;
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processMessage(io.coala.message.AbstractMessage) */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#processMessage(io.coala.message.AbstractMessage) */
 	@Override
 	public void processMessage(
 			final Message<?> m)
@@ -203,7 +203,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		}
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processClaim(eu.a4ee.negotiation.messages.Claim) */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#processClaim(io.asimov.negotiation.messages.Claim) */
 	@Override
 	public synchronized Claimed processClaim(Claim claim)
 	{
@@ -240,6 +240,8 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 	 */
 	private boolean isAvailable(final Serializable requirements)
 	{
+		if (!getBinder().inject(GenericResourceManagementWorld.class).isAvailable())
+			return false;
 		ReasoningCapability reasonerService = agentServiceProxy.getBinder()
 				.inject(ReasoningCapability.class);
 		Query query = reasonerService.toQuery(new SLParsableSerializable(requirements.toString()));
@@ -331,7 +333,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		return result.get(requirements);
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processAvailabilityCheck(eu.a4ee.negotiation.messages.UnAvailabilityRequest) */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#processAvailabilityCheck(io.asimov.negotiation.messages.UnAvailabilityRequest) */
 	@Override
 	public synchronized AvailabilityReply processAvailabilityCheck(
 			AvailabilityCheck availabilityCheck)
@@ -345,7 +347,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		return reply;
 	}
 	
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#processAvailabilityCheck(eu.a4ee.negotiation.messages.UnAvailabilityRequest) */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#processAvailabilityCheck(io.asimov.negotiation.messages.UnAvailabilityRequest) */
 	@Override
 	public synchronized Proposal processProposalRequest(
 			ProposalRequest proposalRequest)
@@ -358,7 +360,7 @@ public class ResourceAllocationResponderImpl extends BasicCapability implements
 		return reply;
 	}
 
-	/** @see eu.a4ee.negotiation.ResourceAllocationResponder#reset() */
+	/** @see io.asimov.negotiation.ResourceAllocationResponder#reset() */
 	@Override
 	public void reset()
 	{

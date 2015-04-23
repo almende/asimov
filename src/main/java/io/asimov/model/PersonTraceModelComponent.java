@@ -15,7 +15,7 @@ import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
  *
  */
 public interface PersonTraceModelComponent extends
-		DsolModelComponent<DEVSSimulatorInterface, PersonTraceModel>
+		DsolModelComponent<DEVSSimulatorInterface, ResourceTraceModel>
 {
 
 	/** */

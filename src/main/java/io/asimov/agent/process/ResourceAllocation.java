@@ -152,7 +152,7 @@ public interface ResourceAllocation extends CoordinationFact
 
 		}
 
-		/** @see eu.a4ee.model.process.ResourceAllocation#getCandidateMap() */
+		/** @see io.asimov.model.process.ResourceAllocation#getCandidateMap() */
 		@Override
 		public Map<Serializable, Set<AgentID>> getCandidateMap()
 		{

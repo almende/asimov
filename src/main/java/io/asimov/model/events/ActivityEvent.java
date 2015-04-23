@@ -1,11 +1,11 @@
 package io.asimov.model.events;
 
-import io.arum.model.events.PersonEvent;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.person.PersonRole;
+import io.asimov.db.Datasource;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.XMLConvertible;
+import io.asimov.model.process.Process;
 import io.asimov.model.xml.XmlUtil;
-import io.asimov.xml.ActivityEnumerator;
+import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.exception.CoalaRuntimeException;
 import io.coala.log.LogUtil;
@@ -14,9 +14,9 @@ import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.log4j.Logger;
@@ -34,8 +34,7 @@ import org.joda.time.DateTime;
  */
 @Entity
 @NoSql(dataType = "activityEvents")
-public class ActivityEvent extends Event<ActivityEvent> implements
-		PersonEvent<ActivityEvent>
+public class ActivityEvent extends Event<ActivityEvent> implements XMLConvertible<EventRecord, ActivityEvent>
 {
 
 	/** */
@@ -53,14 +52,9 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 	private String activityInstanceId;
 
 	/** the person that is performing the activity */
-	@ManyToOne
-	private Person person;
+	private List<String> resources;
 
-	/**
-	 * The name of the assemblyLine this activity was performed in.
-	 */
-	private String assemblyLineName;
-
+	
 	@Override
 	@Field(name = "name")
 	public String getName()
@@ -71,7 +65,6 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 	/**
 	 * @return the activityId
 	 */
-	@Override
 	public String getActivity()
 	{
 		return this.activity;
@@ -80,7 +73,6 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 	/**
 	 * @param activity the activityId to set
 	 */
-	@Override
 	public void setActivity(final String activity)
 	{
 		this.activity = activity;
@@ -98,25 +90,25 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 	/**
 	 * @return the person
 	 */
-	public Person getPerson()
+	public List<String> getInvolvedResources()
 	{
-		return this.person;
+		return this.resources;
 	}
 
 	/**
 	 * @param person the person to set
 	 */
-	protected void setPerson(final Person person)
+	protected void setInvolvedResources(final List<String> resources)
 	{
-		this.person = person;
+		this.resources = resources;
 	}
 
 	/**
 	 * @param person the person to set
 	 */
-	public ActivityEvent withPerson(final Person person)
+	public ActivityEvent withInvolvedResources(final List<String> resources)
 	{
-		setPerson(person);
+		setInvolvedResources(resources);
 		return this;
 	}
 
@@ -126,15 +118,12 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 	public EventRecord toXML()
 	{
 		final EventRecord result = new EventRecord();
-		result.setActivityType(getType().toXML()); // event type
+		result.setActivityType(getType().getName()); // event type
 		result.setActivityInstanceRef(getActivityInstanceId());
-		result.setPersonRef(getPerson().getName());
-		for (PersonRole r: getPerson().getTypes())
-			result.getPersonRoleRef().add(r.getName());
+		result.getResourceRef().addAll(getInvolvedResources());
 		result.setProcessRef(getProcessID());
 		result.setActivityRef(getActivity());
 		result.setProcessInstanceRef(getProcessInstanceID());
-		result.setAssemblyLineRef(getAssemblyLineName());
 		try
 		{
 			result.setTimeStamp(XmlUtil.toXML(new DateTime(getExecutionTime()
@@ -144,6 +133,33 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 			LOG.warn("Problem converting sim event time to XML event date", e);
 		}
 		return result;
+	}
+	
+	public EventRecord toVerboseXML(Datasource ds) {
+		final EventRecord xmlEvent = this.toXML();
+		if (xmlEvent.getResourceRef() != null && !xmlEvent.getResourceRef().isEmpty()) {
+			int i = 0;
+			for (final String resourceRef : xmlEvent.getResourceRef()) {
+				if (i == 0) {
+					final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
+					xmlEvent.setActingResource(r.toXML());
+				} else {
+					final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
+					xmlEvent.getInvolvedResource().add(r.toXML());
+				}
+				i++;
+			}
+		}
+		if (xmlEvent.getActivityRef() != null) {
+			Process p = ds.findProcessByID(xmlEvent.getProcessRef());
+			for (TSkeletonActivityType activityType : p.toXML().getActivity()) {
+				if (activityType.getName().equals(xmlEvent.getActivityRef())) {
+					xmlEvent.setActivityDescription(activityType);
+					break;
+				}
+			}
+		}
+		return xmlEvent;
 	}
 
 	
@@ -161,13 +177,12 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 			final io.asimov.xml.TEventTrace.EventRecord event,
 			final TimeUnit timeUnit, final Date offset)
 	{
-		final EventType actType = event.getActivityType() == ActivityEnumerator.PERSON_STARTS_EXECUTING_SOME_BUSINESS_ACTIVITY ? EventType.START_ACTIVITY
-				: EventType.STOP_ACTIVITY;
+		final EventType actType = new EventType().withName(event.getActivityType());
 		final ClockID sourceID = new ClockID(null, getSourceID());
 		final long simTimeMS = XmlUtil.toDateTime(event.getTimeStamp())
 				.getMillis() - offset.getTime();
 
-		// TODO find assemblyLine/door type from ref
+		// TODO find resource-sub type from ref
 		Number time;
 		try
 		{
@@ -176,48 +191,20 @@ public class ActivityEvent extends Event<ActivityEvent> implements
 		{
 			time = simTimeMS;
 		}
-		Person p = new Person().withName(event.getPersonRef());
-		for (String r : event.getPersonRoleRef())
-			p.getTypes().add(new PersonRole().withName(r));
+		
 		return withType(actType)
 				.withActivity(event.getActivityRef())
 				.withActivityInstanceId(event.getActivityInstanceRef())
 				.withProcessID(event.getProcessRef())
 				.withProcessInstanceID(event.getProcessInstanceRef())
-				.withAssemblyLineName(event.getAssemblyLineRef())
+				.withInvolvedResources(event.getResourceRef())
 //				.withReplicationID(null)
 				.withType(actType)
-				.withPerson(p)
 				.withExecutionTime(new SimTime(// Replication.BASE_UNIT,
 						sourceID, time, timeUnit, offset))
 				.withProcessInstanceID(event.getProcessInstanceRef());
 	}
 
-	/**
-	 * @param buildingElementName
-	 * @return
-	 */
-	public ActivityEvent withAssemblyLineName(final String buildingElementName)
-	{
-		setAssemblyLineName(buildingElementName);
-		return this;
-	}
-
-	/**
-	 * @return the assemblyLineName
-	 */
-	public String getAssemblyLineName()
-	{
-		return this.assemblyLineName;
-	}
-
-	/**
-	 * @param assemblyLineName the assemblyLineName to set
-	 */
-	public void setAssemblyLineName(final String assemblyLineName)
-	{
-		this.assemblyLineName = assemblyLineName;
-	}
 
 	/**
 	 * gets the activityInstanceId for this event

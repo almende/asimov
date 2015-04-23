@@ -1,6 +1,5 @@
 package io.asimov.model;
 
-import io.arum.model.resource.assemblyline.AssemblyLine;
 import io.asimov.db.Datasource;
 import io.coala.agent.AgentID;
 import io.coala.time.SimDuration;
@@ -33,12 +32,12 @@ public class CoordinationUtil
 	public static final int Y_COORDINATE_INDEX = 1;
 	public static final int Z_COORDINATE_INDEX = 2;
 		
-	/** @see eu.a4ee.model.resource.CurrentLocationStateService#getCurrentCoordinates() */
+	/** @see io.asimov.model.resource.CurrentLocationStateService#getCurrentCoordinates() */
 	public static List<Number> getCoordinatesForNonMovingElement(final Datasource ds, final AgentID elementRepresentative) {
-		AssemblyLine r = ds.findAssemblyLineByID(elementRepresentative.getValue());
+		ASIMOVResourceDescriptor r = (ASIMOVResourceDescriptor) ds.findResourceDescriptorByID(elementRepresentative.getValue());
 		ArrayList<Number> result = new ArrayList<Number>();
 		if (r == null) {
-			r = new AssemblyLine().withName("world");
+			r = new ASIMOVResourceDescriptor().withName("world");
 		}
 		if (r.getBody() == null)
 			r.withBody(new Body().withCoordinates(0, 0, 0, 0, 0, 0).withDimensions(0, 0, 0, 0, 0, 0));

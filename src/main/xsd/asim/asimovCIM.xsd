@@ -7,10 +7,6 @@
 	xmlns:asimovunit="http://io.asimov.almende.org/2015/schema/unit/"
 	>
 
-
-
-
-
 	
 	<import schemaLocation="asimovBPM.xsd" namespace="http://io.asimov.almende.org/2015/schema/bpm/">
 	</import>
@@ -29,53 +25,42 @@
 		<attribute name="period" type="duration"/>
 	</complexType>
 	
-	<complexType name="tContext">
+	<complexType name="tConnectedResource">
 		<sequence>
-			<element name="material" maxOccurs="unbounded" minOccurs="1">
-				<complexType>
-					<sequence>
-						<element name="materialId" type="string"></element>
-						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
-						<element name="component" type="asimovcim:tComponent" maxOccurs="unbounded" minOccurs="1"></element>
-						<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
-					</sequence>
-				</complexType>
-			</element>
-			<element name="person" maxOccurs="unbounded" minOccurs="1">
-				<complexType>
-					<sequence>
-						<element name="personId" type="string"></element>
-						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
-						<element name="role" type="asimovbpm:tRole" maxOccurs="unbounded" minOccurs="1"></element>
-						<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
-					</sequence>
-				</complexType>
-			</element>
-			<element name="assemblyLine" maxOccurs="unbounded" minOccurs="1">
-				<complexType>
-					<sequence>
-						<element name="assemblyLineId" type="string"></element>
-						<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
-						<element name="assemblyLineType" type="asimovcim:tAssemblyLineType" maxOccurs="unbounded" minOccurs="1"></element>
-						<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
-					</sequence>
-				</complexType>
-			</element>
+			<element name="connectedResourceId" type="string" maxOccurs="1" minOccurs="1"/>
+			<element name="transportsResourceWithId" type="string" minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="transportsResourceWithType" type="string" minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="transportsResourceWithSubType" type="string" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="timeDistance" type="duration"/>
+	</complexType>
+	
+	<complexType name="tResource">
+		<sequence>
+			<element name="resourceId" type="string" maxOccurs="1" minOccurs="1"></element>
+			<element name="availableAfter" type="duration" maxOccurs="1" minOccurs="0"></element>
+			<element name="resourceType" type="string" maxOccurs="1" minOccurs="1"></element>
+			<element name="resourceSubType" type="string" maxOccurs="unbounded" minOccurs="1"></element>
+			<element name="maxNofUseInActivity" type="integer" maxOccurs="1" minOccurs="0"></element>
+			<element name="maxNofUseInProcess" type="integer" maxOccurs="1" minOccurs="0"></element>
+			<!-- TODO: Add ASIMOV NODE querying system here -->
+			<element name="unavailable" type="asimovcim:tUnavailablePeriodDistribution" maxOccurs="unbounded" minOccurs="0"></element>
+			<!-- Mobility -->
+			<element name="stationary" type="boolean" minOccurs="1" maxOccurs="1"></element>
+			<!-- Connectivity -->
+			<element name="infrastructural" type="boolean" minOccurs="1" maxOccurs="1"></element>
+			<element name="connectedResourceId" type="asimovcim:tConnectedResource" minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="containerResourceId" type="asimovcim:tConnectedResource" minOccurs="0" maxOccurs="1"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="tComponent">
+	<complexType name="tContext">
 		<sequence>
-			<element name="amount" type="int"></element>
-			<element name="type" type="string"></element>
+			<element name="resource" type="asimovcim:tResource" maxOccurs="unbounded" minOccurs="1"/>
 		</sequence>
 	</complexType>
-	<complexType name="tAssemblyLineType">	
-		<sequence>
-			<element name="amount" type="int"></element>
-			<element name="type" type="string"></element>
-		</sequence>
-	</complexType>
+	
+	
 	<complexType name="tUseCase">
 		<sequence>
 			<element name="id" type="string" maxOccurs="1" minOccurs="1"></element>
@@ -137,16 +122,7 @@
 											type="asimovevent:tAgentBasedSimulationModuleOutput" maxOccurs="1"
 											minOccurs="1">
 										</element>
-
-                    <element name="roles" maxOccurs="1" minOccurs="1">
-                      <complexType>
-                        <sequence>
-                          <element name="role" type="asimovbpm:tRole" maxOccurs="unbounded"
-                            minOccurs="0"></element>
-                        </sequence>
-                      </complexType>
-                    </element>
-                  </sequence>
+                  					</sequence>
 								</complexType>
 							</element>
 						</sequence>
@@ -158,15 +134,9 @@
 
 
 
-
-
-
-
-
-
 	<element name="BPMImport">
 		<annotation>
-			<documentation>BPM imorting.</documentation>
+			<documentation>BPM importing.</documentation>
 		</annotation>
 		<complexType>
 			<sequence>
@@ -175,29 +145,6 @@
 					<annotation>
 						<documentation>one or more processes to import</documentation>
 					</annotation>
-				</element>
-			</sequence>
-		</complexType>
-	</element>
-
-	<element name="EventsImport">
-		<annotation>
-			<documentation>import new events into the adapt4ee</documentation>
-		</annotation>
-		<complexType>
-			<sequence>
-				<element name="event" type="asimovevent:tEvent" maxOccurs="unbounded"
-					minOccurs="1">
-				</element>
-			</sequence>
-		</complexType>
-	</element>
-	
-	<element name="ListOfEvents">
-		<complexType>
-			<sequence>
-				<element name="event" type="asimovevent:tEvent" maxOccurs="unbounded"
-					minOccurs="0">
 				</element>
 			</sequence>
 		</complexType>
@@ -213,16 +160,6 @@
 		</complexType>
 	</element>
 
-	<element name="ListOfRoles">
-		<complexType>
-			<sequence>
-				<element name="role" type="asimovbpm:tRole" maxOccurs="unbounded"
-					minOccurs="0"></element>
-			</sequence>
-		</complexType>
-	</element>
-
-	
 	
 	<element name="EventTraceImport">
 		<complexType>
@@ -233,19 +170,6 @@
 		</complexType>
 	</element>
 
-	<element name="ListOfPersons">
-		<complexType>
-			<sequence>
-				<element name="person" maxOccurs="unbounded" minOccurs="0">
-					<complexType>
-						<sequence>
-							<element name="id" type="string" maxOccurs="1" minOccurs="1"></element>
-						</sequence>
-					</complexType>
-				</element>
-			</sequence>
-		</complexType>
-	</element>
 
 	<element name="EventTraceMinTime" type="dateTime"></element>
 

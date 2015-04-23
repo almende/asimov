@@ -45,7 +45,7 @@ public class XmlNamespaceMapper extends NamespacePrefixMapper
 	private static final String CIM_PREFIX = "cim";
 
 	/** */
-	private static final String CIM_URI = "http://www.adapt4ee.eu/2012/schema/cim/";
+	private static final String CIM_URI = "http://io.asimov.almende.org/2015/schema/cim/";
 
 	/** */
 	@SuppressWarnings("unchecked")

@@ -14,7 +14,7 @@ import org.eclipse.persistence.nosql.annotations.NoSql;
  */
 @Entity
 @NoSql(dataType = "rooms")
-public class Body extends AbstractEntity<Body> implements ResourceType
+public class Body extends AbstractEntity<Body>
 {
 
 	/** */

@@ -1,6 +1,5 @@
 package io.asimov.model;
 
-import io.arum.model.resource.ARUMResourceType;
 import io.coala.agent.AgentID;
 import io.coala.json.JsonUtil;
 import io.coala.time.SimDuration;
@@ -64,8 +63,12 @@ public class ActivityParticipationResourceInformation implements Serializable
 	private String processInstanceId = null;
 
 	/** */
-	private ARUMResourceType resourceType = null;
+	private String resourceType = null;
+	
+	private boolean moveable;
 
+	private boolean infrastructural;
+	
 	/**
 	 * @return the resourceAgent
 	 */
@@ -105,8 +108,18 @@ public class ActivityParticipationResourceInformation implements Serializable
 	 * @param resourceType the resourceType to set
 	 * @return {@link ActivityParticipationResourceInformation}
 	 */
-	public ActivityParticipationResourceInformation withResourceType(ARUMResourceType resourceType) {
+	public ActivityParticipationResourceInformation withResourceType(String resourceType) {
 		setResourceType(resourceType);
+		return this;
+	}
+	
+	
+	/**
+	 * @param moveable a boolean indicating if the resource is considered to be moveable or not
+	 * @return {@link ActivityParticipationResourceInformation}
+	 */
+	public ActivityParticipationResourceInformation withMoveability(boolean moveable) {
+		setMoveable(moveable);
 		return this;
 	}
 	
@@ -165,7 +178,7 @@ public class ActivityParticipationResourceInformation implements Serializable
 	/**
 	 * @return the resourceType
 	 */
-	public ARUMResourceType getResourceType()
+	public String getResourceType()
 	{
 		return this.resourceType;
 	}
@@ -173,7 +186,7 @@ public class ActivityParticipationResourceInformation implements Serializable
 	/**
 	 * @param resourceType the resourceType to set
 	 */
-	public void setResourceType(ARUMResourceType resourceType) {
+	public void setResourceType(String resourceType) {
 	this.resourceType = resourceType;}
 
 	/**
@@ -391,6 +404,37 @@ public class ActivityParticipationResourceInformation implements Serializable
 	public ActivityParticipationResourceInformation withActivityInstanceId(String activityInstanceId)
 	{
 		setActivityInstanceId(activityInstanceId);
+		return this;
+	}
+
+	public boolean isMoveable() {
+		return moveable;
+	}
+
+	public void setMoveable(boolean moveable) {
+		this.moveable = moveable;
+	}
+
+	/**
+	 * @return the infrastructural
+	 */
+	public boolean isInfrastructural() {
+		return infrastructural;
+	}
+
+	/**
+	 * @param infrastructural the infrastructural to set
+	 */
+	public void setInfrastructural(boolean infrastructural) {
+		this.infrastructural = infrastructural;
+	}
+	
+	/**
+	 * @param infrastructural the infrastructural to set
+	 * @return the {@link ActivityParticipationResourceInformation}
+	 */
+	public ActivityParticipationResourceInformation withInfrastructural(boolean infrastructural) {
+		setInfrastructural(infrastructural);
 		return this;
 	}
 

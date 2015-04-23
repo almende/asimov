@@ -2,17 +2,22 @@ package io.asimov.agent.gui;
 
 import io.asimov.db.Datasource;
 import io.asimov.model.TraceService;
+import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.vis.timeline.VisJSTimelineUtil;
 import io.asimov.xml.TEventTrace;
 import io.coala.bind.Binder;
 import io.coala.capability.admin.DestroyingCapability;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
+import io.coala.exception.CoalaException;
 import io.coala.log.LogUtil;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -76,10 +81,26 @@ public class ScenarioAgentGui extends JFrame
 				final TraceService trace = TraceService.getInstance(binder
 						.getID().getModelID().getValue());
 				final Datasource ds = binder.inject(Datasource.class);
-				final TEventTrace xmlOutput = trace.toXML(ds);
+				boolean includeResouces = false;
+				try {
+					includeResouces = binder.inject(ConfiguringCapability.class).getProperty("includeResourcesInEventTrace").getBoolean().booleanValue();
+				} catch (CoalaException e3) {
+					LOG.error("Failed to read include resources property defaulting to false",e3);
+				}
+				boolean includeActivities = false;
+				try {
+					includeActivities = binder.inject(ConfiguringCapability.class).getProperty("includeActivitiesInEventTrace").getBoolean().booleanValue();
+				} catch (CoalaException e2) {
+					LOG.error("Failed to read include activities property defaulting to false",e2);
+				}
+
+				final TEventTrace xmlOutput = trace.toXML(ds,includeResouces,includeActivities);
 				try
 				{
-					VisJSTimelineUtil.writeTimelineData(trace.getEvents(ds));
+					List<ActivityEvent> events = new ArrayList<ActivityEvent>();
+					for (ActivityEvent e : trace.getActivityEvents(ds))
+						events.add(e);
+					VisJSTimelineUtil.writeTimelineData(events);
 				} catch (Exception e1)
 				{
 					LOG.error("Failed to write timeline data", e1);

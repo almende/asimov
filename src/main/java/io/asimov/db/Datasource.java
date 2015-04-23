@@ -1,11 +1,7 @@
 package io.asimov.db;
 
-import io.arum.model.events.MaterialEvent;
-import io.arum.model.events.MovementEvent;
-import io.arum.model.resource.assemblyline.AssemblyLine;
-import io.arum.model.resource.person.Person;
-import io.arum.model.resource.supply.Material;
 import io.asimov.agent.scenario.Replication;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
@@ -14,6 +10,7 @@ import io.coala.capability.BasicCapabilityStatus;
 import io.coala.capability.Capability;
 import io.coala.capability.CapabilityFactory;
 
+import javax.media.j3d.Material;
 import javax.persistence.EntityManagerFactory;
 
 /**
@@ -53,36 +50,24 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	void close();
 
 	/**
-	 * @param assemblyLine the {@link AssemblyLine} to save
+	 * @param resourceDescriptor the {@link ASIMOVResourceDescriptor} to save
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
 	 */
-	void save(AssemblyLine assemblyLine);
+	void save(ASIMOVResourceDescriptor resourceDescriptor);
 
 	/**
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 * @return the {@link AssemblyLine}s
+	 * @return the {@link ASIMOVResourceDescriptor}s
 	 */
-	Iterable<AssemblyLine> findAssemblyLines();
+	Iterable<ASIMOVResourceDescriptor> findResourceDescriptors();
 	
-	/**
-	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 * @return the {@link Person}s
-	 */
-	Iterable<Person> findPersons();
-	
-	
-	/**
-	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 * @return the {@link Material}s
-	 */
-	Iterable<Material> findMaterials();
 
 	/**
-	 * @param assemblyLineID the identifier of the {@link AssemblyLine} to load
+	 * @param resourceDescriptorID the identifier of the {@link ASIMOVResourceDescriptor} to load
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 * @return the {@link AssemblyLine} or {@code null} if none found
+	 * @return the {@link ASIMOVResourceDescriptor} or {@code null} if none found
 	 */
-	AssemblyLine findAssemblyLineByID(String AssemblyLine);
+	ASIMOVResourceDescriptor findResourceDescriptorByID(String resourceDescriptor);
 	
 	/**
 	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
@@ -97,20 +82,7 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	 */
 	Process findProcessByID(String processID);
 	
-	/**
-	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 * @param personID the identifier of the {@link Person} to load
-	 * @return the {@link AssemblyLine} or {@code null} if none found
-	 */
-	Person findPersonByID(String personID);
 	
-	
-	/**
-	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 * @param materialID the identifier of the {@link Material} to load
-	 * @return the {@link Material} or {@code null} if none found
-	 */
-	Material findMaterialByID(String materialID);
 
 	/**
 	 * @param event the {@link Event} to save
@@ -123,15 +95,6 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	 */
 	void save(Process process);
 
-	/**
-	 * @return an {@link Iterable} stream of all {@link MovementEvent} for specified replication
-	 */
-	Iterable<MovementEvent> findMovementEvents();
-
-	/**
-	 * @return an {@link Iterable} stream of all {@link MaterialEvent} for specified replication
-	 */
-	Iterable<MaterialEvent> findMaterialEvents();
 
 	/**
 	 * @return an {@link Iterable} stream of all {@link ActivityEvent} for specified replication
@@ -160,24 +123,12 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	 */
 	Iterable<Event> findEvents(EventType... types);
 	
-	/**
-	 * @param replicationId the id {@link Replication} to match
-	 * @param types the {@link EventType} to match
-	 * @return an {@link Iterable} stream of events with specified {@code name}
-	 */
-	Iterable<MovementEvent> findMovementEvents(EventType... types);
-
-	/**
-	 * @param types the {@link EventType} to match
-	 * @return an {@link Iterable} stream of events with specified {@code name}
-	 */
-	Iterable<ActivityEvent> findActivityEvents(EventType... types);
 	
 	/**
 	 * @param types the {@link EventType} to match
 	 * @return an {@link Iterable} stream of events with specified {@code name}
 	 */
-	Iterable<MaterialEvent> findMaterialEvents(EventType... types);
+	Iterable<ActivityEvent> findActivityEvents(EventType... types);
 
 	
 	/**
@@ -194,41 +145,11 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	Replication findReplication();
 	
 	
-	
-	/**
-	 * Find a gbXMLDocument by id.
-	 * Returns null if replication is not found.
-	 * @param id
-	 * @return gbXMLDocument
-	 */
-	//SimulationFileDocument findSimulationFileDocument(String id);
-
 	/**
 	 * Save a new replication in the database
 	 * @param replication
 	 */
 	void save(Replication replication);
-	
-	
-	/**
-	 * Save a gbXML file in the database
-	 * @param replication
-	 */
-	//void save(SimulationFileDocument simulationFileDocument);
-	
-	/**
-	 * Save a Material bean in the database
-	 * @param material the Material to save
-	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 */
-	void save(Material material);
-	
-	/**
-	 * Save a Person bean in the database
-	 * @param person the occpant to save
-	 * @param replicationID the id of the replication this entity belongs to set to null to save 'globally'.
-	 */
-	void save(Person person);
 
 
 	/**
@@ -254,32 +175,18 @@ public interface Datasource extends Capability<BasicCapabilityStatus>
 	 */
 	void removeEvents();
 	
-	/**
-	 * @param replicationId the id {@link Replication} to match
-	 */
-	void removePersons();
 	
 	/**
 	 * @param replicationId the id {@link Replication} to match
 	 */
-	void removeAssemblyLines();
+	void removeResourceDescriptors();
 	
-	/**
-	 * @param replicationId the id {@link Replication} to match
-	 */
-	void removeMaterials();
 	
 	/**
 	 * @param replicationId the id {@link Replication} to match
 	 */
 	void removeProcesses();
 
-
-//	/**
-//	 * Remove a calibration from the database by its id
-//	 * @param id
-//	 */
-//	void removeCalibration(String id);
 
 	/**
 	 * @param replicationID
