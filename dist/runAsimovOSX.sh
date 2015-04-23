@@ -36,7 +36,7 @@ fi
 $DIR/mongodb/bin/mongod --dbpath $DIR/data/db &
 fi
 echo "Starting ASIMOV, when finished the results will be displayed in your web browser."
-if (java -XX:PermSize=512m -XX:MaxPermSize=2048m -Xms256m -Xmx2048m -jar ASIMOV.jar example_usecase.xml 2 example_output); then
+if (java -XX:PermSize=512m -XX:MaxPermSize=2048m -Xms256m -Xmx2048m -jar ASIMOV.jar usecase.xml 2 example_output); then
     open -n "$DIR/example_output/gui/html/index.html"
 else
 echo "An error occured while running ASIMOV."

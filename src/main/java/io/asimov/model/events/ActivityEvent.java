@@ -1,7 +1,11 @@
 package io.asimov.model.events;
 
+import io.asimov.db.Datasource;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.XMLConvertible;
+import io.asimov.model.process.Process;
 import io.asimov.model.xml.XmlUtil;
+import io.asimov.xml.TSkeletonActivityType;
 import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.exception.CoalaRuntimeException;
 import io.coala.log.LogUtil;
@@ -129,6 +133,33 @@ public class ActivityEvent extends Event<ActivityEvent> implements XMLConvertibl
 			LOG.warn("Problem converting sim event time to XML event date", e);
 		}
 		return result;
+	}
+	
+	public EventRecord toVerboseXML(Datasource ds) {
+		final EventRecord xmlEvent = this.toXML();
+		if (xmlEvent.getResourceRef() != null && !xmlEvent.getResourceRef().isEmpty()) {
+			int i = 0;
+			for (final String resourceRef : xmlEvent.getResourceRef()) {
+				if (i == 0) {
+					final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
+					xmlEvent.setActingResource(r.toXML());
+				} else {
+					final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
+					xmlEvent.getInvolvedResource().add(r.toXML());
+				}
+				i++;
+			}
+		}
+		if (xmlEvent.getActivityRef() != null) {
+			Process p = ds.findProcessByID(xmlEvent.getProcessRef());
+			for (TSkeletonActivityType activityType : p.toXML().getActivity()) {
+				if (activityType.getName().equals(xmlEvent.getActivityRef())) {
+					xmlEvent.setActivityDescription(activityType);
+					break;
+				}
+			}
+		}
+		return xmlEvent;
 	}
 
 	

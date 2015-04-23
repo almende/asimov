@@ -1,0 +1,957 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p1:SimulationFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://io.asimov.almende.org/2015/schema/cim/ ../../main/xsd/asim/main.xsd"
+ xmlns:asimovcim="http://io.asimov.almende.org/2015/schema/cim/"
+ xmlns:asimovevent="http://io.asimov.almende.org/2015/schema/event/"
+ xmlns:p1="http://io.asimov.almende.org/2015/schema/cim/"
+ xmlns:asimovunit="http://io.asimov.almende.org/2015/schema/units/"
+ xmlns:asimovbpm="http://io.asimov.almende.org/2015/schema/bpm/">
+   <id>ARUMMovie</id>
+   <simulations>
+       <simulationCase>
+           <id>ARUM Toy Model Movie</id>
+                <usecase>
+                    <id>IHF</id>
+                    <context>
+<!-- Here we make the correlation between the specific materials and the generic components -->
+                        <resource>
+                            <resourceId>Pump A</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pump</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pump B</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pump</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Dispencer Box 1</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Dispencer</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Aluminium Framework</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Framework</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Steel Framework</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Framework</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>ECP 1242 Board set</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Electronical Circuit Pack</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>FP134 FrontPanel</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine front panel</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>RP 2378 rear panel</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine rear panel</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Yellow Cover B234</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine cover</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Circuit Validator 1</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Circuit Validator 2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource><resource>
+                            <resourceId>Circuit Validator 3</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pressure Measurement Device A</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pressure Measurement Device</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pressure Measurement Device B</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pressure Measurement Device</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Pump A.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pump</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pump B.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pump</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Dispencer Box 1.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Dispencer</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Aluminium Framework.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Framework</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Steel Framework.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Framework</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>ECP 1242 Board set.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Electronical Circuit Pack</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>FP134 FrontPanel.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine front panel</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>RP 2378 rear panel.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine rear panel</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Yellow Cover B234.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Coffee machine cover</resourceSubType>
+                            <maxNofUseInProcess>1</maxNofUseInProcess>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Circuit Validator 1.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Circuit Validator 2.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource><resource>
+                            <resourceId>Circuit Validator 3.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Circuit Validator</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pressure Measurement Device A.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pressure Measurement Device</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        <resource>
+                            <resourceId>Pressure Measurement Device B.2</resourceId>
+                            <resourceType>Material</resourceType>
+                            <resourceSubType>Pressure Measurement Device</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>false</infrastructural> 
+                        </resource>
+                        
+                        
+                        
+                        
+                        <!-- Here we make the correlation between the specific persons and the generic roles -->
+                        <resource>
+                            <resourceId>Giovanni</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Minor Manager</resourceSubType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                       
+                        <resource>
+                            <resourceId>Victor</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                       
+                        <resource>
+                            <resourceId>Edward</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                       
+                        <resource>
+                            <resourceId>Suki</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>RAO</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Mario</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Major Manager</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Anthony</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Minor Manager</resourceSubType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Vitek</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+  
+                        <resource>
+                            <resourceId>Eduardo</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Rick</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>RAO</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural> 
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Sven</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Major Manager</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural>
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                        
+                        <resource>
+                            <resourceId>Elza</resourceId>
+                            <resourceType>Person</resourceType>
+                            <resourceSubType>Minor Manager</resourceSubType>
+                            <resourceSubType>Electrical Engineer</resourceSubType>
+                            <resourceSubType>Worker</resourceSubType>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y001DT00H00M00S">
+                                <property name="pmf" type="int">5</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y005DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y010DT00H00M00S">
+                                <property name="pmf" type="int">1</property>
+                            </unavailable>
+                            <unavailable type="EnumeratedDiscrete" period="P00Y000DT00H00M00S">
+                                <property name="pmf" type="int">340</property>
+                            </unavailable>
+                            <stationary>false</stationary> 
+                            <infrastructural>false</infrastructural>
+                            <containerResourceId>
+                                <connectedResourceId>world</connectedResourceId>
+                            </containerResourceId>
+                        </resource>
+                        
+                        
+<!-- Here we make the correlation between the specific assemblyLines and the generic types -->
+                        <resource>
+                            <resourceId>world</resourceId>
+                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
+                            <resourceType>Factory</resourceType>
+                            <resourceSubType>Front door of the factory</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>true</infrastructural> 
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_1</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_2</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_3</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                        </resource>
+                        <resource>
+                            <resourceId>CoffeeMachineProductionTable_1</resourceId>
+                            <availableAfter>P00Y000DT00H00M00S</availableAfter>
+                            <resourceType>AssemblyLine</resourceType>
+                            <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>true</infrastructural> 
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_2</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_3</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>world</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                        </resource>
+                        <resource>
+                            <resourceId>CoffeeMachineProductionTable_2</resourceId>
+                            <availableAfter>P00Y001DT00H00M00S</availableAfter>
+                            <resourceType>AssemblyLine</resourceType>
+                            <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>true</infrastructural> 
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_1</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_3</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>world</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                        </resource>
+                        <resource>
+                            <resourceId>CoffeeMachineProductionTable_3</resourceId>
+                            <availableAfter>P00Y002DT00H00M00S</availableAfter>
+                            <resourceType>AssemblyLine</resourceType>
+                            <resourceSubType>CoffeeMachineProductionTable</resourceSubType>
+                            <stationary>true</stationary> 
+                            <infrastructural>true</infrastructural> 
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_1</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>CoffeeMachineProductionTable_2</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                            <connectedResourceId timeDistance="P00Y000DT00H00M10S">
+                                <connectedResourceId>world</connectedResourceId>
+                                <transportsResourceWithType>Person</transportsResourceWithType>
+                            </connectedResourceId>
+                        </resource>
+                        
+                    </context>
+                    <process>
+                        <id>Process_A.1</id>
+                        <name>Coffee machine production process</name>
+                        <activity>
+                            <id>A1.1</id>
+                            <name>A1 - Manufactoring interior of the Coffee machine</name>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Pump</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                                <timeOfUse>P0Y0M0DT1H</timeOfUse>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Dispencer</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                                <timeOfUse>P0Y0M0DT1H</timeOfUse>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Framework</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Electronical Circuit Pack</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Worker</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT02H10M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <nextActivityRef likelihood="10">A2.1</nextActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A2.1</id>
+                            <name>A2 - Test interior of the Coffee machine</name>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Circuit Validator</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Pressure Measurement Device</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>RAO</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Electrical Engineer</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT00H20M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="5">A1.1</previousActivityRef>
+                            <previousActivityRef likelihood="1">A5.1</previousActivityRef>
+                            <previousActivityRef likelihood="4">A6.1</previousActivityRef>
+                            <nextActivityRef likelihood="5">A3.1</nextActivityRef>
+                            <nextActivityRef likelihood="5">A4.1</nextActivityRef>
+                            <nextActivityRef likelihood="2">A5.1</nextActivityRef>
+                            <nextActivityRef likelihood="8">A6.1</nextActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A3.1</id>
+                            <name>A3 - Manufactoring exterior of the Coffee machine</name>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Coffee machine front panel</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Coffee machine rear panel</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Material</resourceTypeRef>
+                                <resourceSubTypeRef>Coffee machine cover</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Worker</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT00H35M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="10">A2.1</previousActivityRef>
+                            <previousActivityRef likelihood="10">A4.1</previousActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A4.1</id>
+                            <name>A4 - Wait for RAO to complete</name>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>RAO</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT00H30M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="10">A2.1</previousActivityRef>
+                            <nextActivityRef likelihood="10">A3.1</nextActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A5.1</id>
+                            <name>A5 - Minor None Conformity Meeting</name>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Minor Manager</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Electrical Engineer</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT00H10M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="10">A2.1</previousActivityRef>
+                            <nextActivityRef likelihood="10">A2.1</nextActivityRef>
+                        </activity>
+                        <activity>
+                            <id>A6.1</id>
+                            <name>A6 - Major None Conformity Meeting</name>
+                            <usedResource>
+                                <resourceTypeRef>AssemblyLine</resourceTypeRef>
+                                <resourceSubTypeRef>CoffeeMachineProductionTable</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Major Manager</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <usedResource>
+                                <resourceTypeRef>Person</resourceTypeRef>
+                                <resourceSubTypeRef>Electrical Engineer</resourceSubTypeRef>
+                                <numberOf>1</numberOf>
+                            </usedResource>
+                            <interruptable>true</interruptable>
+                            <waitingTime>P00Y000DT00H00M00S</waitingTime>
+                            <executionTime>P00Y000DT01H00M00S</executionTime>
+                            <transportTime>P00Y000DT00H00M00S</transportTime>
+                            
+                            <isBusinessActivity>true</isBusinessActivity>
+                            <previousActivityRef likelihood="10">A2.1</previousActivityRef>
+                            <nextActivityRef likelihood="10">A2.1</nextActivityRef>
+                        </activity>
+                    </process>
+                 
+                    <processTemplate processRef="Process_A.1">
+                        <property name="totalToBePerformed" type="int">5</property>
+                    </processTemplate>
+                </usecase>
+           <simulationResult>
+               <simulationID>IHF</simulationID>
+               <eventTrace>
+                   <!-- Here is an example of the output of ASIMOV all event types -->
+                   <!-- <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <activityType>Person arrives at AssemblyLine (AL corresponds to AL in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <activityType>Person starts executing some Business Activity</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>ECP 1242 Board set</materialRef>
+                       <activityType>Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Pump A</materialRef>
+                       <activityType>Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Aluminium Framework</materialRef>
+                       <activityType>Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T09:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Dispencer Box 1</materialRef>
+                       <activityType>Person starts assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T10:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Pump A</materialRef>
+                       <activityType>Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T10:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Dispencer Box 1</materialRef>
+                       <activityType>Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T11:40:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>Aluminium Framework</materialRef>
+                       <activityType>Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T11:40:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>ECP 1242 Board set</materialRef>
+                       <activityType>Person stops assembly with Material Artifact (MA corresponds to MA in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord>
+                   <eventRecord>
+                       <timeStamp>2015-05-30T11:40:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <activityType>Person stops executing some Business Activity</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord> -->
+                   <!-- Here will be other event events about the preceding activitities within Process_A_instance1 -->
+                  <!-- <eventRecord>
+                       <timeStamp>2015-05-30T17:30:10Z</timeStamp>
+                       <personRef>Edward</personRef>
+                       <personRoleRef>Electrical Engineer</personRoleRef>
+                       <assemblyLineRef>CoffeeMachineProductionTable_1</assemblyLineRef>
+                       <materialRef>ECP 1242 Board set</materialRef>
+                       <activityType>Person leaves AssemblyLine (AL corresponds to AL in Event Record)</activityType>
+                       <processRef>Process_A.1</processRef>
+                       <processInstanceRef>Process_A.1_instance1</processInstanceRef>
+                       <activityRef>A1.1</activityRef>
+                   </eventRecord> -->
+               </eventTrace>
+           </simulationResult>
+       </simulationCase>
+   </simulations>
+</p1:SimulationFile>
+
