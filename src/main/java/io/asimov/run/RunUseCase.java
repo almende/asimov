@@ -67,7 +67,7 @@ public class RunUseCase
 //	public static final long nofOccupants = 9;
 
 	/** */
-	private static String replicationID = "arum";
+	private static String replicationID = "asimov";
 	
 	public static File sourceFile = null;
 	
