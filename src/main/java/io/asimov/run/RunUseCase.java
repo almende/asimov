@@ -383,7 +383,7 @@ public class RunUseCase
 				.getActivityEvents(binder.inject(Datasource.class)))
 				events.add(e);
 		LOG.info("Loaded events");
-		VisJSTimelineUtil.writeTimelineData(events,targetDirectory);
+		VisJSTimelineUtil.writeTimelineData(events,targetDirectory,binder.inject(ConfiguringCapability.class).getProperty("guiTemplate").get("gui"));
 		LOG.info("Wrote timeline");
 		LOG.info("done");
 	}

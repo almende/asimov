@@ -1,8 +1,6 @@
 package io.asimov.test.sim;
 
 import io.asimov.db.Datasource;
-import io.asimov.db.mongo.MongoDatasource;
-import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.TraceService;
 import io.asimov.model.xml.XmlUtil;
 import io.asimov.xml.SimulationFile;
@@ -10,7 +8,6 @@ import io.asimov.xml.SimulationFile.Simulations;
 import io.asimov.xml.SimulationFile.Simulations.SimulationCase;
 import io.asimov.xml.TAgentBasedSimulationModuleOutput;
 import io.asimov.xml.TEventTrace;
-import io.asimov.xml.TEventTrace.EventRecord;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.bind.BinderFactory;

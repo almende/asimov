@@ -7,6 +7,7 @@ import io.coala.agent.AgentStatusUpdate;
 import io.coala.bind.Binder;
 import io.coala.bind.BinderFactory;
 import io.coala.capability.admin.CreatingCapability;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.capability.replicate.ReplicationConfig;
 import io.coala.exception.CoalaException;
@@ -171,7 +172,7 @@ public class ScenarioTest
 	protected void wrapUp() {
 		try {
 			new EventTraceWriter().writeSimulatorOutput();
-			new TimeLineWriter().writeTimeLine();
+			new TimeLineWriter().writeTimeLine(binder.inject(ConfiguringCapability.class).getProperty("guiTemplate").get("gui"));
 		} catch (Exception e) {
 			LOG.error("Failed to write output of ASIMOV",e);
 			System.exit(1);

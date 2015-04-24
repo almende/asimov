@@ -128,10 +128,10 @@ public class VisJSTimelineUtil {
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeTimelineData(final List<ActivityEvent> list, File targetDirectory)
+	public static void writeTimelineData(final List<ActivityEvent> list, File targetDirectory, String guiDir)
 			throws Exception {
-		outputFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/usage.json");
-		styleSheetFile = new File(targetDirectory.getAbsolutePath()+"/gui/html/data/style.css");
+		outputFile = new File(targetDirectory.getAbsolutePath()+"/"+guiDir+"/html/data/usage.json");
+		styleSheetFile = new File(targetDirectory.getAbsolutePath()+"/"+guiDir+"/html/data/style.css");
 		FileWriter fw = new FileWriter(outputFile);
 		FileWriter fws = new FileWriter(styleSheetFile);
 		writeTimelineData(list, fw, fws);
@@ -141,10 +141,10 @@ public class VisJSTimelineUtil {
 	 * @param processTypes
 	 * @throws Exception
 	 */
-	public static void writeTimelineData(final List<ActivityEvent> list)
+	public static void writeTimelineData(final List<ActivityEvent> list,String guiDir)
 			throws Exception {
 		writeTimelineData(list, new File(
-				"src/test/resources"));
+				"src/test/resources"),guiDir);
 	}
 	
 	
