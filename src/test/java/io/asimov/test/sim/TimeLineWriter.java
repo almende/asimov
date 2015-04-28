@@ -28,7 +28,7 @@ public class TimeLineWriter
 	final static String replicationId = "replication_test_0";
 
 	@Test
-	public void writeTimeLine() throws Exception
+	public void writeTimeLine(String guiDir) throws Exception
 	{
 		int mb = 1024 * 1024;
 
@@ -55,7 +55,7 @@ public class TimeLineWriter
 				.getActivityEvents(MongoDatasource.getInstance(replicationId)))
 				events.add(e);
 		LOG.info("Loaded events");
-		VisJSTimelineUtil.writeTimelineData(events);
+		VisJSTimelineUtil.writeTimelineData(events,guiDir);
 		LOG.info("Wrote timeline");
 		LOG.info("done");
 	}

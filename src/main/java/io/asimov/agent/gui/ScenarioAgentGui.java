@@ -100,7 +100,7 @@ public class ScenarioAgentGui extends JFrame
 					List<ActivityEvent> events = new ArrayList<ActivityEvent>();
 					for (ActivityEvent e : trace.getActivityEvents(ds))
 						events.add(e);
-					VisJSTimelineUtil.writeTimelineData(events);
+					VisJSTimelineUtil.writeTimelineData(events,binder.inject(ConfiguringCapability.class).getProperty("guiTemplate").get("gui"));
 				} catch (Exception e1)
 				{
 					LOG.error("Failed to write timeline data", e1);
