@@ -597,6 +597,8 @@ public class ManageProcessActionImpl extends
 			List<ActivityParticipationResourceInformation> resourceParticipationInfo = new ArrayList<ActivityParticipationResourceInformation>();
 
 			for (AgentID agent : nextDistribution.keySet()) {
+				if (!nextDistribution.get(agent).contains(nextActivtyTimeToken))
+					continue;
 				String type = null;
 				String resourceName = agent.getValue();
 						for (UsedResource componentUsed : activityXML

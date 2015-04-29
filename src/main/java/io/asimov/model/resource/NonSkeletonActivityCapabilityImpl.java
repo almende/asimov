@@ -17,6 +17,7 @@ import io.coala.log.LogUtil;
 import io.coala.model.ModelComponentIDFactory;
 import io.coala.name.Identifiable;
 import io.coala.time.SimTime;
+import io.coala.time.TimeUnit;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,7 +105,7 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 					if (world.getCurrentLocation().getValue().equals(ScenarioManagementWorld.WORLD_NAME)){
 						try
 						{
-							getBinder().inject(SendingCapability.class).send(new ASIMOVMessage(getBinder().inject(ReplicatingCapability.class).getTime(), t.getReceiverID(), t.getSenderID(), t.content));
+							getBinder().inject(SendingCapability.class).send(new ASIMOVMessage(getBinder().inject(ReplicatingCapability.class).getTime().plus(1,TimeUnit.MILLIS), t.getReceiverID(), t.getSenderID(), t.content));
 						} catch (Exception e)
 						{
 							LOG.error("Fatal error. could not respond");
