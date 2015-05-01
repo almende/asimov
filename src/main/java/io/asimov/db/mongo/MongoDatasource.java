@@ -58,7 +58,7 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	private static final String DB_JPA_UNIT = "mongo";
 	protected static String DB_NAME = "arum";
 
-	private boolean eventsAreIndexed = false;
+	private static boolean eventsAreIndexed = false;
 
 	// TODO get from @Entity(name=...) JPA annotations
 	protected static String MONGO_SIMFILE_COLLECTION = "cim";

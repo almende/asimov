@@ -21,8 +21,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 	    @Type(value = ASIMOVAndNode.class, name = "AND"),
 	    @Type(value = ASIMOVFunctionNode.class, name = "FUNCTION"),
 	    @Type(value = ASIMOVIntegerTerm.class, name = "INTEGER"),
-	    @Type(value = ASIMOVStringTerm.class, name = "STRING")
-	    
+	    @Type(value = ASIMOVStringTerm.class, name = "STRING")	    
 	})  
 public interface ASIMOVNode<T> extends JSONConvertible<ASIMOVNode<T>>, XMLConvertible<Object, ASIMOVNode<T>>, SLConvertible<ASIMOVNode<T>> {
 
