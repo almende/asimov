@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Asimov by almende</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Asimov</h1>
+        <h2>Agent-based SImulation, MOdeling, and Visualization of processes </h2>
+        <a href="https://github.com/almende/asimov" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="asimov" class="anchor" href="#asimov" aria-hidden="true"><span class="octicon octicon-link"></span></a>ASIMOV</h1>
+
+<p>Agent-based SImulation, MOdeling, and Visualization of processes</p>
+
+<p>ASIMOV is a loosely coupled distributed inference engine that infers knowledge about the details of a process (e.g., consultation) occurring in a context (e.g., hospital) with the sole generic information about the process itself and measurement about a real-life process of that kind. Such knowledge can then be used to calculate KPIs, visualize analytics, make predictions, validate models, explain processes etc.   </p>
+
+<p>Given a business process described as a flowchart and some measurements about the process, ASIMOV can infer what sequence of events have led to the measurements, thus inferring and abstracting knowledge about the process itself. </p>
+
+<p>As input ASIMOV receives two types of parameters together called the <em>usecase</em>:</p>
+
+<ul>
+<li>A Process/Workflow that describes what resources (Actors, Assets, Materials, Places, etc.) are <strong>required</strong> to participate in an activity at the same place and time together, and how these activities are sequenced after eachother expressed by a branching probability.</li>
+<li>A Context describing the types and other properties of resources required to execute the process/workflow descriptions providing detailed information on how they <strong>constrain</strong> the process/workflow in both space and time dimentions.</li>
+</ul>
+
+<p>ASIMOV produces:</p>
+
+<ul>
+<li>Events that <strong>explain</strong> the execution of the process/workflow descriptions meeting the requirements of the the process/workflow and the constraints of the resources.</li>
+<li>A GUI offering Visual Analytics tooling for <strong>verifying/validating</strong> the <em>usecase</em> againts the <em>events</em>.</li>
+</ul>
+
+<h3>
+<a id="version" class="anchor" href="#version" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version</h3>
+
+<p>0.0.1 Beta Release</p>
+
+<h3>
+<a id="tech" class="anchor" href="#tech" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tech</h3>
+
+<p>Currently ASIMOV is written in JAVA, more implementations are currently being considered, but not yet planned. ASIMOV uses a number of open source projects to work properly:</p>
+
+<ul>
+<li>
+<a href="http://eve.almende.com">EVE</a> - A web-based agent platform</li>
+<li>
+<a href="http://visjs.org/">VisJS</a> - Awesome tooling we use for our visual analytics for verification and validation</li>
+<li>
+<a href="http://neo4j.com/">Neo4J</a> - A graph database engine used for process and resource path finding.</li>
+<li>
+<a href="https://github.com/krevelen/coala">COALA</a> - A novel abstraction layer for Agents that helps reuse agent code across MASs and ABMs</li>
+<li>
+<a href="https://www.mongodb.org/">MongoDB</a> - A NoSQL database for quickly storing produced events, and generation of multiple output views on it.</li>
+</ul>
+
+<blockquote>
+<p>In this BETA version the Multi Agent System bootstraps from a command line application and
+reads an input xml and writes the output to a new xml file once it is finished.
+Plans and preperations are made to transform the application to a more loosley coupled 
+micro-service architecture, providing an extention API for developers and a GUI for 
+modelers/researchers.</p>
+</blockquote>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>You need:
+<a href="http://docs.mongodb.org/getting-started/shell/installation/">MongoDB installed</a> locally.</p>
+
+<div class="highlight highlight-sh"><pre>$ git clone https://github.com/almende asimov
+$ <span class="pl-c1">cd</span> asimov
+$ mvn clean install
+$ <span class="pl-c1">cd</span> dist
+$ java -jar asimov.jar <span class="pl-k">&lt;</span>input.xml<span class="pl-k">&gt;</span> <span class="pl-c">#durationInHours &lt;output.xml&gt;</span></pre></div>
+
+<h3>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
+
+<p>Examples of how to use ASIMOV can be found here :</p>
+
+<ul>
+<li><a href="https://github.com/almende/asimov/tree/master/examples/simple/README.md">examples/simple/README.md</a></li>
+</ul>
+
+<h3>
+<a id="development" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development</h3>
+
+<p>Want to contribute? Great!</p>
+
+<h3>
+<a id="todos" class="anchor" href="#todos" aria-hidden="true"><span class="octicon octicon-link"></span></a>Todo's</h3>
+
+<ul>
+<li>Finish this document</li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/almende/asimov/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/almende/asimov/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/almende/asimov"></a> is maintained by <a href="https://github.com/almende">almende</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
