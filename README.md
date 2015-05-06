@@ -103,4 +103,4 @@ MIT Licence
 [Maven installed]:https://maven.apache.org/download.cgi
 [Java JDK version 1.7 or above installed]:http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
 [Almende]:http://www.almende.com
-[ASIMOV](https://raw.githubusercontent.com/almende/asimov/master/src/test/resources/gui/html/images/asimov_logo.png)
+[ASIMOV]:(https://raw.githubusercontent.com/almende/asimov/master/src/test/resources/gui/html/images/asimov_logo.png)
