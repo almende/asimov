@@ -1,6 +1,6 @@
-# ![ASIMOV] 
-Agent-based SImulation, MOdeling, and Visualization of processes
+![ASIMOV] 
 
+# The ASIMOV tool
 
 ASIMOV is a loosely coupled distributed inference engine that infers knowledge about the details of a process (e.g., consultation) occurring in a context (e.g., hospital) with the sole generic information about the process itself and measurement about a real-life process of that kind. Such knowledge can then be used to calculate KPIs, visualize analytics, make predictions, validate models, explain processes etc.   
 
