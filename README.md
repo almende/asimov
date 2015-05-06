@@ -1,4 +1,4 @@
-![ASIMOV] 
+![ASIMOV](https://raw.githubusercontent.com/almende/asimov/master/src/test/resources/gui/html/images/asimov_logo.png)
 
 # The ASIMOV tool
 
@@ -74,7 +74,7 @@ ASIMOV is being developed by [Almende], a Dutch research company specialized in 
 
 ASIMOV is an open-source product, Want to contribute? Great!
 
-The contact person within Almende for development on ASIMOV is Suki van Beusekom @sukivb
+The contact person within Almende for development on ASIMOV is [Suki van Beusekom].
 
 ### Todo's
 
@@ -103,4 +103,4 @@ MIT Licence
 [Maven installed]:https://maven.apache.org/download.cgi
 [Java JDK version 1.7 or above installed]:http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
 [Almende]:http://www.almende.com
-[ASIMOV]:(https://raw.githubusercontent.com/almende/asimov/master/src/test/resources/gui/html/images/asimov_logo.png)
+[Suki van Beusekom]:https://github.com/sukivb
