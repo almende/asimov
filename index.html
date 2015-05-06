@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Asimov by almende</title>
+    <title>ASIMOV by almende</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -15,7 +15,7 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Asimov</h1>
+        <h1>ASIMOV</h1>
         <p>Agent-based SImulation, MOdeling, and Visualization of processes </p>
 
         <p class="view"><a href="https://github.com/almende/asimov">View the Project on GitHub <small>almende/asimov</small></a></p>
@@ -28,10 +28,10 @@
         </ul>
       </header>
       <section>
-        <h1>
-<a id="asimov" class="anchor" href="#asimov" aria-hidden="true"><span class="octicon octicon-link"></span></a>ASIMOV</h1>
+        <p><img src="https://raw.githubusercontent.com/almende/asimov/master/src/test/resources/gui/html/images/asimov_logo_large.png" alt="ASIMOV"></p>
 
-<p>Agent-based SImulation, MOdeling, and Visualization of processes</p>
+<h1>
+<a id="about-the-tool" class="anchor" href="#about-the-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>About the tool</h1>
 
 <p>ASIMOV is a loosely coupled distributed inference engine that infers knowledge about the details of a process (e.g., consultation) occurring in a context (e.g., hospital) with the sole generic information about the process itself and measurement about a real-life process of that kind. Such knowledge can then be used to calculate KPIs, visualize analytics, make predictions, validate models, explain processes etc.   </p>
 
@@ -85,14 +85,30 @@ modelers/researchers.</p>
 <h3>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
 
-<p>You need:
-<a href="http://docs.mongodb.org/getting-started/shell/installation/">MongoDB installed</a> locally.</p>
+<p>First make sure that you have:
+<a href="http://docs.mongodb.org/getting-started/shell/installation/">MongoDB installed</a> on your machine.
+<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html">Java JDK version 1.7 or above installed</a> on your machine.
+<a href="https://maven.apache.org/download.cgi">Maven installed</a> on your machine.
+<a href="http://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Github installed</a> on your machine.</p>
 
-<div class="highlight highlight-sh"><pre>$ git clone https://github.com/almende asimov
+<p>Make sure your JAVA_HOME env variable is set to the JDK 1.7 installation directory.
+Also ensure that your mongoDB is running, if not start the $MONGO_DIR/bin/mongod executable.</p>
+
+<p>To build and install ASIMOV, type the following commands in your favorite shell:</p>
+
+<div class="highlight highlight-sh"><pre>$ git clone https://github.com/almende/asimov asimov
 $ <span class="pl-c1">cd</span> asimov
-$ mvn clean install
-$ <span class="pl-c1">cd</span> dist
-$ java -jar asimov.jar <span class="pl-k">&lt;</span>input.xml<span class="pl-k">&gt;</span> <span class="pl-c">#durationInHours &lt;output.xml&gt;</span></pre></div>
+$ mvn clean install -Dmaven.<span class="pl-c1">test</span>.skip=<span class="pl-c1">true</span>
+$ <span class="pl-c1">cd</span> dist</pre></div>
+
+<p>Now you are ready to run ASIMOV, please refer to the examples listed below to get a more clear understanding of how to use ASIMOV.</p>
+
+<h3>
+<a id="running-asimov" class="anchor" href="#running-asimov" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running ASIMOV</h3>
+
+<div class="highlight highlight-sh"><pre>$ java -jar ASIMOV.jar <span class="pl-k">&lt;</span>inputxmlfilename<span class="pl-k">&gt;</span> <span class="pl-k">&lt;</span>durationInDays<span class="pl-k">&gt;</span> <span class="pl-k">&lt;</span>outputdirectory<span class="pl-k">&gt;</span></pre></div>
+
+<p>Examples with more detailed information for input xml's can be found in the section below.</p>
 
 <h3>
 <a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
@@ -106,19 +122,31 @@ $ java -jar asimov.jar <span class="pl-k">&lt;</span>input.xml<span class="pl-k"
 <h3>
 <a id="development" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development</h3>
 
-<p>Want to contribute? Great!</p>
+<p>ASIMOV is being developed by <a href="http://www.almende.com">Almende</a>, a Dutch research company specialized in information and communication technologies. At the core of all Almende solutions are hybrid agent networks: humans and computers working together. Almende looks towards agent technology to develop smart software that truly supports people in organizing their own lives.</p>
+
+<p>ASIMOV is an open-source product, Want to contribute? Great!</p>
+
+<p>The contact person within Almende for development on ASIMOV is <a href="https://github.com/sukivb">Suki van Beusekom</a>.</p>
 
 <h3>
 <a id="todos" class="anchor" href="#todos" aria-hidden="true"><span class="octicon octicon-link"></span></a>Todo's</h3>
 
 <ul>
-<li>Finish this document</li>
+<li>Provide examples in example pages</li>
+<li>Add ASIMOV SL to input XML.</li>
+<li>Remove COALA dependencies work directly with EVE.</li>
+<li>JS implementation.</li>
+<li>Micro-service extension architecture with RESTFull and RPC-API.</li>
+<li>GUI for building usecases.</li>
+<li>Provide developer documentation.</li>
+<li>Add machine learning feedback loop to adjust processes and resource compositions.</li>
+<li>Finish todo's :-)</li>
 </ul>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
-<p>MIT</p>
+<p>MIT Licence</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/almende">almende</a></p>
