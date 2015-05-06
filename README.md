@@ -1,4 +1,4 @@
-![ASIMOV](https://raw.githubusercontent.com/almende/asimov/master/src/test/resources/gui/html/images/asimov_logo.png)
+![ASIMOV](https://raw.githubusercontent.com/almende/asimov/master/src/test/resources/gui/html/images/asimov_logo_large.png)
 
 # The ASIMOV tool
 
