@@ -2,7 +2,7 @@
 
 ## A simplified MD's office
 
-![Situation](ASIMOV_Simple_MD_Office_Example)
+![Situation](ASIMOV_Simple_MD_Office_Example.png)
 
 The drawing above provides an archetypical example of a MD’s office being modelled as use case in ASIMOV.
 Where just a simple process of the agent visiting the MD practice and optionally schedule a next appointment afterwards is described. 
