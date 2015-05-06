@@ -1,6 +1,8 @@
 # ASIMOV
 Agent-based SImulation, MOdeling, and Visualization of processes
 
+![Logo of ASIMOV](/src/test/resources/gui/html/images/asimov_logo.png)
+
 ASIMOV is a loosely coupled distributed inference engine that infers knowledge about the details of a process (e.g., consultation) occurring in a context (e.g., hospital) with the sole generic information about the process itself and measurement about a real-life process of that kind. Such knowledge can then be used to calculate KPIs, visualize analytics, make predictions, validate models, explain processes etc.   
 
 Given a business process described as a flowchart and some measurements about the process, ASIMOV can infer what sequence of events have led to the measurements, thus inferring and abstracting knowledge about the process itself. 
@@ -34,17 +36,32 @@ Currently ASIMOV is written in JAVA, more implementations are currently being co
 
 ### Installation
 
-You need:
-[MongoDB installed] locally.
+First make sure that you have:
+[MongoDB installed] on your machine.
+[Java JDK version 1.7 or above installed] on your machine.
+[Maven installed] on your machine.
+[Github installed] on your machine.
 
+Make sure your JAVA_HOME env variable is set to the JDK 1.7 installation directory.
+Also ensure that your mongoDB is running, if not start the $MONGO_DIR/bin/mongod executable.
+
+To build and install ASIMOV, type the following commands in your favorite shell:
+```sh
+$ git clone https://github.com/almende/asimov asimov
+$ cd asimov
+$ mvn clean install -Dmaven.test.skip=true
+$ cd dist
+```
+
+Now you are ready to run ASIMOV, please refer to the examples listed below to get a more clear understanding of how to use ASIMOV.
+
+### Running ASIMOV
 
 ```sh
-$ git clone https://github.com/almende asimov
-$ cd asimov
-$ mvn clean install
-$ cd dist
-$ java -jar asimov.jar <input.xml> #durationInHours <output.xml>
+$ java -jar ASIMOV.jar <inputxmlfilename> <durationInDays> <outputdirectory>
 ```
+
+Examples with more detailed information for input xml's can be found in the section below.
 
 ### Examples
 
@@ -54,17 +71,28 @@ Examples of how to use ASIMOV can be found here :
 
 ### Development
 
-Want to contribute? Great!
+ASIMOV is being developed by [Almende], a Dutch research company specialized in information and communication technologies. At the core of all Almende solutions are hybrid agent networks: humans and computers working together. Almende looks towards agent technology to develop smart software that truly supports people in organizing their own lives.
+
+ASIMOV is an open-source product, Want to contribute? Great!
+
+The contact person within Almende for development on ASIMOV is Suki van Beusekom @sukivb
 
 ### Todo's
 
- - Finish this document
+ - Provide examples in example pages
+ - Add ASIMOV SL to input XML.
+ - Remove COALA dependencies work directly with EVE.
+ - JS implementation.
+ - Micro-service extension architecture with RESTFull and RPC-API.
+ - GUI for building usecases.
+ - Provide developer documentation.
+ - Add machine learning feedback loop to adjust processes and resource compositions.
+ - Finish todo's :-)
 
 License
 ----
 
-MIT
-
+MIT Licence
 
 [EVE]:http://eve.almende.com
 [VisJS]:http://visjs.org/
@@ -72,3 +100,7 @@ MIT
 [COALA]:https://github.com/krevelen/coala
 [MongoDB]:https://www.mongodb.org/
 [MongoDB installed]:http://docs.mongodb.org/getting-started/shell/installation/
+[Github installed]:http://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+[Maven installed]:https://maven.apache.org/download.cgi
+[Java JDK version 1.7 or above installed]:http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
+[Almende]:http://www.almende.com
