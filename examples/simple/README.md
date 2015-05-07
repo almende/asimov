@@ -174,6 +174,7 @@ The process references to the types of resources required given that the constra
                             </containerResourceId>
                         </resource>
                     </context>
+                    <!-- Specify the process that are to be performed in the context -->
                     <process>
                         <id>Consultation process</id>
                         <name>Doctors Consult for patient with optional follow-up</name>
@@ -283,6 +284,7 @@ The process references to the types of resources required given that the constra
                             <isBusinessActivity>true</isBusinessActivity>
                             <previousActivityRef likelihood="1">CONSULT</previousActivityRef>
                         </activity>
+                     </process>
                 </usecase>
            <simulationResult>
                <simulationID>MD Office</simulationID>
