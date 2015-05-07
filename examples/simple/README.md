@@ -23,7 +23,7 @@ If we specify as input the xml below:
  xmlns:p1="http://io.asimov.almende.org/2015/schema/cim/"
  xmlns:asimovunit="http://io.asimov.almende.org/2015/schema/units/"
  xmlns:asimovbpm="http://io.asimov.almende.org/2015/schema/bpm/">
-   <id>ARUMMovie</id>
+   <id>Simple example</id>
    <simulations>
        <simulationCase>
            <id>Simple example MD office</id>
