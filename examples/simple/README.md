@@ -13,6 +13,8 @@ The context holds (meta-)physical constraints. In this case this is the building
 
 The process references to the types of resources required given that the constraints from the context are and will be met.
 
+If we specify as input the xml below:
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <p1:SimulationFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -295,5 +297,16 @@ The process references to the types of resources required given that the constra
    </simulations>
 </p1:SimulationFile>
 ```
+We can run a simulation that shows how many of the consultation processes can be performed in this MD office with 1 patient, 1 dokter and 1 nurse for a period of 2 days.
 
-TODO: explain how to transform this to input xml.
+You can run this script from the asimov/dist directory by running the following command from your favorite shell:
+
+```sh
+$ java -jar ASIMOV.jar ../examples/simple/usecase.xml 2 ../examples/simple/output
+``` 
+
+After ASIMOV has ran the output will be stored in asimov/examples/simple/output
+
+> Please note that you have to use JDK 1.7 and have to have MongoDB running.
+
+More examples and detailed descriptions will be added shortly.
