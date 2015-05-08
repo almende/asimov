@@ -47,7 +47,7 @@ public class ScenarioTest
 	public static final long nofOccupants = 9;
 
 	/** */
-	public static final String scenario = "src/test/resources/usecase.xml";
+	public static final String scenario = "examples/simple/usecase.xml";
 
 
 	/** */

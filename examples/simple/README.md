@@ -95,9 +95,9 @@ If we specify as input the xml below:
                             </containerResourceId>
                         </resource>
                          <resource>
-                            <resourceId>Laser printer/copier B120</resourceId>
+                            <resourceId>Laser printer B120</resourceId>
                             <resourceType>Device</resourceType>
-                            <resourceSubType>Computer</resourceSubType>
+                            <resourceSubType>Printer</resourceSubType>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                             <containerResourceId>
@@ -127,7 +127,7 @@ If we specify as input the xml below:
                          <resource>
                             <resourceId>Medical examining station</resourceId>
                             <resourceType>Device</resourceType>
-                            <resourceSubType>General Medical Euipment</resourceSubType>
+                            <resourceSubType>General Medical Equipment</resourceSubType>
                             <stationary>true</stationary> 
                             <infrastructural>false</infrastructural> 
                             <containerResourceId>
@@ -159,7 +159,7 @@ If we specify as input the xml below:
                             <resourceId>Doctor D.</resourceId>
                             <resourceType>Person</resourceType>
                             <resourceSubType>Doctor</resourceSubType>
-                            <stationary>true</stationary> 
+                            <stationary>false</stationary> 
                             <infrastructural>false</infrastructural> 
                             <containerResourceId>
                                 <connectedResourceId>world</connectedResourceId>
@@ -169,7 +169,7 @@ If we specify as input the xml below:
                             <resourceId>Nurse A.</resourceId>
                             <resourceType>Person</resourceType>
                             <resourceSubType>Nurse</resourceSubType>
-                            <stationary>true</stationary> 
+                            <stationary>false</stationary> 
                             <infrastructural>false</infrastructural> 
                             <containerResourceId>
                                 <connectedResourceId>world</connectedResourceId>
@@ -229,7 +229,6 @@ If we specify as input the xml below:
                                 <resourceTypeRef>Device</resourceTypeRef>
                                 <resourceSubTypeRef>General Medical Equipment</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                                <timeOfUse>P0Y0M0DT0H2M</timeOfUse>
                             </usedResource>
                             <usedResource>
                                 <resourceTypeRef>Person</resourceTypeRef>
@@ -261,7 +260,7 @@ If we specify as input the xml below:
                                 <resourceTypeRef>Device</resourceTypeRef>
                                 <resourceSubTypeRef>Computer</resourceSubTypeRef>
                                 <numberOf>1</numberOf>
-                                <timeOfUse>P0Y0M0DT0H2M</timeOfUse>
+                                <timeOfUse>P0Y0M0DT0H4M</timeOfUse>
                             </usedResource>
                             <usedResource>
                                 <resourceTypeRef>Device</resourceTypeRef>
@@ -284,7 +283,7 @@ If we specify as input the xml below:
                             <executionTime>P00Y000DT00H05M00S</executionTime>
                             <transportTime>P00Y000DT00H00M00S</transportTime>
                             <isBusinessActivity>true</isBusinessActivity>
-                            <previousActivityRef likelihood="1">CONSULT</previousActivityRef>
+                            <previousActivityRef likelihood="1">CONSULT</previousActivityRef>                            
                         </activity>
                      </process>
                 </usecase>

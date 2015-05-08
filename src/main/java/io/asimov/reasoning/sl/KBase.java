@@ -22,9 +22,9 @@ import java.util.Set;
 
 public class KBase implements List<ASIMOVNode<?>> {
 	
-	private static boolean showProgressOnStdOut = false;
+	private static boolean showProgressOnStdOut = true;
 
-	private static boolean showReasoningStdErr = false;
+	private static boolean showReasoningStdErr = true;
 
 	
 	
