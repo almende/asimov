@@ -1,5 +1,6 @@
 package io.asimov.model.resource;
 
+import io.asimov.messaging.ASIMOVAllResourcesReadyMessage;
 import io.asimov.microservice.negotiation.ResourceReadyNotification;
 import io.asimov.microservice.negotiation.ResourceReadyNotification.ResourceReadyNotificationInitiator;
 import io.asimov.model.ActivityParticipation;
@@ -20,6 +21,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+
+import rx.Observer;
 
 /**
  * {@link ResouceReadyInitiatorImpl}
@@ -68,6 +71,31 @@ public class ResouceReadyInitiatorImpl extends
 				final ActivityParticipant initiator){
 			this.cause = cause;
 			this.initiator = initiator;
+			getReceiver().getIncoming().ofType(ASIMOVAllResourcesReadyMessage.class).subscribe(new Observer<ASIMOVAllResourcesReadyMessage>() {
+
+				@Override
+				public void onCompleted() {
+					// nothing special
+				}
+
+				@Override
+				public void onError(Throwable e) {
+					LOG.error("Failed to receive ASIMOV All resources ready message",e);
+				}
+
+				@Override
+				public void onNext(ASIMOVAllResourcesReadyMessage t) {
+					if (!isDone() && t.token.equals(cause.getResourceInfo().getActivityInstanceId()+"_"+cause.getResourceInfo().getProcessInstanceId())) {
+						List<ActivityParticipationResourceInformation> others = ResouceReadyInitiatorHandler.this.pendingResources.get(t.token);
+						if (others != null) {
+							others.clear();
+							getBinder().inject(ActivityParticipant.class).notifyResourcesReady(
+									(Request) cause);
+							ResouceReadyInitiatorHandler.this.done = true;
+						}
+					}
+				}
+			});
 		}
 		
 		private final ActivityParticipation cause;
@@ -92,13 +120,13 @@ public class ResouceReadyInitiatorImpl extends
 		
 		private Map<String, List<ActivityParticipationResourceInformation>> pendingResources = new HashMap<String, List<ActivityParticipationResourceInformation>>();
 		public void handle(ResourceReadyNotification.Result result) {
-			if (!result.getResourceInfo().getActivityName()
-					.equals(cause.getResourceInfo().getActivityName()) || 
+			if (!result.getResourceInfo().getActivityInstanceId()
+					.equals(cause.getResourceInfo().getActivityInstanceId()) || 
 				!result.getResourceInfo().getProcessInstanceId()
 					.equals(cause.getResourceInfo().getProcessInstanceId()))
 				return;
 			if (!getPendingResourcesForActivity(
-					cause.getResourceInfo().getActivityName(), cause.getResourceInfo().getProcessInstanceId()).remove(
+					cause.getResourceInfo().getActivityInstanceId(), cause.getResourceInfo().getProcessInstanceId()).remove(
 					result.getResourceInfo()))
 			{
 //				LOG.error(cause.getResourceInfo().getActivityName()
@@ -115,7 +143,7 @@ public class ResouceReadyInitiatorImpl extends
 						+ result.getResourceInfo().getResourceAgent());
 			}
 			if (getPendingResourcesForActivity(
-					cause.getResourceInfo().getActivityName(), cause.getResourceInfo().getProcessInstanceId()).isEmpty())
+					cause.getResourceInfo().getActivityInstanceId(), cause.getResourceInfo().getProcessInstanceId()).isEmpty())
 			{
 				LOG.info("All resources are ready to participate in activity "
 						+ result.getResourceInfo().getActivityName() + "!");
@@ -124,14 +152,26 @@ public class ResouceReadyInitiatorImpl extends
 				getBinder().inject(ActivityParticipant.class).notifyResourcesReady(
 						(Request) cause);
 				done = true;
+				final String token = cause.getResourceInfo().getActivityInstanceId()+"_"+cause.getResourceInfo().getProcessInstanceId();
+
+				for (ActivityParticipationResourceInformation otherResource : cause.getOtherResourceInfo()) {
+					try {
+						getMessenger().send(new ASIMOVAllResourcesReadyMessage(getTime(), getOwnerID(), otherResource.getResourceAgent(), token));
+					} catch (Exception e) {
+						LOG.error("Failed to send all resources ready notification",e);
+					}
+				}
 			} else
 			{
 				LOG.info(getBinder().getID() + "Still waiting for "
 						+ getPendingResourcesForActivity(
-								cause.getResourceInfo().getActivityName(), 
+								cause.getResourceInfo().getActivityInstanceId(), 
 								cause.getResourceInfo().getProcessInstanceId()
 						  ).size()
-						+ " resources to be ready to participate in activity "
+						+  getPendingResourcesForActivity(
+								cause.getResourceInfo().getActivityInstanceId(), 
+								cause.getResourceInfo().getProcessInstanceId()
+						  ) + " resources to be ready to participate in activity "
 						+ result.getResourceInfo().getActivityName() + "...");
 			}
 		}
@@ -159,11 +199,11 @@ public class ResouceReadyInitiatorImpl extends
 					.getOtherResourceInfo())
 			{
 				getPendingResourcesForActivity(
-						cause.getResourceInfo().getActivityName(),cause.getResourceInfo().getProcessInstanceId())
+						cause.getResourceInfo().getActivityInstanceId(),cause.getResourceInfo().getProcessInstanceId())
 						.add(participator);
 			}
 			for (ActivityParticipationResourceInformation participator : getPendingResourcesForActivity(cause
-					.getResourceInfo().getActivityName(), cause.getResourceInfo().getProcessInstanceId()))
+					.getResourceInfo().getActivityInstanceId(), cause.getResourceInfo().getProcessInstanceId()))
 			{
 				try
 				{
