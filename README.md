@@ -15,7 +15,7 @@ ASIMOV produces:
   - A GUI offering Visual Analytics tooling for **verifying/validating** the *usecase* againts the *events*.
 
 ### Version
-0.0.1 Beta Release
+0.3.1 Beta Release
 
 ### Tech
 
@@ -78,7 +78,7 @@ The contact person within Almende for development on ASIMOV is [Suki van Beuseko
 
 ### Todo's
 
- - Provide examples in example pages
+ - Provide more (detailed) examples in example pages
  - Add ASIMOV SL to input XML.
  - Remove COALA dependencies work directly with EVE.
  - JS implementation.

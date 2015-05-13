@@ -727,63 +727,63 @@ public class Process extends AbstractEntity<Process> implements
 	public static synchronized void deNormalizeLikelihoods(
 			TProcessType processType) {
 		 // de-normalize
-		 for (TSkeletonActivityType a : processType.getActivity())
-		 {
-		 ArrayList<Double> denormalizedPrevValues = new ArrayList<Double>();
-		 for (PreviousActivityRef r : a.getPreviousActivityRef())
-		 {
-		 denormalizedPrevValues.add(r.getLikelihood());
-		 }
-		 Double prevFactor =
-		 deNormalizeFactorForDistribution(denormalizedPrevValues);
-		 ArrayList<Double> denormalizedNextValues = new ArrayList<Double>();
-		 for (NextActivityRef r : a.getNextActivityRef())
-		 {
-		 denormalizedNextValues.add(r.getLikelihood());
-		 }
-		 Double nextFactor =
-		 deNormalizeFactorForDistribution(denormalizedNextValues);
-		
-		 for (PreviousActivityRef r : a.getPreviousActivityRef())
-		 {
-		 if (r.getLikelihood() == null)
-		 r.setLikelihood(1.0);
-		 else
-		 r.setLikelihood(r.getLikelihood() * prevFactor);
-		 }
-		 for (NextActivityRef r : a.getNextActivityRef())
-		 {
-		 if (r.getLikelihood() == null)
-		 r.setLikelihood(1.0);
-		 else
-		 r.setLikelihood(r.getLikelihood() * nextFactor);
-		 }
-		 }
+//		 for (TSkeletonActivityType a : processType.getActivity())
+//		 {
+//		 ArrayList<Double> denormalizedPrevValues = new ArrayList<Double>();
+//		 for (PreviousActivityRef r : a.getPreviousActivityRef())
+//		 {
+//		 denormalizedPrevValues.add(r.getLikelihood());
+//		 }
+//		 Double prevFactor =
+//		 deNormalizeFactorForDistribution(denormalizedPrevValues);
+//		 ArrayList<Double> denormalizedNextValues = new ArrayList<Double>();
+//		 for (NextActivityRef r : a.getNextActivityRef())
+//		 {
+//		 denormalizedNextValues.add(r.getLikelihood());
+//		 }
+//		 Double nextFactor =
+//		 deNormalizeFactorForDistribution(denormalizedNextValues);
+//		
+//		 for (PreviousActivityRef r : a.getPreviousActivityRef())
+//		 {
+//		 if (r.getLikelihood() == null)
+//		 r.setLikelihood(1.0);
+//		 else
+//		 r.setLikelihood(r.getLikelihood() * prevFactor);
+//		 }
+//		 for (NextActivityRef r : a.getNextActivityRef())
+//		 {
+//		 if (r.getLikelihood() == null)
+//		 r.setLikelihood(1.0);
+//		 else
+//		 r.setLikelihood(r.getLikelihood() * nextFactor);
+//		 }
+//		 }
 	}
 
 	public static synchronized void normalizeLikelihoods(
 			TProcessType processType) {
 		// normalize
-		for (TSkeletonActivityType a : processType.getActivity()) {
-			Double prevSum = 0.0;
-			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
-				if (r.getLikelihood() == null)
-					r.setLikelihood(1.0);
-				prevSum += r.getLikelihood();
-			}
-			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
-				r.setLikelihood(r.getLikelihood() / prevSum);
-			}
-			Double nextSum = 0.0;
-			for (NextActivityRef r : a.getNextActivityRef()) {
-				if (r.getLikelihood() == null)
-					r.setLikelihood(1.0);
-				nextSum += r.getLikelihood();
-			}
-			for (NextActivityRef r : a.getNextActivityRef()) {
-				r.setLikelihood(r.getLikelihood() / nextSum);
-			}
-		}
+//		for (TSkeletonActivityType a : processType.getActivity()) {
+//			Double prevSum = 0.0;
+//			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
+//				if (r.getLikelihood() == null)
+//					r.setLikelihood(1.0);
+//				prevSum += r.getLikelihood();
+//			}
+//			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
+//				r.setLikelihood(r.getLikelihood() / prevSum);
+//			}
+//			Double nextSum = 0.0;
+//			for (NextActivityRef r : a.getNextActivityRef()) {
+//				if (r.getLikelihood() == null)
+//					r.setLikelihood(1.0);
+//				nextSum += r.getLikelihood();
+//			}
+//			for (NextActivityRef r : a.getNextActivityRef()) {
+//				r.setLikelihood(r.getLikelihood() / nextSum);
+//			}
+//		}
 	}
 
 	private TSkeletonActivityType getTSkeletonActivityTypeForId(TProcessType p,

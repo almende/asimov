@@ -20,9 +20,12 @@ import io.asimov.model.xml.XmlUtil;
 import io.asimov.reasoning.sl.KBase;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TSkeletonActivityType;
+import io.asimov.xml.TSkeletonActivityType.NextActivityRef;
+import io.asimov.xml.TSkeletonActivityType.PreviousActivityRef;
 import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
+import io.coala.capability.replicate.RandomizingCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.enterprise.fact.FactID;
 import io.coala.enterprise.role.AbstractExecutor;
@@ -554,8 +557,32 @@ public class ManageProcessActionImpl extends
 			tokenDistribution.addAll(dist);
 		}
 
-		long pick = getRandomizer().getRNG().nextInt(tokenDistribution.size());
-
+		long delta = 0;
+		
+		for (TSkeletonActivityType activity : processXML.getActivity())
+			if (activity.getId().equals(currentActivityTimeToken)) {
+				{
+					double sumIn = 0;
+					double sumOut = 0;
+					for (PreviousActivityRef ref : activity.getPreviousActivityRef())
+						sumIn += ref.getLikelihood();
+					for (NextActivityRef ref : activity.getNextActivityRef())
+						sumOut += ref.getLikelihood();
+					if (sumIn > sumOut) {
+						delta = (long) Math.round(((tokenDistribution.size()*sumOut) * ((sumIn-sumOut) / sumIn)));
+					}
+					LOG.info(activity.getId()+" delta EOP ("+sumIn+","+sumOut+") = "+delta);
+					break;
+				}
+			}
+		
+		long pick = getBinder().inject(RandomizingCapability.class).getRNG().nextInt(new Long(tokenDistribution.size()+delta).intValue());
+		LOG.info("randomizer picked: "+pick+" out of "+new Long(tokenDistribution.size()+delta).intValue());
+		if (pick >= tokenDistribution.size()) {
+			getDataStore(cause).put(sREACHED_EOP,true);
+			nextActivity(cause, currentActivityTimeToken);
+			return;
+		}
 		final String nextActivtyTimeToken = tokenDistribution.get((int) pick);
 		final String currentActivityName = nextActivtyTimeToken;
 		obtainAvailableTransitions(currentActivityName);
