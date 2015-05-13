@@ -39,7 +39,7 @@ First make sure that you have:
 [MongoDB installed] on your machine.
 [Java JDK version 1.7 or above installed] on your machine.
 [Maven installed] on your machine.
-[Github installed] on your machine.
+[Git installed] on your machine.
 
 Make sure your JAVA_HOME env variable is set to the JDK 1.7 installation directory.
 Also ensure that your mongoDB is running, if not start the $MONGO_DIR/bin/mongod executable.
@@ -99,7 +99,7 @@ MIT Licence
 [COALA]:https://github.com/krevelen/coala
 [MongoDB]:https://www.mongodb.org/
 [MongoDB installed]:http://docs.mongodb.org/getting-started/shell/installation/
-[Github installed]:http://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+[Git installed]:http://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 [Maven installed]:https://maven.apache.org/download.cgi
 [Java JDK version 1.7 or above installed]:http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
 [Almende]:http://www.almende.com
