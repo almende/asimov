@@ -390,7 +390,7 @@ public class DsolSimulatorService extends BasicCapability implements
 		this.complete = true;
 	}
 
-	protected synchronized void setTime(final Double value)
+	protected void setTime(final Double value)
 	{
 		if (this.time != null && value == this.time.doubleValue())
 			return;

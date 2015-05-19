@@ -25,6 +25,7 @@ import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
 import io.coala.json.JsonUtil;
 import io.coala.log.InjectLogger;
+import io.coala.log.LogUtil;
 import io.coala.time.SimTime;
 import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
@@ -60,8 +61,7 @@ public class ActivityParticipantImpl extends
 
 	private static final Integer NORMAL_PRIORITY = new Integer(1);
 
-	@InjectLogger
-	private Logger LOG;
+	protected Logger LOG = LogUtil.getLogger(ActivityParticipantImpl.class);
 
 	private ResouceReadyInitiatorImpl resourceReadyinitiator;
 

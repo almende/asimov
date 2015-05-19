@@ -558,7 +558,6 @@ public class ManageProcessActionImpl extends
 		}
 
 		long delta = 0;
-		
 		for (TSkeletonActivityType activity : processXML.getActivity())
 			if (activity.getId().equals(currentActivityTimeToken)) {
 				{

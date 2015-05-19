@@ -375,12 +375,12 @@ public interface UseCaseScenario {
 			}
 			LOG.info(availableProcesses.size() + " of " + processes.size()
 					+ " processes are feasible with "
-					+ " this contexts resources");
-			if (unavailableProcesses.size() > 0) {
-				LOG.warn("Removing infeasible processes: "
-						+ unavailableProcesses);
-				processes.removeAll(unavailableProcesses);
-			}
+					+ " this contexts initial resources");
+//			if (unavailableProcesses.size() > 0) {
+//				LOG.warn("Removing infeasible processes: "
+//						+ unavailableProcesses);
+//				processes.removeAll(unavailableProcesses);
+//			}
 		}
 
 		/**

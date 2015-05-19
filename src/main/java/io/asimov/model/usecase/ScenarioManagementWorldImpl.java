@@ -188,7 +188,7 @@ public class ScenarioManagementWorldImpl extends
 		return result;
 	}
 
-	public <T extends Agent> ResourceEvent getResourceEventForNewAgent(
+	public static <T extends Agent> ResourceEvent getResourceEventForNewAgent(
 			final AgentID agentID, final Class<T> agentType,
 			final SimTime eventTime) {
 		return new ResourceEvent() {
@@ -459,7 +459,7 @@ public class ScenarioManagementWorldImpl extends
 	public void resourceAvailable(ResourceEvent e) {
 		LOG.error("AVAILABLE: " + e.getResourceID() + " at " + e.getEventTime());
 		resourceEvents.onNext(e);
-		updateResourceStatusHash(getOwnerID().toString());
+		updateResourceStatusHash(e.getResourceID().toString());
 	}
 
 	@Override

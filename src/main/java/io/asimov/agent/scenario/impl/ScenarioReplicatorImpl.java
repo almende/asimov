@@ -1,20 +1,27 @@
 package io.asimov.agent.scenario.impl;
 
 import io.asimov.agent.process.ProcessCompletion;
+import io.asimov.agent.resource.impl.GenericResourceManagementOrganizationImpl;
 import io.asimov.agent.scenario.Replication;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ProcessEvent;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ProcessEventType;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ResourceEvent;
+import io.asimov.agent.scenario.ScenarioManagementWorld.ResourceEventType;
 import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
+import io.asimov.db.Datasource;
 import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.messaging.ASIMOVNewResourceMessage;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.ProcessManagementOrganization;
 import io.asimov.model.resource.ResourceDescriptor;
 import io.asimov.model.resource.RouteLookup.RouteProvider;
+import io.asimov.model.usecase.ScenarioManagementWorldImpl;
 import io.asimov.unavailability.MonkeyAgent;
 import io.asimov.unavailability.UnAvailabilityRequest;
+import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
 import io.coala.agent.AgentStatusUpdate;
 import io.coala.bind.Binder;
@@ -27,9 +34,11 @@ import io.coala.enterprise.role.Executor;
 import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
 import io.coala.log.InjectLogger;
+import io.coala.model.ModelComponentIDFactory;
 import io.coala.random.RandomDistribution;
 import io.coala.time.SimDuration;
 import io.coala.time.SimTime;
+import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
 import io.coala.time.Trigger;
 
@@ -113,6 +122,29 @@ public class ScenarioReplicatorImpl extends
 	protected ScenarioManagementWorld getWorld() {
 		return getBinder().inject(ScenarioManagementWorld.class);
 	}
+	
+	protected void addResource(final ASIMOVNewResourceMessage newResourceMessage) {
+		ASIMOVResourceDescriptor resourceDescriptor = newResourceMessage.resource;
+		getBinder().inject(Datasource.class).save(resourceDescriptor);
+		final ModelComponentIDFactory agentIDFactory = getBinder().inject(
+				ModelComponentIDFactory.class);
+		Long availableFromTime = (resourceDescriptor.getAvailableFromTime() == null) ? 0
+				: resourceDescriptor.getAvailableFromTime();
+		if (availableFromTime < getBinder().inject(ReplicatingCapability.class).getTime().getMillis())
+			availableFromTime = getBinder().inject(ReplicatingCapability.class).getTime().getMillis();
+		ResourceEvent a = ScenarioManagementWorldImpl.getResourceEventForNewAgent(
+				agentIDFactory.createAgentID(resourceDescriptor.getName()),
+				GenericResourceManagementOrganizationImpl.class,
+				getBinder()
+						.inject(SimTimeFactory.class)
+						.create(availableFromTime,
+								TimeUnit.MILLIS));
+		getBinder().inject(ReplicatingCapability.class).schedule(
+				ProcedureCall.create(this, getBinder().inject(ScenarioManagementWorld.class), ScenarioManagementWorldImpl.RESOURCE_AVAILABLE, a),
+				Trigger.createAbsolute(a.getEventTime()));
+		LOG.error("SCHEDULING: " + a.getResourceID() + " at "
+				+ a.getEventTime());
+	}
 
 	@Override
 	public void initialize() {
@@ -146,6 +178,23 @@ public class ScenarioReplicatorImpl extends
 						e.printStackTrace();
 					}
 				});
+		getReceiver().getIncoming().ofType(ASIMOVNewResourceMessage.class)
+		.subscribe(new Observer<ASIMOVNewResourceMessage>() {
+			@Override
+			public void onNext(final ASIMOVNewResourceMessage newResourceMessage) {
+				addResource(newResourceMessage);
+			}
+
+			@Override
+			public void onCompleted() {
+				//
+			}
+
+			@Override
+			public void onError(final Throwable e) {
+				LOG.error("Failed to create new resource",e);
+			}
+		});
 	}
 
 	protected void onNested(final ProcessCompletion.Result result) {
@@ -249,8 +298,9 @@ public class ScenarioReplicatorImpl extends
 
 	@Schedulable(UNAVAILABILITY)
 	public void scheduledUnavailability(final AgentID resource) {
-		final SimDuration duration = getWorld().getResourceUnavailabilityDist(
-				resource.getValue()).draw();
+		RandomDistribution<SimDuration> unavailabilityDist = getWorld().getResourceUnavailabilityDist(
+				resource.getValue());
+		final SimDuration duration = (unavailabilityDist == null) ? SimDuration.ZERO : unavailabilityDist.draw();
 		if (duration.longValue() != 0) {
 			LOG.error("SCHEDULE UNAVAILABILITY: " + resource);
 			String id = resource.getValue() + "_absence_"
