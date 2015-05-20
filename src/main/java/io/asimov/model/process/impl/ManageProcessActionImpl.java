@@ -567,7 +567,7 @@ public class ManageProcessActionImpl extends
 						sumIn += ref.getLikelihood();
 					for (NextActivityRef ref : activity.getNextActivityRef())
 						sumOut += ref.getLikelihood();
-					if (sumIn > sumOut) {
+					if (sumIn > sumOut && sumOut != 0) {
 						delta = (long) Math.round(((tokenDistribution.size()*sumOut) * ((sumIn-sumOut) / sumIn)));
 					}
 					LOG.info(activity.getId()+" delta EOP ("+sumIn+","+sumOut+") = "+delta);
