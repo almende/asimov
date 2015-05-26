@@ -378,24 +378,27 @@ public class ScenarioManagementWorldImpl extends
 							setReplication(null, progressPerc);
 
 						if (replication.getStatus().equals(SimStatus.RUNNING)
-								&& (progressPerc.doubleValue() >= 100 || time
-										.isOnOrAfter(SimTime.ZERO.plus(8,
-												TimeUnit.DAYS)))) {
+								&& (progressPerc.doubleValue() >= 100
+								//|| time
+									//	.isOnOrAfter(SimTime.ZERO.plus(8,
+										//		TimeUnit.DAYS))
+								))
+						{
 							setReplication(SimStatus.FINISHED, 100);
-							try {
-								if (time.isOnOrAfter(SimTime.ZERO.plus(8,
-										TimeUnit.DAYS)))
-									EventExtrapolator.extrapolator(replication
-											.getId(), SimTime.ZERO.plus(1,
-											TimeUnit.DAYS), new SimDuration(7,
-											TimeUnit.DAYS), new SimDuration(
-											replication.getDurationMS(),
-											TimeUnit.MILLIS));
-							} catch (Exception e) {
-								LOG.error(
-										"failed to extrapolate results: "
-												+ e.getMessage(), e);
-							}
+//							try {
+//								if (time.isOnOrAfter(SimTime.ZERO.plus(8,
+//										TimeUnit.DAYS)))
+//									EventExtrapolator.extrapolator(replication
+//											.getId(), SimTime.ZERO.plus(1,
+//											TimeUnit.DAYS), new SimDuration(7,
+//											TimeUnit.DAYS), new SimDuration(
+//											replication.getDurationMS(),
+//											TimeUnit.MILLIS));
+//							} catch (Exception e) {
+//								LOG.error(
+//										"failed to extrapolate results: "
+//												+ e.getMessage(), e);
+//							}
 							System.exit(0); // FIXME Must be more elegant
 											// eventualy
 						}
