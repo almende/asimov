@@ -46,7 +46,6 @@ import io.coala.invoke.Schedulable;
 import io.coala.log.InjectLogger;
 import io.coala.log.LogUtil;
 import io.coala.message.Message;
-import io.coala.model.ModelComponent;
 import io.coala.model.ModelComponentIDFactory;
 import io.coala.process.Job;
 import io.coala.random.RandomDistribution;
@@ -66,6 +65,9 @@ import org.apache.log4j.Logger;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Scheduler;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
 
@@ -411,9 +413,6 @@ public abstract class AbstractActorRole<F extends CoordinationFact> extends
 							"Child agent " + agentID
 									+ " reached unblock status: "
 									+ update.getStatus());
-					// first schedule/block, then countdown/yield
-					getSimulator().schedule(next,
-							Trigger.createAbsolute(getTime()));
 					success = true;
 					latch.countDown(); // yield
 				}
@@ -438,41 +437,13 @@ public abstract class AbstractActorRole<F extends CoordinationFact> extends
 				e.printStackTrace();
 			}
 		});
-
-		getSimulator().schedule(
-				ProcedureCall.create(this, this, AWAIT_METHOD_ID, latch,
-						agentID), Trigger.createAbsolute(getTime()));
-
 		getBooter().createAgent(agentID, agentType).subscribe(status);
 
+		latch.await();
+		getSimulator().schedule(next,
+				Trigger.createAbsolute(getTime()));
+
 		return status.asObservable();
-	}
-
-	private static final String AWAIT_METHOD_ID = "holdSimUntilAgentInitializes";
-
-	@Schedulable(AWAIT_METHOD_ID)
-	protected void holdSimUntilLatchCompletes(final CountDownLatch latch,
-			final AgentID agentID)
-	{
-		if (latch.getCount() == 0)
-			return;
-
-		// wait for other thread to make scheduling
-		// attempt and block until this thread
-		// yields
-//		try
-//		{
-//			LOG().trace(
-//					"Sleeping simulator thread until the other agent/thread "
-//							+ "attempts to schedule too, then yield");
-//			Thread.sleep(10);
-//		} catch (final InterruptedException ignore)
-//		{
-//		}
-//		Thread.yield();
-		getSimulator().schedule(
-				ProcedureCall.create(this, this, AWAIT_METHOD_ID, latch,
-						agentID), Trigger.createAbsolute(getTime()));
 	}
 
 	/**
