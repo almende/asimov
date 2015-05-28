@@ -63,13 +63,16 @@ public class ASIMOVTermSequenceNode implements ASIMOVNode<ASIMOVTermSequenceNode
 	}
 
 	@Override
-	public ASIMOVTermSequenceNode instantiate(String key, ASIMOVNode<?> value) {
+	public ASIMOVTermSequenceNode instantiate() {
 		final ASIMOVTermSequenceNode copy = new ASIMOVTermSequenceNode().withName(this.name);
-		copy.termSequence = new ArrayList<ASIMOVTerm>();
-		if (this.termSequence != null)
-			for (ASIMOVTerm  entry : this.termSequence)
-				copy.termSequence.add(entry);
+		copy.termSequence = new ArrayList<ASIMOVTerm>( this.termSequence == null?new ArrayList<ASIMOVTerm>(0):this.termSequence);
 		return copy;
+	}
+	
+	@Override
+	public ASIMOVTermSequenceNode add(String key, ASIMOVNode<?> value){
+		this.termSequence.add((ASIMOVTerm) value);
+		return this;
 	}
 
 	@Override

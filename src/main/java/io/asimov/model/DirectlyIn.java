@@ -23,8 +23,8 @@ public class DirectlyIn extends ConnectionFrom
 	
 	/** Pattern for a {@link DirectlyIn} {@link Term} representation */
 	public static ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
-			.instantiate(DELAY,  null)
-			.instantiate(SOURCE_BODY, null);
+			.instantiate().add(DELAY,  null)
+			.add(SOURCE_BODY, null);
 	
 	protected ASIMOVTerm getPattern(){
 		return PATTERN;

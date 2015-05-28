@@ -92,9 +92,9 @@ public class ResourceRequirement extends AbstractNamed<ResourceRequirement>
 	/** */
 	public static final ASIMOVTerm TASK_RESOURCE_PATTERN = new ASIMOVTerm()
 		.withName(TASK_RESOURCE_TERM_NAME)
-		.instantiate(TASK_RESOURCE,null)
-		.instantiate(TASK_RESOURCE_AMOUNT, null)
-		.instantiate(TASK_RESOURCE_DURATION, null);
+		.instantiate().add(TASK_RESOURCE,null)
+		.add(TASK_RESOURCE_AMOUNT, null)
+		.add(TASK_RESOURCE_DURATION, null);
 
 	/** @see SLConvertible#toSL() */
 	@SuppressWarnings("unchecked")
@@ -102,9 +102,9 @@ public class ResourceRequirement extends AbstractNamed<ResourceRequirement>
 	public ASIMOVTerm toSL()
 	{
 		return TASK_RESOURCE_PATTERN
-				.instantiate(TASK_RESOURCE, getResource().toSL())
-				.instantiate(TASK_RESOURCE_AMOUNT, SL.integer(getAmount().intValue()))
-				.instantiate(TASK_RESOURCE_DURATION, getDuration().toSL());
+				.instantiate().add(TASK_RESOURCE, getResource().toSL())
+				.add(TASK_RESOURCE_AMOUNT, SL.integer(getAmount().intValue()))
+				.add(TASK_RESOURCE_DURATION, getDuration().toSL());
 	}
 	
 	

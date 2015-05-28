@@ -149,10 +149,10 @@ public class Transition extends AbstractNamed<Transition> implements
 
 	/** */
 	public static final ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
-					.instantiate(INPUT_TASK_NAMES, null)
-					.instantiate(OUTPUT_TASK_NAMES,null)
-					.instantiate(TRANSITION_ID, null)
-					.instantiate(CASE_IDS,null);
+					.instantiate().add(INPUT_TASK_NAMES, null)
+					.add(OUTPUT_TASK_NAMES,null)
+					.add(TRANSITION_ID, null)
+					.add(CASE_IDS,null);
 
 	/** @see SLConvertible#toSL() */
 	@Override
@@ -170,12 +170,12 @@ public class Transition extends AbstractNamed<Transition> implements
 		for (String traceID : getTraceIDs())
 			caseIdTerms.add(SL.string(traceID));
 		return ((ASIMOVTerm) PATTERN)
-				.instantiate(TRANSITION_ID, SL.string(getName()))
-				.instantiate(INPUT_TASK_NAMES,
+				.instantiate().add(TRANSITION_ID, SL.string(getName()))
+				.add(INPUT_TASK_NAMES,
 						new ASIMOVTermSequenceNode(inputTaskTerms))
-				.instantiate(OUTPUT_TASK_NAMES,
+				.add(OUTPUT_TASK_NAMES,
 						new ASIMOVTermSequenceNode(outputTaskTerms))
-				.instantiate(CASE_IDS, new ASIMOVTermSequenceNode(caseIdTerms));
+				.add(CASE_IDS, new ASIMOVTermSequenceNode(caseIdTerms));
 	}
 
 	/** @see XMLConvertible#toXML() */

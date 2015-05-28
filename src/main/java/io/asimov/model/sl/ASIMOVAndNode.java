@@ -35,7 +35,7 @@ public class ASIMOVAndNode implements ASIMOVNode<ASIMOVAndNode> {
 			count = namedChildren.size();
 		if (formulas != null)
 			for (ASIMOVNode<?> f : formulas) {
-				this.instantiate(""+(count++), f);
+				this.add(""+(count++), f);
 			}
 				
 	}
@@ -98,9 +98,13 @@ public class ASIMOVAndNode implements ASIMOVNode<ASIMOVAndNode> {
 	}
 
 	@Override
-	public ASIMOVNode<ASIMOVAndNode> instantiate(String key, ASIMOVNode<?> value) {
+	public ASIMOVNode<ASIMOVAndNode> instantiate() {
 		if (this.namedChildren == null)
 			this.namedChildren = new HashMap<String, ASIMOVNode<?>>();
+		return this;
+	}
+	
+	public ASIMOVNode<ASIMOVAndNode> add(String key, ASIMOVNode<?> value){
 		this.namedChildren.put(key, value);
 		return this;
 	}
@@ -123,7 +127,7 @@ public class ASIMOVAndNode implements ASIMOVNode<ASIMOVAndNode> {
 	@Override
 	public ASIMOVNode<ASIMOVAndNode> replace(String key, ASIMOVNode<?> value) {
 		if (getKeys().contains(key))
-			instantiate(key, value);
+			add(key, value);
 		return this;
 	}
 

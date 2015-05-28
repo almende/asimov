@@ -47,10 +47,10 @@ public class Activity extends AbstractEntity<Activity> implements
 
 	/** */
 	public static final ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
-			.instantiate(TASK,Task.PATTERN)
-			.instantiate(ACTIVITY_NAME, null)
-			.instantiate(ACTIVITY_TIME_TOKEN,null)
-			.instantiate(PROCESS_AGENT_AID, null);
+			.instantiate().add(TASK,Task.PATTERN)
+			.add(ACTIVITY_NAME, null)
+			.add(ACTIVITY_TIME_TOKEN,null)
+			.add(PROCESS_AGENT_AID, null);
 
 	/** */
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })

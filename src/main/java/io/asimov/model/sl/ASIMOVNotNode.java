@@ -32,7 +32,7 @@ public class ASIMOVNotNode implements ASIMOVNode<ASIMOVNotNode> {
 	
 	public ASIMOVNotNode(ASIMOVFormula formula){
 		this();
-		this.instantiate("NOT", formula);
+		this.add("NOT", formula);
 	}
 	
 	public ASIMOVNotNode(){
@@ -91,12 +91,17 @@ public class ASIMOVNotNode implements ASIMOVNode<ASIMOVNotNode> {
 	}
 
 	@Override
-	public ASIMOVNotNode instantiate(String key, ASIMOVNode<?> value) {
+	public ASIMOVNotNode instantiate() {
+		return this;
+	}
+
+	@Override
+	public ASIMOVNotNode add(String key, ASIMOVNode<?> value){
 		this.withName("not_"+value.getName());
 		getNotNodeProperties().put(key,value);
 		return this;
 	}
-
+	
 	@Override
 	public Set<String> getKeys() {
 		return Collections.singleton("NOT");
@@ -126,7 +131,7 @@ public class ASIMOVNotNode implements ASIMOVNode<ASIMOVNotNode> {
 	@Override
 	public ASIMOVNode<ASIMOVNotNode> replace(String key, ASIMOVNode<?> value) {
 		if (getKeys().contains(key))
-			instantiate(key, value);
+			add(key, value);
 		return this;
 	}
 }

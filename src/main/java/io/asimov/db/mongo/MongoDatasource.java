@@ -18,8 +18,10 @@ import io.coala.model.ModelID;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
@@ -296,7 +298,7 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	 * @param query
 	 * @return
 	 */
-	protected Iterable<ASIMOVResourceDescriptor> queryResourceDescriptors(final String query)
+	private Iterable<ASIMOVResourceDescriptor> queryResourceDescriptors(final String query)
 	{
 		LOG.trace("query resource descriptors: " + query);
 		return getResourceDescriptorCollection().find(query).as(ASIMOVResourceDescriptor.class);
@@ -308,10 +310,10 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	 * @param query
 	 * @return
 	 */
-	protected Iterable<Process> querProcesses(final String query)
+	private Iterable<Process> queryProcesses(final String query)
 	{
 		LOG.trace("query processes: " + query);
-		return getProcesCollection().find(query).as(Process.class);
+		return getProcessCollection().find(query).as(Process.class);
 	}
 
 	/**
@@ -352,7 +354,7 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	 * 
 	 * @return collection
 	 */
-	protected MongoCollection getProcesCollection()
+	protected MongoCollection getProcessCollection()
 	{
 		return getCollection(MONGO_PROCESS_COLLECTION);
 	}
@@ -396,10 +398,13 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	}
 
 
+	private static Map<String,ASIMOVResourceDescriptor> rdcache = new ConcurrentHashMap<String,ASIMOVResourceDescriptor>();
+	
 	/** @see Datasource#save(AssemblyLine) */
 	@Override
 	public void save(final ASIMOVResourceDescriptor resourceDescriptor)
 	{
+		
 		// FIXME : Must be a REAL update instead of a remove/create
 		MongoCollection collection = getResourceDescriptorCollection();
 		collection.remove("{name: '" + resourceDescriptor.getName() + "', "
@@ -407,21 +412,36 @@ public class MongoDatasource extends BasicCapability implements Datasource
 				+ "'}");
 		resourceDescriptor.setReplicationID(replicationID);
 		save(getResourceDescriptorCollection(), resourceDescriptor);
+		rdcache.put(resourceDescriptor.getName(), resourceDescriptor);
 	}
 
 	/** @see Datasource#findAssemblyLines() */
 	@Override
 	public Iterable<ASIMOVResourceDescriptor> findResourceDescriptors()
 	{
-		final String query = "{" + REPLICATION_FOREIGN_ID_FIELDNAME + ": '"
-				+ replicationID + "'}";
-		return queryResourceDescriptors(query);
+		if (rdcache.size()==0){
+			final String query = "{" + REPLICATION_FOREIGN_ID_FIELDNAME + ": '"
+					+ replicationID + "'}";
+			Iterator<ASIMOVResourceDescriptor> iter = queryResourceDescriptors(query).iterator();
+			while (iter.hasNext()){
+				final ASIMOVResourceDescriptor item = iter.next();
+				rdcache.put(item.getName(), item);
+			}
+		}
+		return rdcache.values();
 	}
 
 	/** @see Datasource#findAssemblyLineByID(String) */
 	@Override
 	public ASIMOVResourceDescriptor findResourceDescriptorByID(final String resourceDescriptorID)
 	{
+		if (!rdcache.containsKey(resourceDescriptorID)){
+			findResourceDescriptors();
+		}
+		if (rdcache.containsKey(resourceDescriptorID)){
+			return rdcache.get(resourceDescriptorID);
+		}
+		//This will probably not result in an answer, due to the caching above.
 		final String query = "{name: '" + resourceDescriptorID + "', "
 				+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '" + replicationID
 				+ "'}";
@@ -431,13 +451,18 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	@Override
 	public void removeResourceDescriptors()
 	{
+		rdcache.clear();
 		removeReplicationFromCollection(replicationID, getResourceDescriptorCollection());
 	}
 
+	private static Map<String,Process> prcache = new ConcurrentHashMap<String,Process>();
+	
+	
 	// @Override
 	public void removeProcesses()
 	{
-		removeReplicationFromCollection(replicationID, getProcesCollection());
+		prcache.clear();
+		removeReplicationFromCollection(replicationID, getProcessCollection());
 	}
 
 	// @Override
@@ -661,30 +686,44 @@ public class MongoDatasource extends BasicCapability implements Datasource
 	@Override
 	public Iterable<Process> findProcesses()
 	{
-		final String query = "{" + REPLICATION_FOREIGN_ID_FIELDNAME + ": '"
-				+ replicationID + "'}";
-		return querProcesses(query);
+		if (prcache.size()==0){
+			final String query = "{" + REPLICATION_FOREIGN_ID_FIELDNAME + ": '"
+					+ replicationID + "'}";
+			final Iterator<Process> iter = queryProcesses(query).iterator();
+			while (iter.hasNext()){
+				final Process item = iter.next();
+				prcache.put(item.getName(), item);
+			}
+		}
+		return prcache.values();
 	}
 
 	@Override
 	public Process findProcessByID(String processID)
 	{
+		if (!prcache.containsKey(processID)){
+			findProcesses();
+		}
+		if (prcache.containsKey(processID)){
+			return prcache.get(processID);
+		}
 		final String query = "{name: '" + processID + "', "
 				+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '" + replicationID
 				+ "'}";
-		return getProcesCollection().findOne(query).as(Process.class);
+		return getProcessCollection().findOne(query).as(Process.class);
 	}
 
 	@Override
 	public void save(Process process)
 	{
 		// FIXME : Must be a REAL update instead of a remove/create
-		getProcesCollection().remove(
+		getProcessCollection().remove(
 				"{name: '" + process.getName() + "', "
 						+ REPLICATION_FOREIGN_ID_FIELDNAME + ": '"
 						+ replicationID + "'}");
 		process.setReplicationID(replicationID);
-		save(getProcesCollection(), process);
+		save(getProcessCollection(), process);
+		prcache.put(process.getName(), process);
 	}
 
 	

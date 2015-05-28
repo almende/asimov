@@ -146,22 +146,22 @@ public class Next extends AbstractEntity<Next> implements SLConvertible<Next>,
 
 	/** */
 	public static final ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
-			.instantiate(FORMER_ACTIVITY_TIME_TOKEN, null)
-			.instantiate(LATTER_ACTIVITY_TIME_TOKEN, null)
-			.instantiate(FORMER_ACTIVITY_NAME, null)
-			.instantiate(LATTER_ACTIVITY_NAME, null)
-			.instantiate(PROCESS_AGENT_AID, null)
-			.instantiate(ACTOR_AGENT_AID, null);
+			.instantiate().add(FORMER_ACTIVITY_TIME_TOKEN, null)
+			.add(LATTER_ACTIVITY_TIME_TOKEN, null)
+			.add(FORMER_ACTIVITY_NAME, null)
+			.add(LATTER_ACTIVITY_NAME, null)
+			.add(PROCESS_AGENT_AID, null)
+			.add(ACTOR_AGENT_AID, null);
 	
 	/** */
 	public static final ASIMOVTerm OPTION_PATTERN = new ASIMOVTerm().withName(OPTION_TERM_NAME)
-			.instantiate(FORMER_ACTIVITY_TIME_TOKEN, null)
-			.instantiate(LATTER_ACTIVITY_TIME_TOKEN, null)
-			.instantiate(FORMER_ACTIVITY_NAME, null)
-			.instantiate(LATTER_ACTIVITY_NAME, null)
-			.instantiate(PROCESS_AGENT_AID, null)
-			.instantiate(ACTOR_AGENT_AID, null)
-			.instantiate(CHANCE, null);
+			.instantiate().add(FORMER_ACTIVITY_TIME_TOKEN, null)
+			.add(LATTER_ACTIVITY_TIME_TOKEN, null)
+			.add(FORMER_ACTIVITY_NAME, null)
+			.add(LATTER_ACTIVITY_NAME, null)
+			.add(PROCESS_AGENT_AID, null)
+			.add(ACTOR_AGENT_AID, null)
+			.add(CHANCE, null);
 	
 
 	/** @see SLConvertible#toSL() */
@@ -171,10 +171,10 @@ public class Next extends AbstractEntity<Next> implements SLConvertible<Next>,
 	{
 		// FIXME add next's own id?
 		return ((ASIMOVTerm) PATTERN)
-				.instantiate(PROCESS_AGENT_AID, SL.string(getProcessID()))
-				.instantiate(FORMER_ACTIVITY_TIME_TOKEN,
+				.instantiate().add(PROCESS_AGENT_AID, SL.string(getProcessID()))
+				.add(FORMER_ACTIVITY_TIME_TOKEN,
 						SL.string(getFormerTimeToken()))
-				.instantiate(LATTER_ACTIVITY_TIME_TOKEN,
+				.add(LATTER_ACTIVITY_TIME_TOKEN,
 						SL.string(getLatterTimeToken()));
 	}
 

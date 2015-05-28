@@ -195,10 +195,10 @@ public class Task extends AbstractNamed<Task> implements SLConvertible<Task>,
 
 	/** Pattern for a {@link Task}'s {@link Term} representation */
 	public static final ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
-			.instantiate(TASK_NAME,null)
-			.instantiate(TASK_DESCRIPTION,null)
-			.instantiate(TASK_RESOURCE_RESERVATION_SET,null)
-			.instantiate(CASE_IDS, null);
+			.instantiate().add(TASK_NAME,null)
+			.add(TASK_DESCRIPTION,null)
+			.add(TASK_RESOURCE_RESERVATION_SET,null)
+			.add(CASE_IDS, null);
 
 	/** @see SLConvertible#toSL() */
 	@SuppressWarnings("unchecked")
@@ -218,11 +218,11 @@ public class Task extends AbstractNamed<Task> implements SLConvertible<Task>,
 				caseIdTerms.add(SL.string(caseID));
 
 		final ASIMOVTerm result = ((ASIMOVTerm) PATTERN)
-				.instantiate(TASK_NAME, SL.string(getName()))
-				.instantiate(TASK_DESCRIPTION, SL.string(getDescription()))
-				.instantiate(TASK_RESOURCE_RESERVATION_SET,
+				.instantiate().add(TASK_NAME, SL.string(getName()))
+				.add(TASK_DESCRIPTION, SL.string(getDescription()))
+				.add(TASK_RESOURCE_RESERVATION_SET,
 						new ASIMOVTermSequenceNode(resourceTerms))
-				.instantiate(CASE_IDS, new ASIMOVTermSequenceNode(caseIdTerms));
+				.add(CASE_IDS, new ASIMOVTermSequenceNode(caseIdTerms));
 
 		return result;
 	}

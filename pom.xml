@@ -29,10 +29,9 @@
 			</snapshots>
 		</repository>
 		<!-- TU Delft simulation repository -->
-		<repository>
+<!--		<repository>
 			<name>DSOL Public Repository</name>
 			<id>dsol</id>
-			<!-- <url>http://simulation.tudelft.nl/maven</url> -->
 			<url>http://sk-33.tbm.tudelft.nl/maven/</url>
 			<releases>
 				<enabled>true</enabled>
@@ -43,6 +42,7 @@
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
 		</repository>
+-->
 	</repositories>
 
 	<properties>

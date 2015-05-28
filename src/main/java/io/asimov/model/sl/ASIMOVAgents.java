@@ -27,13 +27,13 @@ public interface ASIMOVAgents {
 	/** */
 	public static final ASIMOVFormula BELONGS_TO_PROCESS_FORMULA = new ASIMOVFormula()
 			.withName(BELONGS_TO_PROCESS_FORMULA_NAME)
-			.instantiate(PROCESS_PROPERTY,null)
-			.instantiate(PROCESS_NAME,null);
+			.instantiate().add(PROCESS_PROPERTY,null)
+			.add(PROCESS_NAME,null);
 
 	
     public static final ASIMOVTerm REQUEST_ALLOCATION_ACTION_TERM = new ASIMOVTerm()
     		.withName("ALLOCATE_RESOURCE")
-    			.instantiate(ResourceAllocation.RESOURCE_REQUIREMENT_ID,null)
-    			.instantiate(PROCESS_NAME,null);
+    			.instantiate().add(ResourceAllocation.RESOURCE_REQUIREMENT_ID,null)
+    			.add(PROCESS_NAME,null);
       
 }

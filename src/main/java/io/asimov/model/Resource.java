@@ -95,9 +95,9 @@ public class Resource extends AbstractNamed<Resource> implements
 	 *  If the resourceName is equal to the resourceSubType it can be any resource for that type, otherwise it is a unique instance.
 	 * */
 	public static final ASIMOVTerm RESOURCE_PATTERN = new ASIMOVTerm().withName(TERM_NAME)
-			.instantiate(RESOURCE_NAME,null)
-			.instantiate(RESOURCE_TYPE, null)
-			.instantiate(RESOURCE_SUB_TYPE,null);
+			.instantiate().add(RESOURCE_NAME,null)
+			.add(RESOURCE_TYPE, null)
+			.add(RESOURCE_SUB_TYPE,null);
 
 	/** @see SLConvertible#toSL() */
 	@Override
@@ -105,12 +105,12 @@ public class Resource extends AbstractNamed<Resource> implements
 	public ASIMOVTerm toSL()
 	{
 		ASIMOVTerm result = ((ASIMOVTerm) RESOURCE_PATTERN)
-				.instantiate(RESOURCE_TYPE, SL.string(getTypeID().getName()))
-				.instantiate(RESOURCE_SUB_TYPE,
+				.instantiate().add(RESOURCE_TYPE, SL.string(getTypeID().getName()))
+				.add(RESOURCE_SUB_TYPE,
 						SL.string(getSubTypeID().getName()));
 		if (getName() != null) 
-			return result.instantiate(RESOURCE_NAME, SL.string(getName()));
-		return result.instantiate(RESOURCE_NAME, SL.string(getSubTypeID().getName()));
+			return result.instantiate().add(RESOURCE_NAME, SL.string(getName()));
+		return result.instantiate().add(RESOURCE_NAME, SL.string(getSubTypeID().getName()));
 	}
 
 	/** @see SLConvertible#fromSL(Term) */

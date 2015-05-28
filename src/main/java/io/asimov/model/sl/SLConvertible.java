@@ -25,9 +25,9 @@ public interface SLConvertible<T extends SLConvertible<?>> extends io.asimov.rea
 	
 		public static final ASIMOVFormula ASIMOV_PROPERTY_SET_FORMULA = new ASIMOVFormula()
 		.withName("ASIMOV_PROPERTY_SET")
-			.instantiate(sASIMOV_PROPERTY,null)
-			.instantiate(sASIMOV_KEY, null)
-			.instantiate(sASIMOV_VALUE, null);
+			.instantiate().add(sASIMOV_PROPERTY,null)
+			.add(sASIMOV_KEY, null)
+			.add(sASIMOV_VALUE, null);
 
 //	
 //	final public static class FOLToSLHelper {

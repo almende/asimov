@@ -33,7 +33,9 @@ public interface ASIMOVNode<T> extends JSONConvertible<ASIMOVNode<T>>, XMLConver
 	@JsonIgnore
 	String getNodeType();
 	
-	ASIMOVNode<T> instantiate(final String key, final ASIMOVNode<?> value);
+	ASIMOVNode<T> instantiate();
+	
+	ASIMOVNode<T> add(final String key,final ASIMOVNode<?> value);
 	
 	@JsonIgnore
 	Set<String> getKeys();

@@ -2,8 +2,12 @@ package io.asimov.model.sl;
 
 public class SL {
 	
-	public static ASIMOVNode<?> instantiate(final ASIMOVNode<?> node,final String key, final ASIMOVNode<?> value) {
-		return node.instantiate(key, value);
+	public static ASIMOVNode<?> instantiate(final ASIMOVNode<?> node) {
+		return node.instantiate();
+	}
+	
+	public static ASIMOVNode<?> add(final ASIMOVNode<?> node,final String key, final ASIMOVNode<?> value){
+		return node.add(key, value);
 	}
 		
 	public static ASIMOVTerm integer(final long integer) {

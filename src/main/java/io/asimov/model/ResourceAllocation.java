@@ -43,9 +43,9 @@ public class ResourceAllocation extends AbstractNamed<ResourceAllocation>
 	/** */
 	public static final ASIMOVTerm PATTERN = new ASIMOVTerm()
 		.withName(RESOURCE_ALLOCATION_TERM)
-		.instantiate(ALLOCATED_AGENT_AID, null)
-		.instantiate(RESOURCE_REQUIREMENT_ID, null)
-		.instantiate(RESOURCE_ALLOCATION_TERM, SL.string(ResourceAllocation.class.getName()));
+		.instantiate().add(ALLOCATED_AGENT_AID, null)
+		.add(RESOURCE_REQUIREMENT_ID, null)
+		.add(RESOURCE_ALLOCATION_TERM, SL.string(ResourceAllocation.class.getName()));
 
 	/** */
 	private static long counter = 0L;
@@ -100,8 +100,8 @@ public class ResourceAllocation extends AbstractNamed<ResourceAllocation>
 	@SuppressWarnings("unchecked")
 	public ASIMOVTerm toSL()
 	{
-		return PATTERN.instantiate(ALLOCATED_AGENT_AID,
-				new ASIMOVTerm().withName(getAllocatedAgentID())).instantiate(
+		return PATTERN.instantiate().add(ALLOCATED_AGENT_AID,
+				new ASIMOVTerm().withName(getAllocatedAgentID())).add(
 				RESOURCE_REQUIREMENT_ID, SL.string(getResourceRequirementID()));
 	}
 

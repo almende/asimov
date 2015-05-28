@@ -77,23 +77,23 @@ public class LegacySLUtil implements ASIMOVAgents {
 			return null;
 		}
 		ASIMOVTerm resourceMatchPattern = ResourceRequirement.TASK_RESOURCE_PATTERN
-				.instantiate(ResourceRequirement.TASK_RESOURCE,
+				.instantiate().add(ResourceRequirement.TASK_RESOURCE,
 						Resource.RESOURCE_PATTERN
 				// .instantiate(Resource.RESOURCE_NAME,agentName)
 				// .instantiate(Resource.RESOURCE_SUB_TYPE,
 				// SL.string(requirement.getResource().getSubTypeID().getName()))
 				// .instantiate(Resource.RESOURCE_TYPE,SL.string(requirement.getResource().getTypeID().getName()))
 				)
-				.instantiate(ResourceRequirement.TASK_RESOURCE_AMOUNT,
+				.add(ResourceRequirement.TASK_RESOURCE_AMOUNT,
 						SL.integer(1))
-				.instantiate(ResourceRequirement.TASK_RESOURCE_DURATION,
+				.add(ResourceRequirement.TASK_RESOURCE_DURATION,
 						new Time().withMillisecond(0).toSL());
 		ASIMOVFormula resourceFormula = SLConvertible.ASIMOV_PROPERTY_SET_FORMULA
-				.instantiate(SLConvertible.sASIMOV_PROPERTY,
+				.instantiate().add(SLConvertible.sASIMOV_PROPERTY,
 						SL.string(ResourceRequirement.TASK_RESOURCE))
-				.instantiate(SLConvertible.sASIMOV_KEY,
+				.add(SLConvertible.sASIMOV_KEY,
 						SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
-				.instantiate(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
+				.add(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
 		List<ASIMOVFormula> formulas = new ArrayList<ASIMOVFormula>();
 		if (f instanceof ASIMOVAndNode) {
 			for (String andChildKey : ((ASIMOVAndNode) f).getKeys())
@@ -110,13 +110,13 @@ public class LegacySLUtil implements ASIMOVAgents {
 
 			List<ASIMOVFormula> resultList = new ArrayList<ASIMOVFormula>();
 
-			ASIMOVFormula result = BELONGS_TO_PROCESS_FORMULA.instantiate(
+			ASIMOVFormula result = BELONGS_TO_PROCESS_FORMULA.instantiate().add(
 					PROCESS_PROPERTY,
-					ResourceAllocation.PATTERN.instantiate(
+					ResourceAllocation.PATTERN.instantiate().add(
 							ResourceAllocation.RESOURCE_REQUIREMENT_ID,
 							SL.string(matchedResourceResult
 									.get(Resource.RESOURCE_SUB_TYPE).toString()
-									.replace("\"", "")))).instantiate(
+									.replace("\"", "")))).add(
 					PROCESS_NAME, SL.string(agentID.getValue()));
 			resultList.add(result);
 
@@ -125,13 +125,13 @@ public class LegacySLUtil implements ASIMOVAgents {
 				Map<String, Object> matchedEquipmentResult = new KBase()
 						.matchNode(resourceFormula, matching);
 				if (matchedEquipmentResult != null)
-					resultList.add(BELONGS_TO_PROCESS_FORMULA.instantiate(
+					resultList.add(BELONGS_TO_PROCESS_FORMULA.instantiate().add(
 							PROCESS_PROPERTY,
-							ResourceAllocation.PATTERN.instantiate(
+							ResourceAllocation.PATTERN.instantiate().add(
 									ResourceAllocation.RESOURCE_REQUIREMENT_ID,
 									(ASIMOVNode<?>) matchedResourceResult
 											.get(Resource.RESOURCE_SUB_TYPE)))
-							.instantiate(PROCESS_NAME,
+							.add(PROCESS_NAME,
 									SL.string(agentID.getValue())));
 			}
 			if (resultList.size() < 2)
@@ -140,7 +140,7 @@ public class LegacySLUtil implements ASIMOVAgents {
 			Iterator<?> it = resultList.iterator();
 			for (int i = 0; it.hasNext(); i++) {
 				ASIMOVFormula ff = (ASIMOVFormula) it.next();
-				rNode = (ASIMOVAndNode) rNode.instantiate("" + i, ff);
+				rNode = (ASIMOVAndNode) rNode.add("" + i, ff);
 			}
 			return new SLParsableSerializable(rNode.toJSON());
 		}
@@ -149,14 +149,14 @@ public class LegacySLUtil implements ASIMOVAgents {
 
 	public static ASIMOVFormula getBelongsToProcessFormula(
 			final String processName, ASIMOVTerm property) {
-		return getStaticBelongsToProcessFormula(property).instantiate(
+		return getStaticBelongsToProcessFormula(property).instantiate().add(
 				PROCESS_NAME, SL.string(processName));
 	}
 
 	@Deprecated
 	public static ASIMOVFormula getStaticBelongsToProcessFormula(
 			ASIMOVTerm property) {
-		return (ASIMOVFormula) SL.instantiate(BELONGS_TO_PROCESS_FORMULA,
+		return (ASIMOVFormula) SL.add(SL.instantiate(BELONGS_TO_PROCESS_FORMULA),
 				PROCESS_PROPERTY, property);
 	}
 
@@ -382,28 +382,28 @@ public class LegacySLUtil implements ASIMOVAgents {
 		// .instantiate(PROCESS_NAME,
 		// procesName));
 		ASIMOVTerm resourceMatchPattern = ResourceRequirement.TASK_RESOURCE_PATTERN
-				.instantiate(
+				.instantiate().add(
 						ResourceRequirement.TASK_RESOURCE,
 						Resource.RESOURCE_PATTERN
 								// .instantiate(Resource.RESOURCE_NAME,agentName)
-								.instantiate(
+								.instantiate().add(
 										Resource.RESOURCE_SUB_TYPE,
 										SL.string(requirement.getResource()
 												.getSubTypeID().getName()))
-								.instantiate(
+								.add(
 										Resource.RESOURCE_TYPE,
 										SL.string(requirement.getResource()
 												.getTypeID().getName())))
-				.instantiate(ResourceRequirement.TASK_RESOURCE_AMOUNT,
+				.add(ResourceRequirement.TASK_RESOURCE_AMOUNT,
 						SL.integer(1))
-				.instantiate(ResourceRequirement.TASK_RESOURCE_DURATION,
+				.add(ResourceRequirement.TASK_RESOURCE_DURATION,
 						new Time().withMillisecond(0).toSL());
 		ASIMOVFormula resourceFormula = SLConvertible.ASIMOV_PROPERTY_SET_FORMULA
-				.instantiate(SLConvertible.sASIMOV_PROPERTY,
+				.instantiate().add(SLConvertible.sASIMOV_PROPERTY,
 						SL.string(ResourceRequirement.TASK_RESOURCE))
-				.instantiate(SLConvertible.sASIMOV_KEY,
+				.add(SLConvertible.sASIMOV_KEY,
 						SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
-				.instantiate(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
+				.add(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
 
 		// if (!requirement.getResource().getTypeID().getName()
 		// .equalsIgnoreCase(ARUMResourceType.PERSON.name()) ||
@@ -434,24 +434,24 @@ public class LegacySLUtil implements ASIMOVAgents {
 		ASIMOVNotNode notAllocated = new ASIMOVNotNode(
 				getStaticBelongsToProcessFormula(ResourceAllocation.PATTERN));
 		ASIMOVTerm resourceMatchPattern = ResourceRequirement.TASK_RESOURCE_PATTERN
-				.instantiate(
+				.instantiate().add(
 						ResourceRequirement.TASK_RESOURCE,
 						Resource.RESOURCE_PATTERN
 								// .instantiate(Resource.RESOURCE_NAME,agentName)
-								.instantiate(Resource.RESOURCE_SUB_TYPE,
+								.instantiate().add(Resource.RESOURCE_SUB_TYPE,
 										SL.string(subType))
-								.instantiate(Resource.RESOURCE_TYPE,
+								.add(Resource.RESOURCE_TYPE,
 										SL.string(type)))
-				.instantiate(ResourceRequirement.TASK_RESOURCE_AMOUNT,
+				.add(ResourceRequirement.TASK_RESOURCE_AMOUNT,
 						SL.integer(1))
-				.instantiate(ResourceRequirement.TASK_RESOURCE_DURATION,
+				.add(ResourceRequirement.TASK_RESOURCE_DURATION,
 						new Time().withMillisecond(0).toSL());
 		ASIMOVFormula resourceFormula = SLConvertible.ASIMOV_PROPERTY_SET_FORMULA
-				.instantiate(SLConvertible.sASIMOV_PROPERTY,
+				.instantiate().add(SLConvertible.sASIMOV_PROPERTY,
 						SL.string(ResourceRequirement.TASK_RESOURCE))
-				.instantiate(SLConvertible.sASIMOV_KEY,
+				.add(SLConvertible.sASIMOV_KEY,
 						SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
-				.instantiate(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
+				.add(SLConvertible.sASIMOV_VALUE, resourceMatchPattern);
 
 		// if (!requirement.getResource().getTypeID().getName()
 		// .equalsIgnoreCase(ARUMResourceType.PERSON.name()) ||

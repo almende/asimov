@@ -163,12 +163,12 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 		}
 		for (ResourceRequirement resourceMatchPattern : resourceMatchPatterns)
 			result.add(InitialASIMOVPercept.toBelief(SLConvertible.ASIMOV_PROPERTY_SET_FORMULA
-					.instantiate(SLConvertible.sASIMOV_PROPERTY,
+					.instantiate().add(SLConvertible.sASIMOV_PROPERTY,
 							SL.string(ResourceRequirement.TASK_RESOURCE))
-					.instantiate(
+					.add(
 							SLConvertible.sASIMOV_KEY,
 							SL.string(ResourceRequirement.TASK_RESOURCE_TERM_NAME))
-					.instantiate(SLConvertible.sASIMOV_VALUE,
+					.add(SLConvertible.sASIMOV_VALUE,
 							resourceMatchPattern.toSL())));
 
 		// LOG.trace("Init "+baseAID.getLocalName()+" with: "+result);

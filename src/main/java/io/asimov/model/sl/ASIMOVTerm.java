@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -68,16 +67,17 @@ public class ASIMOVTerm implements ASIMOVNode<ASIMOVTerm> {
 	}
 
 	@Override
-	public ASIMOVTerm instantiate(String key, ASIMOVNode<?> value) {
+	public ASIMOVTerm instantiate() {
 		final ASIMOVTerm copy = new ASIMOVTerm().withName(this.name);
-		copy.termProperties = new HashMap<String, ASIMOVNode<?>>();
-		if (this.termProperties != null)
-			for (Entry<String, ASIMOVNode<?>>  entry : this.termProperties.entrySet())
-				copy.termProperties.put(entry.getKey(), entry.getValue());
-		copy.termProperties.put(key,value);
+		copy.termProperties = new HashMap<String, ASIMOVNode<?>>(this.termProperties == null?new HashMap<String,ASIMOVNode<?>>(0):this.termProperties);
 		return copy;
 	}
 
+	public ASIMOVTerm add(final String key,final ASIMOVNode<?> value){
+		this.termProperties.put(key,value);
+		return this;
+	}
+	
 	@Override
 	public String getNodeType() {
 		return "TERM";

@@ -373,9 +373,9 @@ public class ScenarioManagementWorldImpl extends
 						final Number progressPerc =
 						// (time.getValue().doubleValue() == 0.0) ? 0 :
 						time.dividedBy(duration).doubleValue() * 100;
-						if (replication.getProgress().doubleValue() != progressPerc
-								.doubleValue())
-							setReplication(null, progressPerc);
+//						if (replication.getProgress().doubleValue() != progressPerc
+//								.doubleValue())
+//							setReplication(null, progressPerc);
 
 						if (replication.getStatus().equals(SimStatus.RUNNING)
 								&& (progressPerc.doubleValue() >= 100

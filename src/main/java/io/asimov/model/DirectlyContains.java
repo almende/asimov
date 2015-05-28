@@ -22,8 +22,8 @@ public class DirectlyContains extends ConnectionTo
 	
 	/** Pattern for a {@link DirectlyContains} {@link Term} representation */
 	public static ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
-			.instantiate(DELAY,  null)
-			.instantiate(TARGET_BODY, null);
+			.instantiate().add(DELAY,  null)
+			.add(TARGET_BODY, null);
 	
 	protected ASIMOVTerm getPattern(){
 		return PATTERN;

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -72,17 +71,18 @@ public class ASIMOVFormula implements  ASIMOVNode<ASIMOVFormula> {
 	}
 
 	@Override
-	public ASIMOVFormula instantiate(String key, ASIMOVNode<?> value) {
+	public ASIMOVFormula instantiate() {
 		final ASIMOVFormula copy = new ASIMOVFormula().withName(this.name);
-		copy.formulaProperties = new HashMap<String, ASIMOVNode<?>>();
+		copy.formulaProperties = new HashMap<String, ASIMOVNode<?>>(this.formulaProperties == null?new HashMap<String,ASIMOVNode<?>>(0):this.formulaProperties);
 		copy.type = type;
-		if (this.formulaProperties != null)
-			for (Entry<String, ASIMOVNode<?>>  entry : this.formulaProperties.entrySet())
-				copy.formulaProperties.put(entry.getKey(), entry.getValue());
-		copy.formulaProperties.put(key,value);
 		return copy;
 	}
 	
+	@Override
+	public ASIMOVFormula add(String key, ASIMOVNode<?> value){
+		this.formulaProperties.put(key,value);
+		return this;
+	}
 	
 	public ASIMOVNotNode negate() {
 		return new ASIMOVNotNode(this);

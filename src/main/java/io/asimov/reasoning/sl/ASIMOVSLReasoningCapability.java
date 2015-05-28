@@ -235,7 +235,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 					value = getSLForObject(params[i]);
 			}
 			if (!recursiveReplace(node, key, value))
-				node = (T) SL.instantiate(node,key,value);
+				node = (T) SL.add(SL.instantiate(node),key,value);
 			key = null;
 			value = null;
 		}

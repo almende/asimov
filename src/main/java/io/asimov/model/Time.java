@@ -29,7 +29,7 @@ public class Time extends AbstractEntity<Time> implements SLConvertible<Time>, X
 	
 	/** Pattern for a {@link Time} {@link Term} representation */
 	public static ASIMOVTerm PATTERN = new ASIMOVTerm().withName(TERM_NAME)
-			.instantiate(MILLISECOND,  null);
+			.instantiate().add(MILLISECOND,  null);
 	
 	protected ASIMOVTerm getPattern(){
 		return PATTERN;
@@ -101,7 +101,7 @@ public class Time extends AbstractEntity<Time> implements SLConvertible<Time>, X
 	public ASIMOVTerm toSL()
 	{
 		ASIMOVTerm result = getPattern()
-				.instantiate(MILLISECOND,SL.integer(getMillisecond()));
+				.instantiate().add(MILLISECOND,SL.integer(getMillisecond()));
 		return result;
 	}
 
