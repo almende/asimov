@@ -426,8 +426,6 @@ public abstract class AbstractActorRole<F extends CoordinationFact> extends
 				LOG().warn(
 						"Child agent died but never reached blockable status"
 								+ ", scheduling next job now");
-				getSimulator()
-						.schedule(next, Trigger.createAbsolute(getTime()));
 				latch.countDown();
 			}
 
