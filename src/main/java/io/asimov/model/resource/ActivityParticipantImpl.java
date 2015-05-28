@@ -99,7 +99,7 @@ public class ActivityParticipantImpl extends
 
 	protected void updateHighestPriorityActivityLocation() {
 		synchronized (this.highestPriorityActivityLocationRepr) {
-			this.highestPriorityActivityLocationRepr.clear();
+			//this.highestPriorityActivityLocationRepr.clear();
 			int maxPriority = Integer.MIN_VALUE; // lowest
 			activities: for (Entry<Request, Integer> entry : this.priorities
 					.entrySet()) {
@@ -119,12 +119,12 @@ public class ActivityParticipantImpl extends
 							continue activities;
 						}
 					}
-				if (!targetFound)
-					LOG.error(
-							"No target resource specified among other resources: "
-									+ JsonUtil.toPrettyJSON(entry.getKey()
-											.getOtherResourceInfo()),
-							new NullPointerException());
+//				if (!targetFound)
+//					LOG.error(
+//							"No target resource specified among other resources: "
+//									+ JsonUtil.toPrettyJSON(entry.getKey()
+//											.getOtherResourceInfo()),
+//							new NullPointerException());
 			}
 			LOG.info("New priority locations: "
 					+ this.highestPriorityActivityLocationRepr);
