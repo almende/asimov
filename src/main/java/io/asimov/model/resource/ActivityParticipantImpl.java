@@ -97,7 +97,8 @@ public class ActivityParticipantImpl extends
 		}
 	}
 
-	protected void updateHighestPriorityActivityLocation() {
+	protected boolean updateHighestPriorityActivityLocation() {
+		boolean result = true;
 		synchronized (this.highestPriorityActivityLocationRepr) {
 			this.highestPriorityActivityLocationRepr.clear();
 			int maxPriority = Integer.MIN_VALUE; // lowest
@@ -120,19 +121,13 @@ public class ActivityParticipantImpl extends
 						}
 					}
 				if (!targetFound) {
-//					LOG.error(
-//							"No target resource specified among other resources: "
-//									+ JsonUtil.toPrettyJSON(entry.getKey()
-//											.getOtherResourceInfo()),
-//							new NullPointerException());
-					LOG.error(
-							"No target resource specified among other resources: assuming current location ");
-					this.highestPriorityActivityLocationRepr.add(getBinder().inject(ResourceManagementWorld.class).getCurrentLocation());
+					result = false;
 				}
 			}
 			LOG.info("New priority locations: "
 					+ this.highestPriorityActivityLocationRepr);
 		}
+		return true;
 	}
 
 	protected <T extends ResourceManagementWorld<?>> T getWorld(
@@ -213,10 +208,12 @@ public class ActivityParticipantImpl extends
 						+ " is not yet at target "
 						+ targetInfo.getResourceName()
 						+ " starts moving now on " + getTime());
-				updateHighestPriorityActivityLocation();
-				getBinder().inject(RouteInitiator.class).initiate(this,
+				if (updateHighestPriorityActivityLocation())
+					getBinder().inject(RouteInitiator.class).initiate(this,
 						request, targetInfo.getResourceName(), false);
-			}
+				else
+					this.resourceReadyinitiator.forProducer(this, request);
+			} 
 		}
 	}
 
