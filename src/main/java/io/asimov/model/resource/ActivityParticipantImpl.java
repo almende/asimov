@@ -127,7 +127,7 @@ public class ActivityParticipantImpl extends
 			LOG.info("New priority locations: "
 					+ this.highestPriorityActivityLocationRepr);
 		}
-		return true;
+		return result;
 	}
 
 	protected <T extends ResourceManagementWorld<?>> T getWorld(
