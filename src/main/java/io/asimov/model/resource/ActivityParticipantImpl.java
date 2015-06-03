@@ -66,7 +66,7 @@ public class ActivityParticipantImpl extends
 	private ResouceReadyInitiatorImpl resourceReadyinitiator;
 
 	private Set<String> activityBacklog = new HashSet<String>();
-
+	
 	private Set<String> processBacklog = new HashSet<String>();
 
 	private AgentID scenarioReplicatorID = null;
@@ -97,8 +97,7 @@ public class ActivityParticipantImpl extends
 		}
 	}
 
-	protected boolean updateHighestPriorityActivityLocation() {
-		boolean result = true;
+	protected void updateHighestPriorityActivityLocation() {
 		synchronized (this.highestPriorityActivityLocationRepr) {
 			this.highestPriorityActivityLocationRepr.clear();
 			int maxPriority = Integer.MIN_VALUE; // lowest
@@ -120,14 +119,16 @@ public class ActivityParticipantImpl extends
 							continue activities;
 						}
 					}
-				if (!targetFound) {
-					result = false;
-				}
+				if (!targetFound)
+					LOG.error(
+							"No target resource specified among other resources: "
+									+ JsonUtil.toPrettyJSON(entry.getKey()
+											.getOtherResourceInfo()),
+							new NullPointerException());
 			}
 			LOG.info("New priority locations: "
 					+ this.highestPriorityActivityLocationRepr);
 		}
-		return result;
 	}
 
 	protected <T extends ResourceManagementWorld<?>> T getWorld(
@@ -181,10 +182,9 @@ public class ActivityParticipantImpl extends
 						&& otherResource.isInfrastructural())
 					targetInfo = otherResource;
 
-			if (targetInfo != null && !getWorld(GenericResourceManagementWorld.class)
+			if (!getWorld(GenericResourceManagementWorld.class)
 					.getCurrentLocation().getValue()
-					.equals(targetInfo.getResourceAgent().getValue())
-					 ) {
+					.equals(targetInfo.getResourceAgent().getValue())) {
 				LOG.info("Resource not yet at target, moving will be required.");
 			} else {
 				this.resourceReadyinitiator.forProducer(this, request);
@@ -201,19 +201,17 @@ public class ActivityParticipantImpl extends
 						&& otherResource.isInfrastructural())
 					targetInfo = otherResource;
 
-			if (targetInfo != null && !getWorld(GenericResourceManagementWorld.class)
+			if (!getWorld(GenericResourceManagementWorld.class)
 					.getCurrentLocation().getValue()
 					.equals(targetInfo.getResourceAgent().getValue())) {
 				LOG.info(request.getResourceInfo().getResourceName()
 						+ " is not yet at target "
 						+ targetInfo.getResourceName()
 						+ " starts moving now on " + getTime());
-				if (updateHighestPriorityActivityLocation())
-					getBinder().inject(RouteInitiator.class).initiate(this,
+				updateHighestPriorityActivityLocation();
+				getBinder().inject(RouteInitiator.class).initiate(this,
 						request, targetInfo.getResourceName(), false);
-				else
-					this.resourceReadyinitiator.forProducer(this, request);
-			} 
+			}
 		}
 	}
 
@@ -329,49 +327,31 @@ public class ActivityParticipantImpl extends
 				resourceInfo.getActivityName(),
 				resourceInfo.getActivityInstanceId(), involvedResources,
 				EventType.STOP_ACTIVITY);
-		if (getWorld(GenericResourceManagementWorld.class).getEntity()
-				.getMaxNofUsesInProcess() != null) {
-			if (!processBacklog.contains(resourceInfo.getProcessInstanceId())) {
-				getWorld(GenericResourceManagementWorld.class)
-						.getEntity()
-						.setMaxNofUsesInProcess(
-								getWorld(GenericResourceManagementWorld.class)
-										.getEntity().getMaxNofUsesInProcess() - 1);
-				if (getWorld(GenericResourceManagementWorld.class).getEntity()
-						.getMaxNofUsesInProcess() < 1) {
+		if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() != null) {
+			if (!processBacklog.contains(resourceInfo.getProcessInstanceId())){
+				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInProcess(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess()-1);
+				if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() < 1) {
 					LOG.info("Resource stays unavailable because it reached maximum participations in process");
-					getWorld(GenericResourceManagementWorld.class)
-							.setUnavailable();
+					getWorld(GenericResourceManagementWorld.class).setUnavailable();
 				} else {
-					getWorld(GenericResourceManagementWorld.class)
-							.setAvailable();
+					getWorld(GenericResourceManagementWorld.class).setAvailable();
 					LOG.info("Resource becomes available");
 				}
-			} else if (getWorld(GenericResourceManagementWorld.class)
-					.getEntity().getMaxNofUsesInProcess() > 0) {
+			} else if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() > 0){
 				getWorld(GenericResourceManagementWorld.class).setAvailable();
 				LOG.info("Resource becomes available");
 			} else {
 				getWorld(GenericResourceManagementWorld.class).setUnavailable();
 				LOG.info("Resource becomes Resource stays unavailable because it reached maximum participations in process");
 			}
-		} else if (!getWorld(GenericResourceManagementWorld.class)
-				.isAvailable()) {
-			if (getWorld(GenericResourceManagementWorld.class).getEntity()
-					.getMaxNofUsesInActivity() != null) {
-				getWorld(GenericResourceManagementWorld.class)
-						.getEntity()
-						.setMaxNofUsesInActivity(
-								getWorld(GenericResourceManagementWorld.class)
-										.getEntity().getMaxNofUsesInActivity() - 1);
-				if (getWorld(GenericResourceManagementWorld.class).getEntity()
-						.getMaxNofUsesInActivity() < 1) {
-					getWorld(GenericResourceManagementWorld.class)
-							.setUnavailable();
+		} else if (!getWorld(GenericResourceManagementWorld.class).isAvailable()) {
+			if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity() != null) {
+				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInActivity(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity()-1);
+				if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity() < 1) {
+					getWorld(GenericResourceManagementWorld.class).setUnavailable();
 					LOG.info("Resource stays unavailable because it reached maximum participations in activity");
 				} else {
-					getWorld(GenericResourceManagementWorld.class)
-							.setAvailable();
+					getWorld(GenericResourceManagementWorld.class).setAvailable();
 					LOG.info("Resource becomes available");
 				}
 			} else {
