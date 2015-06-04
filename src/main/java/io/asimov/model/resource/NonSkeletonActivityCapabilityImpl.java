@@ -102,7 +102,9 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 						}
 					}
 					LOG.info(getOwnerID()+" @ "+world.getCurrentLocation()+" with entity "+world.getEntity());
-					if (world.getCurrentLocation().getValue().equals(ScenarioManagementWorld.WORLD_NAME)){
+					if (world.getCurrentLocation().getValue().equals(ScenarioManagementWorld.WORLD_NAME)
+							&& !t.getReceiverID().equals(t.getSenderID())
+							){
 						try
 						{
 							getBinder().inject(SendingCapability.class).send(new ASIMOVMessage(getBinder().inject(ReplicatingCapability.class).getTime().plus(1,TimeUnit.MILLIS), t.getReceiverID(), t.getSenderID(), t.content));

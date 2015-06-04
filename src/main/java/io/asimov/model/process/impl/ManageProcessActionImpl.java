@@ -496,16 +496,16 @@ public class ManageProcessActionImpl extends
 
 	private static final String REQUEST_ACTIVITY_PARTICIPATION = "requestActivityParticipation";
 
-	public static final String DESTROY = "DESTROY";
-	
-	@Schedulable(DESTROY)
-	public void destroy(){
-		try {
-			getFinalizer().destroy();
-		} catch (Exception e) {
-			LOG.error("Failed to destroy process agent",e);
-		}
-	}
+//	public static final String DESTROY = "DESTROY";
+//	
+//	@Schedulable(DESTROY)
+//	public void destroy(){
+//		try {
+//			getFinalizer().destroy();
+//		} catch (Exception e) {
+//			LOG.error("Failed to destroy process agent",e);
+//		}
+//	}
 	
 	@Schedulable(NEXT_ACTIVITY_METHOD_ID)
 	public void nextActivity(final ProcessCompletion.Request cause,
@@ -540,9 +540,9 @@ public class ManageProcessActionImpl extends
 			try {
 				send(ProcessCompletion.Result.Builder.forProducer(this, cause)
 						.withSuccess(true).build());
-				getScheduler().schedule(
-						ProcedureCall.create(this, this, DESTROY),
-						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
+//				getScheduler().schedule(
+//						ProcedureCall.create(this, this, DESTROY),
+//						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MINUTES)));
 			} catch (Exception e) {
 				LOG.error("Failed to send process completion response", e);
 			}

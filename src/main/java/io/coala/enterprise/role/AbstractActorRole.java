@@ -84,6 +84,8 @@ public abstract class AbstractActorRole<F extends CoordinationFact> extends
 		AbstractCapability<CapabilityID> implements ActorRole<F>
 {
 
+	
+
 	/** */
 	private static final long serialVersionUID = 1L;
 

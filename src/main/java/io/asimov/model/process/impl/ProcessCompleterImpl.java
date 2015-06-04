@@ -273,9 +273,9 @@ public class ProcessCompleterImpl extends
 					LOG.info("Failed to send process completion response",e1);
 					
 				}
-				getScheduler().schedule(
-						ProcedureCall.create(this, this, DESTROY),
-						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
+//				getScheduler().schedule(
+//						ProcedureCall.create(this, this, DESTROY),
+//						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MINUTES)));
 				return;
 			}
 				candidates.put(LegacySLUtil
@@ -395,9 +395,9 @@ public class ProcessCompleterImpl extends
 						.withSuccess(
 								getAllocCallback(cause.getSenderID())
 										.wasSucces()).build());
-				getScheduler().schedule(
-						ProcedureCall.create(this, this, DESTROY),
-						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
+//				getScheduler().schedule(
+//						ProcedureCall.create(this, this, DESTROY),
+//						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MINUTES)));
 			} catch (Exception e1) {
 				LOG.error(
 						"An exception occured while trying to send process completion outcome",
@@ -445,16 +445,16 @@ public class ProcessCompleterImpl extends
 
 	AllocationCallback theCallback;
 
-	public static final String DESTROY = "DESTROY";
-	
-	@Schedulable(DESTROY)
-	public void destroy(){
-		try {
-			getFinalizer().destroy();
-		} catch (Exception e) {
-			LOG.error("Failed to destroy process agent",e);
-		}
-	}
+//	public static final String DESTROY = "DESTROY";
+//	
+//	@Schedulable(DESTROY)
+//	public void destroy(){
+//		try {
+//			getFinalizer().destroy();
+//		} catch (Exception e) {
+//			LOG.error("Failed to destroy process agent",e);
+//		}
+//	}
 	
 	private final AllocationCallback getAllocCallback(final AgentID scenario) {
 		if (theCallback == null)
