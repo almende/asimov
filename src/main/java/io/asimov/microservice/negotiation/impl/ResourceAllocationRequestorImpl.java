@@ -73,6 +73,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 	private Set<AgentID> failedClaims = null;
 	private boolean failing = false;
 	private Map<Serializable, Serializable> queryToAssertionMap;
+	private static Object lock = new Object();
 
 	//private Subject<AllocationCallback,AllocationCallback> callbackSubject;
 
@@ -217,6 +218,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 
 	private void tryAllocationForCandidates(Serializable q) throws Exception
 	{
+		synchronized (lock) {
 		Serializable f = getQueryToAssertionMap().get(q);
 		final HashSet<AgentID> candidates = (HashSet<AgentID>) candidateMap.get(f);
 		if (candidates.size() == 0)
@@ -290,6 +292,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 				if (wait.getCount() > 0)
 					LOG.info("Waiting for response of best candidate");
 			}
+		}
 		}
 	}
 	
@@ -385,12 +388,47 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 
 	/** @see io.asimov.negotiation.ResourceAllocationRequestor#deAllocate() */
 	@Override
-	public void deAllocate(final String scenarioAgentID) throws Exception
+	public synchronized void deAllocate(final String scenarioAgentID) throws Exception
 	{
-		if (!allocated)
-			LOG.error("Allocation failed, de-allocating now.");
+		if (!allocated) {
+			LOG.error("Allocation failed, de-allocating now: "+this.failedClaims);
+			final ReasoningCapability reasonerService = ((AgentServiceProxy) getAgent())
+					.getBinder().inject(ReasoningCapability.class);
+		
+			for (Claim claim : this.requestedClaims.values()) {
+				if (claim == null)
+					return;
+				final AgentID aid = claim.getReceiverID();
+				Belief belief = 
+						reasonerService.toBelief(
+						claim.getAssertion(),
+						ResourceAllocation.ALLOCATED_AGENT_AID, aid).negate(); 
+				ASIMOVMessage informMessage = new ASIMOVMessage(
+						((AgentServiceProxy) getAgent()).getBinder()
+								.inject(ReplicatingCapability.class).getTime(),
+						((AgentServiceProxy) getAgent()).getID(), aid, new SLParsableSerializable(belief.toString()));
+				try
+				{
+					agentServiceProxy.getBinder().inject(SendingCapability.class)
+							.send(informMessage);
+				} catch (Exception e)
+				{
+					LOG.error("Failed to inform de-allocation.",e);
+				}
+				claim.setDeClaim(true);
+				try
+				{
+					sendMessage(claim);
+				} catch (Exception e)
+				{
+					LOG.error("Failed to send claim.",e);
+				}
+			}
+			this.requestedClaims.clear();
+		}
 		else
 			LOG.info("De-allocation allocated resources");
+		
 		for (final Entry<AgentID, Serializable> allocation : getResourceAllocationMap()
 				.entrySet())
 		{
@@ -404,7 +442,6 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 				@Override
 				public void onCompleted()
 				{
-					// FIXME Do not use SL notation here anymore (need generic negator)
 					Belief belief = 
 							reasonerService.toBelief(
 							allocation.getValue(),

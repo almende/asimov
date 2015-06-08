@@ -6,6 +6,7 @@ import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.ConversionCallback;
 import io.asimov.microservice.negotiation.ResourceAllocationRequestor.AllocationCallback;
 import io.asimov.model.ASIMOVOrganization;
+import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.ResourceAllocation;
 import io.asimov.model.TraceService;
 import io.asimov.model.events.ActivityEvent;
@@ -83,10 +84,13 @@ public class MonkeyAgent extends ASIMOVOrganization<MonkeyAgentWorld> {
 	public void performAvailabilityChange(final String resourceName,
 			final EventType eventType) throws Exception {
 		LOG.info("fire ASIMOV resource unavailability event!");
-		if (eventType.equals(EventType.START_GLOBAL_UNAVAILABILITY) || eventType.equals(EventType.STOP_GLOBAL_UNAVAILABILITY))
+		if (eventType.equals(EventType.START_GLOBAL_UNAVAILABILITY) || eventType.equals(EventType.STOP_GLOBAL_UNAVAILABILITY)) {
+			ASIMOVResourceDescriptor resource =getBinder().inject(Datasource.class).findResourceDescriptorByID(resourceName);
+			resource.setUnAvailable(eventType.equals(EventType.START_GLOBAL_UNAVAILABILITY));
+			getBinder().inject(Datasource.class).save(resource);
 			fireAndForget(eventType, Collections.singletonList(resourceName),
 				this.unavailability);
-		else
+		} else
 			LOG.error("Unsupported event type for availablility");
 	}
 
@@ -285,6 +289,7 @@ public class MonkeyAgent extends ASIMOVOrganization<MonkeyAgentWorld> {
 				} catch (Exception e) {
 					LOG.error("Failed to emit unavailability event",e);
 				}
+				
 				getBinder().inject(ResourceAllocationNegotiator.class)
 						.deAllocate(scenarioAgentId.toString());
 			}

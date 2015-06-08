@@ -24,7 +24,6 @@ import io.coala.enterprise.role.Executor;
 import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
 import io.coala.json.JsonUtil;
-import io.coala.log.InjectLogger;
 import io.coala.log.LogUtil;
 import io.coala.time.SimTime;
 import io.coala.time.SimTimeFactory;
@@ -143,10 +142,7 @@ public class ActivityParticipantImpl extends
 		if (activityBacklog.contains(request.getResourceInfo()
 				.getActivityInstanceId()))
 			return;
-		if (getWorld(GenericResourceManagementWorld.class).isAvailable()) {
-			getWorld(GenericResourceManagementWorld.class).setUnavailable();
-			LOG.info("Resource becomes unavailable");
-		}
+		updateUnavailable(request);
 		if (request.getResourceInfo().isMoveable()) {
 			if (!getWorld(GenericResourceManagementWorld.class)
 					.getCurrentLocation().getValue().equalsIgnoreCase("world")
@@ -327,8 +323,21 @@ public class ActivityParticipantImpl extends
 				resourceInfo.getActivityName(),
 				resourceInfo.getActivityInstanceId(), involvedResources,
 				EventType.STOP_ACTIVITY);
+		updateAvailable(request);
+		send(ActivityParticipation.Result.Builder.forProducer(this, request)
+				.build());
+	}
+	
+	private void updateUnavailable(ActivityParticipation.Request request) {
+		if (getWorld(GenericResourceManagementWorld.class).isAvailable()) {
+			getWorld(GenericResourceManagementWorld.class).setUnavailable();
+			LOG.info("Resource becomes unavailable");
+		}
+	}
+	
+	private void updateAvailable(ActivityParticipation.Request request) {
 		if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() != null) {
-			if (!processBacklog.contains(resourceInfo.getProcessInstanceId())){
+			if (!processBacklog.contains(request.getResourceInfo().getProcessInstanceId())){
 				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInProcess(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess()-1);
 				if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() < 1) {
 					LOG.info("Resource stays unavailable because it reached maximum participations in process");
@@ -359,10 +368,6 @@ public class ActivityParticipantImpl extends
 				LOG.info("Resource becomes available");
 			}
 		}
-		processBacklog.add(resourceInfo.getProcessInstanceId());
-		activityBacklog.add(request.getResourceInfo().getActivityInstanceId());
-		send(ActivityParticipation.Result.Builder.forProducer(this, request)
-				.build());
 	}
 
 	@Schedulable(TRANSIT_TO_RESOURCE)
@@ -529,6 +534,7 @@ public class ActivityParticipantImpl extends
 			ActivityParticipation.Request cause, final boolean tommorow) {
 		LOG.info("Intending to walk route: "
 				+ state.getRouteOfRepresentativesWithCoordidnates());
+		updateUnavailable(cause);
 		AgentID currentBE = null;
 		SimTime planning = getTime();
 		for (AgentID routeEntry : state

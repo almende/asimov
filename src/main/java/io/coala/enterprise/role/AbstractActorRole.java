@@ -384,7 +384,7 @@ public abstract class AbstractActorRole<F extends CoordinationFact> extends
 	private static final String ADD_PROCESS_MANAGER_AGENT = "addProcessManagerAgent";
 
 	@Schedulable(ADD_PROCESS_MANAGER_AGENT)
-	protected synchronized Observable<AgentStatusUpdate> bootAgent(
+	protected Observable<AgentStatusUpdate> bootAgent(
 			final AgentID agentID, final Class<? extends Agent> agentType,
 			// final BasicAgentStatus blockSimUntilState,
 			final Job<?> next) throws Exception
@@ -438,9 +438,16 @@ public abstract class AbstractActorRole<F extends CoordinationFact> extends
 			}
 		});
 		getBooter().createAgent(agentID, agentType).subscribe(status);
-
-		latch.await();
-		getSimulator().schedule(next,
+		//while (latch.getCount() > 0) {
+			latch.await(1000L,java.util.concurrent.TimeUnit.MILLISECONDS);
+		//	Thread.yield();
+		//}
+		if (latch.getCount() > 0) {
+			LOG.error("FIXME: Failed to wait for agent boot signal for "+agentID+", continue unsafe.",
+					new IllegalStateException("No initialize or fail status for agent reached during boot."));
+			getScheduler().schedule(ProcedureCall.create(this, this, ADD_PROCESS_MANAGER_AGENT, agentID,agentType,next),Trigger.createAbsolute(getTime()));
+		} else
+			getSimulator().schedule(next,
 				Trigger.createAbsolute(getTime()));
 
 		return status.asObservable();

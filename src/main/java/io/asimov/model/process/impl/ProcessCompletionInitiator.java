@@ -68,12 +68,13 @@ public class ProcessCompletionInitiator extends
 
 	@Override
 	public void onStated(final ProcessCompletion.Result result) {
-		if (!((ProcessCompletion.Result) result).getSuccess())
+		if (!((ProcessCompletion.Result) result).getSuccess()) {
 			try {
 				LOG.warn("Process allocation failed");
 			} catch (final Exception e) {
 				LOG.error("Problem retrying process completion", e);
 			}
+		}
 		else {
 //			resourcesHash = ("" + getTime().hashCode() + result.hashCode())
 //					.hashCode(); // invalidate hash

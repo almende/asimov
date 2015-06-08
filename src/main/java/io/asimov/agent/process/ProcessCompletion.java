@@ -231,6 +231,7 @@ public abstract class ProcessCompletion extends AbstractCoordinationFact
 		/** */
 		private boolean success;
 
+		
 		/**
 		 * {@link Result} zero-arg bean constructor
 		 */
@@ -282,6 +283,7 @@ public abstract class ProcessCompletion extends AbstractCoordinationFact
 
 			/** */
 			private boolean success;
+			
 
 			/**
 			 * @param executor
@@ -332,6 +334,7 @@ public abstract class ProcessCompletion extends AbstractCoordinationFact
 				return this;
 			}
 
+		
 			/** @see CoordinationFact.Builder#build() */
 			@Override
 			public Result build()
