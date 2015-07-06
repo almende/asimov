@@ -221,17 +221,23 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 			public void done(Map<AgentID, Serializable> resources)
 			{
 				this.resources = resources;
-				wasSuccesBoolean = true;
 				for (AgentID allocatedResourceAgentID : resources.keySet()) {
 					try {
 						performAllocationChange(allocatedResourceAgentID.getValue(), EventType.ALLOCATED);
 					} catch (Exception e) {
-						LOG.error("Failed to emit allocation event for "+allocatedResourceAgentID, e);
+						LOG.error("Failed to emit allocation event for "+allocatedResourceAgentID);
+						failing = true;
 					}
 				}
-				callbackSubject.onNext(this);
-				_depr_callback.done(resources);
-				callbackSubject.onCompleted();
+				if (failing) {
+					deAllocate(getScenarioAgentID().getValue());
+					failure(resources.keySet());
+				} else {
+					wasSuccesBoolean = true;
+					callbackSubject.onNext(this);
+					_depr_callback.done(resources);
+					callbackSubject.onCompleted();
+				}
 			}
 
 			@Override

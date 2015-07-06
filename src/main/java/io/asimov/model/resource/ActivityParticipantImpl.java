@@ -228,7 +228,7 @@ public class ActivityParticipantImpl extends
 				targetInfo = otherResource;
 
 		if (getBinder().inject(ConfiguringCapability.class)
-				.getProperty("walkingDisabled").getBoolean().booleanValue()
+				.getProperty("walkingDisabled").getBoolean(false).booleanValue()
 				&& resource.isMoveable()
 				&& !getWorld(GenericResourceManagementWorld.class)
 						.getCurrentLocation().equals(

@@ -9,6 +9,8 @@ import io.asimov.model.events.EventType;
 import io.asimov.model.resource.AbstractResourceManagementWorld;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
+import io.coala.capability.configure.ConfiguringCapability;
+import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.log.InjectLogger;
 import io.coala.time.SimTime;
 
@@ -42,6 +44,10 @@ public class GenericResourceManagementWorldImpl extends
 
 	private static final Map<String, Integer> resourcesOnSite = new HashMap<String, Integer>();
 
+	private boolean performingActivity = false;
+	
+	private String debugDescription = "not performing any activity";
+	
 	/** */
 	private Subject<ActivityEvent, ActivityEvent> activity = PublishSubject
 			.create();
@@ -121,6 +127,33 @@ public class GenericResourceManagementWorldImpl extends
 						resourcesOnSite.put(targetName, occupancy);
 					}
 				}
+		}
+		boolean inconsistent = false;
+		if (getBinder()
+				.inject(ConfiguringCapability.class)
+				.getProperty("holdOnInconsistency").getBoolean().booleanValue() 
+				&& eventType.equals(EventType.START_ACTIVITY)) {
+			if (!performingActivity) {
+				this.performingActivity = true;
+				this.debugDescription =  processID+" "+activityName+" for resource "+resourceNames.get(0);
+			} else
+				inconsistent = true;	
+		}
+		if (getBinder()
+				.inject(ConfiguringCapability.class)
+				.getProperty("holdOnInconsistency").getBoolean().booleanValue() 
+				&& eventType.equals(EventType.STOP_ACTIVITY)) {
+			if (performingActivity) {
+				this.debugDescription = "not performing any activity";
+				this.performingActivity = false;
+			} else
+				inconsistent = true;	
+		}
+		if (inconsistent) {
+			getBinder().inject(ReplicatingCapability.class).pause();
+			LOG.error("Could not "+ eventType.getValue() + " : "+processID+" "+activityName+" for resource "+resourceNames.get(0));
+			LOG.error("Reason:"+this.debugDescription);
+			LOG.error("Inconsistency detected pausing simulator", new IllegalStateException());
 		}
 		fireAndForget(processID, processInstanceID, activityName,
 				activityInstanceId, eventType, resourceNames, this.activity);

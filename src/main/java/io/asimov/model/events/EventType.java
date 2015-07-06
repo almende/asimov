@@ -100,6 +100,30 @@ public class EventType extends AbstractNamed<EventType> {
 	 */
 	public static final EventType STOP_PROCESS = new EventType()
 			.withValue("stopsProcess");
+	
+	/**
+	 * This {@link EventType} indicates a {@link Process} has been created
+	 */
+	public static final EventType PROCESS_CREATED = new EventType()
+			.withValue("ProcessCreated");
+	
+	/**
+	 * This {@link EventType} indicates a {@link Process} has been created
+	 */
+	public static final EventType ACTIVITY_CREATED = new EventType()
+			.withValue("ActivityCreated");
+	
+	/**
+	 * This {@link EventType} indicates a {@link Process} has been created
+	 */
+	public static final EventType RESOURCE_CREATED = new EventType()
+			.withValue("ResourceCreated");
+	
+	/**
+	 * This {@link EventType} indicates a {@link Process} has been created
+	 */
+	public static final EventType INITIAL_MODEL_LOADED = new EventType()
+			.withValue("InitialModelLoaded");
 
 	/**
 	 * This {@link EventType} indicates an {@link ASIMOVResourceDescriptor} is

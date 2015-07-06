@@ -17,6 +17,7 @@ import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.admin.DestroyingCapability;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
@@ -125,6 +126,14 @@ public class MonkeyAgent extends ASIMOVOrganization<MonkeyAgentWorld> {
 
 					@Override
 					public void onNext(UnAvailabilityRequest t) {
+						if (getBinder().inject(ConfiguringCapability.class).getProperty("disableMonkeys").getBoolean(false)) {
+							getScheduler().schedule(
+									ProcedureCall.create(MonkeyAgent.this, MonkeyAgent.this, DONE),
+									Trigger.createAbsolute(getBinder()
+											.inject(ReplicatingCapability.class).getTime()
+											.plus(1, TimeUnit.MILLIS)));
+							return;
+						}
 						LOG.error("Monkey received:" + t.toJSON());
 						scenarioAgentId = t.getSenderID();
 						pending.add(t);

@@ -1,6 +1,7 @@
 package io.asimov.microservice.negotiation.impl;
 
 import io.asimov.agent.resource.GenericResourceManagementWorld;
+import io.asimov.db.Datasource;
 import io.asimov.messaging.ASIMOVMessageID;
 import io.asimov.microservice.negotiation.AgentServiceProxy;
 import io.asimov.microservice.negotiation.ResourceAllocationResponder;
@@ -171,26 +172,29 @@ public class ResourceAllocationResponderImpl extends NegotiatingCapability imple
 			Claim claim = ((Claim) m);
 			if (claim.isDeClaim())
 			{
-				// ReasonerService<?> reasonerService = agentServiceProxy
-				// .getBinder().bind(ReasonerService.class);
-				// reasonerService.removeBeliefFromKBase(reasonerService.toBelief(
-				// claim.getAssertion(),
-				// ResourceAllocation.ALLOCATED_AGENT_AID,
-				// agentServiceProxy.getID()));
+				 ReasoningCapability reasonerService = agentServiceProxy
+				 .getBinder().inject(ReasoningCapability.class);
+				 reasonerService.removeBeliefFromKBase(reasonerService.toBelief(
+				 claim.getAssertion(),
+				 ResourceAllocation.ALLOCATED_AGENT_AID,
+				 agentServiceProxy.getID()));
 				reset();
+				//LOG.error(getID().getOwnerID()+" de-claimed by "+m.getSenderID());
 				return;
 			} else
 			{
 				r = processClaim((Claim) m);
-
+				//LOG.error(getID().getOwnerID()+" claimed by "+m.getSenderID());
 			}
 		} else if (m instanceof AvailabilityCheck)
 		{
 			r = (processAvailabilityCheck((AvailabilityCheck) m));
+			//LOG.error(getID().getOwnerID()+" respond if available to "+m.getSenderID());
 		}
 		else if (m instanceof ProposalRequest)
 		{
 			r = (processProposalRequest((ProposalRequest) m));
+			//LOG.error(getID().getOwnerID()+" do proposal to "+m.getSenderID());
 		}
 		try
 		{
@@ -209,7 +213,7 @@ public class ResourceAllocationResponderImpl extends NegotiatingCapability imple
 	{
 		Claimed claimed = new Claimed(claim, claim.getID().getTime(),
 				claim.getReceiverID(), claim.getSenderID());
-		if (!isClaimed())
+		if (!isClaimed() && isAvailable(claim.getQuery()))
 		{
 			// need te original query and the filled in allocation statement
 			// here.
@@ -230,6 +234,7 @@ public class ResourceAllocationResponderImpl extends NegotiatingCapability imple
 			// needs to declaim afterwards on failure....
 		} else
 		{
+			
 			claimed.available = false;
 		}
 		return claimed;
@@ -240,7 +245,7 @@ public class ResourceAllocationResponderImpl extends NegotiatingCapability imple
 	 */
 	private boolean isAvailable(final Serializable requirements)
 	{
-		if (!getBinder().inject(GenericResourceManagementWorld.class).isAvailable())
+		if (!getBinder().inject(GenericResourceManagementWorld.class).isAvailable() || isClaimed())
 			return false;
 		ReasoningCapability reasonerService = agentServiceProxy.getBinder()
 				.inject(ReasoningCapability.class);

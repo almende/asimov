@@ -1,7 +1,9 @@
 package io.asimov.microservice.negotiation.impl;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -33,6 +35,8 @@ public class NegotiatingCapability extends BasicCapability {
 
 	private Subject<ActivityEvent, ActivityEvent> allocation = PublishSubject
 			.create();
+	
+	private static Set<String> allocated = new HashSet<String>();
 
 
 	protected NegotiatingCapability(Binder binder) {
@@ -51,10 +55,39 @@ public class NegotiatingCapability extends BasicCapability {
 		return agentServiceProxy;
 	}
 	
+	public static class AlreadyAllocatedException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2796747050881798664L;
+		
+	}
+	
+	public static class NotAllocatedException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2786747050881798664L;
+		
+	}
 
 	public void performAllocationChange(final String resourceName,
 			final EventType eventType) throws Exception {
 		LOG.info("fire ASIMOV resource unavailability event!");
+		if (eventType.equals(EventType.ALLOCATED) && allocated.contains(resourceName))
+			throw new AlreadyAllocatedException();
+		else if (eventType.equals(EventType.ALLOCATED)) {
+			allocated.add(resourceName);
+			System.out.println("allocated "+resourceName);
+		}
+		if (eventType.equals(EventType.DEALLOCATED) && !allocated.contains(resourceName))
+			throw new AlreadyAllocatedException();
+		else if (eventType.equals(EventType.DEALLOCATED)) {
+			allocated.remove(resourceName);
+			System.out.println("de-allocated "+resourceName);
+		}
 		if (eventType.equals(EventType.ALLOCATED) || eventType.equals(EventType.DEALLOCATED))
 			fireAndForget(eventType, Collections.singletonList(resourceName),
 				this.allocation);

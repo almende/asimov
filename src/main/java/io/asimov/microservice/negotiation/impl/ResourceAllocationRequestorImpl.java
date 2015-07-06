@@ -17,6 +17,7 @@ import io.asimov.model.sl.LegacySLUtil;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.interact.SendingCapability;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.know.ReasoningCapability.Belief;
@@ -70,10 +71,9 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 	private Map<Serializable, Set<AgentID>> candidateMap = null;
 	private AllocationCallback callback;
 	private Map<Serializable, Claim> requestedClaims = null;
-	private Set<AgentID> failedClaims = null;
+	private Map<AgentID,Claim> failedClaims = null;
 	private boolean failing = false;
 	private Map<Serializable, Serializable> queryToAssertionMap;
-	private static Object lock = new Object();
 
 	//private Subject<AllocationCallback,AllocationCallback> callbackSubject;
 
@@ -97,7 +97,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 	@Override
 	public void resetFailedClaims()
 	{
-		failedClaims = new HashSet<AgentID>();
+		failedClaims = new HashMap<AgentID,Claim>();
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 				if (entry.getValue().getID().equals(claimed.getReplyToId()))
 					;
 				{
-					failedClaims.add(entry.getValue().getReceiverID());
+					failedClaims.put(entry.getValue().getReceiverID(),entry.getValue());
 					requestedClaims.remove(entry.getKey());
 					try
 					{
@@ -218,7 +218,6 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 
 	private void tryAllocationForCandidates(Serializable q) throws Exception
 	{
-		synchronized (lock) {
 		Serializable f = getQueryToAssertionMap().get(q);
 		final HashSet<AgentID> candidates = (HashSet<AgentID>) candidateMap.get(f);
 		if (candidates.size() == 0)
@@ -292,7 +291,6 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 				if (wait.getCount() > 0)
 					LOG.info("Waiting for response of best candidate");
 			}
-		}
 		}
 	}
 	
@@ -392,39 +390,12 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 	{
 		if (!allocated) {
 			LOG.error("Allocation failed, de-allocating now: "+this.failedClaims);
-			final ReasoningCapability reasonerService = ((AgentServiceProxy) getAgent())
-					.getBinder().inject(ReasoningCapability.class);
-		
-			for (Claim claim : this.requestedClaims.values()) {
-				if (claim == null)
-					return;
-				final AgentID aid = claim.getReceiverID();
-				Belief belief = 
-						reasonerService.toBelief(
-						claim.getAssertion(),
-						ResourceAllocation.ALLOCATED_AGENT_AID, aid).negate(); 
-				ASIMOVMessage informMessage = new ASIMOVMessage(
-						((AgentServiceProxy) getAgent()).getBinder()
-								.inject(ReplicatingCapability.class).getTime(),
-						((AgentServiceProxy) getAgent()).getID(), aid, new SLParsableSerializable(belief.toString()));
-				try
-				{
-					agentServiceProxy.getBinder().inject(SendingCapability.class)
-							.send(informMessage);
-				} catch (Exception e)
-				{
-					LOG.error("Failed to inform de-allocation.",e);
-				}
-				claim.setDeClaim(true);
-				try
-				{
-					sendMessage(claim);
-				} catch (Exception e)
-				{
-					LOG.error("Failed to send claim.",e);
-				}
+//			if (getBinder().inject(ConfiguringCapability.class).getProperty("holdOnInconsistency").getBoolean(true))
+//				getBinder().inject(ReplicatingCapability.class).pause();
+			for (Claim c : this.failedClaims.values()) {
+				c.setDeClaim(true);
+				getBinder().inject(SendingCapability.class).send(c);
 			}
-			this.requestedClaims.clear();
 		}
 		else
 			LOG.info("De-allocation allocated resources");
@@ -461,7 +432,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 					try {
 						performAllocationChange(aid.getValue(), EventType.DEALLOCATED);
 					} catch (Exception e) {
-						LOG.error("Failed to emit deallocation change event for "+aid,e);
+						LOG.error("Failed to emit deallocation change event for "+aid);
 					}
 					LOG.info("De-allocated "+allocation.getValue().toString());
 					Claim claim = requestedClaims.get(allocation.getValue());
@@ -492,7 +463,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 				}});
 		}
 		if (failedClaims.size() > 0 && !allocated)
-			callback.failure(failedClaims);
+			callback.failure(failedClaims.keySet());
 		resetFailedClaims();
 	}
 

@@ -61,6 +61,8 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 	
 	private Set<String> requestedActivityIDs = new HashSet<String>();
 	
+	private AgentID scenarioAgent = null;
+	
 	private Map<NonSkeletonActivityState, AgentID> awaitingStatesFromRequestor = new HashMap<NonSkeletonActivityState,AgentID>();
 	
 	private Observer<ASIMOVMessage> messageObserver = new Observer<ASIMOVMessage>()
@@ -152,11 +154,12 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 			case NonSkeletonActivityCapability.LEAVE_SITE_WHEN_ON_IT:
 				if (arguments == null || arguments.length != 2)
 					throw new IllegalStateException("Expected the name of the scenario agent and the resource agent as an argument.");
+				scenarioAgent = getBinder().inject(ModelComponentIDFactory.class).createAgentID(arguments[0]);
 				leaveSite(result, 
 						new NonSkeletonActivityState(getBinder().inject(ModelComponentIDFactory.class).createAgentID(arguments[1]), 
 								NonSkeletonActivityCapabilityStatus.NonSkeletonActivity_pending,
-								NonSkeletonActivityCapability.LEAVE_SITE_WHEN_ON_IT,
-								getBinder().inject(ModelComponentIDFactory.class).createAgentID(arguments[0]))
+								NonSkeletonActivityCapability.LEAVE_SITE_WHEN_ON_IT,scenarioAgent
+								)
 						);
 				break;
 			default: {
@@ -177,6 +180,13 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 		
 		if (!getBinder().inject(ConfiguringCapability.class).getProperty(EXIT_SITE_AFTER_PROCESS_COMPLETION).getBoolean(false).booleanValue()){
 			result.onCompleted();
+			try {
+				getBinder().inject(SendingCapability.class).send(
+						new ASIMOVMessage(getTime(), getOwnerID(), scenarioAgent, "AvailableResourcesChange:"
+								+ getTime().hashCode()));
+			} catch (Exception e) {
+				LOG.error("Failed to send available resource change update",e);
+			}
 			return;
 		}
 		result.onNext(state);
@@ -192,7 +202,7 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 			{
 				LOG.error("Failed to request leaveSite action.",e);
 			}
-		result.onCompleted();	
+		//result.onCompleted();	
 		
 	}
 	
@@ -222,6 +232,13 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 				results.get(state).onNext(state.transitToStatus(NonSkeletonActivityCapabilityStatus.NonSkeletonActivity_done));
 				results.get(state).onCompleted();
 				results.remove(state);
+				try {
+					getBinder().inject(SendingCapability.class).send(
+							new ASIMOVMessage(getTime(), getOwnerID(), scenarioAgent, "AvailableResourcesChange:"
+									+ getTime().hashCode()));
+				} catch (Exception e) {
+					LOG.error("Failed to send available resource change update",e);
+				}
 			} else {
 				throw new IllegalStateException("Invalid state! expected travelling state...");
 			}
