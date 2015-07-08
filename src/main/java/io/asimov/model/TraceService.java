@@ -208,12 +208,16 @@ public class TraceService extends AbstractPersonTraceEventProducer
 		TEventTrace result = new TEventTrace();
 		for (ActivityEvent event : getActivityEvents(ds))
 		{
+			boolean verboseEvent = (
+					event.hasType(EventType.ACTIVITY_CREATED)
+					|| event.hasType(EventType.PROCESS_CREATED)
+					|| event.hasType(EventType.RESOURCE_CREATED));
 			firstEventTime = Math.min(firstEventTime, event.getExecutionTime()
 					.getIsoTime().getTime());
 			lastEventTime = Math.max(lastEventTime, event.getExecutionTime()
 					.getIsoTime().getTime());
 			final EventRecord xmlEvent = event.toXML();
-			if (includeResourceDescriptors && xmlEvent.getResourceRef() != null && !xmlEvent.getResourceRef().isEmpty()) {
+			if ((verboseEvent || includeResourceDescriptors) && xmlEvent.getResourceRef() != null && !xmlEvent.getResourceRef().isEmpty()) {
 				int i = 0;
 				for (final String resourceRef : xmlEvent.getResourceRef()) {
 					if (i == 0) {
@@ -226,7 +230,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 					i++;
 				}
 			}
-			if (includeActivityDescriptors && event.getActivity() != null) {
+			if ((verboseEvent || includeActivityDescriptors) && event.getActivity() != null) {
 				Process p = ds.findProcessByID(event.getProcessID());
 				for (TSkeletonActivityType activityType : p.toXML().getActivity()) {
 					if (activityType.getName().equals(xmlEvent.getActivityRef())) {

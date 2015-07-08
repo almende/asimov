@@ -450,8 +450,8 @@ public class ScenarioManagementWorldImpl extends
 			getBinder().inject(ReplicatingCapability.class).schedule(
 					ProcedureCall.create(this, this, RESOURCE_AVAILABLE, a),
 					Trigger.createAbsolute(a.getEventTime()));
-			LOG.error("SCHEDULING: " + a.getResourceID() + " at "
-					+ a.getEventTime());
+//			LOG.error("SCHEDULING: " + a.getResourceID() + " at "
+//					+ a.getEventTime());
 		}
 		return resourceEvents.asObservable();
 	}
@@ -460,7 +460,13 @@ public class ScenarioManagementWorldImpl extends
 
 	@Schedulable(RESOURCE_AVAILABLE)
 	public void resourceAvailable(ResourceEvent e) {
-		LOG.error("AVAILABLE: " + e.getResourceID() + " at " + e.getEventTime());
+//		LOG.error("AVAILABLE: " + e.getResourceID() + " at " + e.getEventTime());
+		final SimTime now = getBinder().inject(ReplicatingCapability.class)
+				.getTime();
+		TraceService.getInstance(
+				getOwnerID().getModelID().getValue()).saveEvent(
+				getBinder().inject(Datasource.class), null, null, null, null,
+				Collections.singletonList(e.getResourceID().getValue()), EventType.RESOURCE_CREATED, now);
 		resourceEvents.onNext(e);
 		updateResourceStatusHash(e.getResourceID().toString());
 	}

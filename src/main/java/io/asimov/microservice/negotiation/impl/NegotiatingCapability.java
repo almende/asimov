@@ -80,13 +80,13 @@ public class NegotiatingCapability extends BasicCapability {
 			throw new AlreadyAllocatedException();
 		else if (eventType.equals(EventType.ALLOCATED)) {
 			allocated.add(resourceName);
-			System.out.println("allocated "+resourceName);
+			System.out.println(getID().getOwnerID()+" allocated "+resourceName);
 		}
 		if (eventType.equals(EventType.DEALLOCATED) && !allocated.contains(resourceName))
 			throw new AlreadyAllocatedException();
 		else if (eventType.equals(EventType.DEALLOCATED)) {
 			allocated.remove(resourceName);
-			System.out.println("de-allocated "+resourceName);
+			System.out.println(getID().getOwnerID()+" de-allocated "+resourceName);
 		}
 		if (eventType.equals(EventType.ALLOCATED) || eventType.equals(EventType.DEALLOCATED))
 			fireAndForget(eventType, Collections.singletonList(resourceName),

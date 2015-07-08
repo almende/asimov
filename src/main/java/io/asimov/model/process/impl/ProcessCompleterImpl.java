@@ -231,56 +231,56 @@ public class ProcessCompleterImpl extends
 			return null;
 		return recipientSet.toArray(recipients);
 	}
-
+	
 	@Schedulable(REQUEST_RESOURCE_ALLLOCATIONS)
 	private void requestResourceAllocations(
 			final ProcessCompletion.Request cause) {
-		final String processTypeID = cause.getProcessTypeID();
-		// getSimulator().pause();
-		// FIXME: Need to be able to to allocate multiple instances of a role
-		// now it is just limited to one instance per role.
-		LOG.trace("Allocating resources for process.");
-		LOG.warn("Resources are allocated per role (not per instance) and "
-				+ "per process (not per activity).");
-
-		Map<Serializable, Set<AgentID>> candidates = new HashMap<Serializable, Set<AgentID>>();
-
-		for (ResourceRequirement requirement : getWorld()
-				.getProcess(processTypeID).getRequiredResources().values()) {
-			final Set<AgentID> aidSet = new HashSet<AgentID>();
-			for (ASIMOVResourceDescriptor resourceDescriptor : getBinder().inject(
-					Datasource.class).findResourceDescriptors()) {
-				if (resourceDescriptor.getType().equalsIgnoreCase(requirement.getResource().getTypeID()
-								.getName())) {
-						if (!resourceDescriptor.isUnAvailable()) {
-							aidSet.add(resourceDescriptor.getAgentID());
-							LOG.info(resourceDescriptor.getAgentID()+" is available");
-						} 
-						else 
-							LOG.info(resourceDescriptor.getAgentID()+" is unavailable");
-				} else {
-					LOG.info(resourceDescriptor.getType()+" != "+requirement.getResource().getTypeID()
-							.getName());
+			final String processTypeID = cause.getProcessTypeID();
+			// getSimulator().pause();
+			// FIXME: Need to be able to to allocate multiple instances of a role
+			// now it is just limited to one instance per role.
+			LOG.trace("Allocating resources for process.");
+			LOG.warn("Resources are allocated per role (not per instance) and "
+					+ "per process (not per activity).");
+	
+			Map<Serializable, Set<AgentID>> candidates = new HashMap<Serializable, Set<AgentID>>();
+	
+			for (ResourceRequirement requirement : getWorld()
+					.getProcess(processTypeID).getRequiredResources().values()) {
+				final Set<AgentID> aidSet = new HashSet<AgentID>();
+				for (ASIMOVResourceDescriptor resourceDescriptor : getBinder().inject(
+						Datasource.class).findResourceDescriptors()) {
+					if (resourceDescriptor.getType().equalsIgnoreCase(requirement.getResource().getTypeID()
+									.getName())) {
+							if (!resourceDescriptor.isUnAvailable()) {
+								aidSet.add(resourceDescriptor.getAgentID());
+								LOG.info(resourceDescriptor.getAgentID()+" is available");
+							} 
+							else 
+								LOG.info(resourceDescriptor.getAgentID()+" is unavailable");
+					} else {
+						LOG.info(resourceDescriptor.getType()+" != "+requirement.getResource().getTypeID()
+								.getName());
+					}
 				}
-			}
-			if (aidSet.isEmpty()) {
-				LOG.info("ABORTING process no agents available for type "+requirement.getResource().getTypeID().getName());
-				try {
-					send(ProcessCompletion.Result.Builder
-							.forProducer(this, cause)
-							.withSuccess(false).build());
-				} catch (Exception e1) {
-					LOG.info("Failed to send process completion response",e1);
-					
+				if (aidSet.isEmpty()) {
+					LOG.info("ABORTING process no agents available for type "+requirement.getResource().getTypeID().getName());
+					try {
+						send(ProcessCompletion.Result.Builder
+								.forProducer(this, cause)
+								.withSuccess(false).build());
+					} catch (Exception e1) {
+						LOG.info("Failed to send process completion response",e1);
+						
+					}
+					getScheduler().schedule(
+							ProcedureCall.create(this, this, DESTROY),
+							Trigger.createAbsolute(getTime().plus(1,TimeUnit.MINUTES)));
+					return;
 				}
-//				getScheduler().schedule(
-//						ProcedureCall.create(this, this, DESTROY),
-//						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MINUTES)));
-				return;
-			}
-				candidates.put(LegacySLUtil
-						.requestResourceAllocationForRequirement(requirement)
-						.toString(), aidSet);
+					candidates.put(LegacySLUtil
+							.requestResourceAllocationForRequirement(requirement)
+							.toString(), aidSet);
 		}
 
 		// FIXME Add callback and converter
@@ -395,9 +395,9 @@ public class ProcessCompleterImpl extends
 						.withSuccess(
 								getAllocCallback(cause.getSenderID())
 										.wasSucces()).build());
-//				getScheduler().schedule(
-//						ProcedureCall.create(this, this, DESTROY),
-//						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MINUTES)));
+				getScheduler().schedule(
+						ProcedureCall.create(this, this, DESTROY),
+						Trigger.createAbsolute(getTime().plus(1,TimeUnit.MINUTES)));
 			} catch (Exception e1) {
 				LOG.error(
 						"An exception occured while trying to send process completion outcome",
@@ -445,16 +445,16 @@ public class ProcessCompleterImpl extends
 
 	AllocationCallback theCallback;
 
-//	public static final String DESTROY = "DESTROY";
-//	
-//	@Schedulable(DESTROY)
-//	public void destroy(){
-//		try {
-//			getFinalizer().destroy();
-//		} catch (Exception e) {
-//			LOG.error("Failed to destroy process agent",e);
-//		}
-//	}
+	public static final String DESTROY = "DESTROY";
+	
+	@Schedulable(DESTROY)
+	public void destroy(){
+		try {
+			getFinalizer().destroy();
+		} catch (Exception e) {
+			LOG.error("Failed to destroy process agent",e);
+		}
+	}
 	
 	private final AllocationCallback getAllocCallback(final AgentID scenario) {
 		if (theCallback == null)

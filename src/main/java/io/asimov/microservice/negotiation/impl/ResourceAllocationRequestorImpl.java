@@ -432,7 +432,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 					try {
 						performAllocationChange(aid.getValue(), EventType.DEALLOCATED);
 					} catch (Exception e) {
-						LOG.error("Failed to emit deallocation change event for "+aid);
+						LOG.error(getID().getOwnerID()+" failed to emit deallocation change event for "+aid);
 					}
 					LOG.info("De-allocated "+allocation.getValue().toString());
 					Claim claim = requestedClaims.get(allocation.getValue());

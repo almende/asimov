@@ -225,7 +225,7 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 					try {
 						performAllocationChange(allocatedResourceAgentID.getValue(), EventType.ALLOCATED);
 					} catch (Exception e) {
-						LOG.error("Failed to emit allocation event for "+allocatedResourceAgentID);
+						LOG.error(getID().getOwnerID()+" failed to emit allocation event for "+allocatedResourceAgentID);
 						failing = true;
 					}
 				}

@@ -14,6 +14,7 @@ import io.asimov.db.Datasource;
 import io.asimov.messaging.ASIMOVMessage;
 import io.asimov.messaging.ASIMOVNewResourceMessage;
 import io.asimov.model.ASIMOVResourceDescriptor;
+import io.asimov.model.TraceService;
 import io.asimov.model.events.EventType;
 import io.asimov.model.process.ProcessManagementOrganization;
 import io.asimov.model.resource.ResourceDescriptor;
@@ -21,6 +22,7 @@ import io.asimov.model.resource.RouteLookup.RouteProvider;
 import io.asimov.model.usecase.ScenarioManagementWorldImpl;
 import io.asimov.unavailability.MonkeyAgent;
 import io.asimov.unavailability.UnAvailabilityRequest;
+import io.asimov.xml.TSkeletonActivityType;
 import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
 import io.coala.agent.AgentStatusUpdate;
@@ -142,8 +144,8 @@ public class ScenarioReplicatorImpl extends
 		getBinder().inject(ReplicatingCapability.class).schedule(
 				ProcedureCall.create(this, getBinder().inject(ScenarioManagementWorld.class), ScenarioManagementWorldImpl.RESOURCE_AVAILABLE, a),
 				Trigger.createAbsolute(a.getEventTime()));
-		LOG.error("SCHEDULING: " + a.getResourceID() + " at "
-				+ a.getEventTime());
+//		LOG.error("SCHEDULING: " + a.getResourceID() + " at "
+//				+ a.getEventTime());
 	}
 
 	@Override
@@ -334,9 +336,7 @@ public class ScenarioReplicatorImpl extends
 				LOG.error("Failed to boot absence agent: "+absenceAgentID,e);
 			}
 			
-		} else {
-			LOG.error("DID NOT SCHEDULE UNAVAILABILITY: " + resource);
-		}
+		} 
 	}
 
 	private Set<Map<String, String>> getTypesForAgent(AgentID agentId) {
@@ -456,8 +456,21 @@ public class ScenarioReplicatorImpl extends
 			getWorld().onProcessEvent().subscribe(new Observer<ProcessEvent>() {
 				@Override
 				public void onNext(final ProcessEvent event) {
-					if (event.getEventType().equals(ProcessEventType.REQUESTED))
+					if (event.getEventType().equals(ProcessEventType.REQUESTED)) {
 						scheduleNextBP(request, event.getProcessTypeID(), -1);
+						final SimTime now = getBinder().inject(ReplicatingCapability.class)
+								.getTime();
+						for ( TSkeletonActivityType activity :getBinder().inject(Datasource.class).findProcessByID(event.getProcessTypeID()).toXML().getActivity()) {
+							TraceService.getInstance(
+									getOwnerID().getModelID().getValue()).saveEvent(
+									getBinder().inject(Datasource.class), event.getProcessTypeID(), null, activity.getId(), null,
+									Collections.EMPTY_LIST, EventType.ACTIVITY_CREATED, now);
+						}
+						TraceService.getInstance(
+								getOwnerID().getModelID().getValue()).saveEvent(
+								getBinder().inject(Datasource.class), event.getProcessTypeID(), null, null, null,
+								Collections.EMPTY_LIST, EventType.PROCESS_CREATED, now);
+					}
 				}
 
 				@Override
@@ -472,6 +485,13 @@ public class ScenarioReplicatorImpl extends
 			});
 
 		}
+		final SimTime now = getBinder().inject(ReplicatingCapability.class)
+				.getTime();
+		
+		TraceService.getInstance(
+				getOwnerID().getModelID().getValue()).saveEvent(
+				getBinder().inject(Datasource.class), null, null, null, null,
+				Collections.EMPTY_LIST, EventType.INITIAL_MODEL_LOADED, now);
 		getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(getTime()));
 		
 	}
