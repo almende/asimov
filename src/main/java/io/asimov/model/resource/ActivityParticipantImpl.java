@@ -21,6 +21,7 @@ import io.coala.enterprise.fact.CoordinationFact;
 import io.coala.enterprise.role.AbstractExecutor;
 import io.coala.enterprise.role.AbstractInitiator;
 import io.coala.enterprise.role.Executor;
+import io.coala.exception.CoalaException;
 import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
 import io.coala.json.JsonUtil;
@@ -30,6 +31,7 @@ import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
 import io.coala.time.Trigger;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -142,6 +144,7 @@ public class ActivityParticipantImpl extends
 		if (activityBacklog.contains(request.getResourceInfo()
 				.getActivityInstanceId()))
 			return;
+		activityBacklog.add(request.getResourceInfo().getActivityInstanceId());
 		updateUnavailable(request);
 		if (request.getResourceInfo().isMoveable()) {
 			if (!getWorld(GenericResourceManagementWorld.class)
@@ -210,6 +213,8 @@ public class ActivityParticipantImpl extends
 			}
 		}
 	}
+	
+
 
 	/**
 	 * @param entity
@@ -217,6 +222,7 @@ public class ActivityParticipantImpl extends
 	 */
 	protected void doResourceParticipation(final ActivityParticipation request,
 			SimTime scheduledExecutiontime) throws Exception {
+		updateUnavailable((Request)request);
 		final ASIMOVResourceDescriptor resource = (ASIMOVResourceDescriptor) getWorld(
 				GenericResourceManagementWorld.class).getEntity();
 		// Find corresponding assemblyLine for this activity
@@ -242,6 +248,7 @@ public class ActivityParticipantImpl extends
 		if (getBinder().inject(ScenarioManagementWorld.class)
 				.onSiteDelay(getTime()).longValue() != 0) {
 			LOG.warn("Resource is in after operating hours, will exit the site first.");
+			activityBacklog.remove(request.getResourceInfo().getActivityInstanceId());
 			ProcedureCall<?> j = ProcedureCall.create(this, this,
 					RETRY_REQUEST, request);
 			getSimulator().schedule(
@@ -260,7 +267,6 @@ public class ActivityParticipantImpl extends
 		 * resources - schedule/perform activity start event - schedule/perform
 		 * activity stop event
 		 */
-
 		final ProcedureCall<?> job = ProcedureCall.create(this, this,
 				START_EXECUTING_ACTIVITY, request);
 
@@ -276,10 +282,10 @@ public class ActivityParticipantImpl extends
 			throws Exception {
 		LOG.info("Starts participating in activity: "
 				+ request.getResourceInfo().getActivityName());
-
+		
 		ActivityParticipationResourceInformation resourceInfo = request
 				.getResourceInfo();
-		// Find corresponding assemblyLine for this activity
+		// Find other involved resources for this activity
 		List<String> involvedResources = new ArrayList<String>();
 		involvedResources.add(resourceInfo.getResourceName());
 		for (ActivityParticipationResourceInformation otherResource : request
@@ -310,7 +316,7 @@ public class ActivityParticipantImpl extends
 				+ request.getResourceInfo().getActivityName());
 		ActivityParticipationResourceInformation resourceInfo = request
 				.getResourceInfo();
-		// Find corresponding assemblyLine for this activity
+		// Find other involved resources for this activity
 		List<String> involvedResources = new ArrayList<String>();
 		involvedResources.add(resourceInfo.getResourceName());
 		for (ActivityParticipationResourceInformation otherResource : request
@@ -553,14 +559,18 @@ public class ActivityParticipantImpl extends
 					ActivityParticipant.TRANSIT_TO_RESOURCE, cause, routeEntry);
 			getSimulator().schedule(enter, Trigger.createAbsolute(planning));
 		}
+		activityBacklog.remove(cause.getResourceInfo().getActivityInstanceId());
+		
 		if (tommorow) {
 			planning = planning.plus(getBinder().inject(
 					ScenarioManagementWorld.class).onSiteDelay(planning));
+			updateUnavailable(cause);
 			ProcedureCall<?> continueProcessOfYesterday = ProcedureCall.create(
 					this, this, ActivityParticipant.RETRY_REQUEST, cause);
 			getSimulator().schedule(continueProcessOfYesterday,
 					Trigger.createAbsolute(planning));
 		} else {
+			updateUnavailable(cause);
 			ProcedureCall<?> continueProcess = ProcedureCall.create(this, this,
 					ActivityParticipant.RETRY_REQUEST, cause);
 			getSimulator().schedule(continueProcess,

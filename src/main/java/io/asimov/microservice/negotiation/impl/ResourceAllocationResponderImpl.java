@@ -172,28 +172,44 @@ public class ResourceAllocationResponderImpl extends NegotiatingCapability imple
 			Claim claim = ((Claim) m);
 			if (claim.isDeClaim())
 			{
-				 ReasoningCapability reasonerService = agentServiceProxy
-				 .getBinder().inject(ReasoningCapability.class);
-				 reasonerService.removeBeliefFromKBase(reasonerService.toBelief(
-				 claim.getAssertion(),
-				 ResourceAllocation.ALLOCATED_AGENT_AID,
-				 agentServiceProxy.getID()));
 				reset();
+				getBinder().inject(GenericResourceManagementWorld.class).debug(
+						false,
+						" de-claimed by ",
+						m.getSenderID().toString()
+				);
 				//LOG.error(getID().getOwnerID()+" de-claimed by "+m.getSenderID());
 				return;
 			} else
 			{
 				r = processClaim((Claim) m);
+				getBinder().inject(GenericResourceManagementWorld.class).debug(
+						false,
+						" claimed by ",
+						m.getSenderID().toString()
+				);
 				//LOG.error(getID().getOwnerID()+" claimed by "+m.getSenderID());
 			}
 		} else if (m instanceof AvailabilityCheck)
 		{
 			r = (processAvailabilityCheck((AvailabilityCheck) m));
+			getBinder().inject(GenericResourceManagementWorld.class).debug(
+					false,
+					((AvailabilityReply)r).available ? " responds available to " : " responds unavailable to ",
+					m.getSenderID().toString()
+			);
 			//LOG.error(getID().getOwnerID()+" respond if available to "+m.getSenderID());
 		}
 		else if (m instanceof ProposalRequest)
 		{
 			r = (processProposalRequest((ProposalRequest) m));
+			getBinder().inject(GenericResourceManagementWorld.class).debug(
+					false,
+					" proposes ",
+					((Proposal)r).getScore()+"",
+					" to ",
+					m.getSenderID().toString()
+			);
 			//LOG.error(getID().getOwnerID()+" do proposal to "+m.getSenderID());
 		}
 		try

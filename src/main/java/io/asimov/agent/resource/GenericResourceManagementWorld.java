@@ -39,8 +39,6 @@ public interface GenericResourceManagementWorld extends ResourceManagementWorld<
 	 */
 	void leftSite(SimTime time);
 	
-	
-	
 	public boolean isMoveable();
 	
 }

@@ -61,6 +61,19 @@ public interface ResourceManagementWorld<E extends AbstractEmbodied<?>> extends
 	void setUnavailable();
 	
 	/**
+	 * Print debug statement for resource that have debugging enabled in config with stacktrace
+	 * @param line
+	 */
+	void debug(final String... line);
+	
+	/**
+	 * Print debug statement for resource that have debugging enabled in config
+	 * @param includeStackTrace
+	 * @param line
+	 */
+	void debug(final boolean includeStackTrace, final String... line);
+	
+	/**
 	 * Sets the current location for the service owner.
 	 * @param locationAgentID the agentID of the agent representing the current location of the service owner
 	 */

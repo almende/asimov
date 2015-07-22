@@ -14,6 +14,7 @@ import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.interact.SendingCapability;
+import io.coala.invoke.Schedulable;
 import io.coala.log.LogUtil;
 import io.coala.message.AbstractMessage;
 import io.coala.message.Message;
@@ -21,6 +22,7 @@ import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -214,7 +216,7 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 		new AllocationCallback() {
 			
 			private Map<AgentID, Serializable> resources;
-			private Set<AgentID> failedIds;
+			private Set<AgentID> failedIds = new HashSet<AgentID>();
 			private boolean wasSuccesBoolean = false;
 
 			@Override
@@ -226,16 +228,18 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 						performAllocationChange(allocatedResourceAgentID.getValue(), EventType.ALLOCATED);
 					} catch (Exception e) {
 						LOG.error(getID().getOwnerID()+" failed to emit allocation event for "+allocatedResourceAgentID);
+						failedIds.add(allocatedResourceAgentID);
 						failing = true;
 					}
 				}
 				if (failing) {
+					wasSuccesBoolean = false;
 					deAllocate(getScenarioAgentID().getValue());
-					failure(resources.keySet());
+					failure(failedIds);
 				} else {
 					wasSuccesBoolean = true;
-					callbackSubject.onNext(this);
 					_depr_callback.done(resources);
+					callbackSubject.onNext(this);
 					callbackSubject.onCompleted();
 				}
 			}
@@ -244,8 +248,8 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 			public void failure(Set<AgentID> aids)
 			{
 				this.failedIds = aids;
-				callbackSubject.onNext(this);
 				_depr_callback.failure(aids);
+				callbackSubject.onNext(this);
 				callbackSubject.onCompleted();
 			}
 
@@ -254,6 +258,8 @@ public class ResourceAllocationNegotiatorImpl extends NegotiatingCapability impl
 			{
  				_depr_callback.error(error);
 				callbackSubject.onError(error);
+				callbackSubject.onNext(this);
+				callbackSubject.onCompleted();
 			}
 
 			@Override

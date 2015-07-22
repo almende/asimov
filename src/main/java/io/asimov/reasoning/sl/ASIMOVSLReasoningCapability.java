@@ -1,5 +1,7 @@
 package io.asimov.reasoning.sl;
 
+import io.asimov.agent.resource.GenericResourceManagementWorld;
+import io.asimov.microservice.negotiation.messages.AvailabilityReply;
 import io.asimov.model.sl.ASIMOVAndNode;
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVNode;
@@ -9,11 +11,15 @@ import io.asimov.model.sl.ASIMOVNotNode;
 import io.asimov.model.sl.SL;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.know.ReasoningCapability;
+import io.coala.capability.replicate.ReplicatingCapability;
+import io.coala.exception.CoalaException;
 import io.coala.exception.CoalaExceptionFactory;
 import io.coala.log.InjectLogger;
 import io.coala.log.LogUtil;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +127,29 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 		return result;
 	}
 	
+	public void debug(boolean includeStackTrace, final String... line) {
+		try {
+			if (getBinder().inject(ConfiguringCapability.class).getProperty("debugResources").getJSON(new ArrayList<String>()).contains(getID().getOwnerID().getValue())) {
+				String message = getBinder().inject(ReplicatingCapability.class).getTime().toString()+" for "+getID()+" DEBUG: ";
+				for (String part : line) {
+					message += part;
+				}
+				PrintWriter pw = new PrintWriter(System.out);
+				pw.flush();
+				pw.println(message);
+				if (includeStackTrace) {
+					final IllegalStateException e 
+						= new IllegalStateException("NO ERROR but DEBUG INFO");
+					e.printStackTrace(pw);
+				}
+				pw.flush();
+			}
+		} catch (CoalaException e) {
+			LOG.error("Failed to read property",e);
+		}
+		
+	}
+	
 	/**
 	 * 
 	 * @param javaObject
@@ -136,7 +165,13 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	public void addNodeToKBase(final Object javaObject, final Object... params){
 		try
 		{
-			kbase.add(getFormulaForObject(javaObject, params));
+			ASIMOVNode<?> node = getFormulaForObject(javaObject, params);
+			debug(
+					false,
+					" add belief: ",
+					node.toJSON()
+			);
+			kbase.add(node);
 		} catch (Exception e)
 		{
 			CoalaExceptionFactory.VALUE_NOT_ALLOWED.create("Could not instantiate and assert SL formula.",javaObject,params,e);
@@ -146,7 +181,13 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 	public void retractNodeFromKBase(final Object javaObject, final Object... params){
 		try
 		{
-			kbase.remove(getFormulaForObject(javaObject, params));
+			ASIMOVNode<?> node = getFormulaForObject(javaObject, params);
+			debug(
+					true,
+					" remove belief: ",
+					node.toJSON()
+			);
+			kbase.remove(node);
 		} catch (Exception e)
 		{
 			CoalaExceptionFactory.VALUE_NOT_ALLOWED.create("Could not instantiate and retract SL formula.",javaObject,params,e);
@@ -177,6 +218,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 						javaObject,
 						params
 						);
+				
 			} catch (Exception e1)
 			{
 				log.error("Query "+javaObject+" could not be created.", e1);
@@ -189,11 +231,23 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 			
 			values = this.getKBase().query(query);
 			if (values == null) {
+				debug(
+						false,
+						" |-- FALSE : ",
+						query.toJSON()
+				);
 				result.onNext(null);
 			}
 			else { 
 				for (Map<String,Object> next : values) {
-								result.onNext(next);
+					debug(
+							false,
+							" |-- TRUE : ",
+							query.toJSON(), 
+							"\n |-- WITH : ",
+							next.toString()
+					);
+					result.onNext(next);
 				}
 			}
 			result.onCompleted();

@@ -18,4 +18,6 @@ public interface ASIMOVOrganizationWorld extends GroundingCapability,
 	/** */
 	String WORLD_NAME = "world";
 	
+	
+	
 }

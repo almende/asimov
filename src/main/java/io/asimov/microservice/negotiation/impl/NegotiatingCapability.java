@@ -75,19 +75,19 @@ public class NegotiatingCapability extends BasicCapability {
 
 	public void performAllocationChange(final String resourceName,
 			final EventType eventType) throws Exception {
-		LOG.info("fire ASIMOV resource unavailability event!");
-		if (eventType.equals(EventType.ALLOCATED) && allocated.contains(resourceName))
-			throw new AlreadyAllocatedException();
-		else if (eventType.equals(EventType.ALLOCATED)) {
-			allocated.add(resourceName);
-			System.out.println(getID().getOwnerID()+" allocated "+resourceName);
-		}
-		if (eventType.equals(EventType.DEALLOCATED) && !allocated.contains(resourceName))
-			throw new AlreadyAllocatedException();
-		else if (eventType.equals(EventType.DEALLOCATED)) {
-			allocated.remove(resourceName);
-			System.out.println(getID().getOwnerID()+" de-allocated "+resourceName);
-		}
+//		LOG.info("fire ASIMOV resource unavailability event!");
+//		if (eventType.equals(EventType.ALLOCATED) && allocated.contains(resourceName))
+//			throw new AlreadyAllocatedException();
+//		else if (eventType.equals(EventType.ALLOCATED)) {
+//			allocated.add(resourceName);
+//			System.out.println(getID().getOwnerID()+" allocated "+resourceName);
+//		}
+//		if (eventType.equals(EventType.DEALLOCATED) && !allocated.contains(resourceName))
+//			throw new AlreadyAllocatedException();
+//		else if (eventType.equals(EventType.DEALLOCATED)) {
+//			allocated.remove(resourceName);
+//			System.out.println(getID().getOwnerID()+" de-allocated "+resourceName);
+//		}
 		if (eventType.equals(EventType.ALLOCATED) || eventType.equals(EventType.DEALLOCATED))
 			fireAndForget(eventType, Collections.singletonList(resourceName),
 				this.allocation);

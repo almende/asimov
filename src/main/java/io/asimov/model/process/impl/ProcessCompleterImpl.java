@@ -307,7 +307,9 @@ public class ProcessCompleterImpl extends
 							LOG.info("Failed to allocate: "
 									+ allocationResult
 											.getUnavailabeResourceIDs());
+							getAllocCallback(cause.getSenderID()).failure(allocationResult.getUnavailabeResourceIDs());;
 						} else {
+							getAllocCallback(cause.getSenderID()).done(allocationResult.getAllocatedResources());
 							
 							final Map<AgentID, Serializable> resources = allocationResult
 									.getAllocatedResources();
@@ -350,7 +352,11 @@ public class ProcessCompleterImpl extends
 			latch.await(1, java.util.concurrent.TimeUnit.SECONDS);
 		} catch (final InterruptedException ignore) {
 		}
-
+		boolean wasAllocated = getAllocCallback(cause.getSenderID()).wasSucces();
+		System.out.println((wasAllocated ? "SUCCES: " : "FAILURE: ")+getID().getOwnerID()+" "+processTypeID);
+		if (!wasAllocated) {
+			System.out.println("Reason: "+getAllocCallback(cause.getSenderID()).getUnavailabeResourceIDs());
+		}
 		getReceiver().getIncoming().ofType(ActivityParticipation.Result.class)
 				.subscribe(new Observer<ActivityParticipation.Result>() {
 
@@ -443,7 +449,7 @@ public class ProcessCompleterImpl extends
 	// this.cause = cause;
 	// }
 
-	AllocationCallback theCallback;
+	private AllocationCallback theCallback;
 
 	public static final String DESTROY = "DESTROY";
 	
@@ -461,32 +467,34 @@ public class ProcessCompleterImpl extends
 			theCallback = new AllocationCallback() {
 
 				private boolean wasSucces = false;
+				private Set<AgentID> failedAIDs;
+				private Map<AgentID,Serializable> allocatedResources;
 
 				@Override
 				public void failure(Set<AgentID> aids) {
-					;// nothing special here
+					failedAIDs = aids;
+					wasSucces = false;
 				}
 
 				@Override
 				public void error(final Exception error) {
-					;// nothing special here
+					LOG.error(error, new IllegalStateException(error.getMessage()));
 				}
 
 				@Override
 				public void done(Map<AgentID, Serializable> resources) {
+					allocatedResources = resources;
 					wasSucces = true;
 				}
 
 				@Override
 				public Map<AgentID, Serializable> getAllocatedResources() {
-					// TODO Auto-generated method stub
-					return null;
+					return allocatedResources;
 				}
 
 				@Override
 				public Set<AgentID> getUnavailabeResourceIDs() {
-					// TODO Auto-generated method stub
-					return null;
+					return failedAIDs;
 				}
 
 				@Override

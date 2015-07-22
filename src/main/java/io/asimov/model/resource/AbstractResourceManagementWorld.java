@@ -18,11 +18,15 @@ import io.asimov.model.sl.SL;
 import io.asimov.model.sl.SLConvertible;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.embody.Percept;
 import io.coala.capability.replicate.ReplicatingCapability;
+import io.coala.exception.CoalaException;
 import io.coala.log.InjectLogger;
 import io.coala.time.SimTime;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -173,6 +177,35 @@ public abstract class AbstractResourceManagementWorld<E extends AbstractEmbodied
 
 		// LOG.trace("Init "+baseAID.getLocalName()+" with: "+result);
 		return result;
+	}
+	
+	@Override
+	public void debug(final String... line) {
+		debug(true, line);
+	}
+	
+	@Override
+	public void debug(boolean includeStackTrace, final String... line) {
+		try {
+			if (getBinder().inject(ConfiguringCapability.class).getProperty("debugResources").getJSON(new ArrayList<String>()).contains(getOwnerID().getValue())) {
+				String message = getBinder().inject(ReplicatingCapability.class).getTime().toString()+" for "+getOwnerID()+" DEBUG: ";
+				for (String part : line) {
+					message += part;
+				}
+				PrintWriter pw = new PrintWriter(System.out);
+				pw.flush();
+				pw.println(message);
+				if (includeStackTrace) {
+					final IllegalStateException e 
+						= new IllegalStateException("NO ERROR but DEBUG INFO");
+					e.printStackTrace(pw);
+				}
+				pw.flush();
+			}
+		} catch (CoalaException e) {
+			LOG.error("Failed to read property",e);
+		}
+		
 	}
 
 	/** @see io.asimov.model.resource.CurrentLocationStateService#getCurrentLocation() */

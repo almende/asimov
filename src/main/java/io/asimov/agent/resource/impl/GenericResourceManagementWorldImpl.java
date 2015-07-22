@@ -133,6 +133,12 @@ public class GenericResourceManagementWorldImpl extends
 				.inject(ConfiguringCapability.class)
 				.getProperty("holdOnInconsistency").getBoolean().booleanValue() 
 				&& eventType.equals(EventType.START_ACTIVITY)) {
+//			getBinder().inject(GenericResourceManagementWorld.class).debug(
+//					"claimed by process request ",
+//					processID,
+//					" for instance ",
+//					processInstanceID
+//			);
 			if (!performingActivity) {
 				this.performingActivity = true;
 				this.debugDescription =  processID+" "+activityName+" for resource "+resourceNames.get(0);
@@ -143,6 +149,12 @@ public class GenericResourceManagementWorldImpl extends
 				.inject(ConfiguringCapability.class)
 				.getProperty("holdOnInconsistency").getBoolean().booleanValue() 
 				&& eventType.equals(EventType.STOP_ACTIVITY)) {
+//			getBinder().inject(GenericResourceManagementWorld.class).debug(
+//					"released by process request ",
+//					processID,
+//					" for instance ",
+//					processInstanceID
+//			);
 			if (performingActivity) {
 				this.debugDescription = "not performing any activity";
 				this.performingActivity = false;
