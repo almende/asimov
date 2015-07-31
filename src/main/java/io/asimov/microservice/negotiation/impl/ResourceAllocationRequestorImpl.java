@@ -389,13 +389,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 	public synchronized void deAllocate(final String scenarioAgentID) throws Exception
 	{
 		if (!allocated) {
-			LOG.error("Allocation failed, de-allocating now: "+this.failedClaims);
-//			if (getBinder().inject(ConfiguringCapability.class).getProperty("holdOnInconsistency").getBoolean(true))
-//				getBinder().inject(ReplicatingCapability.class).pause();
-			for (Claim c : this.failedClaims.values()) {
-				c.setDeClaim(true);
-				getBinder().inject(SendingCapability.class).send(c);
-			}
+			LOG.info("Allocation failed, de-allocating now: "+this.failedClaims);
 		}
 		else
 			LOG.info("De-allocation allocated resources");
@@ -406,6 +400,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 			final AgentID aid = allocation.getKey();
 			final ReasoningCapability reasonerService = ((AgentServiceProxy) getAgent())
 					.getBinder().inject(ReasoningCapability.class);
+			
 			getBinder().inject(NonSkeletonActivityCapability.class)
 			.call(NonSkeletonActivityCapability.LEAVE_SITE_WHEN_ON_IT,scenarioAgentID, aid.getValue())
 			.subscribe(new Observer<NonSkeletonActivityState>(){
@@ -461,7 +456,7 @@ public class ResourceAllocationRequestorImpl extends NegotiatingCapability imple
 				{
 					;// nothing special here
 				}});
-		}
+		} 
 		if (failedClaims.size() > 0 && !allocated)
 			callback.failure(failedClaims.keySet());
 		resetFailedClaims();

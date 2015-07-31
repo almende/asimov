@@ -4,7 +4,15 @@ import io.asimov.agent.process.NonSkeletonActivityCapability;
 import io.asimov.agent.resource.GenericResourceManagementWorld;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
+import io.asimov.microservice.negotiation.ResourceAllocationNegotiator.ConversionCallback;
+import io.asimov.microservice.negotiation.ResourceAllocationRequestor.AllocationCallback;
+import io.asimov.model.ResourceAllocation;
 import io.asimov.model.resource.RouteLookup.RouteInitiator;
+import io.asimov.model.sl.ASIMOVNotNode;
+import io.asimov.model.sl.LegacySLUtil;
+import io.asimov.reasoning.sl.SLParsableSerializable;
+import io.asimov.unavailability.UnAvailabilityRequest;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;
@@ -12,6 +20,7 @@ import io.coala.capability.CapabilityID;
 import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.interact.SendingCapability;
+import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.log.LogUtil;
 import io.coala.model.ModelComponentIDFactory;
@@ -19,6 +28,7 @@ import io.coala.name.Identifiable;
 import io.coala.time.SimTime;
 import io.coala.time.TimeUnit;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -116,7 +126,6 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 							getBinder().inject(ReplicatingCapability.class).pause();
 						}
 					} else {
-						
 						getBinder().inject(RouteInitiator.class).initiate((io.asimov.agent.process.NonSkeletonActivityCapability)NonSkeletonActivityCapabilityImpl.this,
 								world.getCurrentLocation(),
 								state.getScenarioAgentID());
@@ -127,7 +136,8 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 			}
 		}
 	};
-
+	
+	
 	/**
 	 * {@link NonSkeletonActivityCapabilityImpl} constructor
 	 * @param binder
@@ -202,7 +212,7 @@ public class NonSkeletonActivityCapabilityImpl extends BasicCapability
 			{
 				LOG.error("Failed to request leaveSite action.",e);
 			}
-		//result.onCompleted();	
+		result.onCompleted();	
 		
 	}
 	

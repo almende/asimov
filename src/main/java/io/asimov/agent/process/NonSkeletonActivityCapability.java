@@ -49,7 +49,37 @@ public interface NonSkeletonActivityCapability extends ModelComponent<Capability
 		NonSkeletonActivity_executing,
 		NonSkeletonActivity_done,
 		NonSkeletonActivity_failed,
-		NonSkeletonActivity_cancelled
+		NonSkeletonActivity_cancelled;
+		
+		 @Override
+        public String toString() {
+                String value;
+                switch (this) {
+                        case NonSkeletonActivity_cancelled:
+                                value = "cancelled";
+                                break;
+                        case NonSkeletonActivity_executing:
+                                value = "executing";
+                                break;
+                        case NonSkeletonActivity_done:
+                                value = "done";
+                                break;
+                        case NonSkeletonActivity_failed:
+                                value = "failed";
+                                break;
+                        case NonSkeletonActivity_pending:
+                                value = "pending";
+                                break;
+                        case NonSkeletonActivity_traveling:
+                                value = "traveling";
+                                break;
+                        default : {
+                                value = "unknown";
+                        }
+                }
+                return value;
+            }
+
 	};
 	
 	public class NonSkeletonActivityState implements JSONConvertible<NonSkeletonActivityState>, Serializable{
@@ -143,6 +173,13 @@ public interface NonSkeletonActivityCapability extends ModelComponent<Capability
 		{
 			throw new IllegalStateException("Unimplemented method: fromJSON");
 		}
+		
+		@Override
+       public String toString() 
+	   {
+               return getNonSkeletonActivityName()+"("+getSkeltetonActivityId()+")"+":"+getStatus();
+       }
+
 	}
 
 	

@@ -183,7 +183,7 @@ public class ASIMOVSLReasoningCapability extends BasicCapability implements Reas
 		{
 			ASIMOVNode<?> node = getFormulaForObject(javaObject, params);
 			debug(
-					true,
+					false,
 					" remove belief: ",
 					node.toJSON()
 			);
