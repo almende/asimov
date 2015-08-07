@@ -272,17 +272,17 @@ public class ScenarioReplicatorImpl extends
 
 	@Schedulable(OPERATION_PERIOD_EVENT_EMIT)
 	public void emitOperationPeriodEvent() {
-		if (getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).longValue() == 0) {
-			// START OF OPERATION
-			if (!operational) {
-				operational = true;
-				LOG.info("START of operational period at: "+getTime());
-				try {
-					getWorld().performOperationChange(EventType.START_GLOBAL_OPERATIONAL_PERIOD);
-				} catch (Exception e) {
-					LOG.error("Failed to emit START_GLOBAL_OPERATIONAL_PERIOD event",e);
-				}
+		if (!operational) {
+			operational = true;
+			LOG.info("START of operational period at: "+getTime());
+			try {
+				getWorld().performOperationChange(EventType.START_GLOBAL_OPERATIONAL_PERIOD);
+			} catch (Exception e) {
+				LOG.error("Failed to emit START_GLOBAL_OPERATIONAL_PERIOD event",e);
 			}
+		}
+		if (getBinder().inject(ScenarioManagementWorld.class).onSiteDelay(getTime()).getMillis() == 0) {
+			// START OF OPERATION
 			SimTime t = getTime().plus(1,TimeUnit.MINUTES);
 			getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(t));	
 		} else {

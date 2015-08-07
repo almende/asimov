@@ -281,7 +281,17 @@ public class TraceService extends AbstractPersonTraceEventProducer
 	 */
 	public Iterable<ActivityEvent> getActivityEvents(final Datasource ds)
 	{
-		return ds.findActivityEvents();
+		LOG.info("Getting events for " + this.replicationID);
+		final List<ActivityEvent> events = new ArrayList<ActivityEvent>();
+		for (ActivityEvent event : ds.findActivityEvents())
+			events.add(event);
+		
+
+		EventComparatorByExecutionTime compare = new EventComparatorByExecutionTime();
+
+		Collections.sort(events, compare);
+		Collections.sort(events, new EventComparatorByExecutionTime());
+		return events;
 	}
 
 	
