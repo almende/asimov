@@ -6,7 +6,8 @@
     <link href="./css/vis.css" rel="stylesheet" type="text/css" />
     <link href="./data/style.css" rel="stylesheet" type="text/css" />
 
-	<script type="text/javascript" src="./data/usage.json"></script>
+	<script type="text/javascript" src="./data/usage.json"></script>	
+	<script type="text/javascript" src="./data/typeusage.json"></script>
     <script type="text/javascript" src="./js/vis.js"></script>
     <script type="text/javascript" src="./js/init.js"></script>
     <style>
@@ -14,15 +15,26 @@
 		
 	</style> 
 </head>
-<body onload="if (typeof data != 'undefined') onData(data);">
+<body onload="if (typeof data != 'undefined') onData(data);if (typeof typedata != 'undefined') onTypeData(typedata);">
 <img height="120" src="./images/asimov_logo_large.png" style="float:right;"><br>
 <div class="typeButton selected" onclick="showResourceBtn()" id="showResource">Show by Resource</div>
+<div class="typeButton" onclick="showResourceTypeBtn()" id="showResourceType">Show by Type</div>
 
 <div id="resourceWrapper">
     <table class="mWrapper" class="fullHeight">
         <tr>
             <td width="100%" height="100%">
     			<div id="resourceTimeline" class="fullHeight"></div>	
+    		</td>
+    	</tr>
+    </table>
+</div>
+
+<div id="resourceTypeWrapper">
+    <table class="mTypeWrapper" class="fullHeight">
+        <tr>
+            <td width="100%" height="100%">
+    			<div id="resourceTypeTimeline" class="fullHeight"></div>	
     		</td>
     	</tr>
     </table>

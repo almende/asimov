@@ -102,6 +102,11 @@ table.mWrapper {
     width:100%;
 }
 
+table.mTypeWrapper {
+    position:relative;
+    height:2000px;
+    width:100%;
+}
 
 /*table.wrapper td {*/
     /*border:1px solid #ff0000;*/

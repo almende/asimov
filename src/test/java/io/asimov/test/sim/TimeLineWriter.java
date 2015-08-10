@@ -28,6 +28,11 @@ public class TimeLineWriter
 	final static String replicationId = "replication_test_0";
 
 	@Test
+	public void writeTimeLine() throws Exception
+	{
+		writeTimeLine("gui");
+	}
+	
 	public void writeTimeLine(String guiDir) throws Exception
 	{
 		int mb = 1024 * 1024;
