@@ -1,5 +1,6 @@
 package io.asimov.vis.timeline;
 
+import io.asimov.db.mongo.MongoDatasource;
 import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.EventType;
 import io.asimov.xml.TEventTrace.EventRecord;
@@ -31,6 +32,8 @@ public class VisJSTimelineUtil {
 
 	/** */
 	protected static File outputFile;
+	protected static File typeOutputFile;
+
 
 	/** */
 	protected static File styleSheetFile;
@@ -123,7 +126,9 @@ public class VisJSTimelineUtil {
 		return paired;
 	}
 	
-	
+	private static HashMap<String, String> classNameToStyle;
+	private static HashSet<String> classNames;
+
 	/**
 	 * @param processTypes
 	 * @throws Exception
@@ -131,10 +136,32 @@ public class VisJSTimelineUtil {
 	public static void writeTimelineData(final List<ActivityEvent> list, File targetDirectory, String guiDir)
 			throws Exception {
 		outputFile = new File(targetDirectory.getAbsolutePath()+"/"+guiDir+"/html/data/usage.json");
+		typeOutputFile = new File(targetDirectory.getAbsolutePath()+"/"+guiDir+"/html/data/typeusage.json");
+		classNameToStyle = new HashMap<String, String>();
+		classNames  = new HashSet<String>();
 		styleSheetFile = new File(targetDirectory.getAbsolutePath()+"/"+guiDir+"/html/data/style.css");
 		FileWriter fw = new FileWriter(outputFile);
+		FileWriter tfw = new FileWriter(typeOutputFile);
 		FileWriter fws = new FileWriter(styleSheetFile);
-		writeTimelineData(list, fw, fws);
+		writeTimelineData(list, tfw, fws, true);
+		writeTimelineData(list, fw, fws, false);
+		List<Color> colors = pick(classNames.size()+1);
+		int i = 0;
+		for (String styleName : classNames) {
+			String rgb = Integer.toHexString(colors.get(i).getRGB());
+			rgb = rgb.substring(2, rgb.length());
+			classNameToStyle.put(styleName, "{background-color: #" + rgb + " !important}");
+			i++;
+		}
+
+		String styleData = "";
+
+		for (String key : classNameToStyle.keySet())
+			styleData += ".vis.timeline .item." + key + " "
+					+ classNameToStyle.get(key) + "\n";
+		fws.write(styleData);
+		fws.close();
+		LOG.info("wrote:" + styleData);
 	}
 
 	/**
@@ -153,14 +180,13 @@ public class VisJSTimelineUtil {
 	 * @throws Exception
 	 */
 	public static void writeTimelineData(final List<ActivityEvent> list,
-			Writer outputWriter, Writer styleWriter) throws Exception {
+			Writer outputWriter, Writer styleWriter, boolean groupByType) throws Exception {
 		//TODO FIXME Create generic pivot timeline viewer for all resource types
 		final VisJSTimeline timeline = new VisJSTimeline();
 
 		if (list == null || list.size() == 0)
 			throw new IllegalStateException("Got no events!!!!");
 
-		HashSet<String> classNames = new HashSet<String>();
 
 		VisJSTimelineItem item;
 		String processInstanceName = null;
@@ -176,11 +202,11 @@ public class VisJSTimelineUtil {
 				item.setClassName("c" + processInstanceName);
 				item.setStart(event.getExecutionTime().getIsoTime());
 				LOG.info("Visualizing activity as resource usage event in timeline item.");
-				EventRecord er = ((ActivityEvent) event).toXML();
-				String resource = er.getResourceRef().get(0);
+				EventRecord er = ((ActivityEvent) event).toVerboseXML(MongoDatasource.getInstance(event.getReplicationID()));
+				String resource = (groupByType ? er.getActingResource().getResourceType()+":\n"+er.getActingResource().getResourceSubType().get(0) : er.getResourceRef().get(0));
 				item.setGroup(getGroupWithName(resource, timeline));
 				item.setContent(er.getActivityRef());
-				item.setTitle(resource + "\n"
+				item.setTitle(er.getResourceRef().get(0) + "\n"
 						+ er.getProcessRef() + "\ninstance: "
 						+ processInstanceName + "\nactivity: "
 						+ er.getActivityRef() + "\ninterval: {interval}");
@@ -197,27 +223,11 @@ public class VisJSTimelineUtil {
 
 		}
 
-		HashMap<String, String> classNameToStyle = new HashMap<String, String>();
-		List<Color> colors = pick(classNames.size()+1);
-		int i = 0;
-		for (String styleName : classNames) {
-			String rgb = Integer.toHexString(colors.get(i).getRGB());
-			rgb = rgb.substring(2, rgb.length());
-			classNameToStyle.put(styleName, "{background-color: #" + rgb + " !important}");
-			i++;
-		}
 
-		String data = "var data = " + timeline.toJSON() + ";\n";
+		String data = "var "+(groupByType ? "typedata" : "data")+" = " + timeline.toJSON() + ";\n";
 		outputWriter.write(data);
 		outputWriter.close();
-		LOG.info("wrote:" + data);
-		String styleData = "";
 
-		for (String key : classNameToStyle.keySet())
-			styleData += ".vis.timeline .item." + key + " "
-					+ classNameToStyle.get(key) + "\n";
-		styleWriter.write(styleData);
-		styleWriter.close();
-		LOG.info("wrote:" + styleData);
+		LOG.info("wrote:" + data);
 	}
 }
