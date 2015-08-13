@@ -760,30 +760,30 @@ public class Process extends AbstractEntity<Process> implements
 		 }
 		 }
 	}
-
+	// FIXME: Should be fixed in ASIMOV main dist.
 	public static synchronized void normalizeLikelihoods(
 			TProcessType processType) {
 		// normalize
-//		for (TSkeletonActivityType a : processType.getActivity()) {
-//			Double prevSum = 0.0;
-//			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
-//				if (r.getLikelihood() == null)
-//					r.setLikelihood(1.0);
-//				prevSum += r.getLikelihood();
-//			}
-//			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
-//				r.setLikelihood(r.getLikelihood() / prevSum);
-//			}
-//			Double nextSum = 0.0;
-//			for (NextActivityRef r : a.getNextActivityRef()) {
-//				if (r.getLikelihood() == null)
-//					r.setLikelihood(1.0);
-//				nextSum += r.getLikelihood();
-//			}
-//			for (NextActivityRef r : a.getNextActivityRef()) {
-//				r.setLikelihood(r.getLikelihood() / nextSum);
-//			}
-//		}
+		for (TSkeletonActivityType a : processType.getActivity()) {
+			Double prevSum = 0.0;
+			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
+				if (r.getLikelihood() == null)
+					r.setLikelihood(1.0);
+				prevSum += r.getLikelihood();
+			}
+			for (PreviousActivityRef r : a.getPreviousActivityRef()) {
+				r.setLikelihood(r.getLikelihood() / prevSum);
+			}
+			Double nextSum = 0.0;
+			for (NextActivityRef r : a.getNextActivityRef()) {
+				if (r.getLikelihood() == null)
+					r.setLikelihood(1.0);
+				nextSum += r.getLikelihood();
+			}
+			for (NextActivityRef r : a.getNextActivityRef()) {
+				r.setLikelihood(r.getLikelihood() / nextSum);
+			}
+		}
 	}
 
 	private TSkeletonActivityType getTSkeletonActivityTypeForId(TProcessType p,
