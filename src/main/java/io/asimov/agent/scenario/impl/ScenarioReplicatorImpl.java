@@ -125,6 +125,9 @@ public class ScenarioReplicatorImpl extends
 		return getBinder().inject(ScenarioManagementWorld.class);
 	}
 	
+	public static final String ADD_RESOURCE = "ADD_RESOURCE";
+	
+	@Schedulable(ADD_RESOURCE)
 	protected void addResource(final ASIMOVNewResourceMessage newResourceMessage) {
 		ASIMOVResourceDescriptor resourceDescriptor = newResourceMessage.resource;
 		getBinder().inject(Datasource.class).save(resourceDescriptor);
@@ -184,7 +187,9 @@ public class ScenarioReplicatorImpl extends
 		.subscribe(new Observer<ASIMOVNewResourceMessage>() {
 			@Override
 			public void onNext(final ASIMOVNewResourceMessage newResourceMessage) {
-				addResource(newResourceMessage);
+				getBinder().inject(ReplicatingCapability.class).schedule(
+						ProcedureCall.create(ScenarioReplicatorImpl.this, ScenarioReplicatorImpl.this, ADD_RESOURCE, newResourceMessage),
+						Trigger.createAbsolute(SimTime.ZERO.plus(newResourceMessage.resource.getAvailableFromTime(),TimeUnit.MILLIS)));
 			}
 
 			@Override

@@ -180,7 +180,7 @@ public class RunUseCase
 			if ((runtime.maxMemory()/mb) < 1500) {
 				LOG.error("A max memory of 2GB is adviced please add java options -XX:PermSize=512m -XX:MaxPermSize=2048m -Xms256m -Xmx2048m");
 			}
-			sourceFile = new File(args[0]);
+			sourceFile = new File(new File(".").getAbsolutePath()+"/"+args[0]);
 			durationInMillis = SimDuration.ZERO.plus(Double.valueOf(args[1]),TimeUnit.DAYS).getMillis();
 			targetDirectory = new File(args[2]);
 			if (targetDirectory.isDirectory())

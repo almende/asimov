@@ -8,6 +8,7 @@ import io.asimov.xml.SimulationFile;
 import io.asimov.xml.TDistribution;
 import io.asimov.xml.TProcessType;
 import io.asimov.xml.TSkeletonActivityType;
+import io.asimov.xml.TSkeletonActivityType.UsedResource;
 import io.coala.log.LogUtil;
 import io.coala.xml.XmlContextID;
 
