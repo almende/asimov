@@ -11,6 +11,8 @@ The resources are observable and thus a-priori assets of the investigation.
 
 The context holds (meta-)physical constraints. In this case this is the building (rooms, doors and devices) and the fact that the people fulfilling the roles are starting outside of the building.
 
+> Please note that a resource named "world" *must* be specified in the context.
+
 The process references to the types of resources required given that the constraints from the context are and will be met.
 
 If we specify as input the xml below:
