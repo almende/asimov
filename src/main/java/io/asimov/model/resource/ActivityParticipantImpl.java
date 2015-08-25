@@ -21,7 +21,6 @@ import io.coala.enterprise.fact.CoordinationFact;
 import io.coala.enterprise.role.AbstractExecutor;
 import io.coala.enterprise.role.AbstractInitiator;
 import io.coala.enterprise.role.Executor;
-import io.coala.exception.CoalaException;
 import io.coala.invoke.ProcedureCall;
 import io.coala.invoke.Schedulable;
 import io.coala.json.JsonUtil;
@@ -31,7 +30,6 @@ import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
 import io.coala.time.Trigger;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -267,6 +265,7 @@ public class ActivityParticipantImpl extends
 		 * resources - schedule/perform activity start event - schedule/perform
 		 * activity stop event
 		 */
+		
 		final ProcedureCall<?> job = ProcedureCall.create(this, this,
 				START_EXECUTING_ACTIVITY, request);
 
@@ -291,7 +290,6 @@ public class ActivityParticipantImpl extends
 		for (ActivityParticipationResourceInformation otherResource : request
 				.getOtherResourceInfo())
 			involvedResources.add(otherResource.getResourceName());
-
 		getWorld(GenericResourceManagementWorld.class).performActivityChange(
 				resourceInfo.getProcessID(),
 				resourceInfo.getProcessInstanceId(),

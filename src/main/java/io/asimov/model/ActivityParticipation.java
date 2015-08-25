@@ -448,4 +448,19 @@ public abstract class ActivityParticipation extends AbstractCoordinationFact
 		}
 
 	}
+	
+	@Override
+	public int hashCode() {
+		if (this.resourceInfo == null)
+			return 0;
+		return (this.resourceInfo.getActivityInstanceId()+this.resourceInfo.getResourceName()).hashCode();
+	}
+	
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		else
+			return this.hashCode() == other.hashCode();
+	}
+	
 }

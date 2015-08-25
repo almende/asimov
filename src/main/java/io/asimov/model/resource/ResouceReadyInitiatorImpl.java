@@ -141,7 +141,7 @@ public class ResouceReadyInitiatorImpl extends
 			if (!getPendingResourcesForActivity(
 					cause.getResourceInfo().getActivityInstanceId(),
 					cause.getResourceInfo().getProcessInstanceId()).remove(
-					result.getResourceInfo())) {
+					result.getResourceInfo()) || isDone()) {
 				// LOG.error(cause.getResourceInfo().getActivityName()
 				// + " Unknown resource is ready: "
 				// + result.getResourceInfo().getResourceName()
@@ -262,8 +262,8 @@ public class ResouceReadyInitiatorImpl extends
 		if (handler == null) {
 			handler = new ResouceReadyInitiatorHandler(cause, initiator);
 			instances.put(cause, handler);
+			handler.checkOtherResources();
 		}
-		handler.checkOtherResources();
 		return this;
 	}
 
@@ -271,15 +271,11 @@ public class ResouceReadyInitiatorImpl extends
 	@Override
 	public synchronized void onStated(
 			final ResourceReadyNotification.Result result) {
-		List<ActivityParticipation> toClean = new ArrayList<ActivityParticipation>();
 		for (ActivityParticipation cause : instances.keySet()) {
 			ResouceReadyInitiatorHandler handler = getInstance(cause);
-			handler.handle(result);
-			if (handler.isDone())
-				toClean.add(cause);
+			if (!handler.isDone())
+				handler.handle(result);
 		}
-		for (ActivityParticipation cause : toClean)
-			instances.remove(cause);
 	}
 
 	@Override

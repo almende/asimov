@@ -16,8 +16,10 @@ import io.coala.time.SimTime;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -45,6 +47,8 @@ public class GenericResourceManagementWorldImpl extends
 	private static final Map<String, Integer> resourcesOnSite = new HashMap<String, Integer>();
 
 	private boolean performingActivity = false;
+	
+	private Set<String> performedActivityInstanceIds = new HashSet<String>();
 	
 	private String debugDescription = "not performing any activity";
 	
@@ -141,7 +145,12 @@ public class GenericResourceManagementWorldImpl extends
 //			);
 			if (!performingActivity) {
 				this.performingActivity = true;
-				this.debugDescription =  processID+" "+activityName+" for resource "+resourceNames.get(0);
+				
+				if (!performedActivityInstanceIds.add(activityInstanceId)) {
+					inconsistent = true;
+					this.debugDescription =  "Already executed "+ processID+" "+activityName+" for resource "+resourceNames.get(0);
+				} else
+					this.debugDescription =  processID+" "+activityName+" for resource "+resourceNames.get(0);
 			} else
 				inconsistent = true;	
 		}
