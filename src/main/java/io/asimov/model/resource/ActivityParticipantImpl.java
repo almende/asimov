@@ -342,15 +342,15 @@ public class ActivityParticipantImpl extends
 	private void updateAvailable(ActivityParticipation.Request request) {
 		if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() != null) {
 			if (!processBacklog.contains(request.getResourceInfo().getProcessInstanceId())){
-				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInProcess(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess()-1);
-				if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() < 1) {
+				getWorld(GenericResourceManagementWorld.class).getEntity().setNofUsesInProcess(getWorld(GenericResourceManagementWorld.class).getEntity().getNofUsesInProcess()+1);
+				if (getWorld(GenericResourceManagementWorld.class).getEntity().getNofUsesInProcess() >= getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess()) {
 					LOG.info("Resource stays unavailable because it reached maximum participations in process");
 					getWorld(GenericResourceManagementWorld.class).setUnavailable();
 				} else {
 					getWorld(GenericResourceManagementWorld.class).setAvailable();
 					LOG.info("Resource becomes available");
 				}
-			} else if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess() > 0){
+			} else if (getWorld(GenericResourceManagementWorld.class).getEntity().getNofUsesInProcess() < getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInProcess()){
 				getWorld(GenericResourceManagementWorld.class).setAvailable();
 				LOG.info("Resource becomes available");
 			} else {
@@ -359,8 +359,8 @@ public class ActivityParticipantImpl extends
 			}
 		} else if (!getWorld(GenericResourceManagementWorld.class).isAvailable()) {
 			if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity() != null) {
-				getWorld(GenericResourceManagementWorld.class).getEntity().setMaxNofUsesInActivity(getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity()-1);
-				if (getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity() < 1) {
+				getWorld(GenericResourceManagementWorld.class).getEntity().setNofUsesInActivity(getWorld(GenericResourceManagementWorld.class).getEntity().getNofUsesInActivity()+1);
+				if (getWorld(GenericResourceManagementWorld.class).getEntity().getNofUsesInActivity() >= getWorld(GenericResourceManagementWorld.class).getEntity().getMaxNofUsesInActivity()) {
 					getWorld(GenericResourceManagementWorld.class).setUnavailable();
 					LOG.info("Resource stays unavailable because it reached maximum participations in activity");
 				} else {

@@ -199,7 +199,7 @@ public class TraceService extends AbstractPersonTraceEventProducer
 				return null;
 			}
 		});
-		return event;
+		return (Event<?>)event;
 	}
 
 	public TEventTrace toXML(final Datasource ds, boolean includeResourceDescriptors, boolean includeActivityDescriptors)
@@ -222,10 +222,12 @@ public class TraceService extends AbstractPersonTraceEventProducer
 				for (final String resourceRef : xmlEvent.getResourceRef()) {
 					if (i == 0) {
 						final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
-						xmlEvent.setActingResource(r.toXML());
+						if (r != null)
+							xmlEvent.setActingResource(r.toXML());
 					} else {
 						final ASIMOVResourceDescriptor r = ds.findResourceDescriptorByID(resourceRef);
-						xmlEvent.getInvolvedResource().add(r.toXML());
+						if (r != null)
+							xmlEvent.getInvolvedResource().add(r.toXML());
 					}
 					i++;
 				}

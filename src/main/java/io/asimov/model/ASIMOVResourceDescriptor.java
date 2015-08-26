@@ -90,11 +90,21 @@ public class ASIMOVResourceDescriptor extends
 	 */
 	@Field(name = "maxNofUsesInActivity")
 	private Long maxNofUsesInActivity;
+	
+	/**
+	 */
+	@Field(name = "nofUsesInActivity")
+	private Long nofUsesInActivity;
 
 	/**
 	 */
 	@Field(name = "maxNofUsesInProcess")
 	private Long maxNofUsesInProcess;
+	
+	/**
+	 */
+	@Field(name = "nofUsesInProcess")
+	private Long nofUsesInProcess;
 
 	/**
 	 * 
@@ -103,6 +113,39 @@ public class ASIMOVResourceDescriptor extends
 	private TUnavailablePeriodDistribution unavailabilityDistribution;
 
 	private List<ASIMOVNode<?>> descriptions;
+
+	
+	
+	
+	public Long getNofUsesInActivity() {
+		if (nofUsesInActivity == null)
+			return 0L;
+		return nofUsesInActivity;
+	}
+
+	public void setNofUsesInActivity(Long nofUsesInActivity) {
+		this.nofUsesInActivity = nofUsesInActivity;
+	}
+	
+	public ASIMOVResourceDescriptor withNofUsesInActivity(Long nofUsesInActivity) {
+		setNofUsesInActivity(nofUsesInActivity);
+		return this;
+	}
+	
+	public ASIMOVResourceDescriptor withNofUsesInProcess(Long nofUsesInProcess) {
+		setNofUsesInProcess(nofUsesInProcess);
+		return this;
+	}
+
+	public Long getNofUsesInProcess() {
+		if (nofUsesInProcess == null)
+			return 0L;
+		return nofUsesInProcess;
+	}
+
+	public void setNofUsesInProcess(Long nofUsesInProcess) {
+		this.nofUsesInProcess = nofUsesInProcess;
+	}
 
 	/**
 	 * 
@@ -275,7 +318,9 @@ public class ASIMOVResourceDescriptor extends
 				.withContainerResource(xmlBean.getContainerResourceId())
 				.withConnectedResources(
 						xmlBean.getConnectedResourceId().toArray(
-								new TConnectedResource[0]));
+								new TConnectedResource[0]))
+				.withNofUsesInProcess(0L)
+				.withNofUsesInActivity(0L);
 	}
 
 	/*
@@ -310,7 +355,7 @@ public class ASIMOVResourceDescriptor extends
 		if (getMaxNofUsesInProcess() != null)
 			resource.setMaxNofUseInProcess(new BigInteger(
 					getMaxNofUsesInProcess().toString()));
-
+		
 		return resource;
 	}
 
