@@ -5,15 +5,20 @@ import io.coala.agent.AgentID;
 import io.coala.agent.BasicAgent;
 import io.coala.agent.BasicAgentStatus;
 import io.coala.bind.Binder;
+import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.factory.ClassUtil;
+import io.coala.invoke.ProcedureCall;
+import io.coala.invoke.Schedulable;
 import io.coala.json.JsonUtil;
 import io.coala.log.InjectLogger;
 import io.coala.message.Message;
 import io.coala.model.ModelComponent;
 import io.coala.resource.FileUtil;
 import io.coala.time.Instant;
+import io.coala.time.TimeUnit;
+import io.coala.time.Trigger;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +54,9 @@ public class ASIMOVOrganization<W extends ASIMOVOrganizationWorld> extends
 
 	/** */
 	private W world;
+	
+	public static long agentCount = 0L;
+	public static long messageCount = 0L;
 
 	/**
 	 * {@link ASIMOVOrganization} constructor
@@ -80,7 +88,7 @@ public class ASIMOVOrganization<W extends ASIMOVOrganizationWorld> extends
 			}});
 	}
 
-	private OutputStream jsonSniffer;
+	private static OutputStream jsonSniffer = null;
 
 	// @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.PROPERTY,
 	// property = "class")
@@ -111,46 +119,64 @@ public class ASIMOVOrganization<W extends ASIMOVOrganizationWorld> extends
 			this.content = content;
 		}
 	}
+	
+	public static final String REQUEST_DESTROY = "REQUEST_DESTROY";
+	
+	@Schedulable(REQUEST_DESTROY)
+	public void destroy(){
+		try {
+			getFinalizer().destroy();
+		} catch (Exception e) {
+			LOG.error("Failed to destroy asimov agent",e);
+		}
+	}
 
 	/** @see BasicAgent#initialize() */
 	@Override
 	public void initialize() throws Exception
 	{
 //		getTime(); // FIXME Workaround for bug in coala
-		final File file = new File("sniffer.json");
-		file.delete();
-		this.jsonSniffer = FileUtil.getFileAsOutputStream(file, true);
+		agentCount++;
+		if (jsonSniffer == null && Boolean.parseBoolean(getBinder().inject(ConfiguringCapability.class).getProperty("enableSniffer").get("false"))) {
+			final File file = new File("sniffer.json");
+			file.delete();
+			
+			jsonSniffer = FileUtil.getFileAsOutputStream(file, true);
+		}
 		// if (LOG == null)
 		// {
 		// LOG = LogUtil.getLogger(this);
 		// // new NullPointerException("No LOG??").printStackTrace();
 		// }
-		getReceiver().getIncoming().subscribe(new Observer<Message<?>>()
-		{
-			@Override
-			public void onCompleted()
+		final boolean useSniffer = Boolean.parseBoolean(getBinder().inject(ConfiguringCapability.class).getProperty("enableSniffer").get("false"));
+			getReceiver().getIncoming().subscribe(new Observer<Message<?>>()
 			{
-			}
-
-			@Override
-			public void onError(final Throwable e)
-			{
-				e.printStackTrace();
-			}
-
-			@Override
-			public void onNext(final Message<?> t)
-			{
-				try
+				@Override
+				public void onCompleted()
 				{
-					jsonSniffer.write((JsonUtil.toJSONString(t) + "\r\n")
-							.getBytes());
-				} catch (final IOException e)
-				{
-					onError(e);
 				}
-			}
-		});
+	
+				@Override
+				public void onError(final Throwable e)
+				{
+					e.printStackTrace();
+				}
+	
+				@Override
+				public void onNext(final Message<?> t)
+				{
+					messageCount++;
+					if (useSniffer)
+					try
+					{
+						jsonSniffer.write((JsonUtil.toJSONString(t) + "\r\n")
+								.getBytes());
+					} catch (final IOException e)
+					{
+						onError(e);
+					}
+				}
+			});
 
 		getReceiver().getIncoming().ofType(ASIMOVMessage.class)
 				.subscribe(new Observer<ASIMOVMessage>()
@@ -174,10 +200,17 @@ public class ASIMOVOrganization<W extends ASIMOVOrganizationWorld> extends
 						final ReasoningCapability reasoner = getBinder()
 								.inject(ReasoningCapability.class);
 						// LOG.trace("Got ASIMOV msg: " + msg);
-						reasoner.addBeliefToKBase(reasoner
+						if (msg.content.equals(REQUEST_DESTROY))
+							getScheduler().schedule(
+									ProcedureCall.create(ASIMOVOrganization.this, ASIMOVOrganization.this, REQUEST_DESTROY),
+									Trigger.createAbsolute(getBinder().inject(ReplicatingCapability.class).getTime().plus(1,TimeUnit.MINUTES)));
+						else	
+							reasoner.addBeliefToKBase(reasoner
 								.toBelief(msg.content));
 					}
 				});
+		
+		
 //		MachineUtil.setStatus(this, BasicAgentStatus., false);
 //		((LifeCycleHooks)getReceiver()).activate();// FIXME Yet another workaround for yet another bug in coala
 	}

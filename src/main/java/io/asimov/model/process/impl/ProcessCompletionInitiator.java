@@ -4,6 +4,8 @@ import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
+import io.asimov.messaging.ASIMOVMessage;
+import io.asimov.model.ASIMOVOrganization;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.enterprise.role.AbstractInitiator;
@@ -80,17 +82,22 @@ public class ProcessCompletionInitiator extends
 //					.hashCode(); // invalidate hash
 			LOG.warn("Process completed successfully!");
 			ProcedureCall<?> pc = ProcedureCall.create(this, this,
-					UPDATE_HASH);
+					UPDATE_HASH, result.getProcessTypeID());
 			getScheduler().schedule(pc, Trigger.createAbsolute(getTime().plus(1,TimeUnit.MILLIS)));
-			
+			try {
+				getMessenger().send(new ASIMOVMessage(getTime(), getOwnerID(), getOwnerID(), ASIMOVOrganization.REQUEST_DESTROY));
+			} catch (Exception e) {
+				LOG.error("Failed to request destroy",e);
+			}
 		}
 	}
 	
 	public static final String UPDATE_HASH = "UPDATE_HASH";
 	
 	@Schedulable(UPDATE_HASH)
-	public void updateHash() {
+	public void updateHash(final String processTypeId) {
 		getBinder().inject(ScenarioManagementWorld.class)
 		.updateResourceStatusHash("");
+		getBinder().inject(ScenarioManagementWorld.class).onProcessObserver(processTypeId);
 	}
 }

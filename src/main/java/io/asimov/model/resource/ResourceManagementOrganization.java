@@ -152,7 +152,8 @@ public class ResourceManagementOrganization<T extends ResourceManagementWorld<?>
 	@Override
 	public void finish() throws Exception
 	{
-		LOG.info("Exit with participator status:_" + participator.getStatus());
+		if (LOG != null && participator != null)
+			LOG.info("Exit with participator status:_" + participator.getStatus());
 		if (this.myGui != null && this.myGui.isVisible())
 			this.myGui.dispose();
 	}

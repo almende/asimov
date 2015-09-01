@@ -115,6 +115,9 @@ public class ScenarioManagementWorldImpl extends
 	private UseCaseScenario scenario = null;
 
 	private Subject<Integer, Integer> resourceHash = BehaviorSubject.create(0);
+	
+
+	private Subject<String, String> processReady = ReplaySubject.create(0);
 
 	/**
 	 * {@link ScenarioManagementWorldImpl} constructor
@@ -579,6 +582,18 @@ public class ScenarioManagementWorldImpl extends
 	@Override
 	public int getCurrentResourceStatusHash() {
 		return currentResourceHash;
+	}
+
+	/**
+	 * returns null if used for emission (processTypeId != null) and returns observable when receiving (processTypeId == null)
+	 */
+	@Override
+	public Observable<String> onProcessObserver(String processTypeId) {
+		if (processTypeId == null)
+			return processReady.asObservable();
+		else
+			processReady.onNext(processTypeId);
+		return null;
 	}
 
 }

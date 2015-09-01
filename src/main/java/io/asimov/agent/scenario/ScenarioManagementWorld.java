@@ -208,4 +208,6 @@ public interface ScenarioManagementWorld extends ASIMOVOrganizationWorld
 
 	void performOperationChange(EventType GlobalOperationalPeriodEvent) throws Exception;
 
+	Observable<String> onProcessObserver(String processTypeId);
+
 }

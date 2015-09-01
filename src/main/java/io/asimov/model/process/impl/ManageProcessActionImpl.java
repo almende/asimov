@@ -4,7 +4,9 @@ import io.asimov.agent.process.ManageProcessActionService;
 import io.asimov.agent.process.ProcessCompletion;
 import io.asimov.agent.process.ProcessManagementWorld;
 import io.asimov.db.Datasource;
+import io.asimov.messaging.ASIMOVMessage;
 import io.asimov.microservice.negotiation.ResourceAllocationNegotiator;
+import io.asimov.model.ASIMOVOrganization;
 import io.asimov.model.ASIMOVResourceDescriptor;
 import io.asimov.model.ActivityParticipation;
 import io.asimov.model.ActivityParticipationResourceInformation;
@@ -530,12 +532,18 @@ public class ManageProcessActionImpl extends
 				AgentID aid = getBinder().inject(ModelComponentIDFactory.class).createAgentID(aidString);
 				LOG.info("Checking availability of "+aid.getValue());
 				ASIMOVResourceDescriptor ard = getBinder().inject(Datasource.class).findResourceDescriptorByID(aid.getValue());
-				if (ard.isUnAvailable())
+				if (ard.isUnAvailable()) {
 					try {
 						getWorld().performAvailabilityChange(ard.getName(), EventType.START_GLOBAL_UNAVAILABILITY);
 					} catch (Exception e) {
 						LOG.error("Failed to emit global unavailability",e);
 					}
+					try {
+						getMessenger().send(new ASIMOVMessage(getTime(), getOwnerID(), ard.getAgentID(), ASIMOVOrganization.REQUEST_DESTROY));
+					} catch (Exception e) {
+						LOG.error("Failed to request destroy of resource agent",e);
+					}
+				}
 			}
 			try {
 				send(ProcessCompletion.Result.Builder.forProducer(this, cause)

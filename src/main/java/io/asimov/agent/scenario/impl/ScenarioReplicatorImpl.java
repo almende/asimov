@@ -84,6 +84,8 @@ public class ScenarioReplicatorImpl extends
 
 	private static final String OPERATION_PERIOD_EVENT_EMIT = "OPERATION_PERIOD_EVENT_EMIT";
 
+	private Map<String, Long> nofProcessTypeExec = new HashMap<String, Long>();
+	
 	/** */
 	@InjectLogger
 	private Logger LOG;
@@ -159,7 +161,27 @@ public class ScenarioReplicatorImpl extends
 		// TODO from config?
 		// this.repeatIntervalDist = newDist().getConstant(
 		// newTime(1, TimeUnit.MINUTES));
+		getBinder().inject(ScenarioManagementWorld.class).onProcessObserver(null).subscribe(new Observer<String>(){
 
+			@Override
+			public void onCompleted() {
+				// Nothing special
+				
+			}
+
+			@Override
+			public void onError(Throwable e) {
+				LOG.error("Error while waiting for process status updates",e);
+			}
+
+			@Override
+			public void onNext(String t) {
+				if (nofProcessTypeExec.containsKey(t))
+					nofProcessTypeExec.put(t,nofProcessTypeExec.get(t).longValue()+1);
+				else
+					nofProcessTypeExec.put(t, 1L);
+			}});
+		
 		// subscribe to responses to nested ProcessCompletion requests
 		getReceiver().getIncoming().ofType(ProcessCompletion.Result.class)
 				.filter(new Func1<ProcessCompletion, Boolean>() {
@@ -549,15 +571,19 @@ public class ScenarioReplicatorImpl extends
 		return new SimDuration(0, TimeUnit.HOURS);
 	}
 
+	
+	
 	public SimTime getAbsProcessRepeatTime(final String processTypeID) {
 		final SimTime now = getTime();
+		
+		long delay = (nofProcessTypeExec.containsKey(processTypeID) ? nofProcessTypeExec.get(processTypeID) : 0L);
 		if (getBinder().inject(ScenarioManagementWorld.class)
-				.onSiteDelay(now.plus(1, TimeUnit.MINUTES)).doubleValue() == 0)
-			return now.plus(1, TimeUnit.MINUTES);
+				.onSiteDelay(now.plus(1, TimeUnit.MINUTES).plus(delay,TimeUnit.MILLIS)).doubleValue() == 0)
+			return now.plus(1, TimeUnit.MINUTES).plus(delay,TimeUnit.MILLIS);
 		final SimDuration millisOfDay = new SimDuration(new DateTime(
 				now.getIsoTime()).getMillisOfDay(), TimeUnit.MILLIS);
 		final SimTime startOfDay = now.minus(millisOfDay);
-		SimDuration procStartTimeOfDay = drawProcessStartTimeOfDay(processTypeID);
+		SimDuration procStartTimeOfDay = drawProcessStartTimeOfDay(processTypeID).plus(delay,TimeUnit.MILLIS);
 		if (procStartTimeOfDay.isOnOrBefore(millisOfDay))
 			procStartTimeOfDay = procStartTimeOfDay.plus(1, TimeUnit.DAYS);
 		final SimTime absStart = startOfDay.plus(procStartTimeOfDay);
