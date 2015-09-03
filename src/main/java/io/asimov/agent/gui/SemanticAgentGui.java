@@ -439,7 +439,6 @@ public class SemanticAgentGui extends JFrame
 		{
 			try
 			{
-				@SuppressWarnings("resource")
 				java.io.BufferedReader reader = new BufferedReader(
 						new FileReader(file));
 				while ((line = reader.readLine()) != null)
@@ -467,8 +466,10 @@ public class SemanticAgentGui extends JFrame
 						}
 					}
 				}
+				reader.close();
 			} catch (Exception e)
 			{
+				
 				e.printStackTrace();
 			}
 		}

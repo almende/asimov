@@ -116,7 +116,6 @@ public class RunUseCase
     public static boolean copyFromJar(String sResource, File fDest) {
          if (sResource == null || fDest == null) return false;
          InputStream sIn = null;
-         OutputStream sOut = null;
          @SuppressWarnings("unused")
 		File sFile = null;
          try {
@@ -125,6 +124,8 @@ public class RunUseCase
          }
          catch(Exception e) {}
          try {
+             OutputStream sOut = null;
+
               int nLen = 0;
               sIn = RunUseCase.class.getResourceAsStream("/"+sResource);
               if (sIn == null)
@@ -135,6 +136,8 @@ public class RunUseCase
               while ((nLen = sIn.read(bBuffer)) > 0)
                    sOut.write(bBuffer, 0, nLen);
               sOut.flush();
+              if (sOut != null)
+              sOut.close();
          }
          catch(IOException ex) {
               ex.printStackTrace();
@@ -143,14 +146,13 @@ public class RunUseCase
               try {
                    if (sIn != null)
                         sIn.close();
-                   if (sOut != null)
-                        sOut.close();
               }
               catch (IOException eError) {
                    eError.printStackTrace();
               }
          }
-         return fDest.exists();
+         boolean r = fDest.exists();
+         return r;
     }
 	
 	public static void main(String[] args) {

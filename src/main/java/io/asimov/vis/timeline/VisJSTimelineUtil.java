@@ -161,6 +161,8 @@ public class VisJSTimelineUtil {
 					+ classNameToStyle.get(key) + "\n";
 		fws.write(styleData);
 		fws.close();
+		fw.close();
+		tfw.close();
 		LOG.info("wrote:" + styleData);
 	}
 
