@@ -15,7 +15,7 @@
 			<url>https://github.com/krevelen/coala/raw/mvn-repo</url>
 		</repository>
 		<!-- Time-control public Maven repository -->
-		<repository>
+		<!-- <repository>
 			<name>Time-control Public Maven Repository</name>
 			<id>tc-public</id>
 			<url>https://github.com/almende/time-control/raw/mvn-repo/</url>
@@ -27,7 +27,7 @@
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
-		</repository>
+		</repository> -->
 		<!-- TU Delft simulation repository -->
 <!--		<repository>
 			<name>DSOL Public Repository</name>
