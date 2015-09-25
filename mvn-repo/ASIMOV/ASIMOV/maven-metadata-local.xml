@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-  <groupId>io.asimov</groupId>
-  <artifactId>asimov</artifactId>
+  <groupId>ASIMOV</groupId>
+  <artifactId>ASIMOV</artifactId>
   <versioning>
     <versions>
       <version>0.0.1-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20150925114648</lastUpdated>
+    <lastUpdated>20150925124356</lastUpdated>
   </versioning>
 </metadata>
