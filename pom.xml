@@ -12,7 +12,7 @@
 		<repository>
 			<id>io.coala</id>
 			<name>COALA Repository</name>
-			<url>https://github.com/krevelen/coala/raw/mvn-repo</url>
+			<url>https://raw.github.com/krevelen/coala/mvn-repo</url>
 		</repository>
 		<!-- Time-control public Maven repository -->
 		<!-- <repository>
