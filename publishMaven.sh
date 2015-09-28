@@ -1,2 +1,2 @@
 #bin/bash
-mvn clean install:install-file -Dmaven.test.skip=true -DgroupId=ASIMOV -DartifactId=ASIMOV -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar -Dfile=./dist/asimov.jar -DlocalRepositoryPath=/Users/suki/git/asimov/mvn-repo
+mvn clean deploy
