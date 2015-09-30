@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -143,8 +144,8 @@ public class VisJSTimelineUtil {
 		FileWriter fw = new FileWriter(outputFile);
 		FileWriter tfw = new FileWriter(typeOutputFile);
 		FileWriter fws = new FileWriter(styleSheetFile);
-		writeTimelineData(list, tfw, fws, true);
-		writeTimelineData(list, fw, fws, false);
+		writeTimelineData(list, tfw, fws, true,classNames);
+		writeTimelineData(list, fw, fws, false,classNames);
 		List<Color> colors = pick(classNames.size()+1);
 		int i = 0;
 		for (String styleName : classNames) {
@@ -182,7 +183,7 @@ public class VisJSTimelineUtil {
 	 * @throws Exception
 	 */
 	public static void writeTimelineData(final List<ActivityEvent> list,
-			Writer outputWriter, Writer styleWriter, boolean groupByType) throws Exception {
+			Writer outputWriter, Writer styleWriter, boolean groupByType, Set<String> cn) throws Exception {
 		//TODO FIXME Create generic pivot timeline viewer for all resource types
 		final VisJSTimeline timeline = new VisJSTimeline();
 
@@ -196,7 +197,7 @@ public class VisJSTimelineUtil {
 			if (event.hasType(EventType.START_ACTIVITY) || event.hasType(EventType.STOP_ACTIVITY)) {
 				if (event.getProcessInstanceID() != null) {
 					processInstanceName = event.getProcessInstanceID();
-					classNames.add("c" + processInstanceName);
+					cn.add("c" + processInstanceName);
 				} else {
 					LOG.error("Could not find the process instance for this event");
 				}

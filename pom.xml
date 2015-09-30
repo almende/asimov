@@ -74,7 +74,7 @@
 		<github.repository.localid>asimov</github.repository.localid>
 		<github.repository.tmpdir>file://${project.build.directory}/mvn-repo</github.repository.tmpdir>
 		<github.repository.url>https://raw.github.com/almende/asimov/mvn-repo/</github.repository.url>
-		<github.repository.name>https://www.github.com/almende/asimov</github.repository.name>
+		<github.repository.name>almende/asimov</github.repository.name>
 		<github.global.server>github</github.global.server>
 	</properties>
 
