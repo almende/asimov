@@ -1,13 +1,11 @@
 package io.asimov.reasoning.sl;
 
-import io.asimov.agent.resource.GenericResourceManagementWorld;
-import io.asimov.microservice.negotiation.messages.AvailabilityReply;
 import io.asimov.model.sl.ASIMOVAndNode;
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVNode;
-import io.asimov.model.sl.ASIMOVTerm;
-import io.asimov.model.sl.ASIMOVSLUtil;
 import io.asimov.model.sl.ASIMOVNotNode;
+import io.asimov.model.sl.ASIMOVSLUtil;
+import io.asimov.model.sl.ASIMOVTerm;
 import io.asimov.model.sl.SL;
 import io.coala.bind.Binder;
 import io.coala.capability.BasicCapability;

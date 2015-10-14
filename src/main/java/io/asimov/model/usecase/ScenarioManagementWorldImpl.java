@@ -12,7 +12,6 @@ import io.asimov.model.events.ActivityEvent;
 import io.asimov.model.events.Event;
 import io.asimov.model.events.EventType;
 import io.asimov.run.RunUseCase;
-import io.asimov.util.extrapolator.EventExtrapolator;
 import io.asimov.xml.SimulationFile;
 import io.asimov.xml.TUseCase;
 import io.coala.agent.Agent;

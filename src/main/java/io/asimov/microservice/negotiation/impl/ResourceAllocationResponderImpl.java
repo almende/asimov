@@ -1,7 +1,6 @@
 package io.asimov.microservice.negotiation.impl;
 
 import io.asimov.agent.resource.GenericResourceManagementWorld;
-import io.asimov.db.Datasource;
 import io.asimov.messaging.ASIMOVMessageID;
 import io.asimov.microservice.negotiation.AgentServiceProxy;
 import io.asimov.microservice.negotiation.ResourceAllocationResponder;

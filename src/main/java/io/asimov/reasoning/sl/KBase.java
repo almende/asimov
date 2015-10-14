@@ -1,5 +1,6 @@
 package io.asimov.reasoning.sl;
 
+import io.asimov.model.ASIMOVOrganization;
 import io.asimov.model.sl.ASIMOVAndNode;
 import io.asimov.model.sl.ASIMOVFormula;
 import io.asimov.model.sl.ASIMOVFunctionNode;
@@ -333,6 +334,7 @@ public class KBase implements List<ASIMOVNode<?>> {
 				}
 			}
 		}
+		ASIMOVOrganization.reasoningCount++;
 		if (matched) {
 			if (showReasoningStdErr) System.err.println("-> TRUE  := "+query);
 			return queryResult;

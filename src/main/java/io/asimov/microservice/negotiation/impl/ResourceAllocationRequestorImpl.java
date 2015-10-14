@@ -17,7 +17,6 @@ import io.asimov.model.sl.LegacySLUtil;
 import io.asimov.reasoning.sl.SLParsableSerializable;
 import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
-import io.coala.capability.configure.ConfiguringCapability;
 import io.coala.capability.interact.SendingCapability;
 import io.coala.capability.know.ReasoningCapability;
 import io.coala.capability.know.ReasoningCapability.Belief;

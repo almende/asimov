@@ -14,7 +14,6 @@ import io.coala.agent.AgentID;
 import io.coala.bind.Binder;
 import io.coala.capability.interact.ReceivingCapability;
 import io.coala.capability.interact.SendingCapability;
-import io.coala.invoke.Schedulable;
 import io.coala.log.LogUtil;
 import io.coala.message.AbstractMessage;
 import io.coala.message.Message;
@@ -22,7 +21,6 @@ import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

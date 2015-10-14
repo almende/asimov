@@ -46,6 +46,7 @@ import io.coala.invoke.Schedulable;
 import io.coala.log.InjectLogger;
 import io.coala.log.LogUtil;
 import io.coala.message.Message;
+import io.coala.model.ModelComponent;
 import io.coala.model.ModelComponentIDFactory;
 import io.coala.process.Job;
 import io.coala.random.RandomDistribution;
@@ -65,9 +66,6 @@ import org.apache.log4j.Logger;
 
 import rx.Observable;
 import rx.Observer;
-import rx.Scheduler;
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
 import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
 

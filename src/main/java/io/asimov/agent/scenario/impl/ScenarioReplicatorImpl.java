@@ -7,7 +7,6 @@ import io.asimov.agent.scenario.ScenarioManagementWorld;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ProcessEvent;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ProcessEventType;
 import io.asimov.agent.scenario.ScenarioManagementWorld.ResourceEvent;
-import io.asimov.agent.scenario.ScenarioManagementWorld.ResourceEventType;
 import io.asimov.agent.scenario.ScenarioReplication;
 import io.asimov.agent.scenario.ScenarioReplication.ScenarioReplicator;
 import io.asimov.db.Datasource;
@@ -23,7 +22,6 @@ import io.asimov.model.usecase.ScenarioManagementWorldImpl;
 import io.asimov.unavailability.MonkeyAgent;
 import io.asimov.unavailability.UnAvailabilityRequest;
 import io.asimov.xml.TSkeletonActivityType;
-import io.coala.agent.Agent;
 import io.coala.agent.AgentID;
 import io.coala.agent.AgentStatusUpdate;
 import io.coala.bind.Binder;
@@ -44,6 +42,7 @@ import io.coala.time.SimTimeFactory;
 import io.coala.time.TimeUnit;
 import io.coala.time.Trigger;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -491,12 +490,12 @@ public class ScenarioReplicatorImpl extends
 							TraceService.getInstance(
 									getOwnerID().getModelID().getValue()).saveEvent(
 									getBinder().inject(Datasource.class), event.getProcessTypeID(), null, activity.getId(), null,
-									Collections.EMPTY_LIST, EventType.ACTIVITY_CREATED, now);
+									new ArrayList<String>(), EventType.ACTIVITY_CREATED, now);
 						}
 						TraceService.getInstance(
 								getOwnerID().getModelID().getValue()).saveEvent(
 								getBinder().inject(Datasource.class), event.getProcessTypeID(), null, null, null,
-								Collections.EMPTY_LIST, EventType.PROCESS_CREATED, now);
+								new ArrayList<String>(), EventType.PROCESS_CREATED, now);
 					}
 				}
 
@@ -518,7 +517,7 @@ public class ScenarioReplicatorImpl extends
 		TraceService.getInstance(
 				getOwnerID().getModelID().getValue()).saveEvent(
 				getBinder().inject(Datasource.class), null, null, null, null,
-				Collections.EMPTY_LIST, EventType.INITIAL_MODEL_LOADED, now);
+				new ArrayList<String>(), EventType.INITIAL_MODEL_LOADED, now);
 		getScheduler().schedule(ProcedureCall.create(this, this, OPERATION_PERIOD_EVENT_EMIT), Trigger.createAbsolute(getTime()));
 		
 	}

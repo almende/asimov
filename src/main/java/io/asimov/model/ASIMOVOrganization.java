@@ -57,6 +57,7 @@ public class ASIMOVOrganization<W extends ASIMOVOrganizationWorld> extends
 	
 	public static long agentCount = 0L;
 	public static long messageCount = 0L;
+	public static long reasoningCount = 0L;
 
 	/**
 	 * {@link ASIMOVOrganization} constructor

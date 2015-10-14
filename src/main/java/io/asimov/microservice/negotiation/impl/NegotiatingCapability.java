@@ -1,15 +1,5 @@
 package io.asimov.microservice.negotiation.impl;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-
-import rx.Observer;
-import rx.subjects.PublishSubject;
-import rx.subjects.Subject;
 import io.asimov.db.Datasource;
 import io.asimov.microservice.negotiation.AgentServiceProxy;
 import io.asimov.model.TraceService;
@@ -21,6 +11,15 @@ import io.coala.capability.BasicCapability;
 import io.coala.capability.replicate.ReplicatingCapability;
 import io.coala.log.LogUtil;
 import io.coala.time.SimTime;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import rx.Observer;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
 
 public class NegotiatingCapability extends BasicCapability {
 
@@ -36,8 +35,6 @@ public class NegotiatingCapability extends BasicCapability {
 	private Subject<ActivityEvent, ActivityEvent> allocation = PublishSubject
 			.create();
 	
-	private static Set<String> allocated = new HashSet<String>();
-
 
 	protected NegotiatingCapability(Binder binder) {
 		this(new AgentServiceProxy(binder));
